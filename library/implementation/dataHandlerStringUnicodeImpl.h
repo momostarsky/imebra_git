@@ -50,30 +50,49 @@ public:
 
     // Get the data element as a signed long
     ///////////////////////////////////////////////////////////
-    virtual std::int32_t getSignedLong(const size_t index) const;
+    virtual std::int32_t getSignedLong(const size_t index) const override;
 
     // Get the data element as an unsigned long
     ///////////////////////////////////////////////////////////
-    virtual std::uint32_t getUnsignedLong(const size_t index) const;
+    virtual std::uint32_t getUnsignedLong(const size_t index) const override;
+
+    // Get the data element as a int16
+    ///////////////////////////////////////////////////////////
+    virtual std::int16_t getInt16(const size_t index) const override;
+
+    // Get the data element as a uint16
+    ///////////////////////////////////////////////////////////
+    virtual std::uint16_t getUint16(const size_t index) const override;
+
+    // Get the data element as a int9
+    ///////////////////////////////////////////////////////////
+    virtual std::int8_t getInt8(const size_t index) const override;
+
+    // Get the data element as a uint8
+    ///////////////////////////////////////////////////////////
+    virtual std::uint8_t getUint8(const size_t index) const override;
 
     // Get the data element as a double
     ///////////////////////////////////////////////////////////
-    virtual double getDouble(const size_t index) const;
+    virtual double getDouble(const size_t index) const override;
+
+    // Get the data element as a double
+    ///////////////////////////////////////////////////////////
+    virtual float getFloat(const size_t index) const override;
 
     // Get the data element as a string
     ///////////////////////////////////////////////////////////
-    virtual std::string getString(const size_t index) const;
+    virtual std::string getString(const size_t index) const override;
 
     // Get the data element as an unicode string
     ///////////////////////////////////////////////////////////
-    virtual std::wstring getUnicodeString(const size_t index) const;
+    virtual std::wstring getUnicodeString(const size_t index) const override;
 
     // Retrieve the data element as a string
     ///////////////////////////////////////////////////////////
-    virtual size_t getSize() const;
+    virtual size_t getSize() const override;
 
 protected:
-
     std::vector<std::wstring> m_strings;
 };
 
@@ -83,35 +102,61 @@ class writingDataHandlerStringUnicode : public writingDataHandler
 public:
     writingDataHandlerStringUnicode(const std::shared_ptr<buffer>& pBuffer, const std::shared_ptr<const charsetsList_t>& pCharsets, tagVR_t dataType, const wchar_t separator, const size_t unitSize, const size_t maxSize);
 
-    ~writingDataHandlerStringUnicode();
+    ~writingDataHandlerStringUnicode() override;
 
     // Set the data element as a signed long
     ///////////////////////////////////////////////////////////
-    virtual void setSignedLong(const size_t index, const std::int32_t value);
+    virtual void setSignedLong(const size_t index, const std::int32_t value) override;
 
     // Set the data element as an unsigned long
     ///////////////////////////////////////////////////////////
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value);
+    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) override;
+
+    // Set the data element as a int16
+    ///////////////////////////////////////////////////////////
+    virtual void setInt16(const size_t index, const std::int16_t value) override;
+
+    // Set the data element as a uint16
+    ///////////////////////////////////////////////////////////
+    virtual void setUint16(const size_t index, const std::uint16_t value) override;
+
+    // Set the data element as a int8
+    ///////////////////////////////////////////////////////////
+    virtual void setInt8(const size_t index, const std::int8_t value) override;
+
+    // Set the data element as a uint8
+    ///////////////////////////////////////////////////////////
+    virtual void setUint8(const size_t index, const std::uint8_t value) override;
 
     // Set the data element as a double
     ///////////////////////////////////////////////////////////
-    virtual void setDouble(const size_t index, const double value);
+    virtual void setDouble(const size_t index, const double value) override;
+
+    // Set the data element as a float
+    ///////////////////////////////////////////////////////////
+    virtual void setFloat(const size_t index, const float value) override;
 
     // Set the buffer's size, in data elements
     ///////////////////////////////////////////////////////////
-    virtual void setSize(const size_t elementsNumber);
+    virtual void setSize(const size_t elementsNumber) override;
 
-    virtual size_t getSize() const;
+    virtual size_t getSize() const override;
 
-    virtual void setString(const size_t index, const std::string& value);
+    virtual void setString(const size_t index, const std::string& value) override;
 
-    virtual void setUnicodeString(const size_t index, const std::wstring& value);
+    virtual void setUnicodeString(const size_t index, const std::wstring& value) override;
 
     // Throw an exception if the content is not valid
     ///////////////////////////////////////////////////////////
     virtual void validate() const;
 
 protected:
+    template<typename U> void convertToString(const size_t index, const U value)
+    {
+        std::wostringstream conversion;
+        conversion << +value;
+        setUnicodeString(index, conversion.str());
+    }
 
     std::shared_ptr<memory> m_commitMemory;
 

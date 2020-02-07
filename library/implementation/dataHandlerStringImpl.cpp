@@ -18,11 +18,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include <sstream>
 #include <iomanip>
+#include <limits>
 
 #include "exceptionImpl.h"
 #include "dataHandlerStringImpl.h"
 #include "memoryImpl.h"
 #include "bufferImpl.h"
+#include "dicomDictImpl.h"
 
 namespace imebra
 {
@@ -39,7 +41,7 @@ namespace handlers
 //
 //
 //
-// dataHandlerString
+// readingDataHandlerString
 //
 //
 //
@@ -47,15 +49,6 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Constructor
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
 readingDataHandlerString::readingDataHandlerString(const memory &parseMemory, tagVR_t dataType, const char separator, const uint8_t paddingByte):
     readingDataHandler(dataType)
 {
@@ -89,66 +82,95 @@ readingDataHandlerString::readingDataHandlerString(const memory &parseMemory, ta
 }
 
 
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Destructor
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-readingDataHandler::~readingDataHandler()
+void readingDataHandlerString::throwNumberConversionError() const
 {
+    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert a " << dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()) << " to a number");
 }
 
 // Get the data element as a signed long
 ///////////////////////////////////////////////////////////
-std::int32_t readingDataHandlerString::getSignedLong(const size_t index) const
+std::int32_t readingDataHandlerString::getSignedLong(const size_t /* index */) const
 {
     IMEBRA_FUNCTION_START();
 
-    std::istringstream conversion(getString(index));
-    std::int32_t value;
-    if(!(conversion >> value))
-    {
-        IMEBRA_THROW(DataHandlerConversionError, "Cannot convert " << m_strings.at(index) << " to a number");
-    }
-    return value;
+    throwNumberConversionError();
 
     IMEBRA_FUNCTION_END();
 }
 
 // Get the data element as an unsigned long
 ///////////////////////////////////////////////////////////
-std::uint32_t readingDataHandlerString::getUnsignedLong(const size_t index) const
+std::uint32_t readingDataHandlerString::getUnsignedLong(const size_t /* index */) const
 {
     IMEBRA_FUNCTION_START();
 
-    std::istringstream conversion(getString(index));
-    std::uint32_t value;
-    if(!(conversion >> value))
-    {
-        IMEBRA_THROW(DataHandlerConversionError, "Cannot convert " << m_strings.at(index) << " to a number");
-    }
-    return value;
+    throwNumberConversionError();
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a int16
+///////////////////////////////////////////////////////////
+std::int16_t readingDataHandlerString::getInt16(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    throwNumberConversionError();
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a uint16
+///////////////////////////////////////////////////////////
+std::uint16_t readingDataHandlerString::getUint16(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    throwNumberConversionError();
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a int8
+///////////////////////////////////////////////////////////
+std::int8_t readingDataHandlerString::getInt8(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    throwNumberConversionError();
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a uint8
+///////////////////////////////////////////////////////////
+std::uint8_t readingDataHandlerString::getUint8(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    throwNumberConversionError();
 
     IMEBRA_FUNCTION_END();
 }
 
 // Get the data element as a double
 ///////////////////////////////////////////////////////////
-double readingDataHandlerString::getDouble(const size_t index) const
+double readingDataHandlerString::getDouble(const size_t /* index */) const
 {
     IMEBRA_FUNCTION_START();
 
-    std::istringstream conversion(getString(index));
-    double value;
-    if(!(conversion >> value))
-    {
-        IMEBRA_THROW(DataHandlerConversionError, "Cannot convert " << m_strings.at(index) << " to a number");
-    }
-    return value;
+    throwNumberConversionError();
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a double
+///////////////////////////////////////////////////////////
+float readingDataHandlerString::getFloat(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    throwNumberConversionError();
 
     IMEBRA_FUNCTION_END();
 }
@@ -189,6 +211,132 @@ size_t readingDataHandlerString::getSize() const
     return m_strings.size();
 }
 
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+//
+// readingDataHandlerStringNumbers
+//
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+
+readingDataHandlerStringNumbers::readingDataHandlerStringNumbers(const memory &parseMemory, tagVR_t dataType, const char separator, const uint8_t paddingByte):
+    readingDataHandlerString(parseMemory, dataType, separator, paddingByte)
+{
+}
+
+
+// Get the data element as a signed long
+///////////////////////////////////////////////////////////
+std::int32_t readingDataHandlerStringNumbers::getSignedLong(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::string, std::int32_t>(getString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as an unsigned long
+///////////////////////////////////////////////////////////
+std::uint32_t readingDataHandlerStringNumbers::getUnsignedLong(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::string, std::uint32_t>(getString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a int16
+///////////////////////////////////////////////////////////
+std::int16_t readingDataHandlerStringNumbers::getInt16(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::string, std::int16_t>(getString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a uint16
+///////////////////////////////////////////////////////////
+std::uint16_t readingDataHandlerStringNumbers::getUint16(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::string, std::uint16_t>(getString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a int8
+///////////////////////////////////////////////////////////
+std::int8_t readingDataHandlerStringNumbers::getInt8(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::string, std::int8_t>(getString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a uint8
+///////////////////////////////////////////////////////////
+std::uint8_t readingDataHandlerStringNumbers::getUint8(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::string, std::uint8_t>(getString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a double
+///////////////////////////////////////////////////////////
+double readingDataHandlerStringNumbers::getDouble(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::string, double>(getString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a double
+///////////////////////////////////////////////////////////
+float readingDataHandlerStringNumbers::getFloat(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::string, float>(getString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+//
+// writingDataHandlerString
+//
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+
 writingDataHandlerString::writingDataHandlerString(const std::shared_ptr<buffer> &pBuffer, tagVR_t dataType, const char separator, const size_t unitSize, const size_t maxSize):
     writingDataHandler(pBuffer, dataType), m_separator(separator), m_unitSize(unitSize), m_maxSize(maxSize)
 {
@@ -212,41 +360,96 @@ writingDataHandlerString::~writingDataHandlerString()
     m_buffer->commit(commitMemory);
 }
 
+
+void writingDataHandlerString::throwNumberConversionError() const
+{
+    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert a number to " << dicomDictionary::getDicomDictionary()->enumDataTypeToString(getDataType()));
+}
+
 // Set the data element as a signed long
 ///////////////////////////////////////////////////////////
-void writingDataHandlerString::setSignedLong(const size_t index, const std::int32_t value)
+void writingDataHandlerString::setSignedLong(const size_t /* index */, const std::int32_t /* value */)
 {
     IMEBRA_FUNCTION_START();
 
-    std::ostringstream conversion;
-    conversion << value;
-    setString(index, conversion.str());
+    throwNumberConversionError();
 
     IMEBRA_FUNCTION_END();
 }
 
 // Set the data element as an unsigned long
 ///////////////////////////////////////////////////////////
-void writingDataHandlerString::setUnsignedLong(const size_t index, const std::uint32_t value)
+void writingDataHandlerString::setUnsignedLong(const size_t /* index */, const std::uint32_t /* value */)
 {
     IMEBRA_FUNCTION_START();
 
-    std::ostringstream conversion;
-    conversion << value;
-    setString(index, conversion.str());
+    throwNumberConversionError();
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a int16
+///////////////////////////////////////////////////////////
+void writingDataHandlerString::setInt16(const size_t /* index */, const std::int16_t /* value */)
+{
+    IMEBRA_FUNCTION_START();
+
+    throwNumberConversionError();
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a uint16
+///////////////////////////////////////////////////////////
+void writingDataHandlerString::setUint16(const size_t /* index */, const std::uint16_t /* value */)
+{
+    IMEBRA_FUNCTION_START();
+
+    throwNumberConversionError();
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a int8
+///////////////////////////////////////////////////////////
+void writingDataHandlerString::setInt8(const size_t /* index */, const std::int8_t /* value */)
+{
+    IMEBRA_FUNCTION_START();
+
+    throwNumberConversionError();
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a uint8
+///////////////////////////////////////////////////////////
+void writingDataHandlerString::setUint8(const size_t /* index */, const std::uint8_t /* value */)
+{
+    IMEBRA_FUNCTION_START();
+
+    throwNumberConversionError();
 
     IMEBRA_FUNCTION_END();
 }
 
 // Set the data element as a double
 ///////////////////////////////////////////////////////////
-void writingDataHandlerString::setDouble(const size_t index, const double value)
+void writingDataHandlerString::setDouble(const size_t /* index */, const double /* value */)
 {
     IMEBRA_FUNCTION_START();
 
-    std::ostringstream conversion;
-    conversion << value;
-    setString(index, conversion.str());
+    throwNumberConversionError();
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a double
+///////////////////////////////////////////////////////////
+void writingDataHandlerString::setFloat(const size_t /* index */, const float /* value */)
+{
+    IMEBRA_FUNCTION_START();
+
+    throwNumberConversionError();
 
     IMEBRA_FUNCTION_END();
 }
@@ -305,6 +508,115 @@ void writingDataHandlerString::validate() const
 
     IMEBRA_FUNCTION_END();
 }
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+//
+// writingDataHandlerStringNumbers
+//
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+
+writingDataHandlerStringNumbers::writingDataHandlerStringNumbers(const std::shared_ptr<buffer> &pBuffer, tagVR_t dataType, const char separator, const size_t unitSize, const size_t maxSize):
+    writingDataHandlerString(pBuffer, dataType, separator, unitSize, maxSize)
+{
+}
+
+// Set the data element as a signed long
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringNumbers::setSignedLong(const size_t index, const std::int32_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    convertToString<std::int32_t>(index, value);
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as an unsigned long
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringNumbers::setUnsignedLong(const size_t index, const std::uint32_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    convertToString<std::uint32_t>(index, value);
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a int16
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringNumbers::setInt16(const size_t index, const std::int16_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    convertToString<std::int16_t>(index, value);
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a uint16
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringNumbers::setUint16(const size_t index, const std::uint16_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    convertToString<std::uint16_t>(index, value);
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a int8
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringNumbers::setInt8(const size_t index, const std::int8_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    convertToString<std::int8_t>(index, value);
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a uint8
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringNumbers::setUint8(const size_t index, const std::uint8_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    convertToString<std::uint8_t>(index, value);
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a double
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringNumbers::setDouble(const size_t index, const double value)
+{
+    IMEBRA_FUNCTION_START();
+
+    convertToString<double>(index, value);
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a double
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringNumbers::setFloat(const size_t index, const float value)
+{
+    IMEBRA_FUNCTION_START();
+
+    convertToString<float>(index, value);
+
+    IMEBRA_FUNCTION_END();
+}
+
 
 
 } // namespace handlers

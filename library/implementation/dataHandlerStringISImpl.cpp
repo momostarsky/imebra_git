@@ -42,7 +42,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-readingDataHandlerStringIS::readingDataHandlerStringIS(const memory& parseMemory): readingDataHandlerString(parseMemory, tagVR_t::IS, '\\', 0x20)
+readingDataHandlerStringIS::readingDataHandlerStringIS(const memory& parseMemory): readingDataHandlerStringNumbers(parseMemory, tagVR_t::IS, '\\', 0x20)
 {
 }
 
@@ -67,7 +67,7 @@ double readingDataHandlerStringIS::getDouble(const size_t index) const
 }
 
 writingDataHandlerStringIS::writingDataHandlerStringIS(const std::shared_ptr<buffer> pBuffer):
-    writingDataHandlerString(pBuffer, tagVR_t::IS, '\\', 0, 12)
+    writingDataHandlerStringNumbers(pBuffer, tagVR_t::IS, '\\', 0, 12)
 {
 
 }
@@ -86,7 +86,20 @@ void writingDataHandlerStringIS::setDouble(const size_t index, const double valu
 {
     IMEBRA_FUNCTION_START();
 
+    if(value > static_cast<double>(std::numeric_limits<std::int32_t>::max()) || value < static_cast<double>(std::numeric_limits<std::int32_t>::lowest()))
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the value " << value << " to an integer (out of bounds)");
+    }
     setSignedLong(index, (std::int32_t)value);
+
+    IMEBRA_FUNCTION_END();
+}
+
+void writingDataHandlerStringIS::setFloat(const size_t index, const float value)
+{
+    IMEBRA_FUNCTION_START();
+
+    setDouble(index, static_cast<double>(value));
 
     IMEBRA_FUNCTION_END();
 }

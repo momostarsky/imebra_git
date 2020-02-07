@@ -241,6 +241,78 @@ std::uint32_t DataSet::getUnsignedLong(const TagId& tagId, size_t elementNumber,
     IMEBRA_FUNCTION_END_LOG();
 }
 
+std::int16_t DataSet::getInt16(const TagId& tagId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getInt16(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::int16_t DataSet::getInt16(const TagId& tagId, size_t elementNumber, std::int16_t defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getInt16(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::uint16_t DataSet::getUint16(const TagId& tagId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getUint16(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::uint16_t DataSet::getUint16(const TagId& tagId, size_t elementNumber, std::uint16_t defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getUint16(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::int8_t DataSet::getInt8(const TagId& tagId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getInt8(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::int8_t DataSet::getInt8(const TagId& tagId, size_t elementNumber, std::int8_t defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getInt8(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::uint8_t DataSet::getUint8(const TagId& tagId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getUint8(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::uint8_t DataSet::getUint8(const TagId& tagId, size_t elementNumber, std::uint8_t defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getUint8(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
 double DataSet::getDouble(const TagId& tagId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
@@ -250,11 +322,29 @@ double DataSet::getDouble(const TagId& tagId, size_t elementNumber) const
     IMEBRA_FUNCTION_END_LOG();
 }
 
+float DataSet::getFloat(const TagId& tagId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getFloat(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
 double DataSet::getDouble(const TagId& tagId, size_t elementNumber, double defaultValue) const
 {
     IMEBRA_FUNCTION_START();
 
     return m_pDataSet->getDouble(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+float DataSet::getFloat(const TagId& tagId, size_t elementNumber, float defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getFloat(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
 
     IMEBRA_FUNCTION_END_LOG();
 }
@@ -556,6 +646,78 @@ void MutableDataSet::setUnsignedLong(const TagId& tagId, std::uint32_t newValue)
     IMEBRA_FUNCTION_END_LOG();
 }
 
+void MutableDataSet::setInt8(const TagId& tagId, std::int8_t newValue, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setInt8(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setInt8(const TagId& tagId, std::int8_t newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setInt8(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setUint8(const TagId& tagId, std::uint8_t newValue, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setUint8(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setUint8(const TagId& tagId, std::uint8_t newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setUint16(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setInt16(const TagId& tagId, std::int16_t newValue, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setInt16(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setInt16(const TagId& tagId, std::int16_t newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setInt16(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setUint16(const TagId& tagId, std::uint16_t newValue, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setUint16(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setUint16(const TagId& tagId, std::uint16_t newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setUint16(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
 void MutableDataSet::setDouble(const TagId& tagId, double newValue, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
@@ -570,6 +732,24 @@ void MutableDataSet::setDouble(const TagId& tagId, double newValue)
     IMEBRA_FUNCTION_START();
 
     getDataSetImplementation(*this)->setDouble(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setFloat(const TagId& tagId, float newValue, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setFloat(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setFloat(const TagId& tagId, float newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setFloat(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
 
     IMEBRA_FUNCTION_END_LOG();
 }

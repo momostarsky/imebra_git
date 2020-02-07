@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -36,11 +36,6 @@ namespace handlers
 /// \brief This class is used as base class by the handlers
 ///         that manage the date and the time
 ///
-/// This class supplies the methods setSignedLong(), 
-///  setUnsignedLong(), setDouble(), getSignedLong(),
-///  getUnsignedLong(), getDouble(). Those methods work
-///  with time_t structure
-///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 class readingDataHandlerDateTimeBase : public readingDataHandlerString
@@ -49,35 +44,27 @@ class readingDataHandlerDateTimeBase : public readingDataHandlerString
 public:
     readingDataHandlerDateTimeBase(const memory& parseMemory, tagVR_t dataType);
 
-    virtual std::int32_t getSignedLong(const size_t index) const override;
-    virtual std::uint32_t getUnsignedLong(const size_t index) const override;
-    virtual double getDouble(const size_t index) const override;
-
 protected:
-	void parseDate(
+    void parseDate(
         const std::string& dateString,
         std::uint32_t* pYear,
         std::uint32_t* pMonth,
         std::uint32_t* pDay) const;
 
-	void parseTime(
+    void parseTime(
         const std::string& timeString,
         std::uint32_t* pHour,
         std::uint32_t* pMinutes,
         std::uint32_t* pSeconds,
         std::uint32_t* pNanoseconds,
-		std::int32_t* pOffsetHours,
-		std::int32_t* pOffsetMinutes) const;
+        std::int32_t* pOffsetHours,
+        std::int32_t* pOffsetMinutes) const;
 };
 
 class writingDataHandlerDateTimeBase: public writingDataHandlerString
 {
 public:
     writingDataHandlerDateTimeBase(const std::shared_ptr<buffer>& pBuffer, tagVR_t dataType, const size_t unitSize, const size_t maxSize);
-
-    virtual void setSignedLong(const size_t index, const std::int32_t value) override;
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) override;
-    virtual void setDouble(const size_t index, const double value) override;
 
 protected:
     std::string buildDate(

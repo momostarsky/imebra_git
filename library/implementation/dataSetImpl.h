@@ -381,7 +381,7 @@ public:
     //@{
 public:
     /// \brief Read the value of the requested tag and return
-    ///         it as a signed long.
+    ///         it as a int32.
     ///
     /// @param groupId The group to which the tag to be read
     ///                 belongs
@@ -406,6 +406,147 @@ public:
     std::int32_t getSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     std::int32_t getSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const;
+
+    /// \brief Retrieve a tag's value as an unsigned int32.
+    ///
+    /// Read the value of the requested tag and return it as
+    ///  an unsigned long.
+    ///
+    /// @param groupId The group to which the tag to be read
+    ///                 belongs
+    /// @param order   If the group is recurring in the file
+    ///                 (it appears several times), then use
+    ///                 this parameter to specify to which
+    ///                 group the group belongs.
+    ///                This parameter is used to deal with
+    ///                 old DICOM files, since the new one
+    ///                 should use the sequence items to
+    ///                 achieve the same result.
+    ///                It should be set to zero
+    /// @param tagId   The id of the tag to retrieve
+    /// @param elementNumber The element's number to retrieve.
+    ///                A buffer can store several elements:
+    ///                 this parameter specifies which element
+    ///                 must be retrieved.
+    ///                The first element's number is 0
+    /// @return        The tag's content, as an unsigned long
+    ///
+    ///////////////////////////////////////////////////////////
+    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+
+    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const;
+
+    /// \brief Read the value of the requested tag and return
+    ///         it as a int16.
+    ///
+    /// @param groupId The group to which the tag to be read
+    ///                 belongs
+    /// @param order   If the group is recurring in the file
+    ///                 (it appears several times), then use
+    ///                 this parameter to specify to which
+    ///                 group the group belongs
+    ///                This parameter is used to deal with
+    ///                 old DICOM files, since the new one
+    ///                 should use the sequence items to
+    ///                 achieve the same result.
+    ///                It should be set to zero
+    /// @param tagId   The id of the tag to retrieve
+    /// @param elementNumber The element's number to retrieve.
+    ///                A buffer can store several elements:
+    ///                 this parameter specifies which element
+    ///                 must be retrieved.
+    ///                The first element's number is 0
+    /// @return        The tag's content, as a int16
+    ///
+    ///////////////////////////////////////////////////////////
+    std::int16_t getInt16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+
+    std::int16_t getInt16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int16_t defaultValue) const;
+
+    /// \brief Retrieve a tag's value as an unsigned int32.
+    ///
+    /// Read the value of the requested tag and return it as
+    ///  an unsigned int16.
+    ///
+    /// @param groupId The group to which the tag to be read
+    ///                 belongs
+    /// @param order   If the group is recurring in the file
+    ///                 (it appears several times), then use
+    ///                 this parameter to specify to which
+    ///                 group the group belongs.
+    ///                This parameter is used to deal with
+    ///                 old DICOM files, since the new one
+    ///                 should use the sequence items to
+    ///                 achieve the same result.
+    ///                It should be set to zero
+    /// @param tagId   The id of the tag to retrieve
+    /// @param elementNumber The element's number to retrieve.
+    ///                A buffer can store several elements:
+    ///                 this parameter specifies which element
+    ///                 must be retrieved.
+    ///                The first element's number is 0
+    /// @return        The tag's content, as an unsigned long
+    ///
+    ///////////////////////////////////////////////////////////
+    std::uint16_t getUint16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+
+    std::uint16_t getUint16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint16_t defaultValue) const;
+
+    /// \brief Read the value of the requested tag and return
+    ///         it as a int8.
+    ///
+    /// @param groupId The group to which the tag to be read
+    ///                 belongs
+    /// @param order   If the group is recurring in the file
+    ///                 (it appears several times), then use
+    ///                 this parameter to specify to which
+    ///                 group the group belongs
+    ///                This parameter is used to deal with
+    ///                 old DICOM files, since the new one
+    ///                 should use the sequence items to
+    ///                 achieve the same result.
+    ///                It should be set to zero
+    /// @param tagId   The id of the tag to retrieve
+    /// @param elementNumber The element's number to retrieve.
+    ///                A buffer can store several elements:
+    ///                 this parameter specifies which element
+    ///                 must be retrieved.
+    ///                The first element's number is 0
+    /// @return        The tag's content, as a int16
+    ///
+    ///////////////////////////////////////////////////////////
+    std::int8_t getInt8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+
+    std::int8_t getInt8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int8_t defaultValue) const;
+
+    /// \brief Retrieve a tag's value as an unsigned int8.
+    ///
+    /// Read the value of the requested tag and return it as
+    ///  an unsigned int16.
+    ///
+    /// @param groupId The group to which the tag to be read
+    ///                 belongs
+    /// @param order   If the group is recurring in the file
+    ///                 (it appears several times), then use
+    ///                 this parameter to specify to which
+    ///                 group the group belongs.
+    ///                This parameter is used to deal with
+    ///                 old DICOM files, since the new one
+    ///                 should use the sequence items to
+    ///                 achieve the same result.
+    ///                It should be set to zero
+    /// @param tagId   The id of the tag to retrieve
+    /// @param elementNumber The element's number to retrieve.
+    ///                A buffer can store several elements:
+    ///                 this parameter specifies which element
+    ///                 must be retrieved.
+    ///                The first element's number is 0
+    /// @return        The tag's content, as an unsigned long
+    ///
+    ///////////////////////////////////////////////////////////
+    std::uint8_t getUint8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+
+    std::uint8_t getUint8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint8_t defaultValue) const;
 
     /// \brief Set a tag's value as a signed long.
     ///
@@ -440,36 +581,7 @@ public:
 
     void setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue);
 
-    /// \brief Retrieve a tag's value as an unsigned long.
-    ///
-    /// Read the value of the requested tag and return it as
-    ///  an unsigned long.
-    ///
-    /// @param groupId The group to which the tag to be read
-    ///                 belongs
-    /// @param order   If the group is recurring in the file
-    ///                 (it appears several times), then use
-    ///                 this parameter to specify to which
-    ///                 group the group belongs.
-    ///                This parameter is used to deal with
-    ///                 old DICOM files, since the new one
-    ///                 should use the sequence items to
-    ///                 achieve the same result.
-    ///                It should be set to zero
-    /// @param tagId   The id of the tag to retrieve
-    /// @param elementNumber The element's number to retrieve.
-    ///                A buffer can store several elements:
-    ///                 this parameter specifies which element
-    ///                 must be retrieved.
-    ///                The first element's number is 0
-    /// @return        The tag's content, as an unsigned long
-    ///
-    ///////////////////////////////////////////////////////////
-    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
-
-    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const;
-
-    /// \brief Set a tag's value as an unsigned long.
+    /// \brief Set a tag's value as an unsigned int32.
     ///
     /// If the specified tag doesn't exist, then a new one
     ///  will be created and inserted into the dataset.
@@ -502,6 +614,138 @@ public:
 
     void setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue);
 
+    /// \brief Set a tag's value as a int16.
+    ///
+    /// If the specified tag doesn't exist, then a new one
+    ///  will be created and inserted into the dataset.
+    ///
+    /// @param groupId The group to which the tag to be write
+    ///                 belongs
+    /// @param order   If the group is recurring in the file
+    ///                 (it appears several times), then use
+    ///                 this parameter to specify to which
+    ///                 group the group belongs.
+    ///                This parameter is used to deal with
+    ///                 old DICOM files, since the new one
+    ///                 should use the sequence items to
+    ///                 achieve the same result.
+    ///                It should be set to zero
+    /// @param tagId   The id of the tag to set
+    /// @param elementNumber The element's number to set.
+    ///                A buffer can store several elements:
+    ///                 this parameter specifies which element
+    ///                 must be set.
+    ///                The first element's number is 0
+    /// @param newValue the value to be written into the tag
+    /// @param tagVR if the specified tag doesn't exist
+    ///                 then the function will create a new
+    ///                 tag with the data type specified in
+    ///                 this parameter
+    ///
+    ///////////////////////////////////////////////////////////
+    void setInt16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int16_t newValue, tagVR_t tagVR);
+
+    void setInt16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int16_t newValue);
+
+    /// \brief Set a tag's value as an unsigned int16.
+    ///
+    /// If the specified tag doesn't exist, then a new one
+    ///  will be created and inserted into the dataset.
+    ///
+    /// @param groupId The group to which the tag to be write
+    ///                 belongs
+    /// @param order   If the group is recurring in the file
+    ///                 (it appears several times), then use
+    ///                 this parameter to specify to which
+    ///                 group the group belongs.
+    ///                This parameter is used to deal with
+    ///                 old DICOM files, since the new one
+    ///                 should use the sequence items to
+    ///                 achieve the same result.
+    ///                It should be set to zero
+    /// @param tagId   The id of the tag to set
+    /// @param elementNumber The element's number to set.
+    ///                A buffer can store several elements:
+    ///                 this parameter specifies which element
+    ///                 must be set.
+    ///                The first element's number is 0
+    /// @param newValue the value to be written into the tag
+    /// @param tagVR if the specified tag doesn't exist
+    ///                 then the function will create a new
+    ///                 tag with the data type specified in
+    ///                 this parameter
+    ///
+    ///////////////////////////////////////////////////////////
+    void setUint16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint16_t newValue, tagVR_t tagVR);
+
+    void setUint16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint16_t newValue);
+
+    /// \brief Set a tag's value as a int8.
+    ///
+    /// If the specified tag doesn't exist, then a new one
+    ///  will be created and inserted into the dataset.
+    ///
+    /// @param groupId The group to which the tag to be write
+    ///                 belongs
+    /// @param order   If the group is recurring in the file
+    ///                 (it appears several times), then use
+    ///                 this parameter to specify to which
+    ///                 group the group belongs.
+    ///                This parameter is used to deal with
+    ///                 old DICOM files, since the new one
+    ///                 should use the sequence items to
+    ///                 achieve the same result.
+    ///                It should be set to zero
+    /// @param tagId   The id of the tag to set
+    /// @param elementNumber The element's number to set.
+    ///                A buffer can store several elements:
+    ///                 this parameter specifies which element
+    ///                 must be set.
+    ///                The first element's number is 0
+    /// @param newValue the value to be written into the tag
+    /// @param tagVR if the specified tag doesn't exist
+    ///                 then the function will create a new
+    ///                 tag with the data type specified in
+    ///                 this parameter
+    ///
+    ///////////////////////////////////////////////////////////
+    void setInt8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int8_t newValue, tagVR_t tagVR);
+
+    void setInt8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int8_t newValue);
+
+    /// \brief Set a tag's value as an unsigned int8.
+    ///
+    /// If the specified tag doesn't exist, then a new one
+    ///  will be created and inserted into the dataset.
+    ///
+    /// @param groupId The group to which the tag to be write
+    ///                 belongs
+    /// @param order   If the group is recurring in the file
+    ///                 (it appears several times), then use
+    ///                 this parameter to specify to which
+    ///                 group the group belongs.
+    ///                This parameter is used to deal with
+    ///                 old DICOM files, since the new one
+    ///                 should use the sequence items to
+    ///                 achieve the same result.
+    ///                It should be set to zero
+    /// @param tagId   The id of the tag to set
+    /// @param elementNumber The element's number to set.
+    ///                A buffer can store several elements:
+    ///                 this parameter specifies which element
+    ///                 must be set.
+    ///                The first element's number is 0
+    /// @param newValue the value to be written into the tag
+    /// @param tagVR if the specified tag doesn't exist
+    ///                 then the function will create a new
+    ///                 tag with the data type specified in
+    ///                 this parameter
+    ///
+    ///////////////////////////////////////////////////////////
+    void setUint8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint8_t newValue, tagVR_t tagVR);
+
+    void setUint8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint8_t newValue);
+
     /// \brief Retrieve a tag's value as a double.
     ///
     /// Read the value of the requested tag and return it as
@@ -530,6 +774,10 @@ public:
     double getDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
     double getDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, double defaultValue) const;
+
+    float getFloat(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+
+    float getFloat(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, float defaultValue) const;
 
     /// \brief Set a tag's value as a double.
     ///
@@ -563,6 +811,39 @@ public:
     void setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue, tagVR_t tagVR);
 
     void setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, double newValue);
+
+    /// \brief Set a tag's value as a float.
+    ///
+    /// If the specified tag doesn't exist, then a new one
+    ///  will be created and inserted into the dataset.
+    ///
+    /// @param groupId The group to which the tag to be write
+    ///                 belongs
+    /// @param order   If the group is recurring in the file
+    ///                 (it appears several times), then use
+    ///                 this parameter to specify to which
+    ///                 group the group belongs.
+    ///                This parameter is used to deal with
+    ///                 old DICOM files, since the new one
+    ///                 should use the sequence items to
+    ///                 achieve the same result.
+    ///                It should be set to zero
+    /// @param tagId   The id of the tag to set
+    /// @param elementNumber The element's number to set.
+    ///                A buffer can store several elements:
+    ///                 this parameter specifies which element
+    ///                 must be set.
+    ///                The first element's number is 0
+    /// @param newValue the value to be written into the tag
+    /// @param tagVR if the specified tag doesn't exist
+    ///                 then the function will create a new
+    ///                 tag with the data type specified in
+    ///                 this parameter
+    ///
+    ///////////////////////////////////////////////////////////
+    void setFloat(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, float newValue, tagVR_t tagVR);
+
+    void setFloat(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, float newValue);
 
     /// \brief Retrieve a tag's value as a string.
     ///        getUnicodeString() is preferred over this

@@ -23,11 +23,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <iomanip>
 #include <type_traits>
 #include <numeric>
+#include <string>
 #include "../include/imebra/exceptions.h"
 #include "exceptionImpl.h"
 #include "dataHandlerImpl.h"
 #include "memoryImpl.h"
 #include "charsetConversionImpl.h"
+
 
 
 namespace imebra
@@ -174,31 +176,216 @@ public:
 
     virtual bool isSigned() const
     {
-        IMEBRA_FUNCTION_START();
-
-        dataHandlerType firstValue((dataHandlerType) -1);
-        dataHandlerType secondValue((dataHandlerType) 0);
-        return firstValue < secondValue;
-
-        IMEBRA_FUNCTION_END();
+        return std::is_signed<dataHandlerType>::value;
     }
 
     virtual bool isFloat() const
     {
-        IMEBRA_FUNCTION_START();
-
-        return !std::numeric_limits<dataHandlerType>::is_integer;
-
-        IMEBRA_FUNCTION_END();
+        return !std::is_floating_point<dataHandlerType>::value;
     }
 
     virtual size_t getUnitSize() const
     {
-        IMEBRA_FUNCTION_START();
-
         return sizeof(dataHandlerType);
+    }
 
-        IMEBRA_FUNCTION_END();
+    // Specialized getValue() methods with range checks
+    //
+    ///////////////////////////////////////////////////////////
+    template<typename U>
+    typename std::enable_if<std::is_same<U, dataHandlerType>::value, U>::type getValue(const size_t index) const
+    {
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
+
+        return reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
+    }
+
+    template<typename U>
+    typename std::enable_if<
+                   std::is_integral<U>::value == std::is_integral<dataHandlerType>::value &&
+                   (std::is_signed<U>::value == std::is_signed<dataHandlerType>::value || std::is_signed<U>::value) &&
+                   sizeof(dataHandlerType) < sizeof(U),
+                   U>::type getValue(const size_t index) const
+    {
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
+
+        return static_cast<U>(reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index]);
+    }
+
+    template<typename U>
+    typename std::enable_if<
+                   std::is_integral<U>::value == std::is_integral<dataHandlerType>::value &&
+                   std::is_signed<U>::value == std::is_signed<dataHandlerType>::value &&
+                   sizeof(U) < sizeof(dataHandlerType),
+                   U>::type getValue(const size_t index) const
+    {
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
+
+        dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
+        if(temp < std::numeric_limits<U>::lowest() || temp > std::numeric_limits<U>::max())
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
+        }
+
+        return static_cast<U>(temp);
+    }
+
+    template<typename U>
+    typename std::enable_if<
+                   std::is_integral<U>::value &&
+                   std::is_integral<dataHandlerType>::value &&
+                   std::is_signed<U>::value &&
+                   !std::is_signed<dataHandlerType>::value &&
+                   sizeof(U) < sizeof(dataHandlerType),
+                   U>::type getValue(const size_t index) const
+    {
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
+
+        dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
+        if(temp > static_cast<dataHandlerType>(std::numeric_limits<U>::max()))
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to an integer with lower precision (out of range)")
+        }
+
+        return static_cast<U>(temp);
+    }
+
+    template<typename U>
+    typename std::enable_if<
+                   std::is_integral<U>::value &&
+                   std::is_integral<dataHandlerType>::value &&
+                   !std::is_signed<U>::value &&
+                   std::is_signed<dataHandlerType>::value &&
+                   sizeof(U) < sizeof(dataHandlerType),
+                   U>::type getValue(const size_t index) const
+    {
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
+
+        dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
+        if(temp < 0 || temp > static_cast<dataHandlerType>(std::numeric_limits<U>::max()))
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to an integer with lower precision (out of range)")
+        }
+
+        return static_cast<U>(temp);
+    }
+
+    template<typename U>
+    typename std::enable_if<
+                   std::is_integral<U>::value &&
+                   std::is_integral<dataHandlerType>::value &&
+                   !std::is_signed<U>::value &&
+                   std::is_signed<dataHandlerType>::value &&
+                   sizeof(U) == sizeof(dataHandlerType),
+                   U>::type getValue(const size_t index) const
+    {
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
+
+        dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
+        if(temp < 0)
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert a signed integer to an unsigned integer")
+        }
+
+        return static_cast<U>(temp);
+    }
+
+    template<typename U>
+    typename std::enable_if<
+                   std::is_integral<U>::value &&
+                   std::is_integral<dataHandlerType>::value &&
+                   std::is_signed<U>::value &&
+                   !std::is_signed<dataHandlerType>::value &&
+                   sizeof(U) == sizeof(dataHandlerType),
+                   U>::type getValue(const size_t index) const
+    {
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
+
+        dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
+        if(temp > static_cast<dataHandlerType>(std::numeric_limits<U>::max()))
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert an unsigned integer to a signed integer")
+        }
+
+        return static_cast<U>(temp);
+    }
+
+    template<typename U>
+    typename std::enable_if<
+                   std::is_integral<U>::value &&
+                   std::is_integral<dataHandlerType>::value &&
+                   !std::is_signed<U>::value &&
+                   std::is_signed<dataHandlerType>::value &&
+                   sizeof(dataHandlerType) < sizeof(U),
+                   U>::type getValue(const size_t index) const
+    {
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
+
+        dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
+        if(temp < 0)
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to an unsigned integer (negative value)")
+        }
+
+        return static_cast<U>(temp);
+    }
+
+    template<typename U>
+    typename std::enable_if<
+                   std::is_floating_point<U>::value &&
+                   std::is_integral<dataHandlerType>::value,
+                   U>::type getValue(const size_t index) const
+    {
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
+
+        return static_cast<U>(reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index]);
+    }
+
+    template<typename U>
+    typename std::enable_if<
+                   std::is_integral<U>::value &&
+                   std::is_floating_point<dataHandlerType>::value,
+                   U>::type getValue(const size_t index) const
+    {
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
+
+        dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
+        if(temp < static_cast<dataHandlerType>(std::numeric_limits<U>::lowest()) || temp > static_cast<dataHandlerType>(std::numeric_limits<U>::max()))
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
+        }
+
+        return static_cast<U>(temp);
     }
 
     // Retrieve the data element as a signed long
@@ -207,11 +394,7 @@ public:
     {
         IMEBRA_FUNCTION_START();
 
-        if(index >= getSize())
-        {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
-        }
-        return (std::int32_t) (((const dataHandlerType*)m_pMemory->data())[index]);
+        return getValue<std::int32_t>(index);
 
         IMEBRA_FUNCTION_END();
     }
@@ -222,11 +405,51 @@ public:
     {
         IMEBRA_FUNCTION_START();
 
-        if(index >= getSize())
-        {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
-        }
-        return (std::uint32_t) (((const dataHandlerType*)m_pMemory->data())[index]);
+        return getValue<std::uint32_t>(index);
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    // Retrieve the data element as std::int16_t
+    ///////////////////////////////////////////////////////////
+    virtual std::int16_t getInt16(const size_t index) const
+    {
+        IMEBRA_FUNCTION_START();
+
+        return getValue<std::int16_t>(index);
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    // Retrieve the data element an std::uint16_t
+    ///////////////////////////////////////////////////////////
+    virtual std::uint16_t getUint16(const size_t index) const
+    {
+        IMEBRA_FUNCTION_START();
+
+        return getValue<std::uint16_t>(index);
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    // Retrieve the data element as std::int16_t
+    ///////////////////////////////////////////////////////////
+    virtual std::int8_t getInt8(const size_t index) const
+    {
+        IMEBRA_FUNCTION_START();
+
+        return getValue<std::int8_t>(index);
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    // Retrieve the data element an std::uint16_t
+    ///////////////////////////////////////////////////////////
+    virtual std::uint8_t getUint8(const size_t index) const
+    {
+        IMEBRA_FUNCTION_START();
+
+        return getValue<std::uint8_t>(index);
 
         IMEBRA_FUNCTION_END();
     }
@@ -237,11 +460,18 @@ public:
     {
         IMEBRA_FUNCTION_START();
 
-        if(index >= getSize())
-        {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
-        }
-        return (double) (((const dataHandlerType*)m_pMemory->data())[index]);
+        return getValue<double>(index);
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    // Retrieve the data element as a double
+    ///////////////////////////////////////////////////////////
+    virtual float getFloat(const size_t index) const
+    {
+        IMEBRA_FUNCTION_START();
+
+        return getValue<float>(index);
 
         IMEBRA_FUNCTION_END();
     }
@@ -257,19 +487,7 @@ public:
             IMEBRA_THROW(MissingItemError, "Missing item " << index);
         }
 
-        std::ostringstream convStream;
-
-        if(std::is_same<dataHandlerType, std::uint8_t>::value ||
-                std::is_same<dataHandlerType, std::int8_t>::value )
-        {
-            int tempValue = (int) (((const dataHandlerType*)m_pMemory->data())[index]);
-            convStream << tempValue;
-        }
-        else
-        {
-            convStream << (((const dataHandlerType*)m_pMemory->data())[index]);
-        }
-        return convStream.str();
+        return std::to_string(+(reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index]));
 
         IMEBRA_FUNCTION_END();
     }
@@ -280,12 +498,12 @@ public:
     {
         IMEBRA_FUNCTION_START();
 
-        std::string ansiString = getString(index);
+        if(index >= getSize())
+        {
+            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        }
 
-        charsetsList_t charsets;
-        charsets.push_back("ISO_IR 6");
-
-        return dicomConversion::convertToUnicode(ansiString, charsets);
+        return std::to_wstring(+(reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index]));
 
         IMEBRA_FUNCTION_END();
     }
@@ -554,32 +772,278 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    // Set the data element as a signed long
+    // Specialized setValue() methods with range checks
+    //
+    ///////////////////////////////////////////////////////////
+    template<typename U>
+    void setValue(const size_t index, typename std::enable_if<std::is_same<U, dataHandlerType>::value, U>::type value)
+    {
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
+
+        reinterpret_cast<dataHandlerType*>(m_pMemory->data())[index] = value;
+    }
+
+    template<typename U>
+    void setValue(
+            const size_t index,
+            typename std::enable_if<
+                           std::is_integral<dataHandlerType>::value == std::is_integral<U>::value &&
+                           (std::is_signed<dataHandlerType>::value == std::is_signed<U>::value || std::is_signed<dataHandlerType>::value) &&
+                           sizeof(U) < sizeof(dataHandlerType),
+                           U>::type value)
+    {
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
+
+        reinterpret_cast<dataHandlerType*>(m_pMemory->data())[index] = static_cast<dataHandlerType>(value);
+    }
+
+    template<typename U>
+    void setValue(
+            const size_t index,
+            typename std::enable_if<
+                           std::is_integral<dataHandlerType>::value == std::is_integral<U>::value &&
+                           std::is_signed<dataHandlerType>::value == std::is_signed<U>::value &&
+                           sizeof(dataHandlerType) < sizeof(U),
+                           U>::type value)
+    {
+        if(value < std::numeric_limits<dataHandlerType>::lowest() || value > std::numeric_limits<dataHandlerType>::max())
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
+        }
+
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
+
+        reinterpret_cast<dataHandlerType*>(m_pMemory->data())[index] = static_cast<dataHandlerType>(value);
+    }
+
+    template<typename U>
+    void setValue(
+            const size_t index,
+            typename std::enable_if<
+                           std::is_integral<dataHandlerType>::value &&
+                           std::is_integral<U>::value &&
+                           std::is_signed<dataHandlerType>::value &&
+                           !std::is_signed<U>::value &&
+                           sizeof(dataHandlerType) < sizeof(U),
+                           U>::type value)
+    {
+        if(value > static_cast<U>(std::numeric_limits<dataHandlerType>::max()))
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
+        }
+
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
+
+        reinterpret_cast<dataHandlerType*>(m_pMemory->data())[index] = static_cast<dataHandlerType>(value);
+    }
+
+    template<typename U>
+    void setValue(
+            const size_t index,
+            typename std::enable_if<
+                           std::is_integral<dataHandlerType>::value &&
+                           std::is_integral<U>::value &&
+                           !std::is_signed<dataHandlerType>::value &&
+                           std::is_signed<U>::value &&
+                           sizeof(dataHandlerType) < sizeof(U),
+                           U>::type value)
+    {
+        if(value < 0 || value > static_cast<U>(std::numeric_limits<dataHandlerType>::max()))
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
+        }
+
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
+
+        reinterpret_cast<dataHandlerType*>(m_pMemory->data())[index] = static_cast<dataHandlerType>(value);
+    }
+
+    template<typename U>
+    void setValue(
+            const size_t index,
+            typename std::enable_if<
+                           std::is_integral<dataHandlerType>::value &&
+                           std::is_integral<U>::value &&
+                           !std::is_signed<dataHandlerType>::value &&
+                           std::is_signed<U>::value &&
+                           sizeof(dataHandlerType) == sizeof(U),
+                           U>::type value)
+    {
+        if(value < 0)
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert a signed integer to an unsigned integer")
+        }
+
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
+
+        reinterpret_cast<dataHandlerType*>(m_pMemory->data())[index] = static_cast<dataHandlerType>(value);
+    }
+
+    template<typename U>
+    void setValue(
+            const size_t index,
+            typename std::enable_if<
+                           std::is_integral<dataHandlerType>::value &&
+                           std::is_integral<U>::value &&
+                           std::is_signed<dataHandlerType>::value &&
+                           !std::is_signed<U>::value &&
+                           sizeof(dataHandlerType) == sizeof(U),
+                           U>::type value)
+    {
+        if(value > static_cast<U>(std::numeric_limits<dataHandlerType>::max()))
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert an unsigned integer to a signed integer")
+        }
+
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
+
+        reinterpret_cast<dataHandlerType*>(m_pMemory->data())[index] = static_cast<dataHandlerType>(value);
+    }
+
+    template<typename U>
+    void setValue(
+            const size_t index,
+            typename std::enable_if<
+                           std::is_integral<dataHandlerType>::value &&
+                           std::is_integral<U>::value &&
+                           !std::is_signed<dataHandlerType>::value &&
+                           std::is_signed<U>::value &&
+                           sizeof(U) < sizeof(dataHandlerType),
+                           U>::type value)
+    {
+        if(value < 0)
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to an unsigned integer (negative value)")
+        }
+
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
+
+        reinterpret_cast<dataHandlerType*>(m_pMemory->data())[index] = static_cast<dataHandlerType>(value);
+    }
+
+    template<typename U>
+    void setValue(
+            const size_t index,
+            typename std::enable_if<
+                           std::is_floating_point<dataHandlerType>::value &&
+                           std::is_integral<U>::value,
+                           U>::type value)
+    {
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
+
+        reinterpret_cast<dataHandlerType*>(m_pMemory->data())[index] = static_cast<dataHandlerType>(value);
+    }
+
+    template<typename U>
+    void setValue(
+            const size_t index,
+            typename std::enable_if<
+                           std::is_integral<dataHandlerType>::value &&
+                           std::is_floating_point<U>::value,
+                           U>::type value)
+    {
+        if(value < static_cast<U>(std::numeric_limits<dataHandlerType>::lowest()) || value > static_cast<U>(std::numeric_limits<dataHandlerType>::max()))
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to an unsigned integer (negative value)")
+        }
+
+        if(index >= getSize())
+        {
+            setSize(index + 1);
+        }
+
+        reinterpret_cast<dataHandlerType*>(m_pMemory->data())[index] = static_cast<dataHandlerType>(value);
+    }
+
+    // Set the data element as a std::int32_t
     ///////////////////////////////////////////////////////////
     virtual void setSignedLong(const size_t index, const std::int32_t value) override
     {
         IMEBRA_FUNCTION_START();
 
-        if(index >= getSize())
-        {
-            setSize(index + 1);
-        }
-        ((dataHandlerType*)m_pMemory->data())[index] = (dataHandlerType)value;
+        setValue<std::int32_t>(index, value);
 
         IMEBRA_FUNCTION_END();
     }
 
-    // Set the data element as an unsigned long
+    // Set the data element as a std::uint32_t
     ///////////////////////////////////////////////////////////
     virtual void setUnsignedLong(const size_t index, const std::uint32_t value) override
     {
         IMEBRA_FUNCTION_START();
 
-        if(index >= getSize())
-        {
-            setSize(index + 1);
-        }
-        ((dataHandlerType*)m_pMemory->data())[index] = (dataHandlerType)value;
+        setValue<std::uint32_t>(index, value);
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    // Set the data element as a std::int16_t
+    ///////////////////////////////////////////////////////////
+    virtual void setInt16(const size_t index, const std::int16_t value) override
+    {
+        IMEBRA_FUNCTION_START();
+
+        setValue<std::int16_t>(index, value);
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    // Set the data element as a std::uint16_t
+    ///////////////////////////////////////////////////////////
+    virtual void setUint16(const size_t index, const std::uint16_t value) override
+    {
+        IMEBRA_FUNCTION_START();
+
+        setValue<std::uint16_t>(index, value);
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    // Set the data element as a std::int8_t
+    ///////////////////////////////////////////////////////////
+    virtual void setInt8(const size_t index, const std::int8_t value) override
+    {
+        IMEBRA_FUNCTION_START();
+
+        setValue<std::int8_t>(index, value);
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    // Set the data element as a std::uint8_t
+    ///////////////////////////////////////////////////////////
+    virtual void setUint8(const size_t index, const std::uint8_t value) override
+    {
+        IMEBRA_FUNCTION_START();
+
+        setValue<std::uint8_t>(index, value);
 
         IMEBRA_FUNCTION_END();
     }
@@ -590,13 +1054,78 @@ public:
     {
         IMEBRA_FUNCTION_START();
 
-        if(index >= getSize())
-        {
-            setSize(index + 1);
-        }
-        ((dataHandlerType*)m_pMemory->data())[index] = (dataHandlerType)value;
+        setValue<double>(index, value);
 
         IMEBRA_FUNCTION_END();
+    }
+
+    // Set the data element as a float
+    ///////////////////////////////////////////////////////////
+    virtual void setFloat(const size_t index, const float value) override
+    {
+        IMEBRA_FUNCTION_START();
+
+        setValue<float>(index, value);
+
+        IMEBRA_FUNCTION_END();
+    }
+
+    template<class S, typename U = dataHandlerType>
+    void setStringConvert(const size_t index,
+            const typename std::enable_if<std::is_integral<U>::value &&
+                std::is_signed<U>::value, S>::type& value)
+    {
+        try
+        {
+            long long numericValue(std::stoll(value));
+            setValue<unsigned long long>(index, numericValue);
+        }
+        catch (const std::out_of_range& )
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the string to a number (out of range)");
+        }
+        catch(const std::invalid_argument& )
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the string to a number");
+        }
+    }
+
+    template<class S, typename U = dataHandlerType>
+    void setStringConvert(const size_t index,
+            const typename std::enable_if<std::is_integral<U>::value &&
+                !std::is_signed<U>::value, S>::type& value)
+    {
+        try
+        {
+            unsigned long long numericValue(std::stoull(value));
+            setValue<unsigned long long>(index, numericValue);
+        }
+        catch (const std::out_of_range& )
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the string to a number (out of range)");
+        }
+        catch(const std::invalid_argument& )
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the string to a number");
+        }
+    }
+
+    template<class S, typename U = dataHandlerType>
+    void setStringConvert(const size_t index,
+            const typename std::enable_if<std::is_floating_point<U>::value, S>::type& value)
+    {
+        try
+        {
+            setValue<double>(index, std::stod(value));
+        }
+        catch (const std::out_of_range& )
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the string to a number (out of range)");
+        }
+        catch(const std::invalid_argument& )
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the string to a number");
+        }
     }
 
     // Set the data element as a string
@@ -605,31 +1134,7 @@ public:
     {
         IMEBRA_FUNCTION_START();
 
-        std::istringstream convStream(value);
-        dataHandlerType tempValue;
-        if(std::is_same<dataHandlerType, std::uint8_t>::value ||
-                std::is_same<dataHandlerType, std::int8_t>::value)
-        {
-            int tempValue1;
-            if(!(convStream >> tempValue1))
-            {
-                IMEBRA_THROW(DataHandlerConversionError, "Cannot convert " << value << " to a number");
-            }
-            tempValue = (dataHandlerType)tempValue1;
-        }
-        else
-        {
-            if(!(convStream >> tempValue))
-            {
-                IMEBRA_THROW(DataHandlerConversionError, "Cannot convert " << value << " to a number");
-            }
-        }
-
-        if(index >= getSize())
-        {
-            setSize(index + 1);
-        }
-        ((dataHandlerType*)m_pMemory->data())[index] = tempValue;
+        setStringConvert<std::string>(index, value);
 
         IMEBRA_FUNCTION_END();
     }
@@ -640,10 +1145,7 @@ public:
     {
         IMEBRA_FUNCTION_START();
 
-        charsetsList_t charsets;
-        charsets.push_back("ISO_IR 6");
-
-        setString(index, dicomConversion::convertFromUnicode(value, charsets));
+        setStringConvert<std::wstring>(index, value);
 
         IMEBRA_FUNCTION_END();
     }

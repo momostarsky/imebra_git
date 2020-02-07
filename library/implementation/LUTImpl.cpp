@@ -54,7 +54,7 @@ lut::lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, s
 
     m_size = descriptorSignedToUnsigned(pDescriptor->getSignedLong(0));
 
-    m_firstMapped = (std::int32_t)pDescriptor->getUnsignedLong(1);
+    m_firstMapped = pDescriptor->getSignedLong(1);
     if(signedData)
     {
         if(m_firstMapped >= 32768)

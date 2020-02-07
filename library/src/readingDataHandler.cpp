@@ -79,11 +79,56 @@ std::uint32_t ReadingDataHandler::getUnsignedLong(size_t index) const
     IMEBRA_FUNCTION_END_LOG();
 }
 
+std::int16_t ReadingDataHandler::getInt16(size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataHandler->getInt16(index);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::uint16_t ReadingDataHandler::getUint16(size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataHandler->getUint16(index);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::int8_t ReadingDataHandler::getInt8(size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataHandler->getInt8(index);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::uint8_t ReadingDataHandler::getUint8(size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataHandler->getUint8(index);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
 double ReadingDataHandler::getDouble(size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
     return m_pDataHandler->getDouble(index);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+float ReadingDataHandler::getFloat(size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataHandler->getFloat(index);
 
     IMEBRA_FUNCTION_END_LOG();
 }

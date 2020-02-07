@@ -102,6 +102,8 @@ public:
     /// If the buffer's value cannot be converted to a signed long integer
     /// then throws DataHandlerConversionError.
     ///
+    /// Throws MissingItemError if the requested index does not exist.
+    ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \return the tag's value as a signed 32 bit integer
@@ -114,6 +116,8 @@ public:
     /// If the buffer's value cannot be converted to an unsigned long integer
     /// then throws DataHandlerConversionError.
     ///
+    /// Throws MissingItemError if the requested index does not exist.
+    ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \return the tag's value as an unsigned 32 bit integer
@@ -121,10 +125,68 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     std::uint32_t getUnsignedLong(size_t index) const;
 
+    /// \brief Retrieve a buffer's value as signed long integer (16 bit).
+    ///
+    /// If the buffer's value cannot be converted to a signed long integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// Throws MissingItemError if the requested index does not exist.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \return the tag's value as a signed 32 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::int16_t getInt16(size_t index) const;
+
+    /// \brief Retrieve a buffer's value as an unsigned long integer (16 bit).
+    ///
+    /// If the buffer's value cannot be converted to an unsigned long integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// Throws MissingItemError if the requested index does not exist.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \return the tag's value as an unsigned 32 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::uint16_t getUint16(size_t index) const;
+
+    /// \brief Retrieve a buffer's value as signed long integer (8 bit).
+    ///
+    /// If the buffer's value cannot be converted to a signed long integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// Throws MissingItemError if the requested index does not exist.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \return the tag's value as a signed 32 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::int8_t getInt8(size_t index) const;
+
+    /// \brief Retrieve a buffer's value as an unsigned long integer (8 bit).
+    ///
+    /// If the buffer's value cannot be converted to an unsigned long integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// Throws MissingItemError if the requested index does not exist.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \return the tag's value as an unsigned 32 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::uint8_t getUint8(size_t index) const;
+
     /// \brief Retrieve a buffer's value as a double floating point value (64 bit).
     ///
     /// If the buffer's value cannot be converted to a double value then throws
     /// DataHandlerConversionError.
+    ///
+    /// Throws MissingItemError if the requested index does not exist.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -133,10 +195,26 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     double getDouble(size_t index) const;
 
+    /// \brief Retrieve a buffer's value as a floating point value (32 bit).
+    ///
+    /// If the buffer's value cannot be converted to a float value then throws
+    /// DataHandlerConversionError.
+    ///
+    /// Throws MissingItemError if the requested index does not exist.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \return the tag's value as a floating point value (32 bit)
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    float getFloat(size_t index) const;
+
     /// \brief Retrieve a buffer's value as a UTF8 string.
     ///
     /// If the buffer's value cannot be converted to a string then throws
     /// DataHandlerConversionError.
+    ///
+    /// Throws MissingItemError if the requested index does not exist.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -151,6 +229,8 @@ public:
     /// If the buffer's value cannot be converted to a string then throws
     /// DataHandlerConversionError.
     ///
+    /// Throws MissingItemError if the requested index does not exist.
+    ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \return the tag's value as a Unicode string
@@ -164,6 +244,8 @@ public:
     /// If the buffer's value cannot be converted to a date or time then throws
     /// DataHandlerConversionError.
     ///
+    /// Throws MissingItemError if the requested index does not exist.
+    ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \return the tag's value as a date or time
@@ -176,6 +258,8 @@ public:
     /// If the buffer's value cannot be converted to an Age then throws
     /// DataHandlerConversionError.
     ///
+    /// Throws MissingItemError if the requested index does not exist.
+    ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \return the tag's value as an Age
@@ -187,6 +271,8 @@ public:
     ///
     /// If the tag's value cannot be converted to a patient name then throws
     ///  DataHandlerConversionError.
+    ///
+    /// Throws MissingItemError if the requested index does not exist.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
@@ -201,6 +287,8 @@ public:
     ///
     /// If the tag's value cannot be converted to a patient name then throws
     ///  DataHandlerConversionError.
+    ///
+    /// Throws MissingItemError if the requested index does not exist.
     ///
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()

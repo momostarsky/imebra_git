@@ -19,6 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "exceptionImpl.h"
 #include "dataHandlerStringUnicodeImpl.h"
+#include "dataHandlerStringImpl.h"
 #include "memoryImpl.h"
 #include "bufferImpl.h"
 
@@ -86,13 +87,7 @@ std::int32_t readingDataHandlerStringUnicode::getSignedLong(const size_t index) 
 {
     IMEBRA_FUNCTION_START();
 
-    std::wistringstream conversion(getUnicodeString(index));
-    std::int32_t value;
-    if(!(conversion >> value))
-    {
-        IMEBRA_THROW(DataHandlerConversionError, "The string is not a number");
-    }
-    return value;
+    return convertFromString<std::wstring, std::int32_t>(getUnicodeString(index));
 
     IMEBRA_FUNCTION_END();
 }
@@ -103,13 +98,51 @@ std::uint32_t readingDataHandlerStringUnicode::getUnsignedLong(const size_t inde
 {
     IMEBRA_FUNCTION_START();
 
-    std::wistringstream conversion(getUnicodeString(index));
-    std::uint32_t value;
-    if(!(conversion >> value))
-    {
-        IMEBRA_THROW(DataHandlerConversionError, "The string is not a number");
-    }
-    return value;
+    return convertFromString<std::wstring, std::uint32_t>(getUnicodeString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a int16
+///////////////////////////////////////////////////////////
+std::int16_t readingDataHandlerStringUnicode::getInt16(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::wstring, std::int16_t>(getUnicodeString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a uint16
+///////////////////////////////////////////////////////////
+std::uint16_t readingDataHandlerStringUnicode::getUint16(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::wstring, std::uint16_t>(getUnicodeString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a int8
+///////////////////////////////////////////////////////////
+std::int8_t readingDataHandlerStringUnicode::getInt8(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::wstring, std::int8_t>(getUnicodeString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a uint8
+///////////////////////////////////////////////////////////
+std::uint8_t readingDataHandlerStringUnicode::getUint8(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::wstring, std::uint8_t>(getUnicodeString(index));
 
     IMEBRA_FUNCTION_END();
 }
@@ -120,13 +153,18 @@ double readingDataHandlerStringUnicode::getDouble(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-    std::wistringstream conversion(getUnicodeString(index));
-    double value;
-    if(!(conversion >> value))
-    {
-        IMEBRA_THROW(DataHandlerConversionError, "The string is not a number");
-    }
-    return value;
+    return convertFromString<std::wstring, double>(getUnicodeString(index));
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Get the data element as a float
+///////////////////////////////////////////////////////////
+float readingDataHandlerStringUnicode::getFloat(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return convertFromString<std::wstring, float>(getUnicodeString(index));
 
     IMEBRA_FUNCTION_END();
 }
@@ -204,9 +242,66 @@ void writingDataHandlerStringUnicode::setUnsignedLong(const size_t index, const 
     IMEBRA_FUNCTION_END();
 }
 
+// Set the data element as a int16
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringUnicode::setInt16(const size_t index, const std::int16_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    convertToString<std::int16_t>(index, value);
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a uint16
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringUnicode::setUint16(const size_t index, const std::uint16_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    convertToString<std::uint16_t>(index, value);
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a int8
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringUnicode::setInt8(const size_t index, const std::int8_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    convertToString<std::int8_t>(index, value);
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a uint8
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringUnicode::setUint8(const size_t index, const std::uint8_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    convertToString<std::uint8_t>(index, value);
+
+    IMEBRA_FUNCTION_END();
+}
+
 // Set the data element as a double
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringUnicode::setDouble(const size_t index, const double value)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::wostringstream conversion;
+    conversion << value;
+    setUnicodeString(index, conversion.str());
+
+    IMEBRA_FUNCTION_END();
+}
+
+// Set the data element as a float
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringUnicode::setFloat(const size_t index, const float value)
 {
     IMEBRA_FUNCTION_START();
 

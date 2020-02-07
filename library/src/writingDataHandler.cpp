@@ -106,11 +106,56 @@ void WritingDataHandler::setUnsignedLong(size_t index, std::uint32_t value)
     IMEBRA_FUNCTION_END_LOG();
 }
 
+void WritingDataHandler::setInt16(size_t index, std::int16_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setInt16(index, value);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void WritingDataHandler::setUint16(size_t index, std::uint16_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setUint16(index, value);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void WritingDataHandler::setInt8(size_t index, std::int8_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setInt8(index, value);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void WritingDataHandler::setUint8(size_t index, std::uint8_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setUint8(index, value);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
 void WritingDataHandler::setDouble(size_t index, double value)
 {
     IMEBRA_FUNCTION_START();
 
     m_pDataHandler->setDouble(index, value);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void WritingDataHandler::setFloat(size_t index, float value)
+{
+    IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setFloat(index, value);
 
     IMEBRA_FUNCTION_END_LOG();
 }
