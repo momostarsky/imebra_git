@@ -6,12 +6,11 @@ build_script:
 - cmd: >-
     cmake --help
 
-
     mkdir build_imebra
 
     cd build_imebra
 
-    cmake -G "Visual Studio 14 2015 Win64" ..
+    cmake ..
 
     cmake --build . --config Release
 
