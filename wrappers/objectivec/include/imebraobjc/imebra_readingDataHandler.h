@@ -71,7 +71,35 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \return the tag's value as a signed 32 bit integer
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(int) getSignedLong:(unsigned int)index error:(NSError**)pError
+    -(signed int) getSignedLong:(unsigned int)index error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a buffer's value as signed short integer (16 bit).
+    ///
+    /// If the buffer's value cannot be converted to a signed long integer
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param pError set to a NSError derived class in case of error
+    /// \return the tag's value as a signed 16 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(signed short) getInt16:(unsigned int)index error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a buffer's value as signed char integer (8 bit).
+    ///
+    /// If the buffer's value cannot be converted to a signed long integer
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param pError set to a NSError derived class in case of error
+    /// \return the tag's value as a signed 8 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(signed char) getInt8:(unsigned int)index error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Retrieve a buffer's value as an unsigned long integer (32 bit).
@@ -88,6 +116,34 @@ If you do not want to be bound by the GPL terms (such as the requirement
     -(unsigned int) getUnsignedLong:(unsigned int)index error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
+    /// \brief Retrieve a buffer's value as an unsigned short integer (16 bit).
+    ///
+    /// If the buffer's value cannot be converted to a unsigned long integer
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param pError set to a NSError derived class in case of error
+    /// \return the tag's value as an unsigned 16 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(unsigned short) getUint16:(unsigned int)index error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a buffer's value as an unsigned char integer (8 bit).
+    ///
+    /// If the buffer's value cannot be converted to a unsigned long integer
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param pError set to a NSError derived class in case of error
+    /// \return the tag's value as an unsigned 8 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(unsigned char) getUint8:(unsigned int)index error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
     /// \brief Retrieve a buffer's value as a double floating point value (64 bit).
     ///
     /// If the buffer's value cannot be converted to a double floating point
@@ -100,6 +156,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(double) getDouble:(unsigned int)index error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a buffer's value as a floating point value (32 bit).
+    ///
+    /// If the buffer's value cannot be converted to a double floating point
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param pError set to a NSError derived class in case of error
+    /// \return the tag's value as a floating point value (32 bit)
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(float) getFloat:(unsigned int)index error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Retrieve a buffer's value as a string.

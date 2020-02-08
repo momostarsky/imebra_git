@@ -112,8 +112,13 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
 /// - getImageApplyModalityTransform()
 /// - getSequenceItem()
 /// - getSignedLong()
+/// - getInt16()
+/// - getInt8()
 /// - getUnsignedLong()
+/// - getUint16()
+/// - getUint8()
 /// - getDouble()
+/// - getFloat()
 /// - getString()
 /// - getUnicodeString()
 /// - getAge()
@@ -367,6 +372,42 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
     -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
+    /// \brief Retrieve a tag's value as signed short integer (16 bit).
+    ///
+    /// If the tag's value cannot be converted to a signed long integer
+    /// then sets pError to ImebraDataHandlerConversionError.
+    ///
+    /// If the specified tag does not exist then set pError to
+    /// ImebraMissingTagError or ImebraMissingGroupError.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param pError   a pointer to a NSError pointer which is set when an
+    ///                  error occurs
+    /// \return the tag's value as a signed 16 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(signed short)getInt16:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a tag's value as signed char integer (8 bit).
+    ///
+    /// If the tag's value cannot be converted to a signed long integer
+    /// then sets pError to ImebraDataHandlerConversionError.
+    ///
+    /// If the specified tag does not exist then set pError to
+    /// ImebraMissingTagError or ImebraMissingGroupError.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param pError   a pointer to a NSError pointer which is set when an
+    ///                  error occurs
+    /// \return the tag's value as a signed 8 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(signed char)getInt8:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
     /// \brief Retrieve a tag's value as signed long integer (32 bit).
     ///
     /// If the tag's value cannot be converted to a signed long integer
@@ -386,6 +427,44 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
     -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(signed int)defaultValue error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
+    /// \brief Retrieve a tag's value as signed short integer (16 bit).
+    ///
+    /// If the tag's value cannot be converted to a signed long integer
+    /// then sets pError to ImebraDataHandlerConversionError.
+    ///
+    /// If the specified tag does not exist then returns the default value
+    /// set in the defaultValue parameter.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \param pError   a pointer to a NSError pointer which is set when an
+    ///                  error occurs
+    /// \return the tag's value as a signed 16 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(signed short)getInt16:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(signed short)defaultValue error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a tag's value as signed char integer (8 bit).
+    ///
+    /// If the tag's value cannot be converted to a signed long integer
+    /// then sets pError to ImebraDataHandlerConversionError.
+    ///
+    /// If the specified tag does not exist then returns the default value
+    /// set in the defaultValue parameter.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \param pError   a pointer to a NSError pointer which is set when an
+    ///                  error occurs
+    /// \return the tag's value as a signed 8 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(signed char)getInt8:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(signed char)defaultValue error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
     /// \brief Retrieve a tag's value as unsigned long integer (32 bit).
     ///
     /// If the tag's value cannot be converted to an unsigned long integer
@@ -402,6 +481,42 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(unsigned int)getUnsignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a tag's value as unsigned long integer (16 bit).
+    ///
+    /// If the tag's value cannot be converted to an unsigned long integer
+    /// then sets pError to ImebraDataHandlerConversionError.
+    ///
+    /// If the specified tag does not exist then set pError to
+    /// ImebraMissingTagError or ImebraMissingGroupError.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param pError   a pointer to a NSError pointer which is set when an
+    ///                  error occurs
+    /// \return the tag's value as an unsigned 16 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(unsigned short)getUint16:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a tag's value as unsigned long integer (8 bit).
+    ///
+    /// If the tag's value cannot be converted to an unsigned long integer
+    /// then sets pError to ImebraDataHandlerConversionError.
+    ///
+    /// If the specified tag does not exist then set pError to
+    /// ImebraMissingTagError or ImebraMissingGroupError.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param pError   a pointer to a NSError pointer which is set when an
+    ///                  error occurs
+    /// \return the tag's value as an unsigned 8 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(unsigned char)getUint8:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Retrieve a tag's value as unsigned long integer (32 bit).
@@ -423,6 +538,44 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
     -(unsigned int)getUnsignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(unsigned int)defaultValue error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
+    /// \brief Retrieve a tag's value as unsigned long integer (16 bit).
+    ///
+    /// If the tag's value cannot be converted to an unsigned long integer
+    /// then sets pError to ImebraDataHandlerConversionError.
+    ///
+    /// If the specified tag does not exist then returns the default value
+    /// set in the defaultValue parameter.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \param pError   a pointer to a NSError pointer which is set when an
+    ///                  error occurs
+    /// \return the tag's value as an unsigned 16 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(unsigned short)getUint16:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(unsigned short)defaultValue error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a tag's value as unsigned long integer (8 bit).
+    ///
+    /// If the tag's value cannot be converted to an unsigned long integer
+    /// then sets pError to ImebraDataHandlerConversionError.
+    ///
+    /// If the specified tag does not exist then returns the default value
+    /// set in the defaultValue parameter.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \param pError   a pointer to a NSError pointer which is set when an
+    ///                  error occurs
+    /// \return the tag's value as an unsigned 8 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(unsigned char)getUint8:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(unsigned char)defaultValue error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
     /// \brief Retrieve a tag's value as a double floating point.
     ///
     /// If the tag's value cannot be converted to double floating point
@@ -439,6 +592,24 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(double)getDouble:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a tag's value as a floating point value.
+    ///
+    /// If the tag's value cannot be converted to double floating point
+    /// then sets pError to ImebraDataHandlerConversionError.
+    ///
+    /// If the specified tag does not exist then set pError to
+    /// ImebraMissingTagError or ImebraMissingGroupError.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param pError   a pointer to a NSError pointer which is set when an
+    ///                  error occurs
+    /// \return the tag's value as a floating point
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(float)getFloat:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Retrieve a tag's value as a double floating point.
@@ -458,6 +629,25 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(double)getDouble:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(double)defaultValue error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a tag's value as a floating point value.
+    ///
+    /// If the tag's value cannot be converted to double floating point
+    /// then sets pError to ImebraDataHandlerConversionError.
+    ///
+    /// If the specified tag does not exist then returns the default value
+    /// set in the defaultValue parameter.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \param pError   a pointer to a NSError pointer which is set when an
+    ///                  error occurs
+    /// \return the tag's value as a floating point
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(float)getFloat:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(float)defaultValue error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Retrieve a tag's value as a string.
@@ -633,8 +823,13 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
     /// - setImage()
     /// - appendSequenceItem()
     /// - setSignedLong()
+    /// - setInt16()
+    /// - setInt8()
     /// - setUnsignedLong()
+    /// - setUint16()
+    /// - setUint8()
     /// - setDouble()
+    /// - setFloat()
     /// - setString()
     /// - setUnicodeString()
     /// - setAge()
@@ -907,6 +1102,44 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
         -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
+        /// \brief Write a new signed 16 bit integer value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the specified data type (VR).
+        ///
+        /// If the new value cannot be converted to the specified VR
+        /// then sets pError to ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param tagVR    the tag's type to use when a new tag is created.
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setInt16:(ImebraTagId*)tagId newValue:(signed short)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new signed 8 bit integer value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the specified data type (VR).
+        ///
+        /// If the new value cannot be converted to the specified VR
+        /// then sets pError to ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param tagVR    the tag's type to use when a new tag is created.
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setInt8:(ImebraTagId*)tagId newValue:(signed char)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
         /// \brief Write a new signed 32 bit integer value into the element 0 of the
         ///        specified tag's buffer 0.
         ///
@@ -924,6 +1157,44 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
         ///
         ///////////////////////////////////////////////////////////////////////////////
         -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new signed 16 bit integer value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the data type (VR) retrieved from the ImebraDicomDictionary.
+        ///
+        /// If the new value cannot be converted to the VR returned by the
+        /// ImebraDicomDictionary then sets pError to
+        /// ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setInt16:(ImebraTagId*)tagId newValue:(signed short)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new signed 8 bit integer value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the data type (VR) retrieved from the ImebraDicomDictionary.
+        ///
+        /// If the new value cannot be converted to the VR returned by the
+        /// ImebraDicomDictionary then sets pError to
+        /// ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setInt8:(ImebraTagId*)tagId newValue:(signed char)newValue error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
         /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
@@ -945,6 +1216,44 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
         -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
+        /// \brief Write a new unsigned 16 bit integer value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the specified data type (VR).
+        ///
+        /// If the new value cannot be converted to the specified VR
+        /// then sets pError to ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param tagVR    the tag's type to use when a new tag is created.
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setUint16:(ImebraTagId*)tagId newValue:(unsigned short)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new unsigned 8 bit integer value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the specified data type (VR).
+        ///
+        /// If the new value cannot be converted to the specified VR
+        /// then sets pError to ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param tagVR    the tag's type to use when a new tag is created.
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setUint8:(ImebraTagId*)tagId newValue:(unsigned char)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
         /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
         ///        specified tag's buffer 0.
         ///
@@ -962,6 +1271,44 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
         ///
         ///////////////////////////////////////////////////////////////////////////////
         -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new unsigned 16 bit integer value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the data type (VR) retrieved from the ImebraDicomDictionary.
+        ///
+        /// If the new value cannot be converted to the VR returned by the
+        /// ImebraDicomDictionary then sets pError to
+        /// ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setUint16:(ImebraTagId*)tagId newValue:(unsigned short)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new unsigned 8 bit integer value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the data type (VR) retrieved from the ImebraDicomDictionary.
+        ///
+        /// If the new value cannot be converted to the VR returned by the
+        /// ImebraDicomDictionary then sets pError to
+        /// ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setUint8:(ImebraTagId*)tagId newValue:(unsigned char)newValue error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
         /// \brief Write a new double floating point value into the element 0 of the
@@ -983,6 +1330,25 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
         -(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
+        /// \brief Write a new floating point value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the specified data type (VR).
+        ///
+        /// If the new value cannot be converted to the specified VR
+        /// then sets pError to ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param tagVR    the tag's type to use when a new tag is created.
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setFloat:(ImebraTagId*)tagId newValue:(float)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
         /// \brief Write a new double floating point value into the element 0 of the
         ///        specified tag's buffer 0.
         ///
@@ -1000,6 +1366,25 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
         ///
         ///////////////////////////////////////////////////////////////////////////////
         -(void)setDouble:(ImebraTagId*)tagId newValue:(double)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Write a new floating point value into the element 0 of the
+        ///        specified tag's buffer 0.
+        ///
+        /// If the specified tag doesn't exist then a new tag is created using
+        /// the data type (VR) retrieved from the ImebraDicomDictionary.
+        ///
+        /// If the new value cannot be converted to the VR returned by the
+        /// ImebraDicomDictionary then sets pError to
+        /// ImebraDataHandlerConversionError.
+        ///
+        /// \param tagId    the tag's id
+        /// \param newValue the value to write into the tag
+        /// \param pError   a pointer to a NSError pointer which is set when an
+        ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setFloat:(ImebraTagId*)tagId newValue:(float)newValue error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
         /// \brief Write a new string value into the element 0 of the
