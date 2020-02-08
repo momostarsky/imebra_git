@@ -174,17 +174,17 @@ public:
 
     }
 
-    virtual bool isSigned() const
+    virtual bool isSigned() const override
     {
         return std::is_signed<dataHandlerType>::value;
     }
 
-    virtual bool isFloat() const
+    virtual bool isFloat() const override
     {
-        return !std::is_floating_point<dataHandlerType>::value;
+        return std::is_floating_point<dataHandlerType>::value;
     }
 
-    virtual size_t getUnitSize() const
+    virtual size_t getUnitSize() const override
     {
         return sizeof(dataHandlerType);
     }
@@ -390,7 +390,7 @@ public:
 
     // Retrieve the data element as a signed long
     ///////////////////////////////////////////////////////////
-    virtual std::int32_t getSignedLong(const size_t index) const
+    virtual std::int32_t getSignedLong(const size_t index) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -401,7 +401,7 @@ public:
 
     // Retrieve the data element an unsigned long
     ///////////////////////////////////////////////////////////
-    virtual std::uint32_t getUnsignedLong(const size_t index) const
+    virtual std::uint32_t getUnsignedLong(const size_t index) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -412,7 +412,7 @@ public:
 
     // Retrieve the data element as std::int16_t
     ///////////////////////////////////////////////////////////
-    virtual std::int16_t getInt16(const size_t index) const
+    virtual std::int16_t getInt16(const size_t index) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -423,7 +423,7 @@ public:
 
     // Retrieve the data element an std::uint16_t
     ///////////////////////////////////////////////////////////
-    virtual std::uint16_t getUint16(const size_t index) const
+    virtual std::uint16_t getUint16(const size_t index) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -434,7 +434,7 @@ public:
 
     // Retrieve the data element as std::int16_t
     ///////////////////////////////////////////////////////////
-    virtual std::int8_t getInt8(const size_t index) const
+    virtual std::int8_t getInt8(const size_t index) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -445,7 +445,7 @@ public:
 
     // Retrieve the data element an std::uint16_t
     ///////////////////////////////////////////////////////////
-    virtual std::uint8_t getUint8(const size_t index) const
+    virtual std::uint8_t getUint8(const size_t index) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -456,7 +456,7 @@ public:
 
     // Retrieve the data element as a double
     ///////////////////////////////////////////////////////////
-    virtual double getDouble(const size_t index) const
+    virtual double getDouble(const size_t index) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -467,7 +467,7 @@ public:
 
     // Retrieve the data element as a double
     ///////////////////////////////////////////////////////////
-    virtual float getFloat(const size_t index) const
+    virtual float getFloat(const size_t index) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -478,7 +478,7 @@ public:
 
     // Retrieve the data element as a string
     ///////////////////////////////////////////////////////////
-    virtual std::string getString(const size_t index) const
+    virtual std::string getString(const size_t index) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -494,7 +494,7 @@ public:
 
     // Retrieve the data element as a unicode string
     ///////////////////////////////////////////////////////////
-    virtual std::wstring getUnicodeString(const size_t index) const
+    virtual std::wstring getUnicodeString(const size_t index) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -510,7 +510,7 @@ public:
 
     // Retrieve the buffer's size in elements
     ///////////////////////////////////////////////////////////
-    virtual size_t getSize() const
+    virtual size_t getSize() const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -523,7 +523,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyTo(std::uint8_t* pMemory, size_t memorySize) const
+    virtual void copyTo(std::uint8_t* pMemory, size_t memorySize) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -532,7 +532,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyTo(std::int8_t* pMemory, size_t memorySize) const
+    virtual void copyTo(std::int8_t* pMemory, size_t memorySize) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -541,7 +541,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyTo(std::uint16_t* pMemory, size_t memorySize) const
+    virtual void copyTo(std::uint16_t* pMemory, size_t memorySize) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -550,7 +550,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyTo(std::int16_t* pMemory, size_t memorySize) const
+    virtual void copyTo(std::int16_t* pMemory, size_t memorySize) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -559,7 +559,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyTo(std::uint32_t* pMemory, size_t memorySize) const
+    virtual void copyTo(std::uint32_t* pMemory, size_t memorySize) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -568,7 +568,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyTo(std::int32_t* pMemory, size_t memorySize) const
+    virtual void copyTo(std::int32_t* pMemory, size_t memorySize) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -577,7 +577,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyTo(float* pMemory, size_t memorySize) const
+    virtual void copyTo(float* pMemory, size_t memorySize) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -586,7 +586,7 @@ public:
         IMEBRA_FUNCTION_END();
     }
 
-    virtual void copyTo(double* pMemory, size_t memorySize) const
+    virtual void copyTo(double* pMemory, size_t memorySize) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -642,7 +642,7 @@ public:
                                         std::uint32_t sourceStartChannel,
                                         std::uint32_t sourceWidth,
                                         std::uint32_t sourceHeight,
-                                        std::uint32_t sourceNumChannels) const
+                                        std::uint32_t sourceNumChannels) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -745,31 +745,18 @@ public:
 
     virtual bool isSigned() const override
     {
-        IMEBRA_FUNCTION_START();
-
-        dataHandlerType firstValue((dataHandlerType) -1);
-        dataHandlerType secondValue((dataHandlerType) 0);
-        return firstValue < secondValue;
-
-        IMEBRA_FUNCTION_END();
+        return std::is_signed<dataHandlerType>::value;
     }
+
 
     virtual bool isFloat() const override
     {
-        IMEBRA_FUNCTION_START();
-
-        return !std::numeric_limits<dataHandlerType>::is_integer;
-
-        IMEBRA_FUNCTION_END();
+        return std::is_floating_point<dataHandlerType>::value;
     }
 
     virtual size_t getUnitSize() const override
     {
-        IMEBRA_FUNCTION_START();
-
         return sizeof(dataHandlerType);
-
-        IMEBRA_FUNCTION_END();
     }
 
     // Specialized setValue() methods with range checks
