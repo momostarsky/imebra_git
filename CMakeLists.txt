@@ -294,9 +294,9 @@ if(NOT IOS)
     # Set libgtest properties
     if(APPLE)
     set_target_properties(libgtest PROPERTIES
-        "IMPORTED_LOCATION" "${binary_dir}/libgtest.a"
-        "IMPORTED_LOCATION_DEBUG" "${binary_dir}/Debug/libgtest.a"
-        "IMPORTED_LOCATION_RELEASE" "${binary_dir}/Release/libgtest.a"
+        "IMPORTED_LOCATION" "${binary_dir}/lib/libgtest.a"
+        "IMPORTED_LOCATION_DEBUG" "${binary_dir}/Debug/lib/libgtest.a"
+        "IMPORTED_LOCATION_RELEASE" "${binary_dir}/Release/lib/libgtest.a"
         "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
     )
     elseif(MSVC)
