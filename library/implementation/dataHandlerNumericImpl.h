@@ -1065,7 +1065,7 @@ public:
         try
         {
             long long numericValue(std::stoll(value));
-            setValue<unsigned long long>(index, numericValue);
+            setValue<long long>(index, numericValue);
         }
         catch (const std::out_of_range& )
         {
