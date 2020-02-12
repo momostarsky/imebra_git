@@ -238,35 +238,35 @@ void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sha
 
     // Number of planes
     ///////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0, 0x0002, 0, (std::uint32_t)information.m_channelsMap.size());
+    pDataSet->setUint32(0x0028, 0, 0x0002, 0, (std::uint32_t)information.m_channelsMap.size());
 
     // Image's width
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0, 0x0011, 0, information.m_imageWidth);
+    pDataSet->setUint32(0x0028, 0, 0x0011, 0, information.m_imageWidth);
 
     // Image's height
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0, 0x0010, 0, information.m_imageHeight);
+    pDataSet->setUint32(0x0028, 0, 0x0010, 0, information.m_imageHeight);
 
     // Number of frames
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0, 0x0008, 0, 1);
+    pDataSet->setUint32(0x0028, 0, 0x0008, 0, 1);
 
     // Pixel representation
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0103, 0, 0);
+    pDataSet->setUint32(0x0028, 0x0, 0x0103, 0, 0);
 
     // Allocated, stored bits and high bit
     /////////////////////////////////////////////////////////////////
-    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0100, 0, information.m_precision);
-    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0101, 0, information.m_precision);
-    pDataSet->setUnsignedLong(0x0028, 0x0, 0x0102, 0, information.m_precision - 1);
+    pDataSet->setUint32(0x0028, 0x0, 0x0100, 0, information.m_precision);
+    pDataSet->setUint32(0x0028, 0x0, 0x0101, 0, information.m_precision);
+    pDataSet->setUint32(0x0028, 0x0, 0x0102, 0, information.m_precision - 1);
 
     // Interleaved (more than 1 channel in the channels list)
     /////////////////////////////////////////////////////////////////
     if(information.m_channelsMap.size() != 1)
     {
-        pDataSet->setUnsignedLong(0x0028, 0x0, 0x0006, 0, information.m_channelsList.size() > 1 ? 1 : 0);
+        pDataSet->setUint32(0x0028, 0x0, 0x0006, 0, information.m_channelsList.size() > 1 ? 1 : 0);
     }
 
     // Insert the basic offset table

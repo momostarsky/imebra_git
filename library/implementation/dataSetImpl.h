@@ -403,9 +403,9 @@ public:
     /// @return        The tag's content, as a signed long
     ///
     ///////////////////////////////////////////////////////////
-    std::int32_t getSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::int32_t getInt32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    std::int32_t getSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const;
+    std::int32_t getInt32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const;
 
     /// \brief Retrieve a tag's value as an unsigned int32.
     ///
@@ -432,9 +432,9 @@ public:
     /// @return        The tag's content, as an unsigned long
     ///
     ///////////////////////////////////////////////////////////
-    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
+    std::uint32_t getUint32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const;
 
-    std::uint32_t getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const;
+    std::uint32_t getUint32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const;
 
     /// \brief Read the value of the requested tag and return
     ///         it as a int16.
@@ -577,9 +577,9 @@ public:
     ///                 this parameter
     ///
     ///////////////////////////////////////////////////////////
-    void setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, tagVR_t tagVR);
+    void setInt32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, tagVR_t tagVR);
 
-    void setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue);
+    void setInt32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue);
 
     /// \brief Set a tag's value as an unsigned int32.
     ///
@@ -610,9 +610,9 @@ public:
     ///                 this parameter
     ///
     ///////////////////////////////////////////////////////////
-    void setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, tagVR_t tagVR);
+    void setUint32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, tagVR_t tagVR);
 
-    void setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue);
+    void setUint32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue);
 
     /// \brief Set a tag's value as a int16.
     ///

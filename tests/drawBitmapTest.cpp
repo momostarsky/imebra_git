@@ -45,7 +45,7 @@ TEST(drawBitmapTest, testDrawBitmapRGB)
 
                     if(monochrome)
                     {
-                        red = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -54,9 +54,9 @@ TEST(drawBitmapTest, testDrawBitmapRGB)
                     }
                     else
                     {
-                        red = imageHandler.getUnsignedLong(index++);
-                        green = imageHandler.getUnsignedLong(index++);
-                        blue = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
+                        green = imageHandler.getUint32(index++);
+                        blue = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -119,7 +119,7 @@ TEST(drawBitmapTest, testDrawBitmapBGR)
 
                     if(monochrome)
                     {
-                        red = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -128,9 +128,9 @@ TEST(drawBitmapTest, testDrawBitmapBGR)
                     }
                     else
                     {
-                        red = imageHandler.getUnsignedLong(index++);
-                        green = imageHandler.getUnsignedLong(index++);
-                        blue = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
+                        green = imageHandler.getUint32(index++);
+                        blue = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -194,7 +194,7 @@ TEST(drawBitmapTest, testDrawBitmapRGBA)
 
                     if(monochrome)
                     {
-                        red = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -203,9 +203,9 @@ TEST(drawBitmapTest, testDrawBitmapRGBA)
                     }
                     else
                     {
-                        red = imageHandler.getUnsignedLong(index++);
-                        green = imageHandler.getUnsignedLong(index++);
-                        blue = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
+                        green = imageHandler.getUint32(index++);
+                        blue = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -268,7 +268,7 @@ TEST(drawBitmapTest, testDrawBitmapBGRA)
 
                     if(monochrome)
                     {
-                        red = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -277,9 +277,9 @@ TEST(drawBitmapTest, testDrawBitmapBGRA)
                     }
                     else
                     {
-                        red = imageHandler.getUnsignedLong(index++);
-                        green = imageHandler.getUnsignedLong(index++);
-                        blue = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
+                        green = imageHandler.getUint32(index++);
+                        blue = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);

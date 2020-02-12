@@ -36,12 +36,12 @@ TEST(modalityVoilut, voilutUnsigned8)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-1, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(19, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(39, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(59, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(79, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(99, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-1, signed8Handler.getInt32(0));
+        ASSERT_EQ(19, signed8Handler.getInt32(1));
+        ASSERT_EQ(39, signed8Handler.getInt32(2));
+        ASSERT_EQ(59, signed8Handler.getInt32(3));
+        ASSERT_EQ(79, signed8Handler.getInt32(4));
+        ASSERT_EQ(99, signed8Handler.getInt32(5));
     }
 
     {
@@ -50,12 +50,12 @@ TEST(modalityVoilut, voilutUnsigned8)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-1, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(19, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(39, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(59, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(79, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(99, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-1, signed8Handler.getInt32(0));
+        ASSERT_EQ(19, signed8Handler.getInt32(1));
+        ASSERT_EQ(39, signed8Handler.getInt32(2));
+        ASSERT_EQ(59, signed8Handler.getInt32(3));
+        ASSERT_EQ(79, signed8Handler.getInt32(4));
+        ASSERT_EQ(99, signed8Handler.getInt32(5));
     }
 }
 
@@ -110,12 +110,12 @@ TEST(modalityVoilut, voilutUnsigned8FunctionalGroupFrame)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-1, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(19, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(39, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(59, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(79, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(99, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-1, signed8Handler.getInt32(0));
+        ASSERT_EQ(19, signed8Handler.getInt32(1));
+        ASSERT_EQ(39, signed8Handler.getInt32(2));
+        ASSERT_EQ(59, signed8Handler.getInt32(3));
+        ASSERT_EQ(79, signed8Handler.getInt32(4));
+        ASSERT_EQ(99, signed8Handler.getInt32(5));
     }
 
     {
@@ -124,12 +124,12 @@ TEST(modalityVoilut, voilutUnsigned8FunctionalGroupFrame)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-2, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(18, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(38, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(58, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(78, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(98, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-2, signed8Handler.getInt32(0));
+        ASSERT_EQ(18, signed8Handler.getInt32(1));
+        ASSERT_EQ(38, signed8Handler.getInt32(2));
+        ASSERT_EQ(58, signed8Handler.getInt32(3));
+        ASSERT_EQ(78, signed8Handler.getInt32(4));
+        ASSERT_EQ(98, signed8Handler.getInt32(5));
     }
 
     {
@@ -138,12 +138,12 @@ TEST(modalityVoilut, voilutUnsigned8FunctionalGroupFrame)
 
         ReadingDataHandler unsignedHandler = unsigned16Out.getReadingDataHandler();
 
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(0));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(1));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(2));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(3));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(4));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(5));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(0));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(1));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(2));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(3));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(4));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(5));
     }
 
     {
@@ -152,12 +152,12 @@ TEST(modalityVoilut, voilutUnsigned8FunctionalGroupFrame)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-3, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(17, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(37, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(57, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(77, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(97, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-3, signed8Handler.getInt32(0));
+        ASSERT_EQ(17, signed8Handler.getInt32(1));
+        ASSERT_EQ(37, signed8Handler.getInt32(2));
+        ASSERT_EQ(57, signed8Handler.getInt32(3));
+        ASSERT_EQ(77, signed8Handler.getInt32(4));
+        ASSERT_EQ(97, signed8Handler.getInt32(5));
     }
 
 }
@@ -194,12 +194,12 @@ TEST(modalityVoilut, voilutSigned8)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-20, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(0, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(20, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(40, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(60, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(80, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-20, signed8Handler.getInt32(0));
+        ASSERT_EQ(0, signed8Handler.getInt32(1));
+        ASSERT_EQ(20, signed8Handler.getInt32(2));
+        ASSERT_EQ(40, signed8Handler.getInt32(3));
+        ASSERT_EQ(60, signed8Handler.getInt32(4));
+        ASSERT_EQ(80, signed8Handler.getInt32(5));
     }
 
     {
@@ -208,12 +208,12 @@ TEST(modalityVoilut, voilutSigned8)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-20, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(0, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(20, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(40, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(60, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(80, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-20, signed8Handler.getInt32(0));
+        ASSERT_EQ(0, signed8Handler.getInt32(1));
+        ASSERT_EQ(20, signed8Handler.getInt32(2));
+        ASSERT_EQ(40, signed8Handler.getInt32(3));
+        ASSERT_EQ(60, signed8Handler.getInt32(4));
+        ASSERT_EQ(80, signed8Handler.getInt32(5));
     }
 }
 
@@ -255,12 +255,12 @@ TEST(modalityVoilut, voilutUnsigned8LUT)
 
         ReadingDataHandler unsignedHandler = unsigned8Out.getReadingDataHandler();
 
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(0));
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(1));
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(2));
-        ASSERT_EQ(200u, unsignedHandler.getUnsignedLong(3));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(4));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(5));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(0));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(1));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(2));
+        ASSERT_EQ(200u, unsignedHandler.getUint32(3));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(4));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(5));
     }
 
     {
@@ -268,12 +268,12 @@ TEST(modalityVoilut, voilutUnsigned8LUT)
 
         ReadingDataHandler unsignedHandler = unsigned8Out.getReadingDataHandler();
 
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(0));
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(1));
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(2));
-        ASSERT_EQ(200u, unsignedHandler.getUnsignedLong(3));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(4));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(5));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(0));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(1));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(2));
+        ASSERT_EQ(200u, unsignedHandler.getUint32(3));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(4));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(5));
     }
 }
 

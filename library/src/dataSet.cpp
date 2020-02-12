@@ -205,11 +205,29 @@ bool DataSet::bufferExists(const TagId& tagId, size_t bufferId) const
     IMEBRA_FUNCTION_END_LOG();
 }
 
+std::int32_t DataSet::getInt32(const TagId& tagId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getInt32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::int32_t DataSet::getInt32(const TagId& tagId, size_t elementNumber, std::int32_t defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getInt32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
 std::int32_t DataSet::getSignedLong(const TagId& tagId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
-    return m_pDataSet->getSignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+    return m_pDataSet->getInt32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
 
     IMEBRA_FUNCTION_END_LOG();
 }
@@ -218,7 +236,25 @@ std::int32_t DataSet::getSignedLong(const TagId& tagId, size_t elementNumber, st
 {
     IMEBRA_FUNCTION_START();
 
-    return m_pDataSet->getSignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
+    return m_pDataSet->getInt32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::uint32_t DataSet::getUint32(const TagId& tagId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getUint32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+std::uint32_t DataSet::getUint32(const TagId& tagId, size_t elementNumber, std::uint32_t defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return m_pDataSet->getUint32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
 
     IMEBRA_FUNCTION_END_LOG();
 }
@@ -227,7 +263,7 @@ std::uint32_t DataSet::getUnsignedLong(const TagId& tagId, size_t elementNumber)
 {
     IMEBRA_FUNCTION_START();
 
-    return m_pDataSet->getUnsignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+    return m_pDataSet->getUint32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
 
     IMEBRA_FUNCTION_END_LOG();
 }
@@ -236,7 +272,7 @@ std::uint32_t DataSet::getUnsignedLong(const TagId& tagId, size_t elementNumber,
 {
     IMEBRA_FUNCTION_START();
 
-    return m_pDataSet->getUnsignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
+    return m_pDataSet->getUint32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
 
     IMEBRA_FUNCTION_END_LOG();
 }
@@ -610,11 +646,29 @@ MutableDataSet MutableDataSet::appendSequenceItem(const TagId &tagId)
     IMEBRA_FUNCTION_END_LOG();
 }
 
+void MutableDataSet::setInt32(const TagId& tagId, std::int32_t newValue, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setInt32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
 void MutableDataSet::setSignedLong(const TagId& tagId, std::int32_t newValue, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
-    getDataSetImplementation(*this)->setSignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+    getDataSetImplementation(*this)->setInt32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setInt32(const TagId& tagId, std::int32_t newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setInt32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
 
     IMEBRA_FUNCTION_END_LOG();
 }
@@ -623,7 +677,16 @@ void MutableDataSet::setSignedLong(const TagId& tagId, std::int32_t newValue)
 {
     IMEBRA_FUNCTION_START();
 
-    getDataSetImplementation(*this)->setSignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
+    getDataSetImplementation(*this)->setInt32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setUint32(const TagId& tagId, std::uint32_t newValue, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setUint32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
 
     IMEBRA_FUNCTION_END_LOG();
 }
@@ -632,7 +695,16 @@ void MutableDataSet::setUnsignedLong(const TagId& tagId, std::uint32_t newValue,
 {
     IMEBRA_FUNCTION_START();
 
-    getDataSetImplementation(*this)->setUnsignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+    getDataSetImplementation(*this)->setUint32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setUint32(const TagId& tagId, std::uint32_t newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setUint32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
 
     IMEBRA_FUNCTION_END_LOG();
 }
@@ -641,7 +713,7 @@ void MutableDataSet::setUnsignedLong(const TagId& tagId, std::uint32_t newValue)
 {
     IMEBRA_FUNCTION_START();
 
-    getDataSetImplementation(*this)->setUnsignedLong(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
+    getDataSetImplementation(*this)->setUint32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
 
     IMEBRA_FUNCTION_END_LOG();
 }

@@ -30,7 +30,7 @@ dimseCommandBase::dimseCommandBase(const std::string& abstractSyntax,
     associationMessage(abstractSyntax, std::make_shared<dataSet>("1.2.840.10008.1.2", charsetsList_t()), pPayload)
 {
     // Set the "payload present" flag
-    m_pCommand->setUnsignedLong(0x0, 0, 0x0800, 0, m_pPayload == nullptr ? 0x101 : 0x0);
+    m_pCommand->setUint32(0x0, 0, 0x0800, 0, m_pPayload == nullptr ? 0x101 : 0x0);
 }
 
 
@@ -90,10 +90,10 @@ dimseNCommand::dimseNCommand(const std::string& abstractSyntax,
     dimseCommandBase(abstractSyntax, pPayload)
 {
     // Set the command type
-    m_pCommand->setUnsignedLong(0x0, 0, 0x0100, 0, (std::uint16_t)command);
+    m_pCommand->setUint32(0x0, 0, 0x0100, 0, (std::uint16_t)command);
 
     // Set the message ID
-    m_pCommand->setUnsignedLong(0x0, 0, 0x0110, 0, messageID);
+    m_pCommand->setUint32(0x0, 0, 0x0110, 0, messageID);
 }
 
 
@@ -115,7 +115,7 @@ dimseNCommand::dimseNCommand(std::shared_ptr<const associationMessage> pMessage)
 //////////////////////////////////////////////////////////////////
 std::uint16_t dimseNCommand::getID() const
 {
-    return (std::uint16_t)m_pCommand->getUnsignedLong(0x0, 0, 0x0110, 0, 0);
+    return (std::uint16_t)m_pCommand->getUint32(0x0, 0, 0x0110, 0, 0);
 }
 
 
@@ -126,7 +126,7 @@ std::uint16_t dimseNCommand::getID() const
 //////////////////////////////////////////////////////////////////
 dimseCommandType_t dimseNCommand::getCommandType() const
 {
-    return (dimseCommandType_t)(getCommandDataSet()->getUnsignedLong(0x0, 0, 0x0100, 0, 0));
+    return (dimseCommandType_t)(getCommandDataSet()->getUint32(0x0, 0, 0x0100, 0, 0));
 }
 
 
@@ -224,7 +224,7 @@ dimseCCommand::dimseCCommand(const std::string& abstractSyntax,
     dimseNCommand(abstractSyntax, command, messageID, pPayload)
 {
     // Set the priority
-    m_pCommand->setUnsignedLong(0x0, 0, 0x0700, 0, (std::uint16_t)priority);
+    m_pCommand->setUint32(0x0, 0, 0x0700, 0, (std::uint16_t)priority);
 }
 
 
@@ -248,7 +248,7 @@ dimseCommandPriority_t dimseCCommand::getPriority() const
 {
     IMEBRA_FUNCTION_START();
 
-    std::uint32_t priority(m_pCommand->getUnsignedLong(0x0, 0, 0x0700, 0, 0));
+    std::uint32_t priority(m_pCommand->getUint32(0x0, 0, 0x0700, 0, 0));
     switch(priority)
     {
     case (std::uint32_t)dimseCommandPriority_t::high:
@@ -310,13 +310,13 @@ dimseResponse::dimseResponse(std::shared_ptr<dimseNCommand> pCommand, dimseStatu
     dimseCommandBase(pCommand->getAbstractSyntax(), pPayload)
 {
     // Set the response type
-    m_pCommand->setUnsignedLong(0x0, 0, 0x0100, 0, pCommand->getCommandDataSet()->getUnsignedLong(0x0, 0, 0x0100, 0, 0) | (std::uint16_t)dimseCommandType_t::response);
+    m_pCommand->setUint32(0x0, 0, 0x0100, 0, pCommand->getCommandDataSet()->getUint32(0x0, 0, 0x0100, 0, 0) | (std::uint16_t)dimseCommandType_t::response);
 
     // Set message ID being responded to
-    m_pCommand->setUnsignedLong(0x0, 0, 0x0120, 0, pCommand->getID());
+    m_pCommand->setUint32(0x0, 0, 0x0120, 0, pCommand->getID());
 
     // Set the status code
-    m_pCommand->setUnsignedLong(0x0, 0, 0x0900, 0, (std::uint16_t)responseCode);
+    m_pCommand->setUint32(0x0, 0, 0x0900, 0, (std::uint16_t)responseCode);
 }
 
 
@@ -338,7 +338,7 @@ dimseResponse::dimseResponse(std::shared_ptr<const associationMessage> pMessage)
 //////////////////////////////////////////////////////////////////
 std::uint16_t dimseResponse::getMessageBeingRespondedID() const
 {
-    return (std::uint16_t)(m_pCommand->getUnsignedLong(0x0, 0, 0x0120, 0, 0));
+    return (std::uint16_t)(m_pCommand->getUint32(0x0, 0, 0x0120, 0, 0));
 }
 
 
@@ -378,7 +378,7 @@ dimseStatus_t dimseResponse::getStatus() const
 //////////////////////////////////////////////////////////////////
 std::uint16_t dimseResponse::getStatusCode() const
 {
-    return (std::uint16_t)getCommandDataSet()->getUnsignedLong(0x0, 0, 0x0900, 0, 0);
+    return (std::uint16_t)getCommandDataSet()->getUint32(0x0, 0, 0x0900, 0, 0);
 }
 
 
@@ -442,11 +442,11 @@ cPartialResponse::cPartialResponse(
     dimseStatus_t responseStatus(getStatus());
     if(responseStatus == dimseStatus_t::pending || responseStatus == dimseStatus_t::cancel)
     {
-        m_pCommand->setUnsignedLong(0x0, 0, 0x1020, 0, remainingSubOperations);
+        m_pCommand->setUint32(0x0, 0, 0x1020, 0, remainingSubOperations);
     }
-    m_pCommand->setUnsignedLong(0x0, 0, 0x1021, 0, completedSubOperations);
-    m_pCommand->setUnsignedLong(0x0, 0, 0x1022, 0, failedSubOperations);
-    m_pCommand->setUnsignedLong(0x0, 0, 0x1023, 0, warningSubOperations);
+    m_pCommand->setUint32(0x0, 0, 0x1021, 0, completedSubOperations);
+    m_pCommand->setUint32(0x0, 0, 0x1022, 0, failedSubOperations);
+    m_pCommand->setUint32(0x0, 0, 0x1023, 0, warningSubOperations);
 }
 
 
@@ -468,7 +468,7 @@ cPartialResponse::cPartialResponse(std::shared_ptr<const associationMessage> pMe
 //////////////////////////////////////////////////////////////////
 std::uint32_t cPartialResponse::getRemainingSubOperations() const
 {
-    return m_pCommand->getUnsignedLong(0x0, 0, 0x1020, 0, 0);
+    return m_pCommand->getUint32(0x0, 0, 0x1020, 0, 0);
 }
 
 
@@ -479,7 +479,7 @@ std::uint32_t cPartialResponse::getRemainingSubOperations() const
 //////////////////////////////////////////////////////////////////
 std::uint32_t cPartialResponse::getCompletedSubOperations() const
 {
-    return m_pCommand->getUnsignedLong(0x0, 0, 0x1021, 0, 0);
+    return m_pCommand->getUint32(0x0, 0, 0x1021, 0, 0);
 }
 
 
@@ -490,7 +490,7 @@ std::uint32_t cPartialResponse::getCompletedSubOperations() const
 //////////////////////////////////////////////////////////////////
 std::uint32_t cPartialResponse::getFailedSubOperations() const
 {
-    return m_pCommand->getUnsignedLong(0x0, 0, 0x1022, 0, 0);
+    return m_pCommand->getUint32(0x0, 0, 0x1022, 0, 0);
 }
 
 
@@ -501,7 +501,7 @@ std::uint32_t cPartialResponse::getFailedSubOperations() const
 //////////////////////////////////////////////////////////////////
 std::uint32_t cPartialResponse::getWarningSubOperations() const
 {
-    return m_pCommand->getUnsignedLong(0x0, 0, 0x1023, 0, 0);
+    return m_pCommand->getUint32(0x0, 0, 0x1023, 0, 0);
 }
 
 
@@ -573,7 +573,7 @@ cStoreCommand::cStoreCommand(
     m_pCommand->setString(0x0, 0, 0x1030, 0, originatorAET);
 
     // Move originator command ID
-    m_pCommand->setUnsignedLong(0x0, 0, 0x1031, 0, originatorMessageID);
+    m_pCommand->setUint32(0x0, 0, 0x1031, 0, originatorMessageID);
 }
 
 
@@ -629,7 +629,7 @@ std::string cStoreCommand::getOriginatorAET() const
 //////////////////////////////////////////////////////////////////
 std::uint16_t cStoreCommand::getOriginatorMessageID() const
 {
-    return (std::uint16_t)m_pCommand->getUnsignedLong(0x0, 0, 0x1031, 0, 0, 0);
+    return (std::uint16_t)m_pCommand->getUint32(0x0, 0, 0x1031, 0, 0, 0);
 }
 
 
@@ -1150,7 +1150,7 @@ cCancelCommand::cCancelCommand(
         std::uint16_t cancelMessageID):
     dimseCCommand(abstractSyntax, dimseCommandType_t::cCancel, priority, messageID)
 {
-    m_pCommand->setUnsignedLong(0x0, 0, 0x0120, 0, cancelMessageID);
+    m_pCommand->setUint32(0x0, 0, 0x0120, 0, cancelMessageID);
 }
 
 
@@ -1172,7 +1172,7 @@ cCancelCommand::cCancelCommand(std::shared_ptr<const associationMessage> pMessag
 //////////////////////////////////////////////////////////////////
 std::uint16_t cCancelCommand::getCancelMessageID() const
 {
-    return (std::uint16_t)m_pCommand->getUnsignedLong(0x0, 0, 0x0120, 0, 0);
+    return (std::uint16_t)m_pCommand->getUint32(0x0, 0, 0x0120, 0, 0);
 }
 
 
@@ -1234,7 +1234,7 @@ nEventReportCommand::nEventReportCommand(
 {
     m_pCommand->setString(0x0, 0, 0x0002, 0, affectedSopClassUid);
     m_pCommand->setString(0x0, 0, 0x1000, 0, affectedSopInstanceUid);
-    m_pCommand->setUnsignedLong(0x0, 0, 0x1002, 0, eventID);
+    m_pCommand->setUint32(0x0, 0, 0x1002, 0, eventID);
 }
 
 
@@ -1269,7 +1269,7 @@ void nEventReportCommand::validate() const
 //////////////////////////////////////////////////////////////////
 std::uint16_t nEventReportCommand::getEventID() const
 {
-    return (std::uint16_t)(m_pCommand->getUnsignedLong(0x0, 0, 0x1002, 0, 0, 0));
+    return (std::uint16_t)(m_pCommand->getUint32(0x0, 0, 0x1002, 0, 0, 0));
 }
 
 
@@ -1297,7 +1297,7 @@ nEventReportResponse::nEventReportResponse(
     dimseResponse(pCommand, dimseStatusCode_t::success, pEventReply)
 {
     m_pCommand->setString(0x0, 0, 0x0002, 0, pCommand->getAffectedSopClassUid());
-    m_pCommand->setUnsignedLong(0x0, 0, 0x1002, 0, pCommand->getEventID());
+    m_pCommand->setUint32(0x0, 0, 0x1002, 0, pCommand->getEventID());
 }
 
 
@@ -1313,7 +1313,7 @@ nEventReportResponse::nEventReportResponse(
     dimseResponse(pCommand, responseCode)
 {
     m_pCommand->setString(0x0, 0, 0x0002, 0, pCommand->getAffectedSopClassUid());
-    m_pCommand->setUnsignedLong(0x0, 0, 0x1002, 0, pCommand->getEventID());
+    m_pCommand->setUint32(0x0, 0, 0x1002, 0, pCommand->getEventID());
 }
 
 
@@ -1335,7 +1335,7 @@ nEventReportResponse::nEventReportResponse(std::shared_ptr<const associationMess
 //////////////////////////////////////////////////////////////////
 std::uint16_t nEventReportResponse::getEventID() const
 {
-    return (std::uint16_t)(m_pCommand->getUnsignedLong(0x0, 0, 0x1002, 0, 0, 0));
+    return (std::uint16_t)(m_pCommand->getUint32(0x0, 0, 0x1002, 0, 0, 0));
 }
 
 
@@ -1365,7 +1365,7 @@ attributeIdentifierList_t attributeIdentifierCommand::getAttributeList(std::shar
         std::shared_ptr<handlers::readingDataHandler> attributesHandler(pDataSet->getReadingDataHandler(0x0, 0, 0x1005, 0));
         for(size_t scanAttributeIdentifier(0); scanAttributeIdentifier != attributesHandler->getSize(); ++scanAttributeIdentifier)
         {
-            attributeIdentifierList.push_back((tagId_t)attributesHandler->getUnsignedLong(scanAttributeIdentifier));
+            attributeIdentifierList.push_back((tagId_t)attributesHandler->getUint32(scanAttributeIdentifier));
         }
         return attributeIdentifierList;
     }
@@ -1390,7 +1390,7 @@ void attributeIdentifierCommand::setAttributeIdentifierList(
     size_t index(0);
     for(const tagId_t tagId: attributeIdentifierList)
     {
-        attributesHandler->setUnsignedLong(index++, (std::uint32_t)tagId);
+        attributesHandler->setUint32(index++, (std::uint32_t)tagId);
     }
 }
 
@@ -1683,7 +1683,7 @@ nActionCommand::nActionCommand(
         ):
     dimseNCommand(abstractSyntax, dimseCommandType_t::nAction, messageID, pActionInformation)
 {
-    m_pCommand->setUnsignedLong(0x0, 0, 0x1008, 0, actionID);
+    m_pCommand->setUint32(0x0, 0, 0x1008, 0, actionID);
     m_pCommand->setString(0x0, 0, 0x0003, 0, requestedSopClassUid);
     m_pCommand->setString(0x0, 0, 0x1001, 0, requestedSopInstanceUid);
 }
@@ -1732,7 +1732,7 @@ void nActionCommand::validate() const
 //////////////////////////////////////////////////////////////////
 std::uint16_t nActionCommand::getActionID() const
 {
-    return (std::uint16_t)(m_pCommand->getUnsignedLong(0x0, 0, 0x1008, 0, 0));
+    return (std::uint16_t)(m_pCommand->getUint32(0x0, 0, 0x1008, 0, 0));
 }
 
 
@@ -1759,7 +1759,7 @@ nActionResponse::nActionResponse(
         ):
     dimseResponse(pCommand, dimseStatusCode_t::success, pActionReply)
 {
-    m_pCommand->setUnsignedLong(0x0, 0, 0x1008, 0, pCommand->getActionID());
+    m_pCommand->setUint32(0x0, 0, 0x1008, 0, pCommand->getActionID());
     m_pCommand->setString(0x0, 0, 0x0002, 0, pCommand->getRequestedSopClassUid());
     m_pCommand->setString(0x0, 0, 0x1000, 0, pCommand->getRequestedSopInstanceUid());
 }
@@ -1776,7 +1776,7 @@ nActionResponse::nActionResponse(
         ):
     dimseResponse(pCommand, responseCode)
 {
-    m_pCommand->setUnsignedLong(0x0, 0, 0x1008, 0, pCommand->getActionID());
+    m_pCommand->setUint32(0x0, 0, 0x1008, 0, pCommand->getActionID());
     m_pCommand->setString(0x0, 0, 0x0002, 0, pCommand->getRequestedSopClassUid());
     m_pCommand->setString(0x0, 0, 0x1000, 0, pCommand->getRequestedSopInstanceUid());
 }
@@ -1800,7 +1800,7 @@ nActionResponse::nActionResponse(std::shared_ptr<const associationMessage> pMess
 //////////////////////////////////////////////////////////////////
 std::uint16_t nActionResponse::getActionID() const
 {
-    return (std::uint16_t)(m_pCommand->getUnsignedLong(0x0, 0, 0x1008, 0, 0));
+    return (std::uint16_t)(m_pCommand->getUint32(0x0, 0, 0x1008, 0, 0));
 }
 
 
@@ -2117,7 +2117,7 @@ std::shared_ptr<dimseNCommand> dimseService::getCommand()
     std::shared_ptr<associationMessage> pMessage(m_pAssociation->getCommand());
 
     std::shared_ptr<dimseNCommand> pCommand;
-    std::uint16_t commandType((std::uint16_t)pMessage->getCommandDataSet()->getUnsignedLong(0x0, 0, 0x0100, 0, 0));
+    std::uint16_t commandType((std::uint16_t)pMessage->getCommandDataSet()->getUint32(0x0, 0, 0x0100, 0, 0));
     switch( (dimseCommandType_t)commandType )
     {
     case dimseCommandType_t::cStore:
@@ -2191,7 +2191,7 @@ std::shared_ptr<dimseResponse> dimseService::getResponse(std::uint16_t commandID
 
     std::shared_ptr<associationMessage> pMessage(m_pAssociation->getResponse(commandID));
 
-    std::uint16_t commandType((std::uint16_t)pMessage->getCommandDataSet()->getUnsignedLong(0x0, 0, 0x100, 0, 0));
+    std::uint16_t commandType((std::uint16_t)pMessage->getCommandDataSet()->getUint32(0x0, 0, 0x100, 0, 0));
 
     if((commandType & 0x8000) == 0)
     {

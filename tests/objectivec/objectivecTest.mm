@@ -167,7 +167,7 @@ TEST(objectivec, image)
     ImebraReadingDataHandlerNumeric* readingDataHandler = [pCheckImage getReadingDataHandler:&error];
     for(unsigned int pixel(0); pixel != 25; ++pixel)
     {
-        EXPECT_EQ([readingDataHandler getUnsignedLong:pixel error:&error], pixel);
+        EXPECT_EQ([readingDataHandler getUint32:pixel error:&error], pixel);
     }
 }
 
@@ -247,11 +247,11 @@ TEST(objectivec, datasetValues)
     EXPECT_EQ(10u, [checkAge age]);
     EXPECT_EQ(ImebraAgeUnitYears, [checkAge units]);
 
-    EXPECT_EQ(10, [pDataSet getSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1011] elementNumber:0 error:&error]);
-    EXPECT_EQ(11u, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] elementNumber:0 error:&error]);
+    EXPECT_EQ(10, [pDataSet getInt32:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1011] elementNumber:0 error:&error]);
+    EXPECT_EQ(11u, [pDataSet getUint32:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] elementNumber:0 error:&error]);
     EXPECT_DOUBLE_EQ(12.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] elementNumber:0 error:&error]);
-    EXPECT_EQ(12, [pDataSet getSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1020] elementNumber:0 defaultValue:12u error:&error]);
-    EXPECT_EQ(13u, [pDataSet getUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1021] elementNumber:0 defaultValue:13u error:&error]);
+    EXPECT_EQ(12, [pDataSet getInt32:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1020] elementNumber:0 defaultValue:12u error:&error]);
+    EXPECT_EQ(13u, [pDataSet getUint32:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1021] elementNumber:0 defaultValue:13u error:&error]);
     EXPECT_DOUBLE_EQ(14.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1022] elementNumber:0 defaultValue:14.0 error:&error]);
 
     EXPECT_DOUBLE_EQ(0.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:0 error:&error]);
@@ -810,12 +810,12 @@ TEST(objectivec, voilutUnsigned8OptimalVOI)
 
     ImebraReadingDataHandler* unsigned8Handler = [unsigned8Out getReadingDataHandler:&pError];
 
-    ASSERT_EQ(51u, [unsigned8Handler getUnsignedLong:0 error:&pError]);
-    ASSERT_EQ(0u, [unsigned8Handler getUnsignedLong:1 error:&pError]);
-    ASSERT_EQ(102u, [unsigned8Handler getUnsignedLong:2 error:&pError]);
-    ASSERT_EQ(153u, [unsigned8Handler getUnsignedLong:3 error:&pError]);
-    ASSERT_EQ(204u, [unsigned8Handler getUnsignedLong:4 error:&pError]);
-    ASSERT_EQ(255u, [unsigned8Handler getUnsignedLong:5 error:&pError]);
+    ASSERT_EQ(51u, [unsigned8Handler getUint32:0 error:&pError]);
+    ASSERT_EQ(0u, [unsigned8Handler getUint32:1 error:&pError]);
+    ASSERT_EQ(102u, [unsigned8Handler getUint32:2 error:&pError]);
+    ASSERT_EQ(153u, [unsigned8Handler getUint32:3 error:&pError]);
+    ASSERT_EQ(204u, [unsigned8Handler getUint32:4 error:&pError]);
+    ASSERT_EQ(255u, [unsigned8Handler getUint32:5 error:&pError]);
 }
 
 

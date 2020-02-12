@@ -390,7 +390,7 @@ public:
 
     // Retrieve the data element as a signed long
     ///////////////////////////////////////////////////////////
-    virtual std::int32_t getSignedLong(const size_t index) const override
+    virtual std::int32_t getInt32(const size_t index) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -401,7 +401,7 @@ public:
 
     // Retrieve the data element an unsigned long
     ///////////////////////////////////////////////////////////
-    virtual std::uint32_t getUnsignedLong(const size_t index) const override
+    virtual std::uint32_t getUint32(const size_t index) const override
     {
         IMEBRA_FUNCTION_START();
 
@@ -971,7 +971,7 @@ public:
 
     // Set the data element as a std::int32_t
     ///////////////////////////////////////////////////////////
-    virtual void setSignedLong(const size_t index, const std::int32_t value) override
+    virtual void setInt32(const size_t index, const std::int32_t value) override
     {
         IMEBRA_FUNCTION_START();
 
@@ -982,7 +982,7 @@ public:
 
     // Set the data element as a std::uint32_t
     ///////////////////////////////////////////////////////////
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) override
+    virtual void setUint32(const size_t index, const std::uint32_t value) override
     {
         IMEBRA_FUNCTION_START();
 

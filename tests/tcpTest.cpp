@@ -66,7 +66,7 @@ TEST(tcpTest, sendReceive)
             StreamReader reader(newStream.getStreamInput());
             DataSet dataSet = CodecFactory::load(reader);
 
-            ASSERT_EQ(connectionNumber, dataSet.getUnsignedLong(TagId(11, 11), 0));
+            ASSERT_EQ(connectionNumber, dataSet.getUint32(TagId(11, 11), 0));
         }
     }
     catch(const std::exception& e)

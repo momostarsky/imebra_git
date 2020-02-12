@@ -42,7 +42,7 @@ class readingDataHandlerStringIS : public readingDataHandlerStringNumbers
 public:
     readingDataHandlerStringIS(const memory& parseMemory);
 
-    // Overwritten to use getSignedLong()
+    // Overwritten to use getInt32()
     ///////////////////////////////////////////////////////////
     virtual double getDouble(const size_t index) const override;
 
@@ -53,11 +53,11 @@ class writingDataHandlerStringIS: public writingDataHandlerStringNumbers
 public:
     writingDataHandlerStringIS(const std::shared_ptr<buffer> pBuffer);
 
-    // Overwritten to use setSignedLong()
+    // Overwritten to use setInt32()
     ///////////////////////////////////////////////////////////
     virtual void setDouble(const size_t index, const double value) override;
 
-    // Overwritten to use setSignedLong()
+    // Overwritten to use setInt32()
     ///////////////////////////////////////////////////////////
     virtual void setFloat(const size_t index, const float value) override;
 };

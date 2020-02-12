@@ -109,6 +109,11 @@ public:
     /// \return the tag's value as a signed 32 bit integer
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    std::int32_t getInt32(size_t index) const;
+
+    /// \brief Deprecated. Use getInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     std::int32_t getSignedLong(size_t index) const;
 
     /// \brief Retrieve a buffer's value as an unsigned long integer (32 bit).
@@ -121,6 +126,11 @@ public:
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \return the tag's value as an unsigned 32 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::uint32_t getUint32(size_t index) const;
+
+    /// \brief Deprecated. Use getUint32() instead.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     std::uint32_t getUnsignedLong(size_t index) const;

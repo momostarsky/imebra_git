@@ -88,11 +88,29 @@ void WritingDataHandler::setAge(size_t index, const Age& age)
     IMEBRA_FUNCTION_END_LOG();
 }
 
+void WritingDataHandler::setInt32(size_t index, std::int32_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setInt32(index, value);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
 void WritingDataHandler::setSignedLong(size_t index, std::int32_t value)
 {
     IMEBRA_FUNCTION_START();
 
-    m_pDataHandler->setSignedLong(index, value);
+    m_pDataHandler->setInt32(index, value);
+
+    IMEBRA_FUNCTION_END_LOG();
+}
+
+void WritingDataHandler::setUint32(size_t index, std::uint32_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    m_pDataHandler->setUint32(index, value);
 
     IMEBRA_FUNCTION_END_LOG();
 }
@@ -101,7 +119,7 @@ void WritingDataHandler::setUnsignedLong(size_t index, std::uint32_t value)
 {
     IMEBRA_FUNCTION_START();
 
-    m_pDataHandler->setUnsignedLong(index, value);
+    m_pDataHandler->setUint32(index, value);
 
     IMEBRA_FUNCTION_END_LOG();
 }

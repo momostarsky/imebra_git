@@ -52,7 +52,7 @@ readingDataHandlerStringIS::readingDataHandlerStringIS(const memory& parseMemory
 //
 //
 // Get a value as a double.
-// Overwritten to use getSignedLong()
+// Overwritten to use getInt32()
 //
 //
 ///////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ double readingDataHandlerStringIS::getDouble(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-    return (double)getSignedLong(index);
+    return (double)getInt32(index);
 
     IMEBRA_FUNCTION_END();
 }
@@ -77,7 +77,7 @@ writingDataHandlerStringIS::writingDataHandlerStringIS(const std::shared_ptr<buf
 //
 //
 // Set a value as a double.
-// Overwritten to use setSignedLong()
+// Overwritten to use setInt32()
 //
 //
 ///////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ void writingDataHandlerStringIS::setDouble(const size_t index, const double valu
     {
         IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the value " << value << " to an integer (out of bounds)");
     }
-    setSignedLong(index, (std::int32_t)value);
+    setInt32(index, (std::int32_t)value);
 
     IMEBRA_FUNCTION_END();
 }

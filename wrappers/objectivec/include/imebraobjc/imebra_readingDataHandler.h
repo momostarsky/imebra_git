@@ -71,6 +71,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \return the tag's value as a signed 32 bit integer
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    -(signed int) getInt32:(unsigned int)index error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Deprecated. Use getInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(signed int) getSignedLong:(unsigned int)index error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
@@ -111,6 +117,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///        getSize()
     /// \param pError set to a NSError derived class in case of error
     /// \return the tag's value as an unsigned 32 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(unsigned int) getUint32:(unsigned int)index error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Deprecated. Use getUint32() instead.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(unsigned int) getUnsignedLong:(unsigned int)index error:(NSError**)pError

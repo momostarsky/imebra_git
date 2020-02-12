@@ -73,6 +73,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param pError set to a NSError derived class in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    -(void) setInt32:(unsigned int)index newValue:(signed int)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \bried Deprecated. Use setInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(void) setSignedLong:(unsigned int)index newValue:(signed int)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
@@ -113,6 +119,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///        size()
     /// \param value the value to write
     /// \param pError set to a NSError derived class in case of error
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) setUint32:(unsigned int)index newValue:(unsigned int)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Deprecated. Use setUint32() instead.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(void) setUnsignedLong:(unsigned int)index newValue:(unsigned int)value error:(NSError**)pError

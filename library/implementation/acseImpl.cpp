@@ -1721,7 +1721,7 @@ bool associationMessage::isComplete() const
 {
     return m_pCommand != nullptr &&
             m_pCommand->bufferExists(0, 0, 0x100, 0) &&
-            (m_pCommand->getUnsignedLong(0, 0, 0x800, 0, 0, 0x0101) == 0x0101 || m_pPayload != nullptr);
+            (m_pCommand->getUint32(0, 0, 0x800, 0, 0, 0x0101) == 0x0101 || m_pPayload != nullptr);
 }
 
 
@@ -1833,7 +1833,7 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
             // Check if the role is correct for the selected
             // presentation context
             ///////////////////////////////////////////////////////////
-            const bool bResponse( (pDataSet->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) & 0x00008000) != 0);
+            const bool bResponse( (pDataSet->getUint32(0x0, 0, 0x100, 0, 0, 0) & 0x00008000) != 0);
             if(m_role == role_t::scu)
             {
                 if(!bResponse && !pPresentationContext->m_bRequestorIsSCU)
@@ -1852,8 +1852,8 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
             std::unique_lock<std::mutex> lockCommandsResponses(m_lockCommandsResponses);
             if(bResponse)
             {
-                std::uint32_t responseId = pDataSet->getUnsignedLong(0x0, 0, 0x120, 0, 0, 0);
-                if((pDataSet->getUnsignedLong(0x0, 0, 0x900, 0, 0, 0) & 0xfff0) == 0xff00)
+                std::uint32_t responseId = pDataSet->getUint32(0x0, 0, 0x120, 0, 0, 0);
+                if((pDataSet->getUint32(0x0, 0, 0x900, 0, 0, 0) & 0xfff0) == 0xff00)
                 {
                     // partial response
                     if(m_processingCommands.find(responseId) == m_processingCommands.end())
@@ -1868,9 +1868,9 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
             }
             else
             {
-                if(pDataSet->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) != 0x0fff)
+                if(pDataSet->getUint32(0x0, 0, 0x100, 0, 0, 0) != 0x0fff)
                 {
-                    const std::uint32_t commandId(pDataSet->getUnsignedLong(0x0, 0, 0x110, 0, 0, 0));
+                    const std::uint32_t commandId(pDataSet->getUint32(0x0, 0, 0x110, 0, 0, 0));
                     if(m_waitingResponses.count(commandId) != 0)
                     {
                         IMEBRA_THROW(AcseWrongCommandIdError, "Sending a command with the same ID of a command still being processed");
@@ -1972,8 +1972,8 @@ std::shared_ptr<associationMessage> associationBase::getMessage(std::uint16_t me
 
             if(
                     (*scanDatasets)->isComplete() &&
-                    (((commandDataset->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0)) & 0x00008000) != 0) == bResponse && // Check if this is a response
-                    (!bResponse || (std::uint16_t)commandDataset->getUnsignedLong(0, 0, 0x0120, 0, 0) == messageId)) // If is a response check the message id
+                    (((commandDataset->getUint32(0x0, 0, 0x100, 0, 0, 0)) & 0x00008000) != 0) == bResponse && // Check if this is a response
+                    (!bResponse || (std::uint16_t)commandDataset->getUint32(0, 0, 0x0120, 0, 0) == messageId)) // If is a response check the message id
             {
                 std::shared_ptr<associationMessage> pMessage(*scanDatasets);
                 m_readyDataSets.erase(scanDatasets);
@@ -2284,24 +2284,24 @@ void associationBase::getMessagesThread()
 
                     // We received a command or response dataset
                     ///////////////////////////////////////////////////////////
-                    if( (pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) & 0x00008000) != 0)
+                    if( (pReceivedDataset->m_pDataset->getUint32(0x0, 0, 0x100, 0, 0, 0) & 0x00008000) != 0)
                     {
                         // We received a response
                         ///////////////////////////////////////////////////////////
 
                         // Check for a partial response
                         ///////////////////////////////////////////////////////////
-                        if( (pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x900, 0, 0, 0) & 0x0000fff0) == 0xff00)
+                        if( (pReceivedDataset->m_pDataset->getUint32(0x0, 0, 0x900, 0, 0, 0) & 0x0000fff0) == 0xff00)
                         {
                             // We received a partial response
                             ///////////////////////////////////////////////////////////
-                            if(m_waitingResponses.find(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0120, 0, 0)) == m_waitingResponses.end())
+                            if(m_waitingResponses.find(pReceivedDataset->m_pDataset->getUint32(0, 0, 0x0120, 0, 0)) == m_waitingResponses.end())
                             {
                                 abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
                                 IMEBRA_THROW(AcseWrongResponseIdError, "Received a partial response with a wrong ID");
                             }
                         }
-                        else if(m_waitingResponses.erase(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0120, 0, 0)) == 0)
+                        else if(m_waitingResponses.erase(pReceivedDataset->m_pDataset->getUint32(0, 0, 0x0120, 0, 0)) == 0)
                         {
                             abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
                             IMEBRA_THROW(AcseWrongResponseIdError, "Received a response with a wrong ID");
@@ -2311,9 +2311,9 @@ void associationBase::getMessagesThread()
                     {
                         // We received a command (not cancel)
                         ///////////////////////////////////////////////////////////
-                        if(pReceivedDataset->m_pDataset->getUnsignedLong(0x0, 0, 0x100, 0, 0, 0) != 0x0fff)
+                        if(pReceivedDataset->m_pDataset->getUint32(0x0, 0, 0x100, 0, 0, 0) != 0x0fff)
                         {
-                            if(m_processingCommands.count(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0110, 0, 0)) != 0)
+                            if(m_processingCommands.count(pReceivedDataset->m_pDataset->getUint32(0, 0, 0x0110, 0, 0)) != 0)
                             {
                                 abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
                                 IMEBRA_THROW(AcseWrongCommandIdError, "Received a command with an ID from a command still being processed");
@@ -2322,7 +2322,7 @@ void associationBase::getMessagesThread()
                             {
                                 IMEBRA_THROW(AcseTooManyOperationsPerformedError, "Performing too many operations (max is " << m_maxOperationsPerformed << ")");
                             }
-                            m_processingCommands.insert(pReceivedDataset->m_pDataset->getUnsignedLong(0, 0, 0x0110, 0, 0));
+                            m_processingCommands.insert(pReceivedDataset->m_pDataset->getUint32(0, 0, 0x0110, 0, 0));
                         }
                     }
                 }

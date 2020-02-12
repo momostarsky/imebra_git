@@ -111,10 +111,10 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
 /// - getImage()
 /// - getImageApplyModalityTransform()
 /// - getSequenceItem()
-/// - getSignedLong()
+/// - getInt32()
 /// - getInt16()
 /// - getInt8()
-/// - getUnsignedLong()
+/// - getUint32()
 /// - getUint16()
 /// - getUint8()
 /// - getDouble()
@@ -369,6 +369,12 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
     /// \return the tag's value as a signed 32 bit integer
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    -(signed int)getInt32:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Deprecated. Use getInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
@@ -422,6 +428,12 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
     /// \param pError   a pointer to a NSError pointer which is set when an
     ///                  error occurs
     /// \return the tag's value as a signed 32 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(signed int)getInt32:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(signed int)defaultValue error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Deprecated. Use getInt32() instead.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(signed int)defaultValue error:(NSError**)pError
@@ -480,6 +492,12 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
     /// \return the tag's value as an unsigned 32 bit integer
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    -(unsigned int)getUint32:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Deprecated. Use getUint32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(unsigned int)getUnsignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
@@ -533,6 +551,12 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
     /// \param pError   a pointer to a NSError pointer which is set when an
     ///                  error occurs
     /// \return the tag's value as an unsigned 32 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(unsigned int)getUint32:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(unsigned int)defaultValue error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Deprecated. Use getUint32() instead.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(unsigned int)getUnsignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(unsigned int)defaultValue error:(NSError**)pError
@@ -822,10 +846,10 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
     /// To set the ImebraMutableDataSet's content, use one of the following methods:
     /// - setImage()
     /// - appendSequenceItem()
-    /// - setSignedLong()
+    /// - setInt32()
     /// - setInt16()
     /// - setInt8()
-    /// - setUnsignedLong()
+    /// - setUint32()
     /// - setUint16()
     /// - setUint8()
     /// - setDouble()
@@ -1099,6 +1123,12 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
         ///                  error occurs
         ///
         ///////////////////////////////////////////////////////////////////////////////
+        -(void)setInt32:(ImebraTagId*)tagId newValue:(signed int)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \bried Deprecated. Use setInt32() instead.
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
         -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
@@ -1154,6 +1184,12 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
         /// \param newValue the value to write into the tag
         /// \param pError   a pointer to a NSError pointer which is set when an
         ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setInt32:(ImebraTagId*)tagId newValue:(signed int)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \bried Deprecated. Use setInt32() instead.
         ///
         ///////////////////////////////////////////////////////////////////////////////
         -(void)setSignedLong:(ImebraTagId*)tagId newValue:(signed int)newValue error:(NSError**)pError
@@ -1213,6 +1249,12 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
         ///                  error occurs
         ///
         ///////////////////////////////////////////////////////////////////////////////
+        -(void)setUint32:(ImebraTagId*)tagId newValue:(unsigned int)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Deprecated. Use setUint32() instead.
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
         -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
@@ -1268,6 +1310,12 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
         /// \param newValue the value to write into the tag
         /// \param pError   a pointer to a NSError pointer which is set when an
         ///                  error occurs
+        ///
+        ///////////////////////////////////////////////////////////////////////////////
+        -(void)setUint32:(ImebraTagId*)tagId newValue:(unsigned int)newValue error:(NSError**)pError
+            __attribute__((swift_error(nonnull_error)));
+
+        /// \brief Deprecated. Use setUint32() instead.
         ///
         ///////////////////////////////////////////////////////////////////////////////
         -(void)setUnsignedLong:(ImebraTagId*)tagId newValue:(unsigned int)newValue error:(NSError**)pError

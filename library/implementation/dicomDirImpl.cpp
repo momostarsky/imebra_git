@@ -263,11 +263,11 @@ void directoryRecord::updateOffsets()
     ///////////////////////////////////////////////////////////
     if(m_pNextRecord == 0)
     {
-        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1400, 0, 0);
+        getRecordDataSet()->setUint32(0x0004, 0, 0x1400, 0, 0);
     }
     else
     {
-        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1400, 0, m_pNextRecord->getRecordDataSet()->getItemOffset());
+        getRecordDataSet()->setUint32(0x0004, 0, 0x1400, 0, m_pNextRecord->getRecordDataSet()->getItemOffset());
         m_pNextRecord->updateOffsets();
     }
 
@@ -275,11 +275,11 @@ void directoryRecord::updateOffsets()
     ///////////////////////////////////////////////////////////
     if(m_pFirstChildRecord == 0)
     {
-        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1420, 0, 0);
+        getRecordDataSet()->setUint32(0x0004, 0, 0x1420, 0, 0);
     }
     else
     {
-        getRecordDataSet()->setUnsignedLong(0x0004, 0, 0x1420, 0, m_pFirstChildRecord->getRecordDataSet()->getItemOffset());
+        getRecordDataSet()->setUint32(0x0004, 0, 0x1420, 0, m_pFirstChildRecord->getRecordDataSet()->getItemOffset());
         m_pFirstChildRecord->updateOffsets();
     }
 
@@ -341,8 +341,8 @@ dicomDir::dicomDir(): m_pDataSet(std::make_shared<dataSet>("1.2.840.10008.1.2.1"
     {
         std::shared_ptr<handlers::writingDataHandlerRaw> versionHandler(m_pDataSet->getWritingDataHandlerRaw(0x2, 0, 0x1, 0, tagVR_t::OB));
         versionHandler->setSize(2);
-        versionHandler->setUnsignedLong(0, 0);
-        versionHandler->setUnsignedLong(1, 1);
+        versionHandler->setUint32(0, 0);
+        versionHandler->setUint32(1, 1);
     }
 
     // Adjust the SOP class UID
@@ -399,7 +399,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
     {
         try
         {
-            std::uint32_t nextRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1400, 0, 0));
+            std::uint32_t nextRecordOffset(scanRecords->second->getRecordDataSet()->getUint32(0x0004, 0, 0x1400, 0, 0));
             tOffsetsToRecords::iterator findNextRecord(offsetsToRecords.find(nextRecordOffset));
             if(findNextRecord != offsetsToRecords.end())
             {
@@ -413,7 +413,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
 
         try
         {
-            std::uint32_t childRecordOffset(scanRecords->second->getRecordDataSet()->getUnsignedLong(0x0004, 0, 0x1420, 0, 0));
+            std::uint32_t childRecordOffset(scanRecords->second->getRecordDataSet()->getUint32(0x0004, 0, 0x1420, 0, 0));
             tOffsetsToRecords::iterator findChildRecord(offsetsToRecords.find(childRecordOffset));
             if(findChildRecord != offsetsToRecords.end())
             {
@@ -430,7 +430,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
     ///////////////////////////////////////////////////////////
     try
     {
-        tOffsetsToRecords::iterator findRecord(offsetsToRecords.find(m_pDataSet->getUnsignedLong(0x0004, 0, 0x1200, 0, 0)));
+        tOffsetsToRecords::iterator findRecord(offsetsToRecords.find(m_pDataSet->getUint32(0x0004, 0, 0x1200, 0, 0)));
         if(findRecord == offsetsToRecords.end())
         {
             setFirstRootRecord(std::shared_ptr<directoryRecord>());
@@ -529,7 +529,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
     {
         m_pFirstRootRecord->updateOffsets();
     }
-    m_pDataSet->setUnsignedLong(0x0004, 0, 0x1200, 0, 0);
+    m_pDataSet->setUint32(0x0004, 0, 0x1200, 0, 0);
 
 
     // Save to a null stream in order to update the offsets
@@ -544,7 +544,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
     if(m_pFirstRootRecord != 0)
     {
         m_pFirstRootRecord->updateOffsets();
-        m_pDataSet->setUnsignedLong(0x0004, 0, 0x1200, 0, m_pFirstRootRecord->getRecordDataSet()->getItemOffset());
+        m_pDataSet->setUint32(0x0004, 0, 0x1200, 0, m_pFirstRootRecord->getRecordDataSet()->getItemOffset());
     }
 
     return m_pDataSet;

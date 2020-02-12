@@ -59,13 +59,25 @@ If you do not want to be bound by the GPL terms (such as the requirement
     }
 }
 
+-(void) setInt32:(unsigned int)index newValue:(signed int)value error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    if(get_imebra_object_holder(WritingDataHandler) != nullptr)
+    {
+        get_imebra_object_holder(WritingDataHandler)->setInt32(index, value);
+    }
+
+    OBJC_IMEBRA_FUNCTION_END();
+}
+
 -(void) setSignedLong:(unsigned int)index newValue:(signed int)value error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
     if(get_imebra_object_holder(WritingDataHandler) != nullptr)
     {
-        get_imebra_object_holder(WritingDataHandler)->setSignedLong(index, value);
+        get_imebra_object_holder(WritingDataHandler)->setInt32(index, value);
     }
 
     OBJC_IMEBRA_FUNCTION_END();
@@ -95,13 +107,25 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
+-(void) setUint32:(unsigned int)index newValue:(unsigned int)value error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    if(get_imebra_object_holder(WritingDataHandler) != nullptr)
+    {
+        get_imebra_object_holder(WritingDataHandler)->setUint32(index, value);
+    }
+
+    OBJC_IMEBRA_FUNCTION_END();
+}
+
 -(void) setUnsignedLong:(unsigned int)index newValue:(unsigned int)value error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
     if(get_imebra_object_holder(WritingDataHandler) != nullptr)
     {
-        get_imebra_object_holder(WritingDataHandler)->setUnsignedLong(index, value);
+        get_imebra_object_holder(WritingDataHandler)->setUint32(index, value);
     }
 
     OBJC_IMEBRA_FUNCTION_END();

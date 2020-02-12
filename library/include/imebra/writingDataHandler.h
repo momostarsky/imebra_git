@@ -123,6 +123,11 @@ public:
     /// \param value the value to write
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    void setInt32(size_t index, std::int32_t value);
+
+    /// \brief Deprecated. Use setInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void setSignedLong(size_t index, std::int32_t value);
 
     /// \brief Write an unsigned long integer (32 bit).
@@ -133,6 +138,11 @@ public:
     /// \param index the element number within the buffer. Must be smaller than
     ///        getSize()
     /// \param value the value to write
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setUint32(size_t index, std::uint32_t value);
+
+    /// \brief Deprecated. Use setUint32() instead.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setUnsignedLong(size_t index, std::uint32_t value);

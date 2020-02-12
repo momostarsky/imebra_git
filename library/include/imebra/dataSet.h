@@ -72,8 +72,8 @@ class Overlay;
 /// - getImage()
 /// - getImageApplyModalityTransform()
 /// - getSequenceItem()
-/// - getSignedLong()
-/// - getUnsignedLong()
+/// - getInt32()
+/// - getUint32()
 /// - getInt16()
 /// - getUint16()
 /// - getInt8()
@@ -330,6 +330,11 @@ public:
     /// \return the tag's value as a signed 32 bit integer
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    std::int32_t getInt32(const TagId& tagId, size_t elementNumber) const;
+
+    /// \brief Deprecated. Use getInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     std::int32_t getSignedLong(const TagId& tagId, size_t elementNumber) const;
 
     /// \brief Retrieve a tag's value as signed integer (32 bit).
@@ -347,6 +352,11 @@ public:
     ///         the tag doesn't exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    std::int32_t getInt32(const TagId& tagId, size_t elementNumber, std::int32_t defaultValue) const;
+
+    /// \brief Deprecated. Use getInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     std::int32_t getSignedLong(const TagId& tagId, size_t elementNumber, std::int32_t defaultValue) const;
 
     /// \brief Retrieve a tag's value as unsigned integer (32 bit).
@@ -360,6 +370,11 @@ public:
     /// \param tagId    the tag's id
     /// \param elementNumber the element number within the buffer
     /// \return the tag's value as an unsigned 32 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::uint32_t getUint32(const TagId& tagId, size_t elementNumber) const;
+
+    /// \brief Deprecated. Use getUint32() instead.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     std::uint32_t getUnsignedLong(const TagId& tagId, size_t elementNumber) const;
@@ -377,6 +392,11 @@ public:
     /// \param defaultValue  the value to return if the tag doesn't exist
     /// \return the tag's value as an unsigned 32 bit integer, or defaultValue if
     ///         the tag doesn't exist
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::uint32_t getUint32(const TagId& tagId, size_t elementNumber, std::uint32_t defaultValue) const;
+
+    /// \brief Deprecated. Use getUint32() instead.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     std::uint32_t getUnsignedLong(const TagId& tagId, size_t elementNumber, std::uint32_t defaultValue) const;
@@ -806,8 +826,8 @@ private:
 /// To set the DataSet's content, use one of the following methods:
 /// - setImage()
 /// - setSequenceItem()
-/// - setSignedLong()
-/// - setUnsignedLong()
+/// - setInt32()
+/// - setUint32()
 /// - setInt16()
 /// - setUint16()
 /// - setInt8()
@@ -1103,6 +1123,11 @@ public:
     /// \param tagVR    the tag's type to use when a new tag is created.
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    void setInt32(const TagId& tagId, std::int32_t newValue, tagVR_t tagVR);
+
+    /// \brief Deprecated. Use setInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void setSignedLong(const TagId& tagId, std::int32_t newValue, tagVR_t tagVR);
 
     /// \brief Write a new signed 32 bit integer value into the element 0 of the
@@ -1113,6 +1138,11 @@ public:
     ///
     /// \param tagId    the tag's id
     /// \param newValue the value to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setInt32(const TagId& tagId, std::int32_t newValue);
+
+    /// \brief Deprecated. Use setInt32() instead.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setSignedLong(const TagId& tagId, std::int32_t newValue);
@@ -1128,6 +1158,11 @@ public:
     /// \param tagVR    the tag's type to use when a new tag is created.
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    void setUint32(const TagId& tagId, std::uint32_t newValue, tagVR_t tagVR);
+
+    /// \brief Deprecated. Use setUint32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void setUnsignedLong(const TagId& tagId, std::uint32_t newValue, tagVR_t tagVR);
 
     /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
@@ -1138,6 +1173,11 @@ public:
     ///
     /// \param tagId    the tag's id
     /// \param newValue the value to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setUint32(const TagId& tagId, std::uint32_t newValue);
+
+    /// \brief Deprecated. Use setUint32() instead.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setUnsignedLong(const TagId& tagId, std::uint32_t newValue);

@@ -89,7 +89,7 @@ void readingDataHandlerString::throwNumberConversionError() const
 
 // Get the data element as a signed long
 ///////////////////////////////////////////////////////////
-std::int32_t readingDataHandlerString::getSignedLong(const size_t /* index */) const
+std::int32_t readingDataHandlerString::getInt32(const size_t /* index */) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -100,7 +100,7 @@ std::int32_t readingDataHandlerString::getSignedLong(const size_t /* index */) c
 
 // Get the data element as an unsigned long
 ///////////////////////////////////////////////////////////
-std::uint32_t readingDataHandlerString::getUnsignedLong(const size_t /* index */) const
+std::uint32_t readingDataHandlerString::getUint32(const size_t /* index */) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -235,7 +235,7 @@ readingDataHandlerStringNumbers::readingDataHandlerStringNumbers(const memory &p
 
 // Get the data element as a signed long
 ///////////////////////////////////////////////////////////
-std::int32_t readingDataHandlerStringNumbers::getSignedLong(const size_t index) const
+std::int32_t readingDataHandlerStringNumbers::getInt32(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -246,7 +246,7 @@ std::int32_t readingDataHandlerStringNumbers::getSignedLong(const size_t index) 
 
 // Get the data element as an unsigned long
 ///////////////////////////////////////////////////////////
-std::uint32_t readingDataHandlerStringNumbers::getUnsignedLong(const size_t index) const
+std::uint32_t readingDataHandlerStringNumbers::getUint32(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
@@ -368,7 +368,7 @@ void writingDataHandlerString::throwNumberConversionError() const
 
 // Set the data element as a signed long
 ///////////////////////////////////////////////////////////
-void writingDataHandlerString::setSignedLong(const size_t /* index */, const std::int32_t /* value */)
+void writingDataHandlerString::setInt32(const size_t /* index */, const std::int32_t /* value */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -379,7 +379,7 @@ void writingDataHandlerString::setSignedLong(const size_t /* index */, const std
 
 // Set the data element as an unsigned long
 ///////////////////////////////////////////////////////////
-void writingDataHandlerString::setUnsignedLong(const size_t /* index */, const std::uint32_t /* value */)
+void writingDataHandlerString::setUint32(const size_t /* index */, const std::uint32_t /* value */)
 {
     IMEBRA_FUNCTION_START();
 
@@ -531,7 +531,7 @@ writingDataHandlerStringNumbers::writingDataHandlerStringNumbers(const std::shar
 
 // Set the data element as a signed long
 ///////////////////////////////////////////////////////////
-void writingDataHandlerStringNumbers::setSignedLong(const size_t index, const std::int32_t value)
+void writingDataHandlerStringNumbers::setInt32(const size_t index, const std::int32_t value)
 {
     IMEBRA_FUNCTION_START();
 
@@ -542,7 +542,7 @@ void writingDataHandlerStringNumbers::setSignedLong(const size_t index, const st
 
 // Set the data element as an unsigned long
 ///////////////////////////////////////////////////////////
-void writingDataHandlerStringNumbers::setUnsignedLong(const size_t index, const std::uint32_t value)
+void writingDataHandlerStringNumbers::setUint32(const size_t index, const std::uint32_t value)
 {
     IMEBRA_FUNCTION_START();
 

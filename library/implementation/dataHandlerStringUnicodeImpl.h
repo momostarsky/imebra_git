@@ -50,11 +50,11 @@ public:
 
     // Get the data element as a signed long
     ///////////////////////////////////////////////////////////
-    virtual std::int32_t getSignedLong(const size_t index) const override;
+    virtual std::int32_t getInt32(const size_t index) const override;
 
     // Get the data element as an unsigned long
     ///////////////////////////////////////////////////////////
-    virtual std::uint32_t getUnsignedLong(const size_t index) const override;
+    virtual std::uint32_t getUint32(const size_t index) const override;
 
     // Get the data element as a int16
     ///////////////////////////////////////////////////////////
@@ -106,11 +106,11 @@ public:
 
     // Set the data element as a signed long
     ///////////////////////////////////////////////////////////
-    virtual void setSignedLong(const size_t index, const std::int32_t value) override;
+    virtual void setInt32(const size_t index, const std::int32_t value) override;
 
     // Set the data element as an unsigned long
     ///////////////////////////////////////////////////////////
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) override;
+    virtual void setUint32(const size_t index, const std::uint32_t value) override;
 
     // Set the data element as a int16
     ///////////////////////////////////////////////////////////

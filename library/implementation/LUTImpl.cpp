@@ -52,9 +52,9 @@ lut::lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, s
         IMEBRA_THROW(LutCorruptedError, "The LUT is corrupted");
     }
 
-    m_size = descriptorSignedToUnsigned(pDescriptor->getSignedLong(0));
+    m_size = descriptorSignedToUnsigned(pDescriptor->getInt32(0));
 
-    m_firstMapped = pDescriptor->getSignedLong(1);
+    m_firstMapped = pDescriptor->getInt32(1);
     if(signedData)
     {
         if(m_firstMapped >= 32768)
@@ -63,7 +63,7 @@ lut::lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, s
         }
     }
 
-    m_bits = (std::uint8_t)pDescriptor->getUnsignedLong(2);
+    m_bits = (std::uint8_t)pDescriptor->getUint32(2);
 
     // If the LUT descriptor says 8 bit but it is actually 16 bits
     // then correct the descriptor's information
@@ -89,9 +89,9 @@ lut::lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, s
         std::shared_ptr<handlers::writingDataHandlerNumericBase> writingHandler(temporaryBuffer->getWritingDataHandlerNumeric(tagVR_t::OB, m_size));
         for(size_t scanData(0); scanData != pData->getSize(); ++scanData)
         {
-            std::uint32_t data = pData->getUnsignedLong(scanData);
-            writingHandler->setUnsignedLong(scanData * 2, data & 0xff);
-            writingHandler->setUnsignedLong(scanData * 2 + 1, data >> 8);
+            std::uint32_t data = pData->getUint32(scanData);
+            writingHandler->setUint32(scanData * 2, data & 0xff);
+            writingHandler->setUint32(scanData * 2 + 1, data >> 8);
         }
         writingHandler.reset();
         pData = temporaryBuffer->getReadingDataHandlerNumeric(tagVR_t::OB);
@@ -201,7 +201,7 @@ std::uint32_t lut::getMappedValue(std::int32_t index) const
     {
         correctedIndex = m_size - 1;
     }
-    return m_pDataHandler->getUnsignedLong(correctedIndex);
+    return m_pDataHandler->getUint32(correctedIndex);
 
     IMEBRA_FUNCTION_END();
 }

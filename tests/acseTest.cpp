@@ -88,7 +88,7 @@ void scpThread(
                 DataSet commandDataSet = command.getCommand();
                 MutableDataSet responseDataSet;
                 responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
-                std::uint32_t messageId(commandDataSet.getUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0));
+                std::uint32_t messageId(commandDataSet.getUint32(TagId(tagId_t::MessageID_0000_0110), 0));
                 responseDataSet.setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
                 responseDataSet.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), commandDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0, ""));
                 responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
@@ -129,7 +129,7 @@ void scpThreadMultipleOperations(const std::string& name, PresentationContexts& 
             {
                 MutableDataSet responseDataSet;
                 responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
-                std::uint32_t messageId(command.getCommand().getUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0));
+                std::uint32_t messageId(command.getCommand().getUint32(TagId(tagId_t::MessageID_0000_0110), 0));
                 responseDataSet.setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
                 responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
                 responseDataSet.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), command.hasPayload() ? 0 : 0x0101);
@@ -290,7 +290,7 @@ TEST(acseTest, scpScuRole)
                 AssociationMessage command = scu.getCommand();
                 MutableDataSet responseDataSet;
                 responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
-                std::uint32_t messageId(command.getCommand().getUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0));
+                std::uint32_t messageId(command.getCommand().getUint32(TagId(tagId_t::MessageID_0000_0110), 0));
                 responseDataSet.setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
                 responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
                 responseDataSet.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x0101);

@@ -336,8 +336,8 @@ std::shared_ptr<image> jpeg2000ImageCodec::getImage(const dataSet& sourceDataSet
         IMEBRA_THROW(CodecCorruptedFileError, "Could not decode the jpeg2000 image");
     }
 
-    std::uint32_t width(sourceDataSet.getUnsignedLong(0x0028, 0, 0x0011, 0, 0, 0));
-    std::uint32_t height(sourceDataSet.getUnsignedLong(0x0028, 0, 0x0010, 0, 0, 0));
+    std::uint32_t width(sourceDataSet.getUint32(0x0028, 0, 0x0011, 0, 0, 0));
+    std::uint32_t height(sourceDataSet.getUint32(0x0028, 0, 0x0010, 0, 0, 0));
 
     std::string colorSpace(sourceDataSet.getString(0x0028, 0, 0x0004, 0, 0, ""));
 
@@ -347,7 +347,7 @@ std::shared_ptr<image> jpeg2000ImageCodec::getImage(const dataSet& sourceDataSet
                     height,
                     bitDepth_t::depthS16,
                     colorSpace,
-                    sourceDataSet.getUnsignedLong(0x0028, 0, 0x0102, 0, 0, 7)));
+                    sourceDataSet.getUint32(0x0028, 0, 0x0102, 0, 0, 7)));
 
     std::shared_ptr<handlers::writingDataHandlerNumericBase> imageHandler(returnImage->getWritingDataHandler());
 

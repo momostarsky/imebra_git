@@ -79,9 +79,9 @@ TEST(paletteTest, testPalette)
     {
         for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
         {
-            std::uint32_t r = rgbHandler.getUnsignedLong(rgbPointer++);
-            std::uint32_t g = rgbHandler.getUnsignedLong(rgbPointer++);
-            std::uint32_t b = rgbHandler.getUnsignedLong(rgbPointer++);
+            std::uint32_t r = rgbHandler.getUint32(rgbPointer++);
+            std::uint32_t g = rgbHandler.getUint32(rgbPointer++);
+            std::uint32_t b = rgbHandler.getUint32(rgbPointer++);
 
             ASSERT_EQ(((pointer & 0xff) + 10) & 0xff, r);
             ASSERT_EQ(((pointer & 0xff) + 21) & 0xff, g);
@@ -164,9 +164,9 @@ TEST(paletteTest, testPalette16bit)
     {
         for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
         {
-            std::uint32_t r = rgbHandler.getUnsignedLong(rgbPointer++);
-            std::uint32_t g = rgbHandler.getUnsignedLong(rgbPointer++);
-            std::uint32_t b = rgbHandler.getUnsignedLong(rgbPointer++);
+            std::uint32_t r = rgbHandler.getUint32(rgbPointer++);
+            std::uint32_t g = rgbHandler.getUint32(rgbPointer++);
+            std::uint32_t b = rgbHandler.getUint32(rgbPointer++);
 
             ASSERT_EQ(((pointer & 0xff) + 10) & 0xff, r);
             ASSERT_EQ(((pointer & 0xff) + 21) & 0xff, g);

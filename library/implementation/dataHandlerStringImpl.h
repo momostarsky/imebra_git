@@ -108,9 +108,9 @@ class readingDataHandlerString : public readingDataHandler
 public:
     readingDataHandlerString(const memory& parseMemory, tagVR_t dataType, const char separator, const std::uint8_t paddingByte);
 
-    virtual std::int32_t getSignedLong(const size_t index) const override;
+    virtual std::int32_t getInt32(const size_t index) const override;
 
-    virtual std::uint32_t getUnsignedLong(const size_t index) const override;
+    virtual std::uint32_t getUint32(const size_t index) const override;
 
     virtual std::int16_t getInt16(const size_t index) const override;
 
@@ -142,9 +142,9 @@ class readingDataHandlerStringNumbers: public readingDataHandlerString
 public:
     readingDataHandlerStringNumbers(const memory& parseMemory, tagVR_t dataType, const char separator, const std::uint8_t paddingByte);
 
-    virtual std::int32_t getSignedLong(const size_t index) const override;
+    virtual std::int32_t getInt32(const size_t index) const override;
 
-    virtual std::uint32_t getUnsignedLong(const size_t index) const override;
+    virtual std::uint32_t getUint32(const size_t index) const override;
 
     virtual std::int16_t getInt16(const size_t index) const override;
 
@@ -168,9 +168,9 @@ public:
 
     virtual ~writingDataHandlerString() override;
 
-    virtual void setSignedLong(const size_t index, const std::int32_t value) override;
+    virtual void setInt32(const size_t index, const std::int32_t value) override;
 
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) override;
+    virtual void setUint32(const size_t index, const std::uint32_t value) override;
 
     virtual void setInt16(const size_t index, const std::int16_t value) override;
 
@@ -213,9 +213,9 @@ class writingDataHandlerStringNumbers: public writingDataHandlerString
 public:
     writingDataHandlerStringNumbers(const std::shared_ptr<buffer>& pBuffer, tagVR_t dataType, const char separator, const size_t unitSize, const size_t maxSize);
 
-    virtual void setSignedLong(const size_t index, const std::int32_t value) override;
+    virtual void setInt32(const size_t index, const std::int32_t value) override;
 
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) override;
+    virtual void setUint32(const size_t index, const std::uint32_t value) override;
 
     virtual void setInt16(const size_t index, const std::int16_t value) override;
 

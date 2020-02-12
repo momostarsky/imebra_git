@@ -84,15 +84,15 @@ TEST(buildImage, testBuildImage)
         {
             if(index == 0)
             {
-                midR = maxR = minR = handler.getUnsignedLong(index++);
-                maxG = minG = handler.getUnsignedLong(index++);
-                maxB = minB = handler.getUnsignedLong(index++);
+                midR = maxR = minR = handler.getUint32(index++);
+                maxG = minG = handler.getUint32(index++);
+                maxB = minB = handler.getUint32(index++);
             }
             else
             {
-                r = handler.getUnsignedLong(index++);
-                g = handler.getUnsignedLong(index++);
-                b = handler.getUnsignedLong(index++);
+                r = handler.getUint32(index++);
+                g = handler.getUint32(index++);
+                b = handler.getUint32(index++);
                 maxR = std::max(maxR, r);
                 maxG = std::max(maxG, g);
                 maxB = std::max(maxB, b);
@@ -270,8 +270,8 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
             {
                 if(depth0 == bitDepth_t::depthS32 || depth0 == bitDepth_t::depthS16 || depth0 == bitDepth_t::depthS8)
                 {
-                    std::int32_t p0 = hImage0.getSignedLong(index);
-                    std::int32_t p1 = hImage1.getSignedLong(index);
+                    std::int32_t p0 = hImage0.getInt32(index);
+                    std::int32_t p1 = hImage1.getInt32(index);
                     if(p0 > p1)
                     {
                         difference += (1000 * (std::uint64_t)(p0 - p1)) / range;
@@ -284,8 +284,8 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
                 }
                 else
                 {
-                    std::uint32_t p0 = hImage0.getUnsignedLong(index);
-                    std::uint32_t p1 = hImage1.getUnsignedLong(index);
+                    std::uint32_t p0 = hImage0.getUint32(index);
+                    std::uint32_t p1 = hImage1.getUint32(index);
                     if(p0 > p1)
                     {
                         difference += (1000 * (std::uint64_t)(p0 - p1)) / range;

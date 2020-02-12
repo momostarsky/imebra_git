@@ -87,7 +87,7 @@ public:
     ///          is out of range.
     ///
     ///////////////////////////////////////////////////////////
-    virtual std::int32_t getSignedLong(const size_t index) const = 0;
+    virtual std::int32_t getInt32(const size_t index) const = 0;
 
     /// \brief Retrieve the buffer's element referenced by the
     ///         zero-based index specified in the parameter and
@@ -101,7 +101,7 @@ public:
     ///          is out of range.
     ///
     ///////////////////////////////////////////////////////////
-    virtual std::uint32_t getUnsignedLong(const size_t index) const = 0;
+    virtual std::uint32_t getUint32(const size_t index) const = 0;
 
     /// \brief Retrieve the buffer's element referenced by the
     ///         zero-based index specified in the parameter and
@@ -315,7 +315,7 @@ public:
     ///				  %data element.
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setSignedLong(const size_t index, const std::int32_t value) = 0;
+    virtual void setInt32(const size_t index, const std::int32_t value) = 0;
 
     /// \brief Set the buffer's element referenced by the
     ///         zero-based index specified in the parameter
@@ -327,7 +327,7 @@ public:
     ///				  %data element.
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) = 0;
+    virtual void setUint32(const size_t index, const std::uint32_t value) = 0;
 
     /// \brief Set the buffer's element referenced by the
     ///         zero-based index specified in the parameter
