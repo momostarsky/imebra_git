@@ -190,7 +190,7 @@ TEST(dicomCodecTest, testDicom)
                                     testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
                                     if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
                                     {
-                                        testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
+                                        testDataSet.setUint32(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
                                     }
                                     testDataSet.setImage(0, images[0], quality);
                                     testDataSet.setImage(1, images[1], quality);
@@ -301,9 +301,9 @@ TEST(dicomCodecTest, testDicom32bit)
         MutableImage dicomImage(3, 1, bitDepth_t::depthU32, colorSpace, 31);
         {
             WritingDataHandlerNumeric write = dicomImage.getWritingDataHandler();
-            write.setUnsignedLong(0, std::numeric_limits<std::uint32_t>::max());
-            write.setUnsignedLong(1, std::numeric_limits<std::uint32_t>::max() / 2);
-            write.setUnsignedLong(2, 0);
+            write.setUint32(0, std::numeric_limits<std::uint32_t>::max());
+            write.setUint32(1, std::numeric_limits<std::uint32_t>::max() / 2);
+            write.setUint32(2, 0);
         }
 
         std::string transferSyntax;
@@ -862,7 +862,7 @@ TEST(dicomCodecTest, dcmtkInteroperabilityDicomImage)
                         testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
                         if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
                         {
-                            testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
+                            testDataSet.setUint32(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
                         }
                         testDataSet.setImage(0, images[0], quality);
                         testDataSet.setImage(1, images[1], quality);
@@ -1002,7 +1002,7 @@ TEST(dicomCodecTest, dcmtkInteroperabilityDicomOverlay)
             testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
             if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
             {
-                testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1);
+                testDataSet.setUint32(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1);
             }
             testDataSet.setImage(0, image, quality);
 

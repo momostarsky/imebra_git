@@ -187,8 +187,8 @@ TEST(dataSetTest, testSetGetTags)
     testDataSet.setDate(TagId(tagId_t::PatientBirthDate_0010_0030), Date(2000, 1, 2, 13, 30, 40, 0, 0, 0), tagVR_t::DT);
     testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test patient");
     testDataSet.setDouble(TagId(0x20, 0x20), 45.6, tagVR_t::OD);
-    testDataSet.setSignedLong(TagId(0x20, 0x21), 50, tagVR_t::SL);
-    testDataSet.setUnsignedLong(TagId(0x20, 0x22), 60, tagVR_t::UL);
+    testDataSet.setInt32(TagId(0x20, 0x21), 50, tagVR_t::SL);
+    testDataSet.setUint32(TagId(0x20, 0x22), 60, tagVR_t::UL);
 
     Age age0 = testDataSet.getAge(TagId(tagId_t::PatientAge_0010_1010), 0);
     ASSERT_EQ(3u, age0.getAgeValue());
@@ -333,7 +333,7 @@ TEST(dataSetTest, dataHandler)
         MutableDataSet testDataSet;
         {
             WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0);
-            handler.setSignedLong(0, 100);
+            handler.setInt32(0, 100);
             handler.setSize(10);
             ASSERT_EQ(tagVR_t::UL, handler.getDataType());
             ASSERT_EQ(10u, handler.getSize());

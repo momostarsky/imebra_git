@@ -14,13 +14,13 @@ TEST(voilut, voilutUnsigned8)
     MutableImage unsigned8(7, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
     {
         WritingDataHandler unsigned8Handler = unsigned8.getWritingDataHandler();
-        unsigned8Handler.setUnsignedLong(0, 0);
-        unsigned8Handler.setUnsignedLong(1, 10);
-        unsigned8Handler.setUnsignedLong(2, 20);
-        unsigned8Handler.setUnsignedLong(3, 30);
-        unsigned8Handler.setUnsignedLong(4, 40);
-        unsigned8Handler.setUnsignedLong(5, 50);
-        unsigned8Handler.setUnsignedLong(6, 60);
+        unsigned8Handler.setUint32(0, 0);
+        unsigned8Handler.setUint32(1, 10);
+        unsigned8Handler.setUint32(2, 20);
+        unsigned8Handler.setUint32(3, 30);
+        unsigned8Handler.setUint32(4, 40);
+        unsigned8Handler.setUint32(5, 50);
+        unsigned8Handler.setUint32(6, 60);
     }
 
     {
@@ -149,12 +149,12 @@ TEST(voilut, voilutUnsigned8OptimalVOI)
     MutableImage unsigned8(6, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
     {
         WritingDataHandler unsigned8Handler = unsigned8.getWritingDataHandler();
-        unsigned8Handler.setUnsignedLong(0, 10);
-        unsigned8Handler.setUnsignedLong(1, 0);
-        unsigned8Handler.setUnsignedLong(2, 20);
-        unsigned8Handler.setUnsignedLong(3, 30);
-        unsigned8Handler.setUnsignedLong(4, 40);
-        unsigned8Handler.setUnsignedLong(5, 50);
+        unsigned8Handler.setUint32(0, 10);
+        unsigned8Handler.setUint32(1, 0);
+        unsigned8Handler.setUint32(2, 20);
+        unsigned8Handler.setUint32(3, 30);
+        unsigned8Handler.setUint32(4, 40);
+        unsigned8Handler.setUint32(5, 50);
     }
 
     VOIDescription voiDescription = VOILUT::getOptimalVOI(unsigned8, 0, 0, 6, 1);
@@ -192,12 +192,12 @@ TEST(voilut, voilutUnsigned8LUT)
     MutableImage unsigned8(6, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
     {
         WritingDataHandler unsigned8Handler = unsigned8.getWritingDataHandler();
-        unsigned8Handler.setUnsignedLong(0, 0);
-        unsigned8Handler.setUnsignedLong(1, 1);
-        unsigned8Handler.setUnsignedLong(2, 2);
-        unsigned8Handler.setUnsignedLong(3, 3);
-        unsigned8Handler.setUnsignedLong(4, 4);
-        unsigned8Handler.setUnsignedLong(5, 5);
+        unsigned8Handler.setUint32(0, 0);
+        unsigned8Handler.setUint32(1, 1);
+        unsigned8Handler.setUint32(2, 2);
+        unsigned8Handler.setUint32(3, 3);
+        unsigned8Handler.setUint32(4, 4);
+        unsigned8Handler.setUint32(5, 5);
     }
 
     MutableDataSet testDataSet;
@@ -206,13 +206,13 @@ TEST(voilut, voilutUnsigned8LUT)
     {
         WritingDataHandlerNumeric descriptor = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::US);
         WritingDataHandlerNumeric data = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US);
-        descriptor.setUnsignedLong(0, 3);
-        descriptor.setUnsignedLong(1, 2);
-        descriptor.setUnsignedLong(2, 16);
+        descriptor.setUint32(0, 3);
+        descriptor.setUint32(1, 2);
+        descriptor.setUint32(2, 16);
 
-        data.setUnsignedLong(0, 100);
-        data.setUnsignedLong(1, 200);
-        data.setUnsignedLong(2, 300);
+        data.setUint32(0, 100);
+        data.setUint32(1, 200);
+        data.setUint32(2, 300);
     }
     LUT lut = testDataSet.getLUT(TagId(tagId_t::VOILUTSequence_0028_3010), 0);
 

@@ -50,11 +50,11 @@ imebra::Image buildImageForTest(
                 }
                 if(depth == bitDepth_t::depthS32 || depth == bitDepth_t::depthS16 || depth == bitDepth_t::depthS8)
                 {
-                    handler.setSignedLong(index++, (std::int32_t)value);
+                    handler.setInt32(index++, (std::int32_t)value);
                 }
                 else
                 {
-                    handler.setUnsignedLong(index++, (std::uint32_t)value);
+                    handler.setUint32(index++, (std::uint32_t)value);
                 }
             }
         }
@@ -181,7 +181,7 @@ imebra::Image buildSubsampledImage(
                 {
                     if(scanChannels == 0)
                     {
-                        handler.setSignedLong(index++, values[scanChannels]);
+                        handler.setInt32(index++, values[scanChannels]);
                         if(++values[scanChannels] > highValue)
                         {
                             values[scanChannels] = lowValue;
@@ -191,17 +191,17 @@ imebra::Image buildSubsampledImage(
                     {
                         if((scanY & 1u) == 1u)
                         {
-                            handler.setSignedLong(index++, previousRow[scanX * channelsNumber + scanChannels]);
+                            handler.setInt32(index++, previousRow[scanX * channelsNumber + scanChannels]);
                         }
                         else if((scanX & 1u) == 1u)
                         {
                             previousRow[scanX * channelsNumber + scanChannels] = previousRow[scanX * channelsNumber + scanChannels - channelsNumber];
-                            handler.setSignedLong(index++, previousRow[scanX * channelsNumber + scanChannels]);
+                            handler.setInt32(index++, previousRow[scanX * channelsNumber + scanChannels]);
                         }
                         else
                         {
                             previousRow[scanX * channelsNumber + scanChannels] = values[scanChannels];
-                            handler.setSignedLong(index++, values[scanChannels]);
+                            handler.setInt32(index++, values[scanChannels]);
                             if(++values[scanChannels] > highValue)
                             {
                                 values[scanChannels] = lowValue;

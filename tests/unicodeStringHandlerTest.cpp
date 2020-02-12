@@ -140,8 +140,8 @@ TEST(unicodeStringHandlerTest, unicodeNumericConversion)
             WritingDataHandler handler = testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0);
 
             handler.setDouble(0, 1000);
-            handler.setUnsignedLong(1, 2000);
-            handler.setSignedLong(2, 3000);
+            handler.setUint32(1, 2000);
+            handler.setInt32(2, 3000);
         }
 
         MemoryStreamOutput writeStream(streamMemory);

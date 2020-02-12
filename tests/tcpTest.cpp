@@ -29,7 +29,7 @@ void sendDataThread(unsigned long maxConnections, std::string port)
             TCPStream newStream(connectToAddress);
 
             MutableDataSet dataSet("1.2.840.10008.1.2.1");
-            dataSet.setUnsignedLong(TagId(11, 11), connectionNumber, tagVR_t::UL);
+            dataSet.setUint32(TagId(11, 11), connectionNumber, tagVR_t::UL);
 
             std::this_thread::sleep_for(std::chrono::seconds(5));
 
@@ -109,7 +109,7 @@ TEST(tcpTest, prematureClose)
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
     MutableDataSet dataSet("1.2.840.10008.1.2.1");
-    dataSet.setUnsignedLong(TagId(11, 11), 1, tagVR_t::UL);
+    dataSet.setUint32(TagId(11, 11), 1, tagVR_t::UL);
 
     StreamWriter writer(newStream.getStreamOutput());
 
@@ -143,7 +143,7 @@ TEST(tcpTest, refusedConnection)
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
     MutableDataSet dataSet("1.2.840.10008.1.2.1");
-    dataSet.setUnsignedLong(TagId(11, 11), 1, tagVR_t::UL);
+    dataSet.setUint32(TagId(11, 11), 1, tagVR_t::UL);
 
     StreamWriter writer(newStream.getStreamOutput());
 
@@ -213,7 +213,7 @@ TEST(tcpTest, delayedConnection)
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
     MutableDataSet dataSet("1.2.840.10008.1.2.1");
-    dataSet.setUnsignedLong(TagId(11, 11), 1, tagVR_t::UL);
+    dataSet.setUint32(TagId(11, 11), 1, tagVR_t::UL);
 
     StreamWriter writer(newStream.getStreamOutput());
 

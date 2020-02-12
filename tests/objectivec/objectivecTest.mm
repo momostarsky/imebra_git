@@ -156,7 +156,7 @@ TEST(objectivec, image)
         ImebraWritingDataHandler* writingDataHandler = [pImage getWritingDataHandler:&error];
         for(unsigned int pixel(0); pixel != 25; ++pixel)
         {
-            [writingDataHandler setUnsignedLong:pixel newValue:pixel error:&error];
+            [writingDataHandler setUint32:pixel newValue:pixel error:&error];
         }
     }
 
@@ -215,8 +215,8 @@ TEST(objectivec, datasetValues)
     [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&error];
     [pDataSet setAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraAgeUnitYears] error:&error];
 
-    [pDataSet setSignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1011] newValue:10 tagVR:ImebraTagTypeSL error:&error];
-    [pDataSet setUnsignedLong:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] newValue:11 tagVR:ImebraTagTypeUL error:&error];
+    [pDataSet setInt32:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1011] newValue:10 tagVR:ImebraTagTypeSL error:&error];
+    [pDataSet setUint32:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] newValue:11 tagVR:ImebraTagTypeUL error:&error];
     [pDataSet setDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] newValue:12.0f tagVR:ImebraTagTypeUL error:&error];
 
     ImebraMutableTag* pTag = [pDataSet getTagCreate:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] tagVR:ImebraTagTypeFD error:&error];
@@ -794,12 +794,12 @@ TEST(objectivec, voilutUnsigned8OptimalVOI)
     @autoreleasepool
     {
         ImebraWritingDataHandler* unsigned8Handler = [unsigned8 getWritingDataHandler:&pError];
-        [unsigned8Handler setUnsignedLong:0 newValue:10 error:&pError];
-        [unsigned8Handler setUnsignedLong:1 newValue:0 error:&pError];
-        [unsigned8Handler setUnsignedLong:2 newValue:20 error:&pError];
-        [unsigned8Handler setUnsignedLong:3 newValue:30 error:&pError];
-        [unsigned8Handler setUnsignedLong:4 newValue:40 error:&pError];
-        [unsigned8Handler setUnsignedLong:5 newValue:50 error:&pError];
+        [unsigned8Handler setUint32:0 newValue:10 error:&pError];
+        [unsigned8Handler setUint32:1 newValue:0 error:&pError];
+        [unsigned8Handler setUint32:2 newValue:20 error:&pError];
+        [unsigned8Handler setUint32:3 newValue:30 error:&pError];
+        [unsigned8Handler setUint32:4 newValue:40 error:&pError];
+        [unsigned8Handler setUint32:5 newValue:50 error:&pError];
     }
 
     ImebraVOIDescription* voiDescription = [ImebraVOILUT getOptimalVOI:unsigned8 inputTopLeftX:0 inputTopLeftY:0 inputWidth:6 inputHeight:1 error:&pError];
@@ -828,12 +828,12 @@ TEST(objectivec, testOverlay)
     @autoreleasepool
     {
         ImebraWritingDataHandler* unsigned8Handler = [overlayBitmap getWritingDataHandler:&pError];
-        [unsigned8Handler setUnsignedLong:0 newValue:1 error:&pError];
-        [unsigned8Handler setUnsignedLong:1 newValue:0 error:&pError];
-        [unsigned8Handler setUnsignedLong:2 newValue:1 error:&pError];
-        [unsigned8Handler setUnsignedLong:3 newValue:0 error:&pError];
-        [unsigned8Handler setUnsignedLong:4 newValue:1 error:&pError];
-        [unsigned8Handler setUnsignedLong:5 newValue:0 error:&pError];
+        [unsigned8Handler setUint32:0 newValue:1 error:&pError];
+        [unsigned8Handler setUint32:1 newValue:0 error:&pError];
+        [unsigned8Handler setUint32:2 newValue:1 error:&pError];
+        [unsigned8Handler setUint32:3 newValue:0 error:&pError];
+        [unsigned8Handler setUint32:4 newValue:1 error:&pError];
+        [unsigned8Handler setUint32:5 newValue:0 error:&pError];
     }
 
     ImebraMutableOverlay* overlay = [[ImebraMutableOverlay alloc] initWithType:ImebraOverlayTypeGraphic subType:@"" firstFrame:0 zeroBasedOriginX:0 zeroBasedOriginY:0 label:@"LABEL" description:@"Description"];
@@ -875,9 +875,9 @@ TEST(objectivec, images)
                 unsigned int r = x < 100 ? 10: 100;
                 unsigned int g = x < 200 ? 40: 200;
                 unsigned int b = x < 300 ? 100: 4;
-                [pWritingDataHandler setUnsignedLong:index++ newValue:r error:&pError];
-                [pWritingDataHandler setUnsignedLong:index++ newValue:g error:&pError];
-                [pWritingDataHandler setUnsignedLong:index++ newValue:b error:&pError];
+                [pWritingDataHandler setUint32:index++ newValue:r error:&pError];
+                [pWritingDataHandler setUint32:index++ newValue:g error:&pError];
+                [pWritingDataHandler setUint32:index++ newValue:b error:&pError];
 
             }
         }

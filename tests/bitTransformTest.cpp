@@ -40,9 +40,9 @@ TEST(bitTransformTest, bitShift)
                     g = 0;
                     b = 0;
                 }
-                imageHandler.setUnsignedLong(elementNumber++, r);
-                imageHandler.setUnsignedLong(elementNumber++, g);
-                imageHandler.setUnsignedLong(elementNumber++, b);
+                imageHandler.setUint32(elementNumber++, r);
+                imageHandler.setUint32(elementNumber++, g);
+                imageHandler.setUint32(elementNumber++, b);
             }
         }
     }

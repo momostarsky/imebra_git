@@ -39,8 +39,8 @@ TEST(numericHandlerTest, testDouble)
             handler.setDouble(0, 5.6);
             handler.setDouble(1, 3.6);
             handler.setDouble(3, 2.6);
-            handler.setSignedLong(4, 10);
-            handler.setUnsignedLong(5, 20);
+            handler.setInt32(4, 10);
+            handler.setUint32(5, 20);
             handler.setString(6, "123.7");
             handler.setUnicodeString(7, L"124.9");
             ASSERT_THROW(handler.setDate(8, Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), DataHandlerConversionError);
@@ -171,8 +171,8 @@ TEST(numericHandlerTest, testInteger)
             handler.setDouble(0, 5.6);
             handler.setDouble(1, 3.6);
             handler.setDouble(3, 2.6);
-            handler.setSignedLong(4, 10);
-            handler.setUnsignedLong(5, 20);
+            handler.setInt32(4, 10);
+            handler.setUint32(5, 20);
             handler.setString(6, "123.7");
             handler.setUnicodeString(7, L"124.9");
             ASSERT_THROW(handler.setDate(8, Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), DataHandlerConversionError);
@@ -241,7 +241,7 @@ TEST(numericHandlerTest, testInteger)
         ASSERT_EQ(124, std::stol(testDataSet.getUnicodeString(TagId(10, 10), 7).c_str()));
         ASSERT_THROW(testDataSet.getString(TagId(10, 10), 8), MissingItemError);
 
-        testDataSet.setUnsignedLong(TagId(tagId_t::DimensionIndexPointer_0020_9165), (std::uint32_t)tagId_t::PatientName_0010_0010);
+        testDataSet.setUint32(TagId(tagId_t::DimensionIndexPointer_0020_9165), (std::uint32_t)tagId_t::PatientName_0010_0010);
         ASSERT_EQ(tagId_t::PatientName_0010_0010, (tagId_t)testDataSet.getUint32(TagId(tagId_t::DimensionIndexPointer_0020_9165), 0));
     }
 }
@@ -260,7 +260,7 @@ TEST(numericHandlerTest, testCopyFrom)
                 WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(10, 11), 0, allTags[sourceVR]);
                 for(std::uint32_t fillData(0); fillData != 10; ++fillData)
                 {
-                    handler.setSignedLong(fillData, (std::int32_t)fillData);
+                    handler.setInt32(fillData, (std::int32_t)fillData);
                 }
             }
 
@@ -302,7 +302,7 @@ TEST(numericHandlerTest, testCopyTo)
                 WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(10, 11), 0, allTags[sourceVR]);
                 for(std::uint32_t fillData(0); fillData != 10; ++fillData)
                 {
-                    handler.setSignedLong(fillData, (std::int32_t)fillData);
+                    handler.setInt32(fillData, (std::int32_t)fillData);
                 }
             }
 
@@ -347,7 +347,7 @@ TEST(numericHandlerTest, testLimits)
         ASSERT_EQ(std::numeric_limits<std::uint8_t>::max(), testDataSet.getInt16(TagId(0x10, 0x10), 0));
         ASSERT_EQ(std::numeric_limits<std::uint8_t>::max(), testDataSet.getInt32(TagId(0x10, 0x10), 0));
         ASSERT_THROW(testDataSet.setUint16(TagId(0x10, 0x10), std::numeric_limits<std::uint8_t>::max() + 1, tagVR_t::OB), DataHandlerConversionError);
-        ASSERT_THROW(testDataSet.setUnsignedLong(TagId(0x10, 0x10), std::numeric_limits<std::uint8_t>::max() + 1, tagVR_t::OB), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setUint32(TagId(0x10, 0x10), std::numeric_limits<std::uint8_t>::max() + 1, tagVR_t::OB), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.setDouble(TagId(0x10, 0x10), static_cast<double>(std::numeric_limits<std::uint8_t>::max()) + 1.0, tagVR_t::OB), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.setDouble(TagId(0x10, 0x10), static_cast<double>(std::numeric_limits<std::uint8_t>::lowest()) - 1.0, tagVR_t::OB), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.setFloat(TagId(0x10, 0x10), static_cast<float>(std::numeric_limits<std::uint8_t>::max()) + 1.0f, tagVR_t::OB), DataHandlerConversionError);
@@ -378,7 +378,7 @@ TEST(numericHandlerTest, testLimits)
         ASSERT_THROW(testDataSet.getInt8(TagId(0x10, 0x10), 0), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.getInt16(TagId(0x10, 0x10), 0), DataHandlerConversionError);
         ASSERT_EQ(std::numeric_limits<std::uint16_t>::max(), testDataSet.getInt32(TagId(0x10, 0x10), 0));
-        ASSERT_THROW(testDataSet.setUnsignedLong(TagId(0x10, 0x10), std::numeric_limits<std::uint16_t>::max() + 1, tagVR_t::OW), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setUint32(TagId(0x10, 0x10), std::numeric_limits<std::uint16_t>::max() + 1, tagVR_t::OW), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.setDouble(TagId(0x10, 0x10), static_cast<double>(std::numeric_limits<std::uint16_t>::max()) + 1.0, tagVR_t::US), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.setDouble(TagId(0x10, 0x10), static_cast<double>(std::numeric_limits<std::uint16_t>::lowest()) - 1.0, tagVR_t::US), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.setFloat(TagId(0x10, 0x10), static_cast<float>(std::numeric_limits<std::uint16_t>::max()) + 1.0f, tagVR_t::US), DataHandlerConversionError);
@@ -409,7 +409,7 @@ TEST(numericHandlerTest, testLimits)
         ASSERT_THROW(testDataSet.getInt8(TagId(0x10, 0x10), 0), DataHandlerConversionError);
         ASSERT_EQ(std::numeric_limits<std::int16_t>::max(), testDataSet.getInt16(TagId(0x10, 0x10), 0));
         ASSERT_EQ(std::numeric_limits<std::int16_t>::max(), testDataSet.getInt32(TagId(0x10, 0x10), 0));
-        ASSERT_THROW(testDataSet.setUnsignedLong(TagId(0x10, 0x10), std::numeric_limits<std::int16_t>::max() + 1, tagVR_t::SS), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setUint32(TagId(0x10, 0x10), std::numeric_limits<std::int16_t>::max() + 1, tagVR_t::SS), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.setDouble(TagId(0x10, 0x10), static_cast<double>(std::numeric_limits<std::int16_t>::max()) + 1.0, tagVR_t::SS), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.setDouble(TagId(0x10, 0x10), static_cast<double>(std::numeric_limits<std::int16_t>::lowest()) - 1.0, tagVR_t::SS), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.setFloat(TagId(0x10, 0x10), static_cast<float>(std::numeric_limits<std::int16_t>::max()) + 1.0f, tagVR_t::SS), DataHandlerConversionError);
@@ -429,7 +429,7 @@ TEST(numericHandlerTest, testLimits)
     {
         // UL (uint32)
         MutableDataSet testDataSet;
-        testDataSet.setUnsignedLong(TagId(0x10, 0x10), std::numeric_limits<std::uint32_t>::max(), tagVR_t::UL);
+        testDataSet.setUint32(TagId(0x10, 0x10), std::numeric_limits<std::uint32_t>::max(), tagVR_t::UL);
         ASSERT_THROW(testDataSet.getUint8(TagId(0x10, 0x10), 0), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.getUint16(TagId(0x10, 0x10), 0), DataHandlerConversionError);
         ASSERT_EQ(std::numeric_limits<std::uint32_t>::max(), testDataSet.getUint32(TagId(0x10, 0x10), 0));
@@ -443,7 +443,7 @@ TEST(numericHandlerTest, testLimits)
         ASSERT_THROW(testDataSet.setFloat(TagId(0x10, 0x10), static_cast<float>(std::numeric_limits<std::uint32_t>::max()) + 1000.0f, tagVR_t::UL), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.setFloat(TagId(0x10, 0x10), static_cast<float>(std::numeric_limits<std::uint32_t>::lowest()) - 1000.0f, tagVR_t::UL), DataHandlerConversionError);
 
-        testDataSet.setUnsignedLong(TagId(0x10, 0x10), 1, tagVR_t::UL);
+        testDataSet.setUint32(TagId(0x10, 0x10), 1, tagVR_t::UL);
         ASSERT_EQ(1u, testDataSet.getUint8(TagId(0x10, 0x10), 0));
         ASSERT_EQ(1u, testDataSet.getUint16(TagId(0x10, 0x10), 0));
         ASSERT_EQ(1u, testDataSet.getUint32(TagId(0x10, 0x10), 0));
@@ -457,7 +457,7 @@ TEST(numericHandlerTest, testLimits)
     {
         // SL (int32)
         MutableDataSet testDataSet;
-        testDataSet.setSignedLong(TagId(0x10, 0x10), std::numeric_limits<std::int32_t>::max(), tagVR_t::SL);
+        testDataSet.setInt32(TagId(0x10, 0x10), std::numeric_limits<std::int32_t>::max(), tagVR_t::SL);
         ASSERT_THROW(testDataSet.getUint8(TagId(0x10, 0x10), 0), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.getUint16(TagId(0x10, 0x10), 0), DataHandlerConversionError);
         ASSERT_EQ(static_cast<std::uint32_t>(std::numeric_limits<std::int32_t>::max()), testDataSet.getUint32(TagId(0x10, 0x10), 0));
