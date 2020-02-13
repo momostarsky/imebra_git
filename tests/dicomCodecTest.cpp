@@ -37,7 +37,7 @@ TEST(dicomCodecTest, testGroupLength)
     StreamReader memoryReader(inputMemory);
     DataSet readDataset(CodecFactory::load(memoryReader));
 
-    size_t groupSize = readDataset.getUnsignedLong(TagId(tagId_t::FileMetaInformationGroupLength_0002_0000), 0);
+    size_t groupSize = readDataset.getUint32(TagId(tagId_t::FileMetaInformationGroupLength_0002_0000), 0);
 
     // size - preamble(128), signature(4), groupId(2), tagId(2), vr(2), length(2), value length (4)
     ASSERT_EQ(memory.size() - 128 - 4 - 2 - 2 - 2 - 2 - 4, groupSize);
@@ -190,7 +190,7 @@ TEST(dicomCodecTest, testDicom)
                                     testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
                                     if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
                                     {
-                                        testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
+                                        testDataSet.setUint32(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
                                     }
                                     testDataSet.setImage(0, images[0], quality);
                                     testDataSet.setImage(1, images[1], quality);
@@ -216,9 +216,9 @@ TEST(dicomCodecTest, testDicom)
                                     EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_CLASS_UID), testDataSet.getString(TagId(tagId_t::ImplementationClassUID_0002_0012), 0));
                                     EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_NAME), testDataSet.getString(TagId(tagId_t::ImplementationVersionName_0002_0013), 0));
 
-                                    EXPECT_EQ(0u, testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
-                                    EXPECT_EQ(1u, testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
-                                    EXPECT_THROW(testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 2), MissingItemError);
+                                    EXPECT_EQ(0u, testDataSet.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
+                                    EXPECT_EQ(1u, testDataSet.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
+                                    EXPECT_THROW(testDataSet.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 2), MissingItemError);
                                     EXPECT_EQ(tagVR_t::OB, testDataSet.getDataType(TagId(tagId_t::FileMetaInformationVersion_0002_0001)));
 
                                     EXPECT_EQ(std::string("AAAaa"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0));
@@ -228,11 +228,11 @@ TEST(dicomCodecTest, testDicom)
 
                                     DataSet sequenceItem = testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0);
                                     EXPECT_EQ("test test", sequenceItem.getString(TagId(tagId_t::PatientName_0010_0010), 0));
-                                    EXPECT_THROW(sequenceItem.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
+                                    EXPECT_THROW(sequenceItem.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
 
                                     DataSet sequenceItem1 = sequenceItem.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0);
                                     EXPECT_EQ("test test1", sequenceItem1.getString(TagId(tagId_t::PatientName_0010_0010), 0));
-                                    EXPECT_THROW(sequenceItem1.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
+                                    EXPECT_THROW(sequenceItem1.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0), MissingGroupError);
 
                                     for(unsigned int repeatLazyLoad(0); repeatLazyLoad != lazyLoad + 1; ++ repeatLazyLoad)
                                     {
@@ -251,15 +251,15 @@ TEST(dicomCodecTest, testDicom)
                                         }
                                         else
                                         {
-                                            EXPECT_EQ((std::int32_t)(1 - interleaved), testDataSet.getSignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
+                                            EXPECT_EQ((std::int32_t)(1 - interleaved), testDataSet.getInt32(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
                                         }
 
                                     }
 
                                     if(transferSyntax != "1.2.840.10008.1.2.5")
                                     {
-                                        std::uint32_t checkHighBit(testDataSet.getUnsignedLong(TagId(tagId_t::HighBit_0028_0102), 0));
-                                        std::uint32_t checkAllocatedBits(testDataSet.getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0));
+                                        std::uint32_t checkHighBit(testDataSet.getUint32(TagId(tagId_t::HighBit_0028_0102), 0));
+                                        std::uint32_t checkAllocatedBits(testDataSet.getUint32(TagId(tagId_t::BitsAllocated_0028_0100), 0));
                                         if(checkHighBit == 0)
                                         {
                                             EXPECT_EQ(1u, checkAllocatedBits);
@@ -301,9 +301,9 @@ TEST(dicomCodecTest, testDicom32bit)
         MutableImage dicomImage(3, 1, bitDepth_t::depthU32, colorSpace, 31);
         {
             WritingDataHandlerNumeric write = dicomImage.getWritingDataHandler();
-            write.setUnsignedLong(0, std::numeric_limits<std::uint32_t>::max());
-            write.setUnsignedLong(1, std::numeric_limits<std::uint32_t>::max() / 2);
-            write.setUnsignedLong(2, 0);
+            write.setUint32(0, std::numeric_limits<std::uint32_t>::max());
+            write.setUint32(1, std::numeric_limits<std::uint32_t>::max() / 2);
+            write.setUint32(2, 0);
         }
 
         std::string transferSyntax;
@@ -343,9 +343,9 @@ TEST(dicomCodecTest, testDicom32bit)
         Image checkImage = testDataSet.getImage(0);
 
         ReadingDataHandlerNumeric read = checkImage.getReadingDataHandler();
-        EXPECT_EQ(std::numeric_limits<std::uint32_t>::max(), read.getUnsignedLong(0));
-        EXPECT_EQ(std::numeric_limits<std::uint32_t>::max() / 2, read.getUnsignedLong(1));
-        EXPECT_EQ(0u, read.getUnsignedLong(2));
+        EXPECT_EQ(std::numeric_limits<std::uint32_t>::max(), read.getUint32(0));
+        EXPECT_EQ(std::numeric_limits<std::uint32_t>::max() / 2, read.getUint32(1));
+        EXPECT_EQ(0u, read.getUint32(2));
     }
 }
 
@@ -662,9 +662,9 @@ TEST(dicomCodecTest, testOverlay)
                     EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_CLASS_UID), testDataSet.getString(TagId(tagId_t::ImplementationClassUID_0002_0012), 0));
                     EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_NAME), testDataSet.getString(TagId(tagId_t::ImplementationVersionName_0002_0013), 0));
 
-                    EXPECT_EQ(0u, testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
-                    EXPECT_EQ(1u, testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
-                    EXPECT_THROW(testDataSet.getUnsignedLong(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 2), MissingItemError);
+                    EXPECT_EQ(0u, testDataSet.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
+                    EXPECT_EQ(1u, testDataSet.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
+                    EXPECT_THROW(testDataSet.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 2), MissingItemError);
                     EXPECT_EQ(tagVR_t::OB, testDataSet.getDataType(TagId(tagId_t::FileMetaInformationVersion_0002_0001)));
 
                     EXPECT_EQ(std::string("AAAaa"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0));
@@ -862,7 +862,7 @@ TEST(dicomCodecTest, dcmtkInteroperabilityDicomImage)
                         testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
                         if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
                         {
-                            testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
+                            testDataSet.setUint32(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
                         }
                         testDataSet.setImage(0, images[0], quality);
                         testDataSet.setImage(1, images[1], quality);
@@ -879,14 +879,14 @@ TEST(dicomCodecTest, dcmtkInteroperabilityDicomImage)
 
                         if(highBit == 0)
                         {
-                            ASSERT_EQ(1u, testDataSet.getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0));
+                            ASSERT_EQ(1u, testDataSet.getUint32(TagId(tagId_t::BitsAllocated_0028_0100), 0));
                         }
 
                         MemoryStreamOutput writeStream(streamMemory);
                         StreamWriter writer(writeStream);
                         CodecFactory::save(testDataSet, writer, codecType_t::dicom);
 
-                        std::cout << " bits allocated: " << testDataSet.getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0) << std::endl;
+                        std::cout << " bits allocated: " << testDataSet.getUint32(TagId(tagId_t::BitsAllocated_0028_0100), 0) << std::endl;
 
                     }
 
@@ -1002,7 +1002,7 @@ TEST(dicomCodecTest, dcmtkInteroperabilityDicomOverlay)
             testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
             if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
             {
-                testDataSet.setUnsignedLong(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1);
+                testDataSet.setUint32(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1);
             }
             testDataSet.setImage(0, image, quality);
 
@@ -1017,7 +1017,7 @@ TEST(dicomCodecTest, dcmtkInteroperabilityDicomOverlay)
 
             if(highBit == 0)
             {
-                ASSERT_EQ(1u, testDataSet.getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0));
+                ASSERT_EQ(1u, testDataSet.getUint32(TagId(tagId_t::BitsAllocated_0028_0100), 0));
             }
 
             MutableOverlay overlay(overlayType_t::graphic, "SUBTYPE0", 0, 0, 0, "LABEL0", "Description0");
@@ -1030,7 +1030,7 @@ TEST(dicomCodecTest, dcmtkInteroperabilityDicomOverlay)
             StreamWriter writer(writeStream);
             CodecFactory::save(testDataSet, writer, codecType_t::dicom);
 
-            std::cout << " bits allocated: " << testDataSet.getUnsignedLong(TagId(tagId_t::BitsAllocated_0028_0100), 0) << std::endl;
+            std::cout << " bits allocated: " << testDataSet.getUint32(TagId(tagId_t::BitsAllocated_0028_0100), 0) << std::endl;
 
         }
 

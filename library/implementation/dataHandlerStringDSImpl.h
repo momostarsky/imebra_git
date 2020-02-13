@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -37,33 +37,18 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class readingDataHandlerStringDS : public readingDataHandlerString
+class readingDataHandlerStringDS : public readingDataHandlerStringNumbers
 {
 public:
     readingDataHandlerStringDS(const memory& memory);
 
-	// Overwritten to use getDouble()
-	///////////////////////////////////////////////////////////
-    virtual std::int32_t getSignedLong(const size_t index) const override;
-
-	// Overwritten to use getDouble()
-	///////////////////////////////////////////////////////////
-    virtual std::uint32_t getUnsignedLong(const size_t index) const override;
-
 };
 
-class writingDataHandlerStringDS: public writingDataHandlerString
+class writingDataHandlerStringDS: public writingDataHandlerStringNumbers
 {
 public:
     writingDataHandlerStringDS(const std::shared_ptr<buffer> pBuffer);
 
-    // Overwritten to use setDouble()
-    ///////////////////////////////////////////////////////////
-    virtual void setSignedLong(const size_t index, const std::int32_t value) override;
-
-    // Overwritten to use setDouble()
-    ///////////////////////////////////////////////////////////
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) override;
 };
 
 } // namespace handlers

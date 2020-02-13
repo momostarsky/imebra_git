@@ -121,34 +121,6 @@ std::string readingDataHandlerStringUI::getString(const size_t index) const
     IMEBRA_FUNCTION_END();
 }
 
-std::int32_t readingDataHandlerStringUI::getSignedLong(const size_t index) const
-{
-    IMEBRA_FUNCTION_START();
-
-    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert UID " << m_strings.at(index) << " to a number");
-
-    IMEBRA_FUNCTION_END();
-}
-
-std::uint32_t readingDataHandlerStringUI::getUnsignedLong(const size_t index) const
-{
-    IMEBRA_FUNCTION_START();
-
-    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert UID " << m_strings.at(index) << " to a number");
-
-    IMEBRA_FUNCTION_END();
-}
-
-double readingDataHandlerStringUI::getDouble(const size_t index) const
-{
-    IMEBRA_FUNCTION_START();
-
-    IMEBRA_THROW(DataHandlerConversionError, "Cannot convert UID " << m_strings.at(index) << " to a number");
-
-    IMEBRA_FUNCTION_END();
-}
-
-
 writingDataHandlerStringUI::writingDataHandlerStringUI(const std::shared_ptr<buffer> &pBuffer):
     writingDataHandlerString(pBuffer, tagVR_t::UI, 0x0, 0, 64)
 {

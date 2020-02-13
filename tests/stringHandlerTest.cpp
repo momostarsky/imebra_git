@@ -21,8 +21,8 @@ TEST(stringHandlerTest, DSTest)
         ASSERT_THROW(testDataSet.getAge(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
         EXPECT_THROW(testDataSet.getUnicodeString(TagId(0x0028, 0x1051), 1), MissingItemError);
         EXPECT_THROW(testDataSet.getString(TagId(0x0028, 0x1051), 1), MissingItemError);
-        EXPECT_THROW(testDataSet.getSignedLong(TagId(0x0028, 0x1051), 1), MissingItemError);
-        EXPECT_THROW(testDataSet.getUnsignedLong(TagId(0x0028, 0x1051), 1), MissingItemError);
+        EXPECT_THROW(testDataSet.getInt32(TagId(0x0028, 0x1051), 1), MissingItemError);
+        EXPECT_THROW(testDataSet.getUint32(TagId(0x0028, 0x1051), 1), MissingItemError);
         EXPECT_THROW(testDataSet.getDouble(TagId(0x0028, 0x1051), 1), MissingItemError);
     }
 
@@ -30,7 +30,7 @@ TEST(stringHandlerTest, DSTest)
         MutableDataSet testDataSet;
         testDataSet.setString(TagId(0x0028, 0x1051), "-2e-8", tagVR_t::DS);
         ASSERT_DOUBLE_EQ(-0.00000002, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
-        ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0028, 0x1051), 1), MissingItemError);
+        ASSERT_THROW(testDataSet.getInt32(TagId(0x0028, 0x1051), 1), MissingItemError);
         ASSERT_EQ(tagVR_t::DS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
     }
 
@@ -38,33 +38,45 @@ TEST(stringHandlerTest, DSTest)
         MutableDataSet testDataSet;
         testDataSet.setString(TagId(0x0028, 0x1051), "20", tagVR_t::DS);
         ASSERT_DOUBLE_EQ(20.0, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
-        ASSERT_EQ(20, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
-        ASSERT_EQ(20u, testDataSet.getUnsignedLong(TagId(0x0028, 0x1051), 0));
+        ASSERT_FLOAT_EQ(20.0f, testDataSet.getFloat(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(20, testDataSet.getInt32(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(20u, testDataSet.getUint32(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(20, testDataSet.getInt16(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(20u, testDataSet.getUint16(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(20, testDataSet.getInt8(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(20u, testDataSet.getUint8(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(tagVR_t::DS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
     }
 
     {
         MutableDataSet testDataSet;
-        testDataSet.setSignedLong(TagId(0x0028, 0x1051), 40, tagVR_t::DS);
+        testDataSet.setInt32(TagId(0x0028, 0x1051), 40, tagVR_t::DS);
         ASSERT_EQ("40", testDataSet.getString(TagId(0x0028, 0x1051), 0));
-        ASSERT_EQ(40, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
-        ASSERT_EQ(40u, testDataSet.getUnsignedLong(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(40, testDataSet.getInt32(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(40u, testDataSet.getUint32(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(tagVR_t::DS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
     }
 
     {
         MutableDataSet testDataSet;
-        testDataSet.setUnsignedLong(TagId(0x0028, 0x1051), 50, tagVR_t::DS);
+        testDataSet.setUint32(TagId(0x0028, 0x1051), 50, tagVR_t::DS);
         ASSERT_EQ("50", testDataSet.getString(TagId(0x0028, 0x1051), 0));
-        ASSERT_EQ(50, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
-        ASSERT_EQ(50u, testDataSet.getUnsignedLong(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(50, testDataSet.getInt32(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(50u, testDataSet.getUint32(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(tagVR_t::DS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
     }
 
     {
         MutableDataSet testDataSet;
         testDataSet.setString(TagId(0x0028, 0x1051), "Hello", tagVR_t::DS);
+        ASSERT_THROW(testDataSet.getInt32(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint32(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt16(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint16(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.getDouble(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getFloat(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
     }
 }
 
@@ -75,7 +87,7 @@ TEST(stringHandlerTest, ISTest)
         MutableDataSet testDataSet;
         testDataSet.setDouble(TagId(0x0028, 0x1051), 12.004, tagVR_t::IS);
         ASSERT_EQ("12", testDataSet.getString(TagId(0x0028, 0x1051), 0));
-        ASSERT_EQ(12, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(12, testDataSet.getInt32(TagId(0x0028, 0x1051), 0));
         ASSERT_DOUBLE_EQ(12.0, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(tagVR_t::IS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
         ASSERT_THROW(testDataSet.getDate(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
@@ -84,9 +96,9 @@ TEST(stringHandlerTest, ISTest)
 
     {
         MutableDataSet testDataSet;
-        testDataSet.setSignedLong(TagId(0x0028, 0x1051), 20, tagVR_t::IS);
+        testDataSet.setInt32(TagId(0x0028, 0x1051), 20, tagVR_t::IS);
         ASSERT_EQ("20", testDataSet.getString(TagId(0x0028, 0x1051), 0));
-        ASSERT_EQ(20, testDataSet.getSignedLong(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(20, testDataSet.getInt32(TagId(0x0028, 0x1051), 0));
         ASSERT_DOUBLE_EQ(20.0, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
         ASSERT_EQ(tagVR_t::IS, testDataSet.getDataType(TagId(0x0028, 0x1051)));
     }
@@ -138,8 +150,8 @@ TEST(stringHandlerTest, URTest)
 
     ASSERT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
-    ASSERT_THROW(testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
-    ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getUint32(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getInt32(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getDouble(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
     ASSERT_EQ(tagVR_t::UR, testDataSet.getDataType(TagId(0x0010, 0x0010)));
@@ -305,8 +317,8 @@ TEST(stringHandlerTest, UITest)
     ASSERT_THROW(testDataSet.setString(TagId(0x0010, 0x0010), "1.3.r"), DataHandlerInvalidDataError);
     ASSERT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
-    ASSERT_THROW(testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
-    ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getUint32(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getInt32(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
     {
         WritingDataHandler dataHandler = testDataSet.getWritingDataHandler(TagId(0x0010, 0x0010), 0, tagVR_t::UI);
@@ -433,8 +445,8 @@ TEST(stringHandlerTest, PNTest)
             ASSERT_EQ("", patientName1.getPhoneticRepresentation());
         }
 
-        ASSERT_THROW(testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
-        ASSERT_THROW(testDataSet.getSignedLong(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint32(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt32(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.getDouble(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
 
         MutableMemory savedDicom;
@@ -583,9 +595,9 @@ TEST(stringHandlerTest, ASTest)
 
     ASSERT_THROW(dataSet.setDouble(TagId(imebra::tagId_t::PatientAge_0010_1010), .01), imebra::DataHandlerConversionError);
 
-    ASSERT_THROW(dataSet.setUnsignedLong(TagId(imebra::tagId_t::PatientAge_0010_1010), 1), imebra::DataHandlerConversionError);
+    ASSERT_THROW(dataSet.setUint32(TagId(imebra::tagId_t::PatientAge_0010_1010), 1), imebra::DataHandlerConversionError);
 
-    ASSERT_THROW(dataSet.setSignedLong(TagId(imebra::tagId_t::PatientAge_0010_1010), 1), imebra::DataHandlerConversionError);
+    ASSERT_THROW(dataSet.setInt32(TagId(imebra::tagId_t::PatientAge_0010_1010), 1), imebra::DataHandlerConversionError);
 
     ASSERT_THROW(dataSet.setDate(TagId(imebra::tagId_t::PatientAge_0010_1010), imebra::Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), imebra::DataHandlerConversionError);
 
@@ -613,6 +625,121 @@ TEST(stringHandlerTest, ASTest)
         EXPECT_DOUBLE_EQ(90.0, age.getYears());
     }
 }
+
+TEST(stringHandlerTest, testLimits)
+{
+    {
+        MutableDataSet testDataSet;
+        testDataSet.setString(TagId(0x0028, 0x1051), "-1", tagVR_t::LT);
+        ASSERT_DOUBLE_EQ(-1.0, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_FLOAT_EQ(-1.0f, testDataSet.getFloat(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getUint32(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_EQ(-1, testDataSet.getInt32(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getUint16(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_EQ(-1, testDataSet.getInt16(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getUint8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_EQ(-1, testDataSet.getInt8(TagId(0x0028, 0x1051), 0));
+    }
+
+    {
+        MutableDataSet testDataSet;
+        testDataSet.setDouble(TagId(0x0028, 0x1051), 10e+40, tagVR_t::DS);
+        ASSERT_DOUBLE_EQ(10e+40, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getFloat(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+    }
+
+    {
+        MutableDataSet testDataSet;
+        testDataSet.setString(TagId(0x0028, 0x1051), "100000000000000000000", tagVR_t::LT);
+        ASSERT_DOUBLE_EQ(1e+20, testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_FLOAT_EQ(1e+20f, testDataSet.getFloat(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getUint32(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt32(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint16(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt16(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+    }
+
+    {
+        MutableDataSet testDataSet;
+        testDataSet.setUint32(TagId(0x0028, 0x1051), std::numeric_limits<std::uint32_t>::max(), tagVR_t::LT);
+        ASSERT_DOUBLE_EQ(static_cast<double>(std::numeric_limits<std::uint32_t>::max()), testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_FLOAT_EQ(static_cast<float>(std::numeric_limits<std::uint32_t>::max()), testDataSet.getFloat(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(std::numeric_limits<std::uint32_t>::max(), testDataSet.getUint32(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getInt32(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint16(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt16(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+    }
+
+    {
+        MutableDataSet testDataSet;
+        testDataSet.setUint16(TagId(0x0028, 0x1051), std::numeric_limits<std::uint16_t>::max(), tagVR_t::LT);
+        ASSERT_DOUBLE_EQ(static_cast<double>(std::numeric_limits<std::uint16_t>::max()), testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_FLOAT_EQ(static_cast<float>(std::numeric_limits<std::uint16_t>::max()), testDataSet.getFloat(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(std::numeric_limits<std::uint16_t>::max(), testDataSet.getUint32(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(std::numeric_limits<std::uint16_t>::max(), testDataSet.getInt32(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(std::numeric_limits<std::uint16_t>::max(), testDataSet.getUint16(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getInt16(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+    }
+
+    {
+        MutableDataSet testDataSet;
+        testDataSet.setUint8(TagId(0x0028, 0x1051), std::numeric_limits<std::uint8_t>::max(), tagVR_t::LT);
+        ASSERT_DOUBLE_EQ(static_cast<double>(std::numeric_limits<std::uint8_t>::max()), testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_FLOAT_EQ(static_cast<float>(std::numeric_limits<std::uint8_t>::max()), testDataSet.getFloat(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(std::numeric_limits<std::uint8_t>::max(), testDataSet.getUint32(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(std::numeric_limits<std::uint8_t>::max(), testDataSet.getInt32(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(std::numeric_limits<std::uint8_t>::max(), testDataSet.getUint16(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(std::numeric_limits<std::uint8_t>::max(), testDataSet.getInt16(TagId(0x0028, 0x1051), 0));
+        ASSERT_EQ(std::numeric_limits<std::uint8_t>::max(), testDataSet.getUint8(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getInt8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+    }
+
+    {
+        MutableDataSet testDataSet;
+        testDataSet.setInt32(TagId(0x0028, 0x1051), std::numeric_limits<std::int32_t>::lowest(), tagVR_t::LT);
+        ASSERT_DOUBLE_EQ(static_cast<double>(std::numeric_limits<std::int32_t>::lowest()), testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_FLOAT_EQ(static_cast<float>(std::numeric_limits<std::int32_t>::lowest()), testDataSet.getFloat(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getUint32(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_EQ(std::numeric_limits<std::int32_t>::lowest(), testDataSet.getInt32(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getUint16(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt16(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+    }
+
+    {
+        MutableDataSet testDataSet;
+        testDataSet.setInt32(TagId(0x0028, 0x1051), std::numeric_limits<std::int16_t>::lowest(), tagVR_t::LT);
+        ASSERT_DOUBLE_EQ(static_cast<double>(std::numeric_limits<std::int16_t>::lowest()), testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_FLOAT_EQ(static_cast<float>(std::numeric_limits<std::int16_t>::lowest()), testDataSet.getFloat(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getUint32(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_EQ(std::numeric_limits<std::int16_t>::lowest(), testDataSet.getInt32(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getUint16(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_EQ(std::numeric_limits<std::int16_t>::lowest(), testDataSet.getInt16(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getUint8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+    }
+
+    {
+        MutableDataSet testDataSet;
+        testDataSet.setInt32(TagId(0x0028, 0x1051), std::numeric_limits<std::int8_t>::lowest(), tagVR_t::LT);
+        ASSERT_DOUBLE_EQ(static_cast<double>(std::numeric_limits<std::int8_t>::lowest()), testDataSet.getDouble(TagId(0x0028, 0x1051), 0));
+        ASSERT_FLOAT_EQ(static_cast<float>(std::numeric_limits<std::int8_t>::lowest()), testDataSet.getFloat(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getUint32(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_EQ(std::numeric_limits<std::int8_t>::lowest(), testDataSet.getInt32(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getUint16(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_EQ(std::numeric_limits<std::int8_t>::lowest(), testDataSet.getInt16(TagId(0x0028, 0x1051), 0));
+        ASSERT_THROW(testDataSet.getUint8(TagId(0x0028, 0x1051), 0), DataHandlerConversionError);
+        ASSERT_EQ(std::numeric_limits<std::int8_t>::lowest(), testDataSet.getInt8(TagId(0x0028, 0x1051), 0));
+    }
+}
+
 
 } // namespace tests
 

@@ -42,7 +42,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 
-readingDataHandlerStringIS::readingDataHandlerStringIS(const memory& parseMemory): readingDataHandlerString(parseMemory, tagVR_t::IS, '\\', 0x20)
+readingDataHandlerStringIS::readingDataHandlerStringIS(const memory& parseMemory): readingDataHandlerStringNumbers(parseMemory, tagVR_t::IS, '\\', 0x20)
 {
 }
 
@@ -52,7 +52,7 @@ readingDataHandlerStringIS::readingDataHandlerStringIS(const memory& parseMemory
 //
 //
 // Get a value as a double.
-// Overwritten to use getSignedLong()
+// Overwritten to use getInt32()
 //
 //
 ///////////////////////////////////////////////////////////
@@ -61,13 +61,13 @@ double readingDataHandlerStringIS::getDouble(const size_t index) const
 {
     IMEBRA_FUNCTION_START();
 
-    return (double)getSignedLong(index);
+    return (double)getInt32(index);
 
     IMEBRA_FUNCTION_END();
 }
 
 writingDataHandlerStringIS::writingDataHandlerStringIS(const std::shared_ptr<buffer> pBuffer):
-    writingDataHandlerString(pBuffer, tagVR_t::IS, '\\', 0, 12)
+    writingDataHandlerStringNumbers(pBuffer, tagVR_t::IS, '\\', 0, 12)
 {
 
 }
@@ -77,7 +77,7 @@ writingDataHandlerStringIS::writingDataHandlerStringIS(const std::shared_ptr<buf
 //
 //
 // Set a value as a double.
-// Overwritten to use setSignedLong()
+// Overwritten to use setInt32()
 //
 //
 ///////////////////////////////////////////////////////////
@@ -86,7 +86,20 @@ void writingDataHandlerStringIS::setDouble(const size_t index, const double valu
 {
     IMEBRA_FUNCTION_START();
 
-    setSignedLong(index, (std::int32_t)value);
+    if(value > static_cast<double>(std::numeric_limits<std::int32_t>::max()) || value < static_cast<double>(std::numeric_limits<std::int32_t>::lowest()))
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the value " << value << " to an integer (out of bounds)");
+    }
+    setInt32(index, (std::int32_t)value);
+
+    IMEBRA_FUNCTION_END();
+}
+
+void writingDataHandlerStringIS::setFloat(const size_t index, const float value)
+{
+    IMEBRA_FUNCTION_START();
+
+    setDouble(index, static_cast<double>(value));
 
     IMEBRA_FUNCTION_END();
 }

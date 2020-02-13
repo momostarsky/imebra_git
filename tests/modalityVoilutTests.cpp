@@ -14,12 +14,12 @@ TEST(modalityVoilut, voilutUnsigned8)
     MutableImage unsigned8(6, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
     {
         WritingDataHandler unsigned8Handler = unsigned8.getWritingDataHandler();
-        unsigned8Handler.setUnsignedLong(0, 0);
-        unsigned8Handler.setUnsignedLong(1, 10);
-        unsigned8Handler.setUnsignedLong(2, 20);
-        unsigned8Handler.setUnsignedLong(3, 30);
-        unsigned8Handler.setUnsignedLong(4, 40);
-        unsigned8Handler.setUnsignedLong(5, 50);
+        unsigned8Handler.setUint32(0, 0);
+        unsigned8Handler.setUint32(1, 10);
+        unsigned8Handler.setUint32(2, 20);
+        unsigned8Handler.setUint32(3, 30);
+        unsigned8Handler.setUint32(4, 40);
+        unsigned8Handler.setUint32(5, 50);
     }
 
     MutableDataSet testDataSet("1.2.840.10008.1.2.1");
@@ -36,12 +36,12 @@ TEST(modalityVoilut, voilutUnsigned8)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-1, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(19, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(39, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(59, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(79, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(99, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-1, signed8Handler.getInt32(0));
+        ASSERT_EQ(19, signed8Handler.getInt32(1));
+        ASSERT_EQ(39, signed8Handler.getInt32(2));
+        ASSERT_EQ(59, signed8Handler.getInt32(3));
+        ASSERT_EQ(79, signed8Handler.getInt32(4));
+        ASSERT_EQ(99, signed8Handler.getInt32(5));
     }
 
     {
@@ -50,12 +50,12 @@ TEST(modalityVoilut, voilutUnsigned8)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-1, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(19, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(39, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(59, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(79, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(99, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-1, signed8Handler.getInt32(0));
+        ASSERT_EQ(19, signed8Handler.getInt32(1));
+        ASSERT_EQ(39, signed8Handler.getInt32(2));
+        ASSERT_EQ(59, signed8Handler.getInt32(3));
+        ASSERT_EQ(79, signed8Handler.getInt32(4));
+        ASSERT_EQ(99, signed8Handler.getInt32(5));
     }
 }
 
@@ -81,23 +81,23 @@ TEST(modalityVoilut, voilutUnsigned8FunctionalGroupFrame)
     {
         WritingDataHandlerNumeric descriptor = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::US);
         WritingDataHandlerNumeric data = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US);
-        descriptor.setUnsignedLong(0, 3u);
-        descriptor.setUnsignedLong(1, 2u);
-        descriptor.setUnsignedLong(2, 16u);
-        data.setUnsignedLong(0, 100u);
-        data.setUnsignedLong(1, 200u);
-        data.setUnsignedLong(2, 300u);
+        descriptor.setUint32(0, 3u);
+        descriptor.setUint32(1, 2u);
+        descriptor.setUint32(2, 16u);
+        data.setUint32(0, 100u);
+        data.setUint32(1, 200u);
+        data.setUint32(2, 300u);
     }
 
     MutableImage unsigned8(6, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
     {
         WritingDataHandler unsigned8Handler = unsigned8.getWritingDataHandler();
-        unsigned8Handler.setUnsignedLong(0, 0);
-        unsigned8Handler.setUnsignedLong(1, 10);
-        unsigned8Handler.setUnsignedLong(2, 20);
-        unsigned8Handler.setUnsignedLong(3, 30);
-        unsigned8Handler.setUnsignedLong(4, 40);
-        unsigned8Handler.setUnsignedLong(5, 50);
+        unsigned8Handler.setUint32(0, 0);
+        unsigned8Handler.setUint32(1, 10);
+        unsigned8Handler.setUint32(2, 20);
+        unsigned8Handler.setUint32(3, 30);
+        unsigned8Handler.setUint32(4, 40);
+        unsigned8Handler.setUint32(5, 50);
     }
     testDataSet.setImage(0, unsigned8, imageQuality_t::veryHigh);
     testDataSet.setImage(1, unsigned8, imageQuality_t::veryHigh);
@@ -110,12 +110,12 @@ TEST(modalityVoilut, voilutUnsigned8FunctionalGroupFrame)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-1, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(19, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(39, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(59, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(79, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(99, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-1, signed8Handler.getInt32(0));
+        ASSERT_EQ(19, signed8Handler.getInt32(1));
+        ASSERT_EQ(39, signed8Handler.getInt32(2));
+        ASSERT_EQ(59, signed8Handler.getInt32(3));
+        ASSERT_EQ(79, signed8Handler.getInt32(4));
+        ASSERT_EQ(99, signed8Handler.getInt32(5));
     }
 
     {
@@ -124,12 +124,12 @@ TEST(modalityVoilut, voilutUnsigned8FunctionalGroupFrame)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-2, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(18, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(38, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(58, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(78, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(98, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-2, signed8Handler.getInt32(0));
+        ASSERT_EQ(18, signed8Handler.getInt32(1));
+        ASSERT_EQ(38, signed8Handler.getInt32(2));
+        ASSERT_EQ(58, signed8Handler.getInt32(3));
+        ASSERT_EQ(78, signed8Handler.getInt32(4));
+        ASSERT_EQ(98, signed8Handler.getInt32(5));
     }
 
     {
@@ -138,12 +138,12 @@ TEST(modalityVoilut, voilutUnsigned8FunctionalGroupFrame)
 
         ReadingDataHandler unsignedHandler = unsigned16Out.getReadingDataHandler();
 
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(0));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(1));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(2));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(3));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(4));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(5));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(0));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(1));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(2));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(3));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(4));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(5));
     }
 
     {
@@ -152,12 +152,12 @@ TEST(modalityVoilut, voilutUnsigned8FunctionalGroupFrame)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-3, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(17, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(37, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(57, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(77, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(97, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-3, signed8Handler.getInt32(0));
+        ASSERT_EQ(17, signed8Handler.getInt32(1));
+        ASSERT_EQ(37, signed8Handler.getInt32(2));
+        ASSERT_EQ(57, signed8Handler.getInt32(3));
+        ASSERT_EQ(77, signed8Handler.getInt32(4));
+        ASSERT_EQ(97, signed8Handler.getInt32(5));
     }
 
 }
@@ -172,12 +172,12 @@ TEST(modalityVoilut, voilutSigned8)
     MutableImage unsigned8(6, 1, bitDepth_t::depthS8, "MONOCHROME2", 7);
     {
         WritingDataHandler unsigned8Handler = unsigned8.getWritingDataHandler();
-        unsigned8Handler.setUnsignedLong(0, static_cast<std::uint32_t>(-30));
-        unsigned8Handler.setUnsignedLong(1, static_cast<std::uint32_t>(-20));
-        unsigned8Handler.setUnsignedLong(2, static_cast<std::uint32_t>(-10));
-        unsigned8Handler.setUnsignedLong(3, 0u);
-        unsigned8Handler.setUnsignedLong(4, 10u);
-        unsigned8Handler.setUnsignedLong(5, 20u);
+        unsigned8Handler.setInt32(0, - 30);
+        unsigned8Handler.setInt32(1, - 20);
+        unsigned8Handler.setInt32(2, - 10);
+        unsigned8Handler.setInt32(3, 0);
+        unsigned8Handler.setInt32(4, 10);
+        unsigned8Handler.setInt32(5, 20);
     }
 
     MutableDataSet testDataSet("1.2.840.10008.1.2.1");
@@ -194,12 +194,12 @@ TEST(modalityVoilut, voilutSigned8)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-20, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(0, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(20, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(40, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(60, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(80, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-20, signed8Handler.getInt32(0));
+        ASSERT_EQ(0, signed8Handler.getInt32(1));
+        ASSERT_EQ(20, signed8Handler.getInt32(2));
+        ASSERT_EQ(40, signed8Handler.getInt32(3));
+        ASSERT_EQ(60, signed8Handler.getInt32(4));
+        ASSERT_EQ(80, signed8Handler.getInt32(5));
     }
 
     {
@@ -208,12 +208,12 @@ TEST(modalityVoilut, voilutSigned8)
 
         ReadingDataHandler signed8Handler = signed8Out.getReadingDataHandler();
 
-        ASSERT_EQ(-20, signed8Handler.getSignedLong(0));
-        ASSERT_EQ(0, signed8Handler.getSignedLong(1));
-        ASSERT_EQ(20, signed8Handler.getSignedLong(2));
-        ASSERT_EQ(40, signed8Handler.getSignedLong(3));
-        ASSERT_EQ(60, signed8Handler.getSignedLong(4));
-        ASSERT_EQ(80, signed8Handler.getSignedLong(5));
+        ASSERT_EQ(-20, signed8Handler.getInt32(0));
+        ASSERT_EQ(0, signed8Handler.getInt32(1));
+        ASSERT_EQ(20, signed8Handler.getInt32(2));
+        ASSERT_EQ(40, signed8Handler.getInt32(3));
+        ASSERT_EQ(60, signed8Handler.getInt32(4));
+        ASSERT_EQ(80, signed8Handler.getInt32(5));
     }
 }
 
@@ -223,12 +223,12 @@ TEST(modalityVoilut, voilutUnsigned8LUT)
     MutableImage unsigned8(6, 1, bitDepth_t::depthU8, "MONOCHROME2", 7);
     {
         WritingDataHandler unsigned8Handler = unsigned8.getWritingDataHandler();
-        unsigned8Handler.setUnsignedLong(0, 0u);
-        unsigned8Handler.setUnsignedLong(1, 1u);
-        unsigned8Handler.setUnsignedLong(2, 2u);
-        unsigned8Handler.setUnsignedLong(3, 3u);
-        unsigned8Handler.setUnsignedLong(4, 4u);
-        unsigned8Handler.setUnsignedLong(5, 5u);
+        unsigned8Handler.setUint32(0, 0u);
+        unsigned8Handler.setUint32(1, 1u);
+        unsigned8Handler.setUint32(2, 2u);
+        unsigned8Handler.setUint32(3, 3u);
+        unsigned8Handler.setUint32(4, 4u);
+        unsigned8Handler.setUint32(5, 5u);
     }
 
     MutableDataSet testDataSet("1.2.840.10008.1.2.1");
@@ -238,13 +238,13 @@ TEST(modalityVoilut, voilutUnsigned8LUT)
     {
         WritingDataHandlerNumeric descriptor = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTDescriptor_0028_3002), 0, tagVR_t::US);
         WritingDataHandlerNumeric data = lutItem.getWritingDataHandlerNumeric(TagId(tagId_t::LUTData_0028_3006), 0, tagVR_t::US);
-        descriptor.setUnsignedLong(0, 3u);
-        descriptor.setUnsignedLong(1, 2u);
-        descriptor.setUnsignedLong(2, 16u);
+        descriptor.setUint32(0, 3u);
+        descriptor.setUint32(1, 2u);
+        descriptor.setUint32(2, 16u);
 
-        data.setUnsignedLong(0, 100u);
-        data.setUnsignedLong(1, 200u);
-        data.setUnsignedLong(2, 300u);
+        data.setUint32(0, 100u);
+        data.setUint32(1, 200u);
+        data.setUint32(2, 300u);
     }
 
     {
@@ -255,12 +255,12 @@ TEST(modalityVoilut, voilutUnsigned8LUT)
 
         ReadingDataHandler unsignedHandler = unsigned8Out.getReadingDataHandler();
 
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(0));
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(1));
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(2));
-        ASSERT_EQ(200u, unsignedHandler.getUnsignedLong(3));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(4));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(5));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(0));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(1));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(2));
+        ASSERT_EQ(200u, unsignedHandler.getUint32(3));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(4));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(5));
     }
 
     {
@@ -268,12 +268,12 @@ TEST(modalityVoilut, voilutUnsigned8LUT)
 
         ReadingDataHandler unsignedHandler = unsigned8Out.getReadingDataHandler();
 
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(0));
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(1));
-        ASSERT_EQ(100u, unsignedHandler.getUnsignedLong(2));
-        ASSERT_EQ(200u, unsignedHandler.getUnsignedLong(3));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(4));
-        ASSERT_EQ(300u, unsignedHandler.getUnsignedLong(5));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(0));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(1));
+        ASSERT_EQ(100u, unsignedHandler.getUint32(2));
+        ASSERT_EQ(200u, unsignedHandler.getUint32(3));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(4));
+        ASSERT_EQ(300u, unsignedHandler.getUint32(5));
     }
 }
 

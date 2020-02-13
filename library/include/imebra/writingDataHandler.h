@@ -123,6 +123,11 @@ public:
     /// \param value the value to write
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    void setInt32(size_t index, std::int32_t value);
+
+    /// \brief Deprecated. Use setInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void setSignedLong(size_t index, std::int32_t value);
 
     /// \brief Write an unsigned long integer (32 bit).
@@ -135,7 +140,60 @@ public:
     /// \param value the value to write
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    void setUint32(size_t index, std::uint32_t value);
+
+    /// \brief Deprecated. Use setUint32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void setUnsignedLong(size_t index, std::uint32_t value);
+
+    /// \brief Write a signed long integer (16 bit).
+    ///
+    /// If the value cannot be converted from a signed long integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param value the value to write
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setInt16(size_t index, std::int16_t value);
+
+    /// \brief Write an unsigned long integer (16 bit).
+    ///
+    /// If the value cannot be converted from an unsigned long integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param value the value to write
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setUint16(size_t index, std::uint16_t value);
+
+    /// \brief Write a signed long integer (8 bit).
+    ///
+    /// If the value cannot be converted from a signed long integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param value the value to write
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setInt8(size_t index, std::int8_t value);
+
+    /// \brief Write an unsigned long integer (8 bit).
+    ///
+    /// If the value cannot be converted from an unsigned long integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param value the value to write
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setUint8(size_t index, std::uint8_t value);
 
     /// \brief Write a double floating point value (64 bit).
     ///
@@ -148,6 +206,18 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setDouble(size_t index, double value);
+
+    /// \brief Write a floating point value (32 bit).
+    ///
+    /// If the value cannot be converted from a floating point
+    /// then throws DataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param value the value to write
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setFloat(size_t index, float value);
 
     /// \brief Write a UTF8 string.
     ///

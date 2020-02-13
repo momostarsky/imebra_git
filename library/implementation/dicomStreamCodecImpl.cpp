@@ -130,8 +130,8 @@ void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::s
                     std::shared_ptr<data> metaInformationTag(std::make_shared<data>(tagVR_t::OB, charsets));
                     {
                         std::shared_ptr<handlers::writingDataHandler> handler(metaInformationTag->getWritingDataHandler(0));
-                        handler->setUnsignedLong(0, 0);
-                        handler->setUnsignedLong(1, 1);
+                        handler->setUint32(0, 0);
+                        handler->setUint32(1, 1);
                     }
                     temporaryTags[1] = metaInformationTag;
 

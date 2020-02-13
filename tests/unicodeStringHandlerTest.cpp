@@ -42,8 +42,8 @@ TEST(unicodeStringHandlerTest, unicodeTest)
         EXPECT_EQ(patientName1, testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 1));
         EXPECT_THROW(testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 2), MissingItemError);
         EXPECT_THROW(testDataSet.getString(TagId(0x0010, 0x0010), 2), MissingItemError);
-        EXPECT_THROW(testDataSet.getSignedLong(TagId(0x0010, 0x0010), 2), MissingItemError);
-        EXPECT_THROW(testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 2), MissingItemError);
+        EXPECT_THROW(testDataSet.getInt32(TagId(0x0010, 0x0010), 2), MissingItemError);
+        EXPECT_THROW(testDataSet.getUint32(TagId(0x0010, 0x0010), 2), MissingItemError);
         EXPECT_THROW(testDataSet.getDouble(TagId(0x0010, 0x0010), 2), MissingItemError);
     }
 }
@@ -140,8 +140,8 @@ TEST(unicodeStringHandlerTest, unicodeNumericConversion)
             WritingDataHandler handler = testDataSet.getWritingDataHandler(TagId(0x10, 0x10), 0);
 
             handler.setDouble(0, 1000);
-            handler.setUnsignedLong(1, 2000);
-            handler.setSignedLong(2, 3000);
+            handler.setUint32(1, 2000);
+            handler.setInt32(2, 3000);
         }
 
         MemoryStreamOutput writeStream(streamMemory);
@@ -155,14 +155,14 @@ TEST(unicodeStringHandlerTest, unicodeNumericConversion)
         DataSet testDataSet = CodecFactory::load(reader);
 
         ASSERT_DOUBLE_EQ(std::stod(L"1000"), std::stod(testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0)));
-        EXPECT_EQ(1000, testDataSet.getSignedLong(TagId(0x0010, 0x0010), 0));
-        EXPECT_EQ(1000u, testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 0));
+        EXPECT_EQ(1000, testDataSet.getInt32(TagId(0x0010, 0x0010), 0));
+        EXPECT_EQ(1000u, testDataSet.getUint32(TagId(0x0010, 0x0010), 0));
         ASSERT_DOUBLE_EQ(1000.0, testDataSet.getDouble(TagId(0x0010, 0x0010), 0));
-        EXPECT_EQ(2000, testDataSet.getSignedLong(TagId(0x0010, 0x0010), 1));
-        EXPECT_EQ(2000u, testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 1));
+        EXPECT_EQ(2000, testDataSet.getInt32(TagId(0x0010, 0x0010), 1));
+        EXPECT_EQ(2000u, testDataSet.getUint32(TagId(0x0010, 0x0010), 1));
         ASSERT_DOUBLE_EQ(2000.0, testDataSet.getDouble(TagId(0x0010, 0x0010), 1));
-        EXPECT_EQ(3000, testDataSet.getSignedLong(TagId(0x0010, 0x0010), 2));
-        EXPECT_EQ(3000u, testDataSet.getUnsignedLong(TagId(0x0010, 0x0010), 2));
+        EXPECT_EQ(3000, testDataSet.getInt32(TagId(0x0010, 0x0010), 2));
+        EXPECT_EQ(3000u, testDataSet.getUint32(TagId(0x0010, 0x0010), 2));
         ASSERT_DOUBLE_EQ(3000.0, testDataSet.getDouble(TagId(0x0010, 0x0010), 2));
         EXPECT_THROW(testDataSet.getDate(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);
         EXPECT_THROW(testDataSet.getAge(TagId(0x0010, 0x0010), 0), DataHandlerConversionError);

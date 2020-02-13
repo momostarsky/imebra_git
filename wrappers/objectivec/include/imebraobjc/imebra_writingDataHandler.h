@@ -73,7 +73,41 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param pError set to a NSError derived class in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
-    -(void) setSignedLong:(unsigned int)index newValue:(int)value error:(NSError**)pError
+    -(void) setInt32:(unsigned int)index newValue:(signed int)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \bried Deprecated. Use setInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) setSignedLong:(unsigned int)index newValue:(signed int)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Write a signed short integer (16 bit).
+    ///
+    /// If the value cannot be converted from a signed long integer
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        size()
+    /// \param value the value to write
+    /// \param pError set to a NSError derived class in case of error
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) setInt16:(unsigned int)index newValue:(signed short)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Write a signed char integer (8 bit).
+    ///
+    /// If the value cannot be converted from a signed long integer
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        size()
+    /// \param value the value to write
+    /// \param pError set to a NSError derived class in case of error
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) setInt8:(unsigned int)index newValue:(signed char)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Write an unsigned long integer (32 bit).
@@ -87,7 +121,41 @@ If you do not want to be bound by the GPL terms (such as the requirement
     /// \param pError set to a NSError derived class in case of error
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    -(void) setUint32:(unsigned int)index newValue:(unsigned int)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Deprecated. Use setUint32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     -(void) setUnsignedLong:(unsigned int)index newValue:(unsigned int)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Write an unsigned short integer (16 bit).
+    ///
+    /// If the value cannot be converted from an unsigned long integer
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        size()
+    /// \param value the value to write
+    /// \param pError set to a NSError derived class in case of error
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) setUint16:(unsigned int)index newValue:(unsigned short)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Write an unsigned char integer (8 bit).
+    ///
+    /// If the value cannot be converted from an unsigned long integer
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        size()
+    /// \param value the value to write
+    /// \param pError set to a NSError derived class in case of error
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) setUint8:(unsigned int)index newValue:(unsigned char)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Write a double floating point value (64 bit).
@@ -102,6 +170,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(void) setDouble:(unsigned int)index newValue:(double)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Write a floating point value (32 bit).
+    ///
+    /// If the value cannot be converted from a double floating point
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        size()
+    /// \param value the value to write
+    /// \param pError set to a NSError derived class in case of error
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) setFloat:(unsigned int)index newValue:(float)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Write a string.

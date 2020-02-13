@@ -202,7 +202,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
     try
     {
         std::string colorSpace = getString(0x0028, 0x0, 0x0004, 0, 0);
-        std::uint32_t channelsNumber = getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0, 1);
+        std::uint32_t channelsNumber = getUint32(0x0028, 0x0, 0x0002, 0, 0, 1);
         if(colorSpace.empty() && (channelsNumber == 0 || channelsNumber == 1))
         {
             colorSpace = "MONOCHROME2";
@@ -221,8 +221,8 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         {
             IMEBRA_THROW(CodecCorruptedFileError, "The color space " << colorSpace << " requires " << requiredChannels << " but the dataset declares " << channelsNumber << " channels");
         }
-        std::uint32_t imageWidth = getUnsignedLong(0x0028, 0x0, 0x0011, 0, 0);
-        std::uint32_t imageHeight = getUnsignedLong(0x0028, 0x0, 0x0010, 0, 0);
+        std::uint32_t imageWidth = getUint32(0x0028, 0x0, 0x0011, 0, 0);
+        std::uint32_t imageHeight = getUint32(0x0028, 0x0, 0x0010, 0, 0);
         if(
                 imageWidth > codecs::codecFactory::getCodecFactory()->getMaximumImageWidth() ||
                 imageHeight > codecs::codecFactory::getCodecFactory()->getMaximumImageHeight())
@@ -233,11 +233,11 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
         {
             IMEBRA_THROW(CodecCorruptedFileError, "The size tags are not available");
         }
-        bool bInterleaved(getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, pCodec->defaultInterleaved() ? 0 : 1u) == 0);
-        bool b2Complement(getUnsignedLong(0x0028, 0x0, 0x0103, 0, 0, 0) != 0);
-        std::uint8_t allocatedBits = static_cast<std::uint8_t>(getUnsignedLong(0x0028, 0x0, 0x0100, 0, 0));
-        std::uint8_t storedBits = static_cast<std::uint8_t>(getUnsignedLong(0x0028, 0x0, 0x0101, 0, 0));
-        std::uint8_t highBit = static_cast<std::uint8_t>(getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0));
+        bool bInterleaved(getUint32(0x0028, 0x0, 0x0006, 0, 0, pCodec->defaultInterleaved() ? 0 : 1u) == 0);
+        bool b2Complement(getUint32(0x0028, 0x0, 0x0103, 0, 0, 0) != 0);
+        std::uint8_t allocatedBits = static_cast<std::uint8_t>(getUint32(0x0028, 0x0, 0x0100, 0, 0));
+        std::uint8_t storedBits = static_cast<std::uint8_t>(getUint32(0x0028, 0x0, 0x0101, 0, 0));
+        std::uint8_t highBit = static_cast<std::uint8_t>(getUint32(0x0028, 0x0, 0x0102, 0, 0));
         if(highBit < storedBits - 1)
         {
             IMEBRA_THROW(CodecCorruptedFileError, "The tag 0028,0102 (high bit) cannot be less than (tag 0028,0101 (stored bit) - 1)");
@@ -249,7 +249,7 @@ std::shared_ptr<image> dataSet::getImage(std::uint32_t frameNumber) const
 
         // Get the number of frames
         ///////////////////////////////////////////////////////////
-        std::uint32_t numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0, 0, 1);
+        std::uint32_t numberOfFrames = getUint32(0x0028, 0, 0x0008, 0, 0, 1);
 
         if(frameNumber >= numberOfFrames)
         {
@@ -485,7 +485,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     //  exist in the dataset and we must save the new image
     //  using the attributes already stored
     ///////////////////////////////////////////////////////////
-    std::uint32_t numberOfFrames = getUnsignedLong(0x0028, 0, 0x0008, 0, 0, 0);
+    std::uint32_t numberOfFrames = getUint32(0x0028, 0, 0x0008, 0, 0, 0);
     if(frameNumber != numberOfFrames)
     {
         IMEBRA_THROW(DataSetWrongFrameError, "The frames must be inserted in sequence");
@@ -516,7 +516,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     const bool b2complement = pImage->isSigned();
     const std::uint32_t channelsNumber = pImage->getChannelsNumber();
     const std::uint32_t highBit = pImage->getHighBit();
-    const bool bInterleaved = (getUnsignedLong(0x0028, 0x0, 0x0006, 0, 0, channelsNumber > 1 ? 0 : 1) == 0x0);
+    const bool bInterleaved = (getUint32(0x0028, 0x0, 0x0006, 0, 0, channelsNumber > 1 ? 0 : 1) == 0x0);
 
     // If the attributes cannot be changed, then check the
     //  attributes already stored in the dataset
@@ -529,11 +529,11 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
                     transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(currentColorSpace) ||
                 bSubSampledX != transforms::colorTransforms::colorTransformsFactory::isSubsampledX(currentColorSpace) ||
                 bSubSampledY != transforms::colorTransforms::colorTransformsFactory::isSubsampledY(currentColorSpace) ||
-                b2complement != (getUnsignedLong(0x0028, 0, 0x0103, 0, 0) != 0) ||
-                highBit != getUnsignedLong(0x0028, 0x0, 0x0102, 0, 0) ||
-                channelsNumber != getUnsignedLong(0x0028, 0x0, 0x0002, 0, 0) ||
-                width != getUnsignedLong(0x0028, 0, 0x0011, 0, 0) ||
-                height != getUnsignedLong(0x0028, 0, 0x0010, 0, 0))
+                b2complement != (getUint32(0x0028, 0, 0x0103, 0, 0) != 0) ||
+                highBit != getUint32(0x0028, 0x0, 0x0102, 0, 0) ||
+                channelsNumber != getUint32(0x0028, 0x0, 0x0002, 0, 0) ||
+                width != getUint32(0x0028, 0, 0x0011, 0, 0) ||
+                height != getUint32(0x0028, 0, 0x0010, 0, 0))
         {
             IMEBRA_THROW(DataSetDifferentFormatError, "An image already exists in the dataset and has different attributes");
         }
@@ -664,16 +664,16 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         setString(0x0028, 0x0, 0x0004, 0, transforms::colorTransforms::colorTransformsFactory::makeSubsampled(colorSpace, bSubSampledX, bSubSampledY));
         if(channelsNumber > 1)
         {
-            setUnsignedLong(0x0028, 0x0, 0x0006, 0, bInterleaved ? 0 : 1);
+            setUint32(0x0028, 0x0, 0x0006, 0, bInterleaved ? 0 : 1);
         }
-        setUnsignedLong(0x0028, 0x0, 0x0100, 0, allocatedBits);            // allocated bits
-        setUnsignedLong(0x0028, 0x0, 0x0101, 0, pImage->getHighBit() + 1); // stored bits
-        setUnsignedLong(0x0028, 0x0, 0x0102, 0, pImage->getHighBit());     // high bit
-        setUnsignedLong(0x0028, 0x0, 0x0103, 0, b2complement ? 1 : 0);
-        setUnsignedLong(0x0028, 0x0, 0x0002, 0, channelsNumber);
+        setUint32(0x0028, 0x0, 0x0100, 0, allocatedBits);            // allocated bits
+        setUint32(0x0028, 0x0, 0x0101, 0, pImage->getHighBit() + 1); // stored bits
+        setUint32(0x0028, 0x0, 0x0102, 0, pImage->getHighBit());     // high bit
+        setUint32(0x0028, 0x0, 0x0103, 0, b2complement ? 1 : 0);
+        setUint32(0x0028, 0x0, 0x0002, 0, channelsNumber);
         pImage->getSize(&width, &height);
-        setUnsignedLong(0x0028, 0x0, 0x0011, 0, width);
-        setUnsignedLong(0x0028, 0x0, 0x0010, 0, height);
+        setUint32(0x0028, 0x0, 0x0011, 0, width);
+        setUint32(0x0028, 0x0, 0x0010, 0, height);
 
         if(colorSpace == "PALETTE COLOR")
         {
@@ -684,7 +684,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
     // Update the number of frames
     ///////////////////////////////////////////////////////////
     numberOfFrames = frameNumber + 1;
-    setUnsignedLong(0x0028, 0, 0x0008, 0, numberOfFrames );
+    setUint32(0x0028, 0, 0x0008, 0, numberOfFrames );
 
     // Update the offsets tag with the image's offsets
     ///////////////////////////////////////////////////////////
@@ -725,21 +725,21 @@ std::shared_ptr<overlay> dataSet::getOverlay(std::uint32_t overlayNumber) const
     }
     try
     {
-        std::uint32_t height = getUnsignedLong(groupId, 0, 0x0010, 0, 0);
-        std::uint32_t width = getUnsignedLong(groupId, 0, 0x0011, 0, 0);
-        std::uint32_t firstFrame = getUnsignedLong(groupId, 0, 0x0051, 0, 0, 1) - 1;
-        std::uint32_t framesCount = getUnsignedLong(groupId, 0, 0x0015, 0, 0, 1);
+        std::uint32_t height = getUint32(groupId, 0, 0x0010, 0, 0);
+        std::uint32_t width = getUint32(groupId, 0, 0x0011, 0, 0);
+        std::uint32_t firstFrame = getUint32(groupId, 0, 0x0051, 0, 0, 1) - 1;
+        std::uint32_t framesCount = getUint32(groupId, 0, 0x0015, 0, 0, 1);
 
         // Construct the overlay and return it
         overlayType_t overlayType = getString(groupId, 0, 0x0040, 0, 0) == "R" ? overlayType_t::ROI : overlayType_t::graphic;
-        std::int32_t originY = getSignedLong(groupId, 0, 0x0050, 0, 0);
-        std::int32_t originX = getSignedLong(groupId, 0, 0x0050, 0, 1);
-        std::uint32_t allocatedBits = getUnsignedLong(groupId, 0, 0x0100, 0, 0); // Fail if different than 1
+        std::int32_t originY = getInt32(groupId, 0, 0x0050, 0, 0);
+        std::int32_t originX = getInt32(groupId, 0, 0x0050, 0, 1);
+        std::uint32_t allocatedBits = getUint32(groupId, 0, 0x0100, 0, 0); // Fail if different than 1
         if(allocatedBits != 1)
         {
             IMEBRA_THROW(CodecCorruptedFileError, "Cannot handle overlays with allocatedBits greater than one");
         }
-        std::uint32_t bitPosition = getUnsignedLong(groupId, 0, 0x0102, 0, 0); // Fail if different than 0
+        std::uint32_t bitPosition = getUint32(groupId, 0, 0x0102, 0, 0); // Fail if different than 0
         if(bitPosition != 0)
         {
             IMEBRA_THROW(CodecCorruptedFileError, "Cannot handle overlays with bitPosition different than one");
@@ -753,7 +753,7 @@ std::shared_ptr<overlay> dataSet::getOverlay(std::uint32_t overlayNumber) const
         std::uint32_t roiAreaPixels = 0;
         try
         {
-            roiAreaPixels = getUnsignedLong(groupId, 0, 0x1301, 0, 0);
+            roiAreaPixels = getUint32(groupId, 0, 0x1301, 0, 0);
         }
         catch(const MissingDataElementError&)
         {
@@ -822,24 +822,24 @@ void dataSet::setOverlay(std::uint32_t overlayNumber, std::shared_ptr<overlay> p
 
     std::uint32_t height, width;
     pOverlay->getImage(0)->getSize(&width, &height);
-    setUnsignedLong(groupId, 0, 0x0010, 0, height);
-    setUnsignedLong(groupId, 0, 0x0011, 0, width);
-    setUnsignedLong(groupId, 0, 0x0051, 0, pOverlay->getFirstFrame() + 1);
-    setUnsignedLong(groupId, 0, 0x0015, 0, pOverlay->getFramesCount());
+    setUint32(groupId, 0, 0x0010, 0, height);
+    setUint32(groupId, 0, 0x0011, 0, width);
+    setUint32(groupId, 0, 0x0051, 0, pOverlay->getFirstFrame() + 1);
+    setUint32(groupId, 0, 0x0015, 0, pOverlay->getFramesCount());
     setString(groupId, 0, 0x0040, 0, pOverlay->getType() == overlayType_t::ROI ? "R" : "G");
     setString(groupId, 0, 0x0045, 0, pOverlay->getSubType());
     std::shared_ptr<handlers::writingDataHandler> originHandler(getWritingDataHandler(groupId, 0, 0x0050, 0));
     originHandler->setSize(2);
-    originHandler->setSignedLong(0, pOverlay->getOneBasedOriginY());
-    originHandler->setSignedLong(1, pOverlay->getOneBasedOriginX());
-    setUnsignedLong(groupId, 0, 0x0100, 0, 1); // bits allocated
-    setUnsignedLong(groupId, 0, 0x0102, 0, 0); // bit position
+    originHandler->setInt32(0, pOverlay->getOneBasedOriginY());
+    originHandler->setInt32(1, pOverlay->getOneBasedOriginX());
+    setUint32(groupId, 0, 0x0100, 0, 1); // bits allocated
+    setUint32(groupId, 0, 0x0102, 0, 0); // bit position
     setUnicodeString(groupId, 0, 0x1500, 0, pOverlay->getUnicodeLabel());
     setUnicodeString(groupId, 0, 0x0022, 0, pOverlay->getUnicodeDescription());
 
     if(pOverlay->getROIAreaPresent())
     {
-        setUnsignedLong(groupId, 0, 0x1301, 0, pOverlay->getROIArea());
+        setUint32(groupId, 0, 0x1301, 0, pOverlay->getROIArea());
     }
 
     if(pOverlay->getROIMeanPresent())
@@ -1101,7 +1101,7 @@ std::shared_ptr<lut> dataSet::getLut(std::uint16_t groupId, std::uint16_t tagId,
         descriptorHandle,
         dataHandle,
         embeddedLUT->getUnicodeString(0x0028, 0x0, 0x3003, 0, 0, L""),
-        getUnsignedLong(0x0028, 0, 0x0103, 0, 0, 0) != 0);
+        getUint32(0x0028, 0, 0x0103, 0, 0, 0) != 0);
     return pLUT;
 
     IMEBRA_FUNCTION_END();
@@ -1184,22 +1184,197 @@ std::shared_ptr<dataSet> dataSet::getFunctionalGroupDataSet(size_t frameNumber) 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+std::int32_t dataSet::getInt32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
 {
     IMEBRA_FUNCTION_START();
 
-    return getReadingDataHandler(groupId, order, tagId, bufferId)->getSignedLong(elementNumber);
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getInt32(elementNumber);
 
     IMEBRA_FUNCTION_END();
 }
 
-std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const
+std::int32_t dataSet::getInt32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int32_t defaultValue) const
 {
     IMEBRA_FUNCTION_START();
 
     try
     {
-        return getSignedLong(groupId, order, tagId, bufferId, elementNumber);
+        return getInt32(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const MissingDataElementError&)
+    {
+        return defaultValue;
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Get the requested tag as an unsigned long
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+std::uint32_t dataSet::getUint32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getUint32(elementNumber);
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::uint32_t dataSet::getUint32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    try
+    {
+        return getUint32(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const MissingDataElementError&)
+    {
+        return defaultValue;
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Get a tag as a int16
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+std::int16_t dataSet::getInt16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getInt16(elementNumber);
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::int16_t dataSet::getInt16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int16_t defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    try
+    {
+        return getInt16(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const MissingDataElementError&)
+    {
+        return defaultValue;
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Get the requested tag as uint16
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+std::uint16_t dataSet::getUint16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getUint16(elementNumber);
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::uint16_t dataSet::getUint16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint16_t defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    try
+    {
+        return getUint16(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const MissingDataElementError&)
+    {
+        return defaultValue;
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Get a tag as a int8
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+std::int8_t dataSet::getInt8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getInt8(elementNumber);
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::int8_t dataSet::getInt8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::int8_t defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    try
+    {
+        return getInt8(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const MissingDataElementError&)
+    {
+        return defaultValue;
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Get the requested tag as uint8
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+std::uint8_t dataSet::getUint8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getUint8(elementNumber);
+
+    IMEBRA_FUNCTION_END();
+}
+
+std::uint8_t dataSet::getUint8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint8_t defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    try
+    {
+        return getUint8(groupId, order, tagId, bufferId, elementNumber);
     }
     catch(const MissingDataElementError&)
     {
@@ -1219,7 +1394,7 @@ std::int32_t dataSet::getSignedLong(std::uint16_t groupId, std::uint32_t order, 
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, tagVR_t tagVR)
+void dataSet::setInt32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1227,52 +1402,17 @@ void dataSet::setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uin
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
     dataHandler->setSize(1);
-    dataHandler->setSignedLong(0, newValue);
+    dataHandler->setInt32(0, newValue);
 
     IMEBRA_FUNCTION_END();
 }
 
 
-void dataSet::setSignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue)
+void dataSet::setInt32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int32_t newValue)
 {
     IMEBRA_FUNCTION_START();
 
-    setSignedLong(groupId, order, tagId, bufferId, newValue, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
-
-    IMEBRA_FUNCTION_END();
-}
-
-
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-//
-//
-// Get the requested tag as an unsigned long
-//
-//
-///////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////
-std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
-{
-    IMEBRA_FUNCTION_START();
-
-    return getReadingDataHandler(groupId, order, tagId, bufferId)->getUnsignedLong(elementNumber);
-
-    IMEBRA_FUNCTION_END();
-}
-
-std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, std::uint32_t defaultValue) const
-{
-    IMEBRA_FUNCTION_START();
-
-    try
-    {
-        return getUnsignedLong(groupId, order, tagId, bufferId, elementNumber);
-    }
-    catch(const MissingDataElementError&)
-    {
-        return defaultValue;
-    }
+    setInt32(groupId, order, tagId, bufferId, newValue, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
 
     IMEBRA_FUNCTION_END();
 }
@@ -1287,7 +1427,7 @@ std::uint32_t dataSet::getUnsignedLong(std::uint16_t groupId, std::uint32_t orde
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, tagVR_t tagVR)
+void dataSet::setUint32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue, tagVR_t tagVR)
 {
     IMEBRA_FUNCTION_START();
 
@@ -1295,17 +1435,149 @@ void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::u
 
     std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
     dataHandler->setSize(1);
-    dataHandler->setUnsignedLong(0, newValue);
+    dataHandler->setUint32(0, newValue);
 
     IMEBRA_FUNCTION_END();
 }
 
 
-void dataSet::setUnsignedLong(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue)
+void dataSet::setUint32(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint32_t newValue)
 {
     IMEBRA_FUNCTION_START();
 
-    setUnsignedLong(groupId, order, tagId, bufferId, newValue, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+    setUint32(groupId, order, tagId, bufferId, newValue, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Set a tag as a int16
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void dataSet::setInt16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int16_t newValue, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
+    dataHandler->setSize(1);
+    dataHandler->setInt16(0, newValue);
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void dataSet::setInt16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int16_t newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    setInt16(groupId, order, tagId, bufferId, newValue, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Set the requested tag as an uint16
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void dataSet::setUint16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint16_t newValue, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
+    dataHandler->setSize(1);
+    dataHandler->setUint16(0, newValue);
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void dataSet::setUint16(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint16_t newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    setUint16(groupId, order, tagId, bufferId, newValue, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Set a tag as a int8
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void dataSet::setInt8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int8_t newValue, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
+    dataHandler->setSize(1);
+    dataHandler->setInt8(0, newValue);
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void dataSet::setInt8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::int8_t newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    setInt8(groupId, order, tagId, bufferId, newValue, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Set the requested tag as an uint16
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void dataSet::setUint8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint8_t newValue, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
+    dataHandler->setSize(1);
+    dataHandler->setUint8(0, newValue);
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void dataSet::setUint8(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, std::uint8_t newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    setUint8(groupId, order, tagId, bufferId, newValue, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
 
     IMEBRA_FUNCTION_END();
 }
@@ -1349,6 +1621,40 @@ double dataSet::getDouble(std::uint16_t groupId, std::uint32_t order, std::uint1
 ///////////////////////////////////////////////////////////
 //
 //
+// Get the requested tag as a float
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+float dataSet::getFloat(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber) const
+{
+    IMEBRA_FUNCTION_START();
+
+    return getReadingDataHandler(groupId, order, tagId, bufferId)->getFloat(elementNumber);
+
+    IMEBRA_FUNCTION_END();
+}
+
+float dataSet::getFloat(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, size_t elementNumber, float defaultValue) const
+{
+    IMEBRA_FUNCTION_START();
+
+    try
+    {
+        return getFloat(groupId, order, tagId, bufferId, elementNumber);
+    }
+    catch(const MissingDataElementError&)
+    {
+        return defaultValue;
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
 // Set the requested tag as a double
 //
 //
@@ -1376,6 +1682,40 @@ void dataSet::setDouble(std::uint16_t groupId, std::uint32_t order, std::uint16_
 
     IMEBRA_FUNCTION_END();
 }
+
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+//
+//
+// Set the requested tag as a float
+//
+//
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+void dataSet::setFloat(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, float newValue, tagVR_t tagVR)
+{
+    IMEBRA_FUNCTION_START();
+
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    std::shared_ptr<handlers::writingDataHandler> dataHandler = getWritingDataHandler(groupId, order, tagId, bufferId, tagVR);
+    dataHandler->setSize(1);
+    dataHandler->setFloat(0, newValue);
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void dataSet::setFloat(std::uint16_t groupId, std::uint32_t order, std::uint16_t tagId, size_t bufferId, float newValue)
+{
+    IMEBRA_FUNCTION_START();
+
+    setFloat(groupId, order, tagId, bufferId, newValue, dicomDictionary::getDicomDictionary()->getTagType(groupId, tagId));
+
+    IMEBRA_FUNCTION_END();
+}
+
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////

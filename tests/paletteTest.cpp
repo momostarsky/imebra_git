@@ -16,27 +16,27 @@ TEST(paletteTest, testPalette)
     {
         WritingDataHandlerNumeric redDescriptor = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RedPaletteColorLookupTableDescriptor_0028_1101), 0, tagVR_t::US);
         WritingDataHandlerNumeric redData = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RedPaletteColorLookupTableData_0028_1201), 0, tagVR_t::US);
-        redDescriptor.setUnsignedLong(0, 256);
-        redDescriptor.setUnsignedLong(1, 0);
-        redDescriptor.setUnsignedLong(2, 8);
+        redDescriptor.setUint32(0, 256);
+        redDescriptor.setUint32(1, 0);
+        redDescriptor.setUint32(2, 8);
 
         WritingDataHandlerNumeric greenDescriptor = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::GreenPaletteColorLookupTableDescriptor_0028_1102), 0, tagVR_t::US);
         WritingDataHandlerNumeric greenData = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::GreenPaletteColorLookupTableData_0028_1202), 0, tagVR_t::US);
-        greenDescriptor.setUnsignedLong(0, 256);
-        greenDescriptor.setUnsignedLong(1, 0);
-        greenDescriptor.setUnsignedLong(2, 8);
+        greenDescriptor.setUint32(0, 256);
+        greenDescriptor.setUint32(1, 0);
+        greenDescriptor.setUint32(2, 8);
 
         WritingDataHandlerNumeric blueDescriptor = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::BluePaletteColorLookupTableDescriptor_0028_1103), 0, tagVR_t::US);
         WritingDataHandlerNumeric blueData = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::BluePaletteColorLookupTableData_0028_1203), 0, tagVR_t::US);
-        blueDescriptor.setUnsignedLong(0, 256);
-        blueDescriptor.setUnsignedLong(1, 0);
-        blueDescriptor.setUnsignedLong(2, 8);
+        blueDescriptor.setUint32(0, 256);
+        blueDescriptor.setUint32(1, 0);
+        blueDescriptor.setUint32(2, 8);
 
         for(std::uint32_t fillPalette(0); fillPalette != 256; fillPalette += 2)
         {
-            redData.setUnsignedLong(fillPalette / 2, ((fillPalette + 10) & 0xff) | (((fillPalette + 11) & 0xff) << 8));
-            greenData.setUnsignedLong(fillPalette / 2, ((fillPalette + 21) & 0xff) | (((fillPalette + 22) & 0xff) << 8));
-            blueData.setUnsignedLong(fillPalette / 2, ((fillPalette + 32) & 0xff) | (((fillPalette + 33) & 0xff) << 8));
+            redData.setUint32(fillPalette / 2, ((fillPalette + 10) & 0xff) | (((fillPalette + 11) & 0xff) << 8));
+            greenData.setUint32(fillPalette / 2, ((fillPalette + 21) & 0xff) | (((fillPalette + 22) & 0xff) << 8));
+            blueData.setUint32(fillPalette / 2, ((fillPalette + 32) & 0xff) | (((fillPalette + 33) & 0xff) << 8));
         }
     }
 
@@ -53,7 +53,7 @@ TEST(paletteTest, testPalette)
         {
             for(std::uint32_t x=0; x<sizeX; ++x)
             {
-                imageHandler.setUnsignedLong(pointer, pointer & 0xff);
+                imageHandler.setUint32(pointer, pointer & 0xff);
                 ++pointer;
             }
         }
@@ -79,9 +79,9 @@ TEST(paletteTest, testPalette)
     {
         for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
         {
-            std::uint32_t r = rgbHandler.getUnsignedLong(rgbPointer++);
-            std::uint32_t g = rgbHandler.getUnsignedLong(rgbPointer++);
-            std::uint32_t b = rgbHandler.getUnsignedLong(rgbPointer++);
+            std::uint32_t r = rgbHandler.getUint32(rgbPointer++);
+            std::uint32_t g = rgbHandler.getUint32(rgbPointer++);
+            std::uint32_t b = rgbHandler.getUint32(rgbPointer++);
 
             ASSERT_EQ(((pointer & 0xff) + 10) & 0xff, r);
             ASSERT_EQ(((pointer & 0xff) + 21) & 0xff, g);
@@ -101,27 +101,27 @@ TEST(paletteTest, testPalette16bit)
     {
         WritingDataHandlerNumeric redDescriptor = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RedPaletteColorLookupTableDescriptor_0028_1101), 0, tagVR_t::US);
         WritingDataHandlerNumeric redData = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RedPaletteColorLookupTableData_0028_1201), 0, tagVR_t::US);
-        redDescriptor.setUnsignedLong(0, 256);
-        redDescriptor.setUnsignedLong(1, 0);
-        redDescriptor.setUnsignedLong(2, 16);
+        redDescriptor.setUint32(0, 256);
+        redDescriptor.setUint32(1, 0);
+        redDescriptor.setUint32(2, 16);
 
         WritingDataHandlerNumeric greenDescriptor = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::GreenPaletteColorLookupTableDescriptor_0028_1102), 0, tagVR_t::US);
         WritingDataHandlerNumeric greenData = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::GreenPaletteColorLookupTableData_0028_1202), 0, tagVR_t::US);
-        greenDescriptor.setUnsignedLong(0, 256);
-        greenDescriptor.setUnsignedLong(1, 0);
-        greenDescriptor.setUnsignedLong(2, 16);
+        greenDescriptor.setUint32(0, 256);
+        greenDescriptor.setUint32(1, 0);
+        greenDescriptor.setUint32(2, 16);
 
         WritingDataHandlerNumeric blueDescriptor = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::BluePaletteColorLookupTableDescriptor_0028_1103), 0, tagVR_t::US);
         WritingDataHandlerNumeric blueData = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::BluePaletteColorLookupTableData_0028_1203), 0, tagVR_t::US);
-        blueDescriptor.setUnsignedLong(0, 256);
-        blueDescriptor.setUnsignedLong(1, 0);
-        blueDescriptor.setUnsignedLong(2, 16);
+        blueDescriptor.setUint32(0, 256);
+        blueDescriptor.setUint32(1, 0);
+        blueDescriptor.setUint32(2, 16);
 
         for(std::uint32_t fillPalette(0); fillPalette != 256; fillPalette++)
         {
-            redData.setUnsignedLong(fillPalette, (fillPalette + 10) & 0xff);
-            greenData.setUnsignedLong(fillPalette, (fillPalette + 21) & 0xff);
-            blueData.setUnsignedLong(fillPalette, (fillPalette + 32) & 0xff);
+            redData.setUint32(fillPalette, (fillPalette + 10) & 0xff);
+            greenData.setUint32(fillPalette, (fillPalette + 21) & 0xff);
+            blueData.setUint32(fillPalette, (fillPalette + 32) & 0xff);
         }
     }
 
@@ -138,7 +138,7 @@ TEST(paletteTest, testPalette16bit)
         {
             for(std::uint32_t x=0; x<sizeX; ++x)
             {
-                imageHandler.setUnsignedLong(pointer, pointer & 0xff);
+                imageHandler.setUint32(pointer, pointer & 0xff);
                 ++pointer;
             }
         }
@@ -164,9 +164,9 @@ TEST(paletteTest, testPalette16bit)
     {
         for(std::uint32_t checkX = 0; checkX < sizeX; ++checkX)
         {
-            std::uint32_t r = rgbHandler.getUnsignedLong(rgbPointer++);
-            std::uint32_t g = rgbHandler.getUnsignedLong(rgbPointer++);
-            std::uint32_t b = rgbHandler.getUnsignedLong(rgbPointer++);
+            std::uint32_t r = rgbHandler.getUint32(rgbPointer++);
+            std::uint32_t g = rgbHandler.getUint32(rgbPointer++);
+            std::uint32_t b = rgbHandler.getUint32(rgbPointer++);
 
             ASSERT_EQ(((pointer & 0xff) + 10) & 0xff, r);
             ASSERT_EQ(((pointer & 0xff) + 21) & 0xff, g);

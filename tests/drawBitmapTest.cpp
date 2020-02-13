@@ -45,7 +45,7 @@ TEST(drawBitmapTest, testDrawBitmapRGB)
 
                     if(monochrome)
                     {
-                        red = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -54,9 +54,9 @@ TEST(drawBitmapTest, testDrawBitmapRGB)
                     }
                     else
                     {
-                        red = imageHandler.getUnsignedLong(index++);
-                        green = imageHandler.getUnsignedLong(index++);
-                        blue = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
+                        green = imageHandler.getUint32(index++);
+                        blue = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -119,7 +119,7 @@ TEST(drawBitmapTest, testDrawBitmapBGR)
 
                     if(monochrome)
                     {
-                        red = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -128,9 +128,9 @@ TEST(drawBitmapTest, testDrawBitmapBGR)
                     }
                     else
                     {
-                        red = imageHandler.getUnsignedLong(index++);
-                        green = imageHandler.getUnsignedLong(index++);
-                        blue = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
+                        green = imageHandler.getUint32(index++);
+                        blue = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -194,7 +194,7 @@ TEST(drawBitmapTest, testDrawBitmapRGBA)
 
                     if(monochrome)
                     {
-                        red = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -203,9 +203,9 @@ TEST(drawBitmapTest, testDrawBitmapRGBA)
                     }
                     else
                     {
-                        red = imageHandler.getUnsignedLong(index++);
-                        green = imageHandler.getUnsignedLong(index++);
-                        blue = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
+                        green = imageHandler.getUint32(index++);
+                        blue = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -268,7 +268,7 @@ TEST(drawBitmapTest, testDrawBitmapBGRA)
 
                     if(monochrome)
                     {
-                        red = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -277,9 +277,9 @@ TEST(drawBitmapTest, testDrawBitmapBGRA)
                     }
                     else
                     {
-                        red = imageHandler.getUnsignedLong(index++);
-                        green = imageHandler.getUnsignedLong(index++);
-                        blue = imageHandler.getUnsignedLong(index++);
+                        red = imageHandler.getUint32(index++);
+                        green = imageHandler.getUint32(index++);
+                        blue = imageHandler.getUint32(index++);
                         if(highBit > 7)
                         {
                             red >>= (highBit - 7);
@@ -311,27 +311,27 @@ TEST(drawBitmapTest, testPalette)
     {
         WritingDataHandlerNumeric redDescriptor = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RedPaletteColorLookupTableDescriptor_0028_1101), 0, tagVR_t::US);
         WritingDataHandlerNumeric redData = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RedPaletteColorLookupTableData_0028_1201), 0, tagVR_t::US);
-        redDescriptor.setUnsignedLong(0, 256u);
-        redDescriptor.setUnsignedLong(1, 0u);
-        redDescriptor.setUnsignedLong(2, 8u);
+        redDescriptor.setUint32(0, 256u);
+        redDescriptor.setUint32(1, 0u);
+        redDescriptor.setUint32(2, 8u);
 
         WritingDataHandlerNumeric greenDescriptor = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::GreenPaletteColorLookupTableDescriptor_0028_1102), 0, tagVR_t::US);
         WritingDataHandlerNumeric greenData = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::GreenPaletteColorLookupTableData_0028_1202), 0, tagVR_t::US);
-        greenDescriptor.setUnsignedLong(0, 256u);
-        greenDescriptor.setUnsignedLong(1, 0u);
-        greenDescriptor.setUnsignedLong(2, 8u);
+        greenDescriptor.setUint32(0, 256u);
+        greenDescriptor.setUint32(1, 0u);
+        greenDescriptor.setUint32(2, 8u);
 
         WritingDataHandlerNumeric blueDescriptor = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::BluePaletteColorLookupTableDescriptor_0028_1103), 0, tagVR_t::US);
         WritingDataHandlerNumeric blueData = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::BluePaletteColorLookupTableData_0028_1203), 0, tagVR_t::US);
-        blueDescriptor.setUnsignedLong(0, 256u);
-        blueDescriptor.setUnsignedLong(1, 0u);
-        blueDescriptor.setUnsignedLong(2, 8u);
+        blueDescriptor.setUint32(0, 256u);
+        blueDescriptor.setUint32(1, 0u);
+        blueDescriptor.setUint32(2, 8u);
 
         for(std::uint32_t fillPalette(0); fillPalette != 256; fillPalette += 2)
         {
-            redData.setUnsignedLong(fillPalette / 2, ((fillPalette + 10) & 0xff) | (((fillPalette + 11) & 0xff) << 8));
-            greenData.setUnsignedLong(fillPalette / 2, ((fillPalette + 21) & 0xff) | (((fillPalette + 22) & 0xff) << 8));
-            blueData.setUnsignedLong(fillPalette / 2, ((fillPalette + 32) & 0xff) | (((fillPalette + 33) & 0xff) << 8));
+            redData.setUint32(fillPalette / 2, ((fillPalette + 10) & 0xff) | (((fillPalette + 11) & 0xff) << 8));
+            greenData.setUint32(fillPalette / 2, ((fillPalette + 21) & 0xff) | (((fillPalette + 22) & 0xff) << 8));
+            blueData.setUint32(fillPalette / 2, ((fillPalette + 32) & 0xff) | (((fillPalette + 33) & 0xff) << 8));
         }
     }
 
@@ -348,7 +348,7 @@ TEST(drawBitmapTest, testPalette)
         {
             for(std::uint32_t x=0; x<sizeX; ++x)
             {
-                imageHandler.setUnsignedLong(pointer, pointer & 0xff);
+                imageHandler.setUint32(pointer, pointer & 0xff);
                 ++pointer;
             }
         }
@@ -391,27 +391,27 @@ TEST(drawBitmapTest, testPalette16bit)
     {
         WritingDataHandlerNumeric redDescriptor = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RedPaletteColorLookupTableDescriptor_0028_1101), 0, tagVR_t::US);
         WritingDataHandlerNumeric redData = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RedPaletteColorLookupTableData_0028_1201), 0, tagVR_t::US);
-        redDescriptor.setUnsignedLong(0, 256);
-        redDescriptor.setUnsignedLong(1, 0);
-        redDescriptor.setUnsignedLong(2, 16);
+        redDescriptor.setUint32(0, 256);
+        redDescriptor.setUint32(1, 0);
+        redDescriptor.setUint32(2, 16);
 
         WritingDataHandlerNumeric greenDescriptor = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::GreenPaletteColorLookupTableDescriptor_0028_1102), 0, tagVR_t::US);
         WritingDataHandlerNumeric greenData = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::GreenPaletteColorLookupTableData_0028_1202), 0, tagVR_t::US);
-        greenDescriptor.setUnsignedLong(0, 256);
-        greenDescriptor.setUnsignedLong(1, 0);
-        greenDescriptor.setUnsignedLong(2, 16);
+        greenDescriptor.setUint32(0, 256);
+        greenDescriptor.setUint32(1, 0);
+        greenDescriptor.setUint32(2, 16);
 
         WritingDataHandlerNumeric blueDescriptor = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::BluePaletteColorLookupTableDescriptor_0028_1103), 0, tagVR_t::US);
         WritingDataHandlerNumeric blueData = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::BluePaletteColorLookupTableData_0028_1203), 0, tagVR_t::US);
-        blueDescriptor.setUnsignedLong(0, 256);
-        blueDescriptor.setUnsignedLong(1, 0);
-        blueDescriptor.setUnsignedLong(2, 16);
+        blueDescriptor.setUint32(0, 256);
+        blueDescriptor.setUint32(1, 0);
+        blueDescriptor.setUint32(2, 16);
 
         for(std::uint32_t fillPalette(0); fillPalette != 256; fillPalette++)
         {
-            redData.setUnsignedLong(fillPalette, ((fillPalette + 10) & 0xff) * 256);
-            greenData.setUnsignedLong(fillPalette, ((fillPalette + 21) & 0xff) * 256);
-            blueData.setUnsignedLong(fillPalette, ((fillPalette + 32) & 0xff) * 256);
+            redData.setUint32(fillPalette, ((fillPalette + 10) & 0xff) * 256);
+            greenData.setUint32(fillPalette, ((fillPalette + 21) & 0xff) * 256);
+            blueData.setUint32(fillPalette, ((fillPalette + 32) & 0xff) * 256);
         }
     }
 
@@ -428,7 +428,7 @@ TEST(drawBitmapTest, testPalette16bit)
         {
             for(std::uint32_t x=0; x<sizeX; ++x)
             {
-                imageHandler.setUnsignedLong(pointer, pointer & 0xff);
+                imageHandler.setUint32(pointer, pointer & 0xff);
                 ++pointer;
             }
         }

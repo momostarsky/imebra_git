@@ -35,10 +35,10 @@ void scpThread(
                 // Send a C-Store command
                 MutableAssociationMessage command(abstractSyntax);
                 MutableDataSet dataset0(transferSyntax);
-                dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-                dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), messageId, tagVR_t::US);
+                dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+                dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), messageId, tagVR_t::US);
                 dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.5");
-                dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+                dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
                 command.addDataSet(dataset0);
                 scp.sendMessage(command);
                 scp.getResponse(messageId);
@@ -56,10 +56,10 @@ void scpThread(
                 // Send a C-Store command
                 MutableAssociationMessage command(abstractSyntax);
                 MutableDataSet dataset0(transferSyntax);
-                dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-                dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), messageId++, tagVR_t::US);
+                dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+                dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), messageId++, tagVR_t::US);
                 dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.5");
-                dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+                dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
                 command.addDataSet(dataset0);
                 EXPECT_THROW(scp.sendMessage(command), AcseWrongRoleError);
             }
@@ -73,11 +73,11 @@ void scpThread(
             // First send a response with a wrong ID: it should throw
             {
                 MutableDataSet responseDataSet;
-                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
-                responseDataSet.setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), 0xffff, tagVR_t::US);
+                responseDataSet.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
+                responseDataSet.setUint32(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), 0xffff, tagVR_t::US);
                 responseDataSet.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), commandDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0, ""));
                 responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
-                responseDataSet.setUnsignedLong(TagId(tagId_t::Status_0000_0900), 0x0000);
+                responseDataSet.setUint32(TagId(tagId_t::Status_0000_0900), 0x0000);
                 MutableAssociationMessage response(command.getAbstractSyntax());
                 response.addDataSet(responseDataSet);
                 EXPECT_THROW(scp.sendMessage(response), AcseWrongResponseIdError);
@@ -87,13 +87,13 @@ void scpThread(
             {
                 DataSet commandDataSet = command.getCommand();
                 MutableDataSet responseDataSet;
-                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
-                std::uint32_t messageId(commandDataSet.getUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0));
-                responseDataSet.setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
+                responseDataSet.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
+                std::uint32_t messageId(commandDataSet.getUint32(TagId(tagId_t::MessageID_0000_0110), 0));
+                responseDataSet.setUint32(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
                 responseDataSet.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), commandDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0, ""));
                 responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
-                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), command.hasPayload() ? 0 : 0x0101);
-                responseDataSet.setUnsignedLong(TagId(tagId_t::Status_0000_0900), 0x0000);
+                responseDataSet.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), command.hasPayload() ? 0 : 0x0101);
+                responseDataSet.setUint32(TagId(tagId_t::Status_0000_0900), 0x0000);
 
                 MutableAssociationMessage response(command.getAbstractSyntax());
                 response.addDataSet(responseDataSet);
@@ -128,12 +128,12 @@ void scpThreadMultipleOperations(const std::string& name, PresentationContexts& 
 
             {
                 MutableDataSet responseDataSet;
-                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
-                std::uint32_t messageId(command.getCommand().getUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0));
-                responseDataSet.setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
+                responseDataSet.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
+                std::uint32_t messageId(command.getCommand().getUint32(TagId(tagId_t::MessageID_0000_0110), 0));
+                responseDataSet.setUint32(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
                 responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
-                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), command.hasPayload() ? 0 : 0x0101);
-                responseDataSet.setUnsignedLong(TagId(tagId_t::Status_0000_0900), 0x0000);
+                responseDataSet.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), command.hasPayload() ? 0 : 0x0101);
+                responseDataSet.setUint32(TagId(tagId_t::Status_0000_0900), 0x0000);
 
                 MutableAssociationMessage response(command.getAbstractSyntax());
                 response.addDataSet(responseDataSet);
@@ -219,10 +219,10 @@ TEST(acseTest, negotiationOneTransferSyntax)
 
     MutableAssociationMessage command("1.2.840.10008.1.1");
     MutableDataSet dataset0;
-    dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-    dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+    dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+    dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
     dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-    dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+    dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
     command.addDataSet(dataset0);
     scu.sendMessage(command);
 
@@ -289,12 +289,12 @@ TEST(acseTest, scpScuRole)
                 std::cout << "Waiting for command with abstract syntax " << abstractSyntax << " and transfer syntax " << transferSyntax << std::endl;
                 AssociationMessage command = scu.getCommand();
                 MutableDataSet responseDataSet;
-                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
-                std::uint32_t messageId(command.getCommand().getUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0));
-                responseDataSet.setUnsignedLong(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
+                responseDataSet.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
+                std::uint32_t messageId(command.getCommand().getUint32(TagId(tagId_t::MessageID_0000_0110), 0));
+                responseDataSet.setUint32(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
                 responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
-                responseDataSet.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x0101);
-                responseDataSet.setUnsignedLong(TagId(tagId_t::Status_0000_0900), 0x0000);
+                responseDataSet.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x0101);
+                responseDataSet.setUint32(TagId(tagId_t::Status_0000_0900), 0x0000);
                 MutableAssociationMessage response(abstractSyntax);
                 response.addDataSet(responseDataSet);
                 scu.sendMessage(response);
@@ -305,10 +305,10 @@ TEST(acseTest, scpScuRole)
         {
             MutableAssociationMessage command(uidHardcopyColorImageStorageSOPClass_1_2_840_10008_5_1_1_30);
             MutableDataSet dataset0;
-            dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-            dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+            dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+            dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
             dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-            dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+            dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
             command.addDataSet(dataset0);
             EXPECT_THROW(scu.sendMessage(command), AcseWrongRoleError);
         }
@@ -318,10 +318,10 @@ TEST(acseTest, scpScuRole)
         {
             MutableAssociationMessage command(uidVerificationSOPClass_1_2_840_10008_1_1);
             MutableDataSet dataset0;
-            dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-            dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x2, tagVR_t::US);
+            dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+            dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x2, tagVR_t::US);
             dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-            dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0);
+            dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0);
             command.addDataSet(dataset0);
             MutableDataSet dataset1(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1);
             dataset1.setString(TagId(tagId_t::PatientName_0010_0010), "Test");
@@ -363,10 +363,10 @@ TEST(acseTest, negotiationMultipleTransferSyntaxes)
 
     MutableAssociationMessage command("1.2.840.10008.1.1");
     MutableDataSet dataset0;
-    dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-    dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+    dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+    dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
     dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-    dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+    dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
     command.addDataSet(dataset0);
     scu.sendMessage(command);
 
@@ -423,10 +423,10 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
 
     MutableAssociationMessage command("1.2.840.10008.1.1");
     MutableDataSet dataset0;
-    dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-    dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+    dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+    dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
     dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-    dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+    dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
     command.addDataSet(dataset0);
     scu.sendMessage(command);
@@ -499,10 +499,10 @@ TEST(acseTest, negotiationPartialMatchSameAbstractSyntax)
     {
         MutableAssociationMessage command("1.2.840.10008.1.1");
         MutableDataSet dataset0;
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+        dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
         command.addDataSet(dataset0);
         scu.sendMessage(command);
@@ -518,10 +518,10 @@ TEST(acseTest, negotiationPartialMatchSameAbstractSyntax)
     {
         MutableAssociationMessage command("1.2.840.10008.1.1");
         MutableDataSet dataset0("1.2.840.10008.1.2.4.50");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+        dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
         command.addDataSet(dataset0);
         scu.sendMessage(command);
@@ -579,9 +579,9 @@ TEST(acseTest, sendPayload)
             MutableAssociationMessage command("1.2.840.10008.1.1");
 
             MutableDataSet dataset0;
-            dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-            dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
-            dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0);
+            dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+            dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+            dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0);
 
             command.addDataSet(dataset0);
 
@@ -638,9 +638,9 @@ void scuThread(AssociationSCU& scu, std::uint16_t firstMessageId, size_t numberO
         MutableAssociationMessage command("1.2.840.10008.1.1");
 
         MutableDataSet dataset0;
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), (std::uint16_t)(firstMessageId + messageNumber), tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0);
+        dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), (std::uint16_t)(firstMessageId + messageNumber), tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0);
 
         command.addDataSet(dataset0);
 
@@ -767,10 +767,10 @@ TEST(acseTest, negotiationMultiplePresentationContexts)
     {
         MutableAssociationMessage command("1.2.840.10008.1.1");
         MutableDataSet dataset0;
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+        dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
         command.addDataSet(dataset0);
         scu.sendMessage(command);
@@ -786,10 +786,10 @@ TEST(acseTest, negotiationMultiplePresentationContexts)
     {
         MutableAssociationMessage command("1.2.840.10008.1.1.2");
         MutableDataSet dataset0;
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+        dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
         command.addDataSet(dataset0);
         scu.sendMessage(command);
@@ -862,10 +862,10 @@ TEST(acseTest, negotiationNoTransferSyntax)
     {
         MutableAssociationMessage command("1.2.840.10008.1.1");
         MutableDataSet dataset0;
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+        dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
         command.addDataSet(dataset0);
         scu.sendMessage(command);
@@ -882,10 +882,10 @@ TEST(acseTest, negotiationNoTransferSyntax)
         // This should fail (no transfer syntax)
         MutableAssociationMessage command("1.2.840.10008.1.1.2");
         MutableDataSet dataset0;
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+        dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
         command.addDataSet(dataset0);
 
         EXPECT_THROW(scu.sendMessage(command), AcseNoTransferSyntaxError);
@@ -895,10 +895,10 @@ TEST(acseTest, negotiationNoTransferSyntax)
     {
         MutableAssociationMessage command("1.2.840.10008.1.1");
         MutableDataSet dataset0;
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.7");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+        dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
         command.addDataSet(dataset0);
         scu.sendMessage(command);
@@ -953,10 +953,10 @@ TEST(acseTest, negotiationNoPresentationContext)
     {
         MutableAssociationMessage command("1.2.840.10008.1.1");
         MutableDataSet dataset0;
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+        dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
         command.addDataSet(dataset0);
         scu.sendMessage(command);
@@ -973,10 +973,10 @@ TEST(acseTest, negotiationNoPresentationContext)
         // This should fail (no presentation context in scp)
         MutableAssociationMessage command("1.2.840.10008.1.1.2");
         MutableDataSet dataset0;
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+        dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
         command.addDataSet(dataset0);
         EXPECT_THROW(scu.sendMessage(command), AcseNoTransferSyntaxError);
@@ -987,10 +987,10 @@ TEST(acseTest, negotiationNoPresentationContext)
         // This should fail (no presentation context in scu)
         MutableAssociationMessage command("1.2.840.10008.1.1.3");
         MutableDataSet dataset0;
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+        dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
         command.addDataSet(dataset0);
         EXPECT_THROW(scu.sendMessage(command), AcsePresentationContextNotRequestedError);
@@ -1000,10 +1000,10 @@ TEST(acseTest, negotiationNoPresentationContext)
     {
         MutableAssociationMessage command("1.2.840.10008.1.1");
         MutableDataSet dataset0;
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-        dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+        dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
         dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.7");
-        dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+        dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
         command.addDataSet(dataset0);
         scu.sendMessage(command);
@@ -1093,10 +1093,10 @@ TEST(acseTest, invokeTooManyOperations)
         {
             MutableAssociationMessage command("1.2.840.10008.1.1");
             MutableDataSet dataset0;
-            dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-            dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+            dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+            dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
             dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.7");
-            dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+            dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
             command.addDataSet(dataset0);
             scu.sendMessage(command);
@@ -1105,10 +1105,10 @@ TEST(acseTest, invokeTooManyOperations)
         {
             MutableAssociationMessage command("1.2.840.10008.1.1");
             MutableDataSet dataset0;
-            dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-            dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x2, tagVR_t::US);
+            dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+            dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x2, tagVR_t::US);
             dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.7");
-            dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+            dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
             command.addDataSet(dataset0);
             EXPECT_THROW(scu.sendMessage(command), AcseTooManyOperationsInvokedError);
@@ -1117,10 +1117,10 @@ TEST(acseTest, invokeTooManyOperations)
         {
             MutableAssociationMessage command("1.2.840.10008.1.1");
             MutableDataSet dataset0;
-            dataset0.setUnsignedLong(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
-            dataset0.setUnsignedLong(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
+            dataset0.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x1, tagVR_t::US);
+            dataset0.setUint32(TagId(tagId_t::MessageID_0000_0110), 0x1, tagVR_t::US);
             dataset0.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), "1.2.3.4.7");
-            dataset0.setUnsignedLong(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
+            dataset0.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), 0x101);
 
             command.addDataSet(dataset0);
             EXPECT_THROW(scu.sendMessage(command), AcseWrongCommandIdError);

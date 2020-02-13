@@ -82,11 +82,12 @@ public:
     /// @param index   the zero base index of the buffer's
     ///                 element to retrieve
     /// @return the value of the data element referenced by
-    ///          the index, transformed into a signed long, or
-    ///          0 if the index is out of range
+    ///          the index.
+    ///          Throws MissingItemError if the index
+    ///          is out of range.
     ///
     ///////////////////////////////////////////////////////////
-    virtual std::int32_t getSignedLong(const size_t index) const = 0;
+    virtual std::int32_t getInt32(const size_t index) const = 0;
 
     /// \brief Retrieve the buffer's element referenced by the
     ///         zero-based index specified in the parameter and
@@ -95,11 +96,68 @@ public:
     /// @param index   the zero base index of the buffer's
     ///                 element to retrieve
     /// @return the value of the data element referenced by
-    ///          the index, transformed into an unsigned long,
-    ///          or 0 if the index is out of range
+    ///          the index.
+    ///          Throws MissingItemError if the index
+    ///          is out of range.
     ///
     ///////////////////////////////////////////////////////////
-    virtual std::uint32_t getUnsignedLong(const size_t index) const = 0;
+    virtual std::uint32_t getUint32(const size_t index) const = 0;
+
+    /// \brief Retrieve the buffer's element referenced by the
+    ///         zero-based index specified in the parameter and
+    ///         returns it as a std::int16_t value.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to retrieve
+    /// @return the value of the data element referenced by
+    ///          the index.
+    ///          Throws MissingItemError if the index
+    ///          is out of range.
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual std::int16_t getInt16(const size_t index) const = 0;
+
+    /// \brief Retrieve the buffer's element referenced by the
+    ///         zero-based index specified in the parameter and
+    ///         returns it as an std::uint16_t value.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to retrieve
+    /// @return the value of the data element referenced by
+    ///          the index.
+    ///          Throws MissingItemError if the index
+    ///          is out of range.
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual std::uint16_t getUint16(const size_t index) const = 0;
+
+    /// \brief Retrieve the buffer's element referenced by the
+    ///         zero-based index specified in the parameter and
+    ///         returns it as a std::int8_t value.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to retrieve
+    /// @return the value of the data element referenced by
+    ///          the index.
+    ///          Throws MissingItemError if the index
+    ///          is out of range.
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual std::int8_t getInt8(const size_t index) const = 0;
+
+    /// \brief Retrieve the buffer's element referenced by the
+    ///         zero-based index specified in the parameter and
+    ///         returns it as an std::uint8_t value.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to retrieve
+    /// @return the value of the data element referenced by
+    ///          the index.
+    ///          Throws MissingItemError if the index
+    ///          is out of range.
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual std::uint8_t getUint8(const size_t index) const = 0;
 
     /// \brief Retrieve the buffer's element referenced by the
     ///         zero-based index specified in the parameter and
@@ -109,10 +167,25 @@ public:
     ///                 element to retrieve
     /// @return the value of the data element referenced by
     ///          the index, transformed into a double floating
-    ///          point, or 0 if the index is out of range
+    ///          point. Throws MissingItemError if the index
+    ///          is out of range.
     ///
     ///////////////////////////////////////////////////////////
     virtual double getDouble(const size_t index) const = 0;
+
+    /// \brief Retrieve the buffer's element referenced by the
+    ///         zero-based index specified in the parameter and
+    ///         returns it as a floating point value.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to retrieve
+    /// @return the value of the data element referenced by
+    ///          the index, transformed into a floating
+    ///          point. Throws MissingItemError if the index
+    ///          is out of range.
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual float getFloat(const size_t index) const = 0;
 
     /// \brief Retrieve the buffer's element referenced by the
     ///         zero-based index specified in the parameter and
@@ -122,7 +195,7 @@ public:
     ///                 element to retrieve
     /// @return the value of the data element referenced by
     ///          the index, transformed into a string, or
-    ///          0 if the index is out of range
+    ///          0 if the index is out of range.
     ///
     ///////////////////////////////////////////////////////////
     virtual std::string getString(const size_t index) const = 0;
@@ -135,7 +208,7 @@ public:
     ///                 element to retrieve
     /// @return the value of the data element referenced by
     ///          the index, transformed into an unicode string,
-    ///          or 0 if the index is out of range
+    ///          or 0 if the index is out of range.
     ///
     ///////////////////////////////////////////////////////////
     virtual std::wstring getUnicodeString(const size_t index) const = 0;
@@ -234,7 +307,7 @@ public:
 
     /// \brief Set the buffer's element referenced by the
     ///         zero-based index specified in the parameter
-    ///         to a signed long value.
+    ///         to a std::int32_t value.
     ///
     /// @param index   the zero base index of the buffer's
     ///                 element to be set
@@ -242,11 +315,11 @@ public:
     ///				  %data element.
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setSignedLong(const size_t index, const std::int32_t value) = 0;
+    virtual void setInt32(const size_t index, const std::int32_t value) = 0;
 
     /// \brief Set the buffer's element referenced by the
     ///         zero-based index specified in the parameter
-    ///         to an unsigned long value.
+    ///         to an std::uint32_t value.
     ///
     /// @param index   the zero base index of the buffer's
     ///                 element to be set
@@ -254,7 +327,55 @@ public:
     ///				  %data element.
     ///
     ///////////////////////////////////////////////////////////
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value) = 0;
+    virtual void setUint32(const size_t index, const std::uint32_t value) = 0;
+
+    /// \brief Set the buffer's element referenced by the
+    ///         zero-based index specified in the parameter
+    ///         to a std::int16_t value.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to be set
+    /// @param value the value to write into the
+    ///				  %data element.
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void setInt16(const size_t index, const std::int16_t value) = 0;
+
+    /// \brief Set the buffer's element referenced by the
+    ///         zero-based index specified in the parameter
+    ///         to an std::uint16_t value.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to be set
+    /// @param value the value to write into the
+    ///				  %data element.
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void setUint16(const size_t index, const std::uint16_t value) = 0;
+
+    /// \brief Set the buffer's element referenced by the
+    ///         zero-based index specified in the parameter
+    ///         to a std::int8_t value.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to be set
+    /// @param value the value to write into the
+    ///				  %data element.
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void setInt8(const size_t index, const std::int8_t value) = 0;
+
+    /// \brief Set the buffer's element referenced by the
+    ///         zero-based index specified in the parameter
+    ///         to an std::uint8_t value.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to be set
+    /// @param value the value to write into the
+    ///				  %data element.
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void setUint8(const size_t index, const std::uint8_t value) = 0;
 
     /// \brief Set the buffer's element referenced by the
     ///         zero-based index specified in the parameter
@@ -267,6 +388,18 @@ public:
     ///
     ///////////////////////////////////////////////////////////
     virtual void setDouble(const size_t index, const double value) = 0;
+
+    /// \brief Set the buffer's element referenced by the
+    ///         zero-based index specified in the parameter
+    ///         to a floating point value.
+    ///
+    /// @param index   the zero base index of the buffer's
+    ///                 element to be set
+    /// @param value the value to write into the
+    ///				  %data element.
+    ///
+    ///////////////////////////////////////////////////////////
+    virtual void setFloat(const size_t index, const float value) = 0;
 
     /// \brief Set the buffer's element referenced by the
     ///         zero-based index specified in the parameter

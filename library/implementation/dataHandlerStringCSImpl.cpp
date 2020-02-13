@@ -42,12 +42,12 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 
 readingDataHandlerStringCS::readingDataHandlerStringCS(const memory &parseMemory):
-    readingDataHandlerString(parseMemory, tagVR_t::CS, '\\', 0x20)
+    readingDataHandlerStringNumbers(parseMemory, tagVR_t::CS, '\\', 0x20)
 {
 }
 
 writingDataHandlerStringCS::writingDataHandlerStringCS(const std::shared_ptr<buffer> pBuffer):
-    writingDataHandlerString(pBuffer, tagVR_t::CS, '\\', 0, 16)
+    writingDataHandlerStringNumbers(pBuffer, tagVR_t::CS, '\\', 0, 16)
 {
 }
 

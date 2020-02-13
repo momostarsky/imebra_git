@@ -51,11 +51,47 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return (unsigned int)get_imebra_object_holder(ReadingDataHandler)->getSize();
 }
 
--(int) getSignedLong:(unsigned int)index error:(NSError**)pError
+-(signed int) getInt32:(unsigned int)index error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return get_imebra_object_holder(ReadingDataHandler)->getSignedLong(index);
+    return get_imebra_object_holder(ReadingDataHandler)->getInt32(index);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
+-(signed int) getSignedLong:(unsigned int)index error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(ReadingDataHandler)->getInt32(index);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
+-(signed short) getInt16:(unsigned int)index error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(ReadingDataHandler)->getInt16(index);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
+-(signed char) getInt8:(unsigned int)index error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(ReadingDataHandler)->getInt8(index);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
+-(unsigned int) getUint32:(unsigned int)index error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(ReadingDataHandler)->getUint32(index);
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
@@ -64,7 +100,25 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_IMEBRA_FUNCTION_START();
 
-    return get_imebra_object_holder(ReadingDataHandler)->getUnsignedLong(index);
+    return get_imebra_object_holder(ReadingDataHandler)->getUint32(index);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
+-(unsigned short) getUint16:(unsigned int)index error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(ReadingDataHandler)->getUint16(index);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
+-(unsigned char) getUint8:(unsigned int)index error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(ReadingDataHandler)->getUint8(index);
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
@@ -74,6 +128,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     return get_imebra_object_holder(ReadingDataHandler)->getDouble(index);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0.0f);
+}
+
+-(float) getFloat:(unsigned int)index error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(ReadingDataHandler)->getFloat(index);
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0.0f);
 }

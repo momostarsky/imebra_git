@@ -72,9 +72,14 @@ class Overlay;
 /// - getImage()
 /// - getImageApplyModalityTransform()
 /// - getSequenceItem()
-/// - getSignedLong()
-/// - getUnsignedLong()
+/// - getInt32()
+/// - getUint32()
+/// - getInt16()
+/// - getUint16()
+/// - getInt8()
+/// - getUint8()
 /// - getDouble()
+/// - getFloat()
 /// - getString()
 /// - getUnicodeString()
 /// - getAge()
@@ -198,8 +203,8 @@ public:
     /// then for a common functional group sequence item if the specific one is
     /// missing.
     ///
-    /// Throws MissingTagError is the dataset does not contain a functional
-    /// group sequence.
+    /// Throws MissingTagError or MissingGroupError or MissingItemError if the
+    /// functional group sequence item is not present.
     ///
     /// \param frameNumber the frame number for which the functional group sequence
     ///                    item is required
@@ -223,8 +228,8 @@ public:
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
     ///
-    /// If the specified Tag does not contain the specified sequence item then
-    ///  throws MissingItemError.
+    /// If the DataSet does not contain the specified sequence item then
+    ///  throws MissingGroupError, MissingTagError or MissingItemError.
     ///
     /// \param tagId  the tag's id containing the sequence item
     /// \param itemId the sequence item to retrieve. The first item has an Id = 0
@@ -238,8 +243,8 @@ public:
     /// If the specified Tag does not exist then throws MissingTagError or
     ///  MissingGroupError.
     ///
-    /// If the specified Tag does not contain the specified sequence item then
-    ///  throws MissingItemError.
+    /// If the DataSet does not contain the specified sequence item then
+    ///  throws MissingGroupError, MissingTagError or MissingItemError.
     ///
     /// \param tagId  the tag's id containing the sequence that stores the LUTs
     /// \param itemId the sequence item to retrieve. The first item has an Id = 0
@@ -274,7 +279,7 @@ public:
     ///  MissingGroupError.
     ///
     /// If the specified Tag does not contain the specified buffer item then
-    ///  throws MissingItemError.
+    ///  throws MissingBufferError.
     ///
     /// \param tagId    the tag's id containing the requested buffer
     /// \param bufferId the buffer to connect to the ReadingDataHandler object.
@@ -294,7 +299,7 @@ public:
     ///  MissingGroupError.
     ///
     /// If the specified Tag does not contain the specified buffer item then
-    ///  throws MissingItemError.
+    ///  throws MissingBufferError.
     ///
     /// \param tagId    the tag's id containing the requested buffer
     /// \param bufferId the buffer to connect to the ReadingDataHandler object.
@@ -312,24 +317,29 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     bool bufferExists(const TagId& tagId, size_t bufferId) const;
 
-    /// \brief Retrieve a tag's value as signed long integer (32 bit).
+    /// \brief Retrieve a tag's value as signed integer (32 bit).
     ///
-    /// If the tag's value cannot be converted to a signed long integer
+    /// If the tag's value cannot be converted to a signed integer
     /// then throws DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist then throws MissingTagError or
-    ///  MissingGroupError.
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
     ///
     /// \param tagId    the tag's id
     /// \param elementNumber the element number within the buffer
     /// \return the tag's value as a signed 32 bit integer
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    std::int32_t getInt32(const TagId& tagId, size_t elementNumber) const;
+
+    /// \brief Deprecated. Use getInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     std::int32_t getSignedLong(const TagId& tagId, size_t elementNumber) const;
 
-    /// \brief Retrieve a tag's value as signed long integer (32 bit).
+    /// \brief Retrieve a tag's value as signed integer (32 bit).
     ///
-    /// If the tag's value cannot be converted to a signed long integer
+    /// If the tag's value cannot be converted to a signed integer
     /// then throws DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist or it does not contain the specified
@@ -342,26 +352,36 @@ public:
     ///         the tag doesn't exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    std::int32_t getInt32(const TagId& tagId, size_t elementNumber, std::int32_t defaultValue) const;
+
+    /// \brief Deprecated. Use getInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     std::int32_t getSignedLong(const TagId& tagId, size_t elementNumber, std::int32_t defaultValue) const;
 
-    /// \brief Retrieve a tag's value as unsigned long integer (32 bit).
+    /// \brief Retrieve a tag's value as unsigned integer (32 bit).
     ///
-    /// If the tag's value cannot be converted to an unsigned long integer
+    /// If the tag's value cannot be converted to an unsigned integer
     /// then throws DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist then throws MissingTagError or
-    ///  MissingGroupError.
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
     ///
     /// \param tagId    the tag's id
     /// \param elementNumber the element number within the buffer
     /// \return the tag's value as an unsigned 32 bit integer
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    std::uint32_t getUint32(const TagId& tagId, size_t elementNumber) const;
+
+    /// \brief Deprecated. Use getUint32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     std::uint32_t getUnsignedLong(const TagId& tagId, size_t elementNumber) const;
 
-    /// \brief Retrieve a tag's value as unsigned long integer (32 bit).
+    /// \brief Retrieve a tag's value as unsigned integer (32 bit).
     ///
-    /// If the tag's value cannot be converted to an unsigned long integer
+    /// If the tag's value cannot be converted to an unsigned integer
     /// then throws DataHandlerConversionError.
     ///
     /// If the specified Tag does not exist then returns the default value
@@ -374,15 +394,148 @@ public:
     ///         the tag doesn't exist
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    std::uint32_t getUint32(const TagId& tagId, size_t elementNumber, std::uint32_t defaultValue) const;
+
+    /// \brief Deprecated. Use getUint32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     std::uint32_t getUnsignedLong(const TagId& tagId, size_t elementNumber, std::uint32_t defaultValue) const;
+
+    /// \brief Retrieve a tag's value as signed integer (16 bit).
+    ///
+    /// If the tag's value cannot be converted to a signed integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \return the tag's value as a signed 16 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::int16_t getInt16(const TagId& tagId, size_t elementNumber) const;
+
+    /// \brief Retrieve a tag's value as signed integer (16 bit).
+    ///
+    /// If the tag's value cannot be converted to a signed long integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// If the specified Tag does not exist or it does not contain the specified
+    /// buffer then returns the default value specified in the parameter.
+    ///
+    /// \param tagId         the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \return the tag's value as a signed 16 bit integer, or defaultValue if
+    ///         the tag doesn't exist
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::int16_t getInt16(const TagId& tagId, size_t elementNumber, std::int16_t defaultValue) const;
+
+    /// \brief Retrieve a tag's value as unsigned integer (16 bit).
+    ///
+    /// If the tag's value cannot be converted to an unsigned integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \return the tag's value as an unsigned 16 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::uint16_t getUint16(const TagId& tagId, size_t elementNumber) const;
+
+    /// \brief Retrieve a tag's value as unsigned integer (16 bit).
+    ///
+    /// If the tag's value cannot be converted to an unsigned integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// If the specified Tag does not exist then returns the default value
+    /// specified in the parameter.
+    ///
+    /// \param tagId         the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \return the tag's value as an unsigned 16 bit integer, or defaultValue if
+    ///         the tag doesn't exist
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::uint16_t getUint16(const TagId& tagId, size_t elementNumber, std::uint16_t defaultValue) const;
+
+    /// \brief Retrieve a tag's value as signed integer (8 bit).
+    ///
+    /// If the tag's value cannot be converted to a signed integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \return the tag's value as a signed 8 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::int8_t getInt8(const TagId& tagId, size_t elementNumber) const;
+
+    /// \brief Retrieve a tag's value as signed integer (8 bit).
+    ///
+    /// If the tag's value cannot be converted to a signed long integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// If the specified Tag does not exist or it does not contain the specified
+    /// buffer then returns the default value specified in the parameter.
+    ///
+    /// \param tagId         the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \return the tag's value as a signed 8 bit integer, or defaultValue if
+    ///         the tag doesn't exist
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::int8_t getInt8(const TagId& tagId, size_t elementNumber, std::int8_t defaultValue) const;
+
+    /// \brief Retrieve a tag's value as unsigned integer (8 bit).
+    ///
+    /// If the tag's value cannot be converted to an unsigned integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \return the tag's value as an unsigned 8 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::uint8_t getUint8(const TagId& tagId, size_t elementNumber) const;
+
+    /// \brief Retrieve a tag's value as unsigned integer (8 bit).
+    ///
+    /// If the tag's value cannot be converted to an unsigned integer
+    /// then throws DataHandlerConversionError.
+    ///
+    /// If the specified Tag does not exist then returns the default value
+    /// specified in the parameter.
+    ///
+    /// \param tagId         the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \return the tag's value as an unsigned 8 bit integer, or defaultValue if
+    ///         the tag doesn't exist
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    std::uint8_t getUint8(const TagId& tagId, size_t elementNumber, std::uint8_t defaultValue) const;
 
     /// \brief Retrieve a tag's value as a 64 bit floating point.
     ///
     /// If the tag's value cannot be converted to a floating point value
     /// then throws DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist then throws MissingTagError or
-    ///  MissingGroupError.
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
     ///
     /// \param tagId    the tag's id
     /// \param elementNumber the element number within the buffer
@@ -390,6 +543,21 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     double getDouble(const TagId& tagId, size_t elementNumber) const;
+
+    /// \brief Retrieve a tag's value as a 32 bit floating point.
+    ///
+    /// If the tag's value cannot be converted to a floating point value
+    /// then throws DataHandlerConversionError.
+    ///
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
+    ///
+    /// \param tagId    the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \return the tag's value as a 32 bit floating point
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    float getFloat(const TagId& tagId, size_t elementNumber) const;
 
     /// \brief Retrieve a tag's value as a 64 bit floating point.
     ///
@@ -408,13 +576,31 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     double getDouble(const TagId& tagId, size_t elementNumber, double defaultValue) const;
 
+    /// \brief Retrieve a tag's value as a 32 bit floating point.
+    ///
+    /// If the tag's value cannot be converted to a floating point value
+    ///  then throws DataHandlerConversionError.
+    ///
+    /// If the specified Tag does not exist then returns the default value
+    /// specified in the parameter.
+    ///
+    /// \param tagId         the tag's id
+    /// \param elementNumber the element number within the buffer
+    /// \param defaultValue  the value to return if the tag doesn't exist
+    /// \return the tag's value as a 32 bit floating point, or defaultValue if
+    ///         the tag doesn't exist
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    float getFloat(const TagId& tagId, size_t elementNumber, float defaultValue) const;
+
     /// \brief Retrieve a tag's value as a UTF8 string.
     ///
     /// If the tag's value cannot be converted to a string then throws
     ///  DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist then throws MissingTagError or
-    ///  MissingGroupError.
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
+    ///
     /// If the conversion to UTF8 fails then throws
     /// CharsetConversionCannotConvert, CharsetConversionNoSupportedTableError,
     /// CharsetConversionNoTableError.
@@ -449,8 +635,8 @@ public:
     /// If the tag's value cannot be converted to a Unicode string
     /// then throws DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist then throws MissingTagError or
-    ///  MissingGroupError.
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
     ///
     /// \param tagId    the tag's id
     /// \param elementNumber the element number within the buffer
@@ -482,8 +668,8 @@ public:
     /// If the tag's value cannot be converted to Age then throws
     ///  DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist then throws MissingTagError or
-    ///  MissingGroupError.
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
     ///
     /// \param tagId    the tag's id
     /// \param elementNumber the element number within the buffer
@@ -513,10 +699,8 @@ public:
     /// If the tag's value cannot be converted to a Date then throws
     ///  DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist then throws MissingTagError or
-    ///  MissingGroupError.
-    ///
-    /// If the specified Tag does not exist then throws MissingItemError.
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
     ///
     /// \param tagId    the tag's id
     /// \param elementNumber the element number within the buffer 0
@@ -543,10 +727,8 @@ public:
 
     /// \brief Retrieve a tag's value as a Patient Name.
     ///
-    /// If the tag's value cannot be converted to a patient name then throws
-    ///  DataHandlerConversionError.
-    ///
-    /// If the specified Tag does not exist then throws MissingItemError.
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
     ///
     /// \param tagId         the tag's id
     /// \param elementNumber the element number within the buffer
@@ -579,7 +761,8 @@ public:
     /// If the tag's value cannot be converted to a patient name then throws
     ///  DataHandlerConversionError.
     ///
-    /// If the specified Tag does not exist then throws MissingItemError.
+    /// If the value does not exist then throws MissingTagError or
+    ///  MissingGroupError or MissingBufferError or MissingItemError.
     ///
     /// \param tagId         the tag's id
     /// \param elementNumber the element number within the buffer
@@ -608,6 +791,8 @@ public:
 #endif
 
     /// \brief Return the 2 chars data type (VR) of the specified tag.
+    ///
+    /// If the tag not exist then throws MissingTagError or MissingGroupError.
     ///
     /// \param tagId the id of the tag
     /// \return the tag's data type (VR)
@@ -641,9 +826,14 @@ private:
 /// To set the DataSet's content, use one of the following methods:
 /// - setImage()
 /// - setSequenceItem()
-/// - setSignedLong()
-/// - setUnsignedLong()
+/// - setInt32()
+/// - setUint32()
+/// - setInt16()
+/// - setUint16()
+/// - setInt8()
+/// - setUint8()
 /// - setDouble()
+/// - setFloat()
 /// - setString()
 /// - setUnicodeString()
 /// - setAge()
@@ -933,6 +1123,11 @@ public:
     /// \param tagVR    the tag's type to use when a new tag is created.
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    void setInt32(const TagId& tagId, std::int32_t newValue, tagVR_t tagVR);
+
+    /// \brief Deprecated. Use setInt32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void setSignedLong(const TagId& tagId, std::int32_t newValue, tagVR_t tagVR);
 
     /// \brief Write a new signed 32 bit integer value into the element 0 of the
@@ -943,6 +1138,11 @@ public:
     ///
     /// \param tagId    the tag's id
     /// \param newValue the value to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setInt32(const TagId& tagId, std::int32_t newValue);
+
+    /// \brief Deprecated. Use setInt32() instead.
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setSignedLong(const TagId& tagId, std::int32_t newValue);
@@ -958,6 +1158,11 @@ public:
     /// \param tagVR    the tag's type to use when a new tag is created.
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    void setUint32(const TagId& tagId, std::uint32_t newValue, tagVR_t tagVR);
+
+    /// \brief Deprecated. Use setUint32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void setUnsignedLong(const TagId& tagId, std::uint32_t newValue, tagVR_t tagVR);
 
     /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
@@ -970,7 +1175,112 @@ public:
     /// \param newValue the value to write into the tag
     ///
     ///////////////////////////////////////////////////////////////////////////////
+    void setUint32(const TagId& tagId, std::uint32_t newValue);
+
+    /// \brief Deprecated. Use setUint32() instead.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
     void setUnsignedLong(const TagId& tagId, std::uint32_t newValue);
+
+    /// \brief Write a new signed 16 bit integer value into the element 0 of the
+    ///        specified Tag's buffer 0.
+    ///
+    /// If the specified Tag or buffer don't exist then a new tag is created
+    /// using the specified data type (VR).
+    ///
+    /// \param tagId    the tag's id
+    /// \param newValue the value to write into the tag
+    /// \param tagVR    the tag's type to use when a new tag is created.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setInt16(const TagId& tagId, std::int16_t newValue, tagVR_t tagVR);
+
+    /// \brief Write a new signed 16 bit integer value into the element 0 of the
+    ///        specified Tag's buffer 0.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// \param tagId    the tag's id
+    /// \param newValue the value to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setInt16(const TagId& tagId, std::int16_t newValue);
+
+    /// \brief Write a new unsigned 16 bit integer value into the element 0 of the
+    ///        specified Tag's buffer 0.
+    ///
+    /// If the specified Tag doesn't exist then a new tag is created using
+    /// the specified data type (VR).
+    ///
+    /// \param tagId    the tag's id
+    /// \param newValue the value to write into the tag
+    /// \param tagVR    the tag's type to use when a new tag is created.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setUint16(const TagId& tagId, std::uint16_t newValue, tagVR_t tagVR);
+
+    /// \brief Write a new unsigned 16 bit integer value into the element 0 of the
+    ///        specified Tag's buffer 0.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// \param tagId    the tag's id
+    /// \param newValue the value to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setUint16(const TagId& tagId, std::uint16_t newValue);
+
+    /// \brief Write a new signed 8 bit integer value into the element 0 of the
+    ///        specified Tag's buffer 0.
+    ///
+    /// If the specified Tag or buffer don't exist then a new tag is created
+    /// using the specified data type (VR).
+    ///
+    /// \param tagId    the tag's id
+    /// \param newValue the value to write into the tag
+    /// \param tagVR    the tag's type to use when a new tag is created.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setInt8(const TagId& tagId, std::int8_t newValue, tagVR_t tagVR);
+
+    /// \brief Write a new signed 8 bit integer value into the element 0 of the
+    ///        specified Tag's buffer 0.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// \param tagId    the tag's id
+    /// \param newValue the value to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setInt8(const TagId& tagId, std::int8_t newValue);
+
+    /// \brief Write a new unsigned 8 bit integer value into the element 0 of the
+    ///        specified Tag's buffer 0.
+    ///
+    /// If the specified Tag doesn't exist then a new tag is created using
+    /// the specified data type (VR).
+    ///
+    /// \param tagId    the tag's id
+    /// \param newValue the value to write into the tag
+    /// \param tagVR    the tag's type to use when a new tag is created.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setUint8(const TagId& tagId, std::uint8_t newValue, tagVR_t tagVR);
+
+    /// \brief Write a new unsigned 8 bit integer value into the element 0 of the
+    ///        specified Tag's buffer 0.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// \param tagId    the tag's id
+    /// \param newValue the value to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setUint8(const TagId& tagId, std::uint8_t newValue);
 
     /// \brief Write a 64 bit floating point value into the element 0 of the
     ///        specified Tag's buffer 0.
@@ -996,6 +1306,31 @@ public:
     ///
     ///////////////////////////////////////////////////////////////////////////////
     void setDouble(const TagId& tagId, double newValue);
+
+    /// \brief Write a 32 bit floating point value into the element 0 of the
+    ///        specified Tag's buffer 0.
+    ///
+    /// If the specified Tag or buffer don't exist then a new tag
+    ///  is created using the specified data type (VR).
+    ///
+    /// \param tagId    the tag's id
+    /// \param newValue the value to write into the tag
+    /// \param tagVR    the tag's type to use when a new tag is created.
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setFloat(const TagId& tagId, float newValue, tagVR_t tagVR);
+
+    /// \brief Write a 32 bit floating point value into the element 0 of the
+    ///        specified Tag's buffer 0.
+    ///
+    /// If the specified Tag does not exist then it creates a new tag with a
+    ///  default VR retrieved from the DicomDictionary.
+    ///
+    /// \param tagId    the tag's id
+    /// \param newValue the value to write into the tag
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    void setFloat(const TagId& tagId, float newValue);
 
     /// \brief Write a UTF8 string value into the element 0 of the specified Tag's
     ///        buffer 0.

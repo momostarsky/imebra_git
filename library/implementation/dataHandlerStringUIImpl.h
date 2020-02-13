@@ -57,15 +57,7 @@ class readingDataHandlerStringUI : public readingDataHandlerString
 public:
     readingDataHandlerStringUI(const memory& parseMemory);
 
-    virtual std::string getString(const size_t index) const;
-
-    virtual std::int32_t getSignedLong(const size_t index) const;
-
-    virtual std::uint32_t getUnsignedLong(const size_t index) const;
-
-    virtual double getDouble(const size_t index) const;
-
-
+    virtual std::string getString(const size_t index) const override;
 };
 
 class writingDataHandlerStringUI: public writingDataHandlerString

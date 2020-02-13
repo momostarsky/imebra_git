@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -37,25 +37,29 @@ namespace handlers
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-class readingDataHandlerStringIS : public readingDataHandlerString
+class readingDataHandlerStringIS : public readingDataHandlerStringNumbers
 {
 public:
     readingDataHandlerStringIS(const memory& parseMemory);
 
-	// Overwritten to use getSignedLong()
-	///////////////////////////////////////////////////////////
+    // Overwritten to use getInt32()
+    ///////////////////////////////////////////////////////////
     virtual double getDouble(const size_t index) const override;
 
 };
 
-class writingDataHandlerStringIS: public writingDataHandlerString
+class writingDataHandlerStringIS: public writingDataHandlerStringNumbers
 {
 public:
     writingDataHandlerStringIS(const std::shared_ptr<buffer> pBuffer);
 
-    // Overwritten to use setSignedLong()
+    // Overwritten to use setInt32()
     ///////////////////////////////////////////////////////////
     virtual void setDouble(const size_t index, const double value) override;
+
+    // Overwritten to use setInt32()
+    ///////////////////////////////////////////////////////////
+    virtual void setFloat(const size_t index, const float value) override;
 };
 
 } // namespace handlers

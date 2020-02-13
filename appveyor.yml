@@ -1,17 +1,17 @@
 
 version: 1.0.{build}
 configuration: Debug
-platform: x86
+platform: x64
+image: Visual Studio 2019
 build_script:
 - cmd: >-
     cmake --help
-
 
     mkdir build_imebra
 
     cd build_imebra
 
-    cmake -G "Visual Studio 14 2015 Win64" ..
+    cmake ..
 
     cmake --build . --config Release
 

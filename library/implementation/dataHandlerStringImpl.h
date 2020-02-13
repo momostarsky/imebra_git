@@ -33,6 +33,69 @@ namespace implementation
 namespace handlers
 {
 
+template<class S, typename U> U convertFromString(const typename std::enable_if<std::is_integral<U>::value && std::is_signed<U>::value, S>::type& string)
+{
+    try
+    {
+        signed long long value(std::stoll(string));
+        if(value < std::numeric_limits<U>::lowest() || value > std::numeric_limits<U>::max())
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "The number in the string is out of bound");
+        }
+        return static_cast<U>(value);
+    }
+    catch (const std::invalid_argument&)
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "The string is not a number");
+    }
+    catch (const std::out_of_range&)
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "The number in the string is out of bound");
+    }
+}
+
+template<class S, typename U> U convertFromString(const typename std::enable_if<std::is_integral<U>::value && !std::is_signed<U>::value, S>::type& string)
+{
+    try
+    {
+        unsigned long long value(std::stoull(string));
+        if(value < std::numeric_limits<U>::lowest() || value > std::numeric_limits<U>::max())
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "The number in the string is out of bound");
+        }
+        return static_cast<U>(value);
+    }
+    catch (const std::invalid_argument&)
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "The string is not a number");
+    }
+    catch (const std::out_of_range&)
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "The number in the string is out of bound");
+    }
+}
+
+template<class S, typename U> U convertFromString(const typename std::enable_if<std::is_floating_point<U>::value, S>::type& string)
+{
+    try
+    {
+        double value(std::stod(string));
+        if(value < std::numeric_limits<U>::lowest() || value > std::numeric_limits<U>::max())
+        {
+            IMEBRA_THROW(DataHandlerConversionError, "The number in the string is out of bound");
+        }
+        return static_cast<U>(value);
+    }
+    catch (const std::invalid_argument&)
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "The string is not a number");
+    }
+    catch (const std::out_of_range&)
+    {
+        IMEBRA_THROW(DataHandlerConversionError, "The number in the string is out of bound");
+    }
+}
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief This is the base class for all the data handlers
@@ -45,33 +108,56 @@ class readingDataHandlerString : public readingDataHandler
 public:
     readingDataHandlerString(const memory& parseMemory, tagVR_t dataType, const char separator, const std::uint8_t paddingByte);
 
-    // Get the data element as a signed long
-    ///////////////////////////////////////////////////////////
-    virtual std::int32_t getSignedLong(const size_t index) const;
+    virtual std::int32_t getInt32(const size_t index) const override;
 
-    // Get the data element as an unsigned long
-    ///////////////////////////////////////////////////////////
-    virtual std::uint32_t getUnsignedLong(const size_t index) const;
+    virtual std::uint32_t getUint32(const size_t index) const override;
 
-    // Get the data element as a double
-    ///////////////////////////////////////////////////////////
-    virtual double getDouble(const size_t index) const;
+    virtual std::int16_t getInt16(const size_t index) const override;
 
-    // Get the data element as a string
-    ///////////////////////////////////////////////////////////
-    virtual std::string getString(const size_t index) const;
+    virtual std::uint16_t getUint16(const size_t index) const override;
 
-    // Get the data element as an unicode string
-    ///////////////////////////////////////////////////////////
-    virtual std::wstring getUnicodeString(const size_t index) const;
+    virtual std::int8_t getInt8(const size_t index) const override;
 
-    // Retrieve the data element as a string
-    ///////////////////////////////////////////////////////////
-    virtual size_t getSize() const;
+    virtual std::uint8_t getUint8(const size_t index) const override;
+
+    virtual double getDouble(const size_t index) const override;
+
+    virtual float getFloat(const size_t index) const override;
+
+    virtual std::string getString(const size_t index) const override;
+
+    virtual std::wstring getUnicodeString(const size_t index) const override;
+
+    virtual size_t getSize() const override;
 
 protected:
+    [[ noreturn ]] void throwNumberConversionError() const;
 
     std::vector<std::string> m_strings;
+};
+
+
+class readingDataHandlerStringNumbers: public readingDataHandlerString
+{
+public:
+    readingDataHandlerStringNumbers(const memory& parseMemory, tagVR_t dataType, const char separator, const std::uint8_t paddingByte);
+
+    virtual std::int32_t getInt32(const size_t index) const override;
+
+    virtual std::uint32_t getUint32(const size_t index) const override;
+
+    virtual std::int16_t getInt16(const size_t index) const override;
+
+    virtual std::uint16_t getUint16(const size_t index) const override;
+
+    virtual std::int8_t getInt8(const size_t index) const override;
+
+    virtual std::uint8_t getUint8(const size_t index) const override;
+
+    virtual double getDouble(const size_t index) const override;
+
+    virtual float getFloat(const size_t index) const override;
+
 };
 
 
@@ -80,35 +166,38 @@ class writingDataHandlerString : public writingDataHandler
 public:
     writingDataHandlerString(const std::shared_ptr<buffer>& pBuffer, tagVR_t dataType, const char separator, const size_t unitSize, const size_t maxSize);
 
-    ~writingDataHandlerString();
+    virtual ~writingDataHandlerString() override;
 
-    // Set the data element as a signed long
-    ///////////////////////////////////////////////////////////
-    virtual void setSignedLong(const size_t index, const std::int32_t value);
+    virtual void setInt32(const size_t index, const std::int32_t value) override;
 
-    // Set the data element as an unsigned long
-    ///////////////////////////////////////////////////////////
-    virtual void setUnsignedLong(const size_t index, const std::uint32_t value);
+    virtual void setUint32(const size_t index, const std::uint32_t value) override;
 
-    // Set the data element as a double
-    ///////////////////////////////////////////////////////////
-    virtual void setDouble(const size_t index, const double value);
+    virtual void setInt16(const size_t index, const std::int16_t value) override;
 
-    // Set the buffer's size, in data elements
-    ///////////////////////////////////////////////////////////
-    virtual void setSize(const size_t elementsNumber);
+    virtual void setUint16(const size_t index, const std::uint16_t value) override;
 
-    virtual size_t getSize() const;
+    virtual void setInt8(const size_t index, const std::int8_t value) override;
 
-    virtual void setString(const size_t index, const std::string& value);
+    virtual void setUint8(const size_t index, const std::uint8_t value) override;
 
-    virtual void setUnicodeString(const size_t index, const std::wstring& value);
+    virtual void setDouble(const size_t index, const double value) override;
+
+    virtual void setFloat(const size_t index, const float value) override;
+
+    virtual void setSize(const size_t elementsNumber) override;
+
+    virtual size_t getSize() const override;
+
+    virtual void setString(const size_t index, const std::string& value) override;
+
+    virtual void setUnicodeString(const size_t index, const std::wstring& value) override;
 
     // Throw an exception if the content is not valid
     ///////////////////////////////////////////////////////////
     virtual void validate() const;
 
 protected:
+    [[ noreturn ]] void throwNumberConversionError() const;
 
     std::vector<std::string> m_strings;
 
@@ -116,7 +205,37 @@ protected:
     size_t m_unitSize;
     size_t m_maxSize;
 
+};
 
+
+class writingDataHandlerStringNumbers: public writingDataHandlerString
+{
+public:
+    writingDataHandlerStringNumbers(const std::shared_ptr<buffer>& pBuffer, tagVR_t dataType, const char separator, const size_t unitSize, const size_t maxSize);
+
+    virtual void setInt32(const size_t index, const std::int32_t value) override;
+
+    virtual void setUint32(const size_t index, const std::uint32_t value) override;
+
+    virtual void setInt16(const size_t index, const std::int16_t value) override;
+
+    virtual void setUint16(const size_t index, const std::uint16_t value) override;
+
+    virtual void setInt8(const size_t index, const std::int8_t value) override;
+
+    virtual void setUint8(const size_t index, const std::uint8_t value) override;
+
+    virtual void setDouble(const size_t index, const double value) override;
+
+    virtual void setFloat(const size_t index, const float value) override;
+
+protected:
+    template<typename U> void convertToString(const size_t index, const U value)
+    {
+        std::ostringstream conversion;
+        conversion << +value;
+        setString(index, conversion.str());
+    }
 };
 
 

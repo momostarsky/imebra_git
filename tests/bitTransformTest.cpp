@@ -40,9 +40,9 @@ TEST(bitTransformTest, bitShift)
                     g = 0;
                     b = 0;
                 }
-                imageHandler.setUnsignedLong(elementNumber++, r);
-                imageHandler.setUnsignedLong(elementNumber++, g);
-                imageHandler.setUnsignedLong(elementNumber++, b);
+                imageHandler.setUint32(elementNumber++, r);
+                imageHandler.setUint32(elementNumber++, g);
+                imageHandler.setUint32(elementNumber++, b);
             }
         }
     }
@@ -77,17 +77,17 @@ TEST(bitTransformTest, bitShift)
                 b = 0;
             }
 
-            std::uint32_t value0r = bits8Handler.getUnsignedLong(elementNumber);
-            std::uint32_t value1r = bits16Handler.getUnsignedLong(elementNumber);
-            std::uint32_t value2r = bits4Handler.getUnsignedLong(elementNumber++);
+            std::uint32_t value0r = bits8Handler.getUint32(elementNumber);
+            std::uint32_t value1r = bits16Handler.getUint32(elementNumber);
+            std::uint32_t value2r = bits4Handler.getUint32(elementNumber++);
 
-            std::uint32_t value0g = bits8Handler.getUnsignedLong(elementNumber);
-            std::uint32_t value1g = bits16Handler.getUnsignedLong(elementNumber);
-            std::uint32_t value2g = bits4Handler.getUnsignedLong(elementNumber++);
+            std::uint32_t value0g = bits8Handler.getUint32(elementNumber);
+            std::uint32_t value1g = bits16Handler.getUint32(elementNumber);
+            std::uint32_t value2g = bits4Handler.getUint32(elementNumber++);
 
-            std::uint32_t value0b = bits8Handler.getUnsignedLong(elementNumber);
-            std::uint32_t value1b = bits16Handler.getUnsignedLong(elementNumber);
-            std::uint32_t value2b = bits4Handler.getUnsignedLong(elementNumber++);
+            std::uint32_t value0b = bits8Handler.getUint32(elementNumber);
+            std::uint32_t value1b = bits16Handler.getUint32(elementNumber);
+            std::uint32_t value2b = bits4Handler.getUint32(elementNumber++);
 
             EXPECT_EQ(value0r, r);
             EXPECT_EQ(value0g, g);

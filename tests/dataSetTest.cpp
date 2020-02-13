@@ -187,15 +187,15 @@ TEST(dataSetTest, testSetGetTags)
     testDataSet.setDate(TagId(tagId_t::PatientBirthDate_0010_0030), Date(2000, 1, 2, 13, 30, 40, 0, 0, 0), tagVR_t::DT);
     testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test patient");
     testDataSet.setDouble(TagId(0x20, 0x20), 45.6, tagVR_t::OD);
-    testDataSet.setSignedLong(TagId(0x20, 0x21), 50, tagVR_t::SL);
-    testDataSet.setUnsignedLong(TagId(0x20, 0x22), 60, tagVR_t::UL);
+    testDataSet.setInt32(TagId(0x20, 0x21), 50, tagVR_t::SL);
+    testDataSet.setUint32(TagId(0x20, 0x22), 60, tagVR_t::UL);
 
     Age age0 = testDataSet.getAge(TagId(tagId_t::PatientAge_0010_1010), 0);
     ASSERT_EQ(3u, age0.getAgeValue());
     ASSERT_EQ(ageUnit_t::months, age0.getAgeUnits());
     ASSERT_EQ("003M", testDataSet.getString(TagId(tagId_t::PatientAge_0010_1010), 0));
-    ASSERT_THROW(testDataSet.getSignedLong(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
-    ASSERT_THROW(testDataSet.getUnsignedLong(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getInt32(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getUint32(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getDouble(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getDouble(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getDate(TagId(tagId_t::PatientAge_0010_1010), 0), DataHandlerConversionError);
@@ -204,8 +204,8 @@ TEST(dataSetTest, testSetGetTags)
     ASSERT_EQ(2014u, date0.getYear());
     ASSERT_EQ(2u, date0.getMonth());
     ASSERT_EQ(1u, date0.getDay());
-    ASSERT_THROW(testDataSet.getSignedLong(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
-    ASSERT_THROW(testDataSet.getUnsignedLong(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getInt32(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
+    ASSERT_THROW(testDataSet.getUint32(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getDouble(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
     ASSERT_THROW(testDataSet.getAge(TagId(tagId_t::AcquisitionDateTime_0008_002A), 0), DataHandlerConversionError);
 
@@ -216,8 +216,8 @@ TEST(dataSetTest, testSetGetTags)
 
     ASSERT_EQ("Test patient", testDataSet.getString(TagId(tagId_t::PatientName_0010_0010), 0));
     ASSERT_DOUBLE_EQ(45.6, testDataSet.getDouble(TagId(0x20, 0x20), 0));
-    ASSERT_EQ(50, testDataSet.getSignedLong(TagId(0x20, 0x21), 0));
-    ASSERT_EQ(60u, testDataSet.getUnsignedLong(TagId(0x20, 0x22), 0));
+    ASSERT_EQ(50, testDataSet.getInt32(TagId(0x20, 0x21), 0));
+    ASSERT_EQ(60u, testDataSet.getUint32(TagId(0x20, 0x22), 0));
 
 }
 
@@ -248,8 +248,8 @@ TEST(dataSetTest, defaults)
     ASSERT_EQ(defaultDate.getOffsetHours(), getDefaultDate.getOffsetHours());
     ASSERT_EQ(defaultDate.getOffsetMinutes(), getDefaultDate.getOffsetMinutes());
 
-    ASSERT_EQ(defaultUnsigned, testDataSet.getUnsignedLong(TagId(20, 20), 0, defaultUnsigned));
-    ASSERT_EQ(defaultSigned, testDataSet.getSignedLong(TagId(20, 20), 0, defaultSigned));
+    ASSERT_EQ(defaultUnsigned, testDataSet.getUint32(TagId(20, 20), 0, defaultUnsigned));
+    ASSERT_EQ(defaultSigned, testDataSet.getInt32(TagId(20, 20), 0, defaultSigned));
     ASSERT_DOUBLE_EQ(defaultDouble, testDataSet.getDouble(TagId(20, 20), 0, defaultDouble));
     ASSERT_EQ(defaultString, testDataSet.getString(TagId(20, 20), 0, defaultString));
     ASSERT_EQ(defaultUnicodeString, testDataSet.getUnicodeString(TagId(20, 20), 0, defaultUnicodeString));
@@ -333,14 +333,14 @@ TEST(dataSetTest, dataHandler)
         MutableDataSet testDataSet;
         {
             WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0);
-            handler.setSignedLong(0, 100);
+            handler.setInt32(0, 100);
             handler.setSize(10);
             ASSERT_EQ(tagVR_t::UL, handler.getDataType());
             ASSERT_EQ(10u, handler.getSize());
         }
         ReadingDataHandlerNumeric handler = testDataSet.getReadingDataHandlerNumeric(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0);
         ReadingDataHandler raw = testDataSet.getReadingDataHandlerRaw(TagId(tagId_t::RegionLocationMinX0_0018_6018), 0);
-        ASSERT_EQ(100, handler.getSignedLong(0));
+        ASSERT_EQ(100, handler.getInt32(0));
         ASSERT_EQ(tagVR_t::UL, handler.getDataType());
         ASSERT_EQ(10u, handler.getSize());
         ASSERT_EQ(40u, raw.getSize());

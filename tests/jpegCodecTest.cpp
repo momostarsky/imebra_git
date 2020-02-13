@@ -175,7 +175,7 @@ TEST(jpegCodecTest, testLossless)
                             depth = (b2Complement == 1) ? bitDepth_t::depthS16 : bitDepth_t::depthU16;
                         }
 
-                        Image image = buildImageForTest(width, height, depth, bits, colorSpace == 0 ? "RGB" : "MONOCHROME2", 50);
+                        Image image = buildImageForTest(width, height, depth, bits - 1, colorSpace == 0 ? "RGB" : "MONOCHROME2", 50);
 
 
                         MutableMemory savedJpeg;

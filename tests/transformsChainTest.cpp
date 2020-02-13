@@ -24,9 +24,9 @@ TEST(transformsChain, emptyChain)
         {
             for(std::uint32_t x(0); x != 100; ++x)
             {
-                rgbHandler.setUnsignedLong(pointer++, y);
-                rgbHandler.setUnsignedLong(pointer++, x);
-                rgbHandler.setUnsignedLong(pointer++, 255);
+                rgbHandler.setUint32(pointer++, y);
+                rgbHandler.setUint32(pointer++, x);
+                rgbHandler.setUint32(pointer++, 255);
             }
         }
     }
@@ -60,9 +60,9 @@ TEST(transformsChain, oneTransform)
         {
             for(std::uint32_t x(0); x != 100; ++x)
             {
-                rgbHandler.setUnsignedLong(pointer++, y);
-                rgbHandler.setUnsignedLong(pointer++, x);
-                rgbHandler.setUnsignedLong(pointer++, 255);
+                rgbHandler.setUint32(pointer++, y);
+                rgbHandler.setUint32(pointer++, x);
+                rgbHandler.setUint32(pointer++, 255);
             }
         }
     }
@@ -98,7 +98,7 @@ TEST(transformsChain, twoTransform)
         {
             for(std::uint32_t x(0); x != 100; ++x)
             {
-                rgbHandler.setUnsignedLong(pointer++, y);
+                rgbHandler.setUint32(pointer++, y);
             }
         }
     }

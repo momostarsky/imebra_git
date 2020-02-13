@@ -277,7 +277,7 @@ if(NOT IOS)
     # Download and install GoogleTest
     ExternalProject_Add(
         gtest
-        URL https://github.com/google/googletest/archive/release-1.7.0.zip
+        URL https://github.com/google/googletest/archive/release-1.10.0.zip
             CMAKE_ARGS "-Dgtest_force_shared_crt=ON"
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
             INSTALL_COMMAND ""
@@ -294,21 +294,21 @@ if(NOT IOS)
     # Set libgtest properties
     if(APPLE)
     set_target_properties(libgtest PROPERTIES
-        "IMPORTED_LOCATION" "${binary_dir}/libgtest.a"
-        "IMPORTED_LOCATION_DEBUG" "${binary_dir}/Debug/libgtest.a"
-        "IMPORTED_LOCATION_RELEASE" "${binary_dir}/Release/libgtest.a"
+        "IMPORTED_LOCATION" "${binary_dir}/lib/libgtest.a"
+        "IMPORTED_LOCATION_DEBUG" "${binary_dir}/Debug/lib/libgtest.a"
+        "IMPORTED_LOCATION_RELEASE" "${binary_dir}/Release/lib/libgtest.a"
         "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
     )
     elseif(MSVC)
     set_target_properties(libgtest PROPERTIES
         "IMPORTED_LOCATION" "${binary_dir}/gtest.lib"
-        "IMPORTED_LOCATION_DEBUG" "${binary_dir}/Debug/gtest.lib"
-        "IMPORTED_LOCATION_RELEASE" "${binary_dir}/Release/gtest.lib"
+        "IMPORTED_LOCATION_DEBUG" "${binary_dir}/lib/Debug/gtestd.lib"
+        "IMPORTED_LOCATION_RELEASE" "${binary_dir}/lib/Release/gtest.lib"
         "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
     )
-    else(APPLE)
+    else()
     set_target_properties(libgtest PROPERTIES
-        "IMPORTED_LOCATION" "${binary_dir}/libgtest.a"
+        "IMPORTED_LOCATION" "${binary_dir}/lib/libgtest.a"
         "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
     )
     endif(APPLE)
@@ -345,7 +345,7 @@ if(NOT IOS)
             ${imebra_tests_src}
             ${imebra_tests_objc_src}
     )
-    target_include_directories(ImebraTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest/src/gtest/include)
+    target_include_directories(ImebraTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest/src/gtest/googletest/include)
     target_link_libraries(ImebraTests imebra libgtest)
 if(${DCMTK_FOUND})
     target_link_libraries(ImebraTests dcmdata dcmimage)
