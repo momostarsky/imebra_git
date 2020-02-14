@@ -624,6 +624,14 @@ TEST(stringHandlerTest, ASTest)
         EXPECT_EQ(imebra::ageUnit_t::years, age.getAgeUnits());
         EXPECT_DOUBLE_EQ(90.0, age.getYears());
     }
+
+    dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "018K");
+    {
+        ASSERT_THROW(imebra::Age age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0), DataHandlerCorruptedBufferError);
+    }
+
+    ASSERT_THROW(dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "18Y"), DataHandlerInvalidDataError);
+
 }
 
 TEST(stringHandlerTest, testLimits)
