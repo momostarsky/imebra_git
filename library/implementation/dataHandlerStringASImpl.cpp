@@ -89,14 +89,14 @@ std::shared_ptr<age> readingDataHandlerStringAS::getAge(const size_t index) cons
     }
     char unit = ageString[3];
     if(
-            unit != (char)ageUnit_t::days &&
-            unit != (char)ageUnit_t::weeks &&
-            unit == (char)ageUnit_t::months &&
-            unit == (char)ageUnit_t::years)
+            unit != static_cast<char>(ageUnit_t::days) &&
+            unit != static_cast<char>(ageUnit_t::weeks) &&
+            unit != static_cast<char>(ageUnit_t::months) &&
+            unit != static_cast<char>(ageUnit_t::years))
     {
-        IMEBRA_THROW(DataHandlerCorruptedBufferError, "The AGE unit should be D, W, M or Y but is ascii code "<< (int)unit);
+        IMEBRA_THROW(DataHandlerCorruptedBufferError, "The AGE unit should be D, W, M or Y but is ascii code " << +unit);
     }
-    return std::make_shared<age>(ageValue, (ageUnit_t)unit);
+    return std::make_shared<age>(ageValue, static_cast<ageUnit_t>(unit));
 
     IMEBRA_FUNCTION_END();
 }
@@ -129,7 +129,7 @@ void writingDataHandlerStringAS::setAge(const size_t index, const std::shared_pt
     std::ostringstream ageStream;
     ageStream << std::setfill('0');
     ageStream << std::setw(3) << pAge->getAgeValue();
-    ageStream << std::setw(1) << (char)pAge->getAgeUnits();
+    ageStream << std::setw(1) << static_cast<char>(pAge->getAgeUnits());
 
     setString(index, ageStream.str());
 
