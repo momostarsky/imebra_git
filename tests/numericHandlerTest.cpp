@@ -531,7 +531,119 @@ TEST(numericHandlerTest, testLimits)
         ASSERT_FLOAT_EQ(1.0f, testDataSet.getFloat(TagId(0x10, 0x10), 0));
         ASSERT_DOUBLE_EQ(1.0, testDataSet.getDouble(TagId(0x10, 0x10), 0));
     }
+}
 
+TEST(numericHandlerTest, testAT)
+{
+    {
+        // AT little endian size 1
+        MutableDataSet testDataSet(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1);
+        testDataSet.setUint32(TagId(0x10, 0x10), 0x001800ffu, tagVR_t::AT);
+
+        MutableMemory dataSetMemory;
+        {
+            MemoryStreamOutput output(dataSetMemory);
+            StreamWriter writer(output);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+        }
+        MemoryStreamInput input(dataSetMemory);
+        StreamReader reader(input);
+        DataSet loadedDataSet = CodecFactory::load(reader);
+
+        ASSERT_EQ(0x001800ffu, loadedDataSet.getUint32(TagId(0x10, 0x10), 0));
+
+        size_t memorySize;
+        std::string memoryString(dataSetMemory.data(&memorySize), dataSetMemory.size());
+        ASSERT_TRUE(memoryString.find(std::string("\x18\x00\xff\x00", 4u)) != std::string::npos);
+
+    }
+
+    {
+        // AT little endian size 2
+        MutableDataSet testDataSet(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1);
+        {
+            WritingDataHandlerNumeric writeAT(testDataSet.getWritingDataHandlerNumeric(TagId(0x10, 0x10), 0, tagVR_t::AT));
+            writeAT.setUint32(0, 0x001800ffu);
+            writeAT.setUint32(1, 0x001900feu);
+        }
+
+        MutableMemory dataSetMemory;
+        {
+            MemoryStreamOutput output(dataSetMemory);
+            StreamWriter writer(output);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+        }
+        MemoryStreamInput input(dataSetMemory);
+        StreamReader reader(input);
+        DataSet loadedDataSet = CodecFactory::load(reader);
+
+        ReadingDataHandlerNumeric readAT = loadedDataSet.getReadingDataHandlerNumeric(TagId(0x10, 0x10), 0);
+        ASSERT_EQ(2u, readAT.getSize());
+        ASSERT_EQ(4u, readAT.getUnitSize());
+
+        ASSERT_EQ(0x001800ffu, loadedDataSet.getUint32(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(0x001900feu, loadedDataSet.getUint32(TagId(0x10, 0x10), 1));
+
+        size_t memorySize;
+        std::string memoryString(dataSetMemory.data(&memorySize), dataSetMemory.size());
+        ASSERT_TRUE(memoryString.find(std::string("\x18\x00\xff\x00\x19\x00\xfe\x00", 8u)) != std::string::npos);
+    }
+
+    {
+        // AT big endian
+        MutableDataSet testDataSet(uidExplicitVRBigEndian_1_2_840_10008_1_2_2);
+        testDataSet.setUint32(TagId(0x10, 0x10), 0x001800ffu, tagVR_t::AT);
+
+        MutableMemory dataSetMemory;
+        {
+            MemoryStreamOutput output(dataSetMemory);
+            StreamWriter writer(output);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+        }
+        MemoryStreamInput input(dataSetMemory);
+        StreamReader reader(input);
+        DataSet loadedDataSet = CodecFactory::load(reader);
+
+        ASSERT_EQ(0x001800ffu, loadedDataSet.getUint32(TagId(0x10, 0x10), 0));
+        ReadingDataHandlerNumeric readAT = loadedDataSet.getReadingDataHandlerNumeric(TagId(0x10, 0x10), 0);
+        ASSERT_EQ(1u, readAT.getSize());
+        ASSERT_EQ(4u, readAT.getUnitSize());
+
+        size_t memorySize;
+        std::string memoryString(dataSetMemory.data(&memorySize), dataSetMemory.size());
+        ASSERT_TRUE(memoryString.find(std::string("\x00\x18\x00\xff", 4u)) != std::string::npos);
+    }
+
+    {
+        // AT big endian size 2
+        MutableDataSet testDataSet(uidExplicitVRBigEndian_1_2_840_10008_1_2_2);
+        {
+            WritingDataHandlerNumeric writeAT(testDataSet.getWritingDataHandlerNumeric(TagId(0x10, 0x10), 0, tagVR_t::AT));
+            writeAT.setUint32(0, 0x001800ffu);
+            writeAT.setUint32(1, 0x001900feu);
+        }
+
+        MutableMemory dataSetMemory;
+        {
+            MemoryStreamOutput output(dataSetMemory);
+            StreamWriter writer(output);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+        }
+        MemoryStreamInput input(dataSetMemory);
+        StreamReader reader(input);
+        DataSet loadedDataSet = CodecFactory::load(reader);
+
+        ASSERT_EQ(0x001800ffu, loadedDataSet.getUint32(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(0x001900feu, loadedDataSet.getUint32(TagId(0x10, 0x10), 1));
+
+        ReadingDataHandlerNumeric readAT = loadedDataSet.getReadingDataHandlerNumeric(TagId(0x10, 0x10), 0);
+        ASSERT_EQ(2u, readAT.getSize());
+        ASSERT_EQ(4u, readAT.getUnitSize());
+
+        size_t memorySize;
+        std::string memoryString(dataSetMemory.data(&memorySize), dataSetMemory.size());
+        ASSERT_TRUE(memoryString.find(std::string("\x00\x18\x00\xff\x00\x19\x00\xfe", 8u)) != std::string::npos);
+    }
 
 }
 

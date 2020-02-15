@@ -1433,6 +1433,24 @@ protected:
 };
 
 
+class readingDataHandlerAT: public readingDataHandlerNumeric<std::uint32_t>
+{
+public:
+    using readingDataHandlerNumeric<std::uint32_t>::readingDataHandlerNumeric;
+
+    virtual std::uint32_t getUint32(const size_t index) const override;
+};
+
+
+class writingDataHandlerAT: public writingDataHandlerNumeric<std::uint32_t>
+{
+public:
+    using writingDataHandlerNumeric<std::uint32_t>::writingDataHandlerNumeric;
+
+    virtual void setUint32(const size_t index, const std::uint32_t value) override;
+};
+
+
 typedef readingDataHandlerNumeric<std::uint8_t> readingDataHandlerRaw;
 typedef readingDataHandlerNumeric<std::uint8_t> readingDataHandlerUint8;
 typedef readingDataHandlerNumeric<std::int8_t> readingDataHandlerInt8;

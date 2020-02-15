@@ -16,6 +16,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
+#include "streamControllerImpl.h"
 #include "dataHandlerNumericImpl.h"
 #include "memoryImpl.h"
 #include "bufferImpl.h"
@@ -209,6 +210,45 @@ void writingDataHandlerNumericBase::copyFrom(std::shared_ptr<readingDataHandlerN
     IMEBRA_FUNCTION_END();
 
 }
+
+
+std::uint32_t readingDataHandlerAT::getUint32(const size_t index) const
+{
+    IMEBRA_FUNCTION_START();
+
+    // In low bit endian machine revert the group and tag part
+    std::uint32_t value = getValue<std::uint32_t>(index);
+    if(streamController::getPlatformEndian() == streamController::tByteOrdering::lowByteEndian)
+    {
+        std::uint32_t group = value & 0x0000ffffu;
+        std::uint32_t id = (value >> 16u) & 0x0000ffffu;
+        value = (group << 16) | id;
+    }
+
+    return value;
+
+    IMEBRA_FUNCTION_END();
+}
+
+void writingDataHandlerAT::setUint32(const size_t index, const std::uint32_t value)
+{
+    IMEBRA_FUNCTION_START();
+
+    // In low bit endian machine revert the group and tag part
+    if(streamController::getPlatformEndian() == streamController::tByteOrdering::lowByteEndian)
+    {
+        std::uint32_t id = value & 0x0000ffffu;
+        std::uint32_t group = (value >> 16u) & 0x0000ffffu;
+        setValue<std::uint32_t>(index, id << 16 | group);
+    }
+    else
+    {
+        setValue<std::uint32_t>(index, value);
+    }
+
+    IMEBRA_FUNCTION_END();
+}
+
 
 
 }
