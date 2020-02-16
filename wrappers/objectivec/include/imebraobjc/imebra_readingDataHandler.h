@@ -110,6 +110,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     /// \brief Retrieve a buffer's value as an unsigned long integer (32 bit).
     ///
+    /// When calling getUint32() on an AT tag (Attribute Tag) then the tag group
+    /// is always in the high word of the returned value.
+    ///
     /// If the buffer's value cannot be converted to a unsigned long integer
     /// then set pError to ImebraDataHandlerConversionError.
     ///

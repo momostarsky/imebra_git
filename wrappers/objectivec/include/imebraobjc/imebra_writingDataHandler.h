@@ -112,6 +112,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     /// \brief Write an unsigned long integer (32 bit).
     ///
+    /// When setting a value for an AT tag (Attribute Tag) then the tag's group
+    /// must always be in the higher 16 bits of the value.
+    ///
     /// If the value cannot be converted from an unsigned long integer
     /// then set pError to ImebraDataHandlerConversionError.
     ///

@@ -479,6 +479,9 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
 
     /// \brief Retrieve a tag's value as unsigned long integer (32 bit).
     ///
+    /// When calling getUint32() on an AT tag (Attribute Tag) then the tag group
+    /// is always in the high word of the returned value.
+    ///
     /// If the tag's value cannot be converted to an unsigned long integer
     /// then sets pError to ImebraDataHandlerConversionError.
     ///
@@ -538,6 +541,9 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Retrieve a tag's value as unsigned long integer (32 bit).
+    ///
+    /// When calling getUint32() on an AT tag (Attribute Tag) then the tag group
+    /// is always in the high word of the returned value.
     ///
     /// If the tag's value cannot be converted to an unsigned long integer
     /// then sets pError to ImebraDataHandlerConversionError.
@@ -1236,6 +1242,9 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
         /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
         ///        specified tag's buffer 0.
         ///
+        /// When setting a value for an AT tag (Attribute Tag) then the tag's group
+        /// must always be in the higher 16 bits of the value.
+        ///
         /// If the specified tag doesn't exist then a new tag is created using
         /// the specified data type (VR).
         ///
@@ -1298,6 +1307,9 @@ typedef NS_ENUM(unsigned int, ImebraImageQuality)
 
         /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
         ///        specified tag's buffer 0.
+        ///
+        /// When setting a value for an AT tag (Attribute Tag) then the tag's group
+        /// must always be in the higher 16 bits of the value.
         ///
         /// If the specified tag doesn't exist then a new tag is created using
         /// the data type (VR) retrieved from the ImebraDicomDictionary.
