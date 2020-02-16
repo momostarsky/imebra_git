@@ -62,6 +62,22 @@ void readingDataHandlerNumericBase::copyTo(std::shared_ptr<writingDataHandlerNum
 {
     IMEBRA_FUNCTION_START();
 
+    if(pDestination->getDataType() == getDataType())
+    {
+        std::shared_ptr<memory> pDestMemory = pDestination->getMemory();
+        std::shared_ptr<const memory> pMemory = getMemory();
+        if(pDestMemory->size() < pMemory->size())
+        {
+            pDestMemory->assignRegion(pMemory->data(), pDestMemory->size(), 0);
+        }
+        else
+        {
+            pDestMemory->assignRegion(pMemory->data(), pMemory->size(), 0);
+        }
+
+        return;
+    }
+
     imebra::implementation::handlers::writingDataHandlerNumericBase* pHandler(pDestination.get());
     if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::uint8_t>) ||
         dynamic_cast<imebra::implementation::handlers::writingDataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
@@ -168,6 +184,15 @@ void writingDataHandlerNumericBase::copyFrom(std::shared_ptr<readingDataHandlerN
 {
     IMEBRA_FUNCTION_START();
 
+    if(pSource->getDataType() == getDataType())
+    {
+        std::shared_ptr<const memory> pMemory = pSource->getMemory();
+        std::shared_ptr<memory> pDestMemory = getMemory();
+        pDestMemory->assign(pMemory->data(), pMemory->size());
+
+        return;
+    }
+
     imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(pSource.get());
     if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>) ||
         dynamic_cast<imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
@@ -230,6 +255,77 @@ std::uint32_t readingDataHandlerAT::getUint32(const size_t index) const
     IMEBRA_FUNCTION_END();
 }
 
+
+std::int32_t readingDataHandlerAT::getInt32(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::int16_t readingDataHandlerAT::getInt16(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::uint16_t readingDataHandlerAT::getUint16(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::int8_t readingDataHandlerAT::getInt8(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+std::uint8_t readingDataHandlerAT::getUint8(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+double readingDataHandlerAT::getDouble(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+float readingDataHandlerAT::getFloat(const size_t /* index */) const
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
 void writingDataHandlerAT::setUint32(const size_t index, const std::uint32_t value)
 {
     IMEBRA_FUNCTION_START();
@@ -249,6 +345,75 @@ void writingDataHandlerAT::setUint32(const size_t index, const std::uint32_t val
     IMEBRA_FUNCTION_END();
 }
 
+
+void writingDataHandlerAT::setInt32(const size_t /* index */, const std::int32_t /* value */)
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void writingDataHandlerAT::setInt16(const size_t /* index */, const std::int16_t /* value */)
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void writingDataHandlerAT::setUint16(const size_t /* index */, const std::uint16_t /* value */)
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void writingDataHandlerAT::setInt8(const size_t /* index */, const std::int8_t /* value */)
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void writingDataHandlerAT::setUint8(const size_t /* index */, const std::uint8_t /* value */)
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void writingDataHandlerAT::setDouble(const size_t /* index */, const double /* value */)
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
+
+
+void writingDataHandlerAT::setFloat(const size_t /* index */, const float /* value */)
+{
+    IMEBRA_FUNCTION_START();
+
+    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+
+    IMEBRA_FUNCTION_END();
+}
 
 
 }
