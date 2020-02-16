@@ -10,15 +10,15 @@ namespace imebra
 namespace tests
 {
 
-tagVR_t integerTags[] = {tagVR_t::OB, tagVR_t::OL, tagVR_t::SB, tagVR_t::UN, tagVR_t::OW, tagVR_t::AT, tagVR_t::SL, tagVR_t::SS, tagVR_t::UL, tagVR_t::US};
+tagVR_t integerTags[] = {tagVR_t::OB, tagVR_t::OL, tagVR_t::SB, tagVR_t::UN, tagVR_t::OW, tagVR_t::SL, tagVR_t::SS, tagVR_t::UL, tagVR_t::US};
 tagVR_t floatTags[] = {tagVR_t::FL, tagVR_t::OF, tagVR_t::FD, tagVR_t::OD};
 tagVR_t allTags[] = {
+    tagVR_t::AT,
     tagVR_t::OB,
     tagVR_t::OL,
     tagVR_t::SB,
     tagVR_t::UN,
     tagVR_t::OW,
-    tagVR_t::AT,
     tagVR_t::SL,
     tagVR_t::SS,
     tagVR_t::UL,
@@ -254,13 +254,21 @@ TEST(numericHandlerTest, testCopyFrom)
 
         for(size_t sourceVR(0); sourceVR != sizeof(allTags) / sizeof(tagVR_t); ++sourceVR)
         {
+            if(
+                    (allTags[destVR] == tagVR_t::AT && allTags[sourceVR] != tagVR_t::AT) ||
+                    (allTags[destVR] != tagVR_t::AT && allTags[sourceVR] == tagVR_t::AT)
+                    )
+            {
+                continue;
+            }
+
             MutableDataSet testDataSet;
 
             {
                 WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(10, 11), 0, allTags[sourceVR]);
                 for(std::uint32_t fillData(0); fillData != 10; ++fillData)
                 {
-                    handler.setInt32(fillData, (std::int32_t)fillData);
+                    handler.setUint32(fillData, fillData);
                 }
             }
 
@@ -279,8 +287,8 @@ TEST(numericHandlerTest, testCopyFrom)
 
             for(size_t checkData(0); checkData != 10; ++checkData)
             {
-                ASSERT_DOUBLE_EQ((double)checkData, dest.getDouble(checkData));
-                ASSERT_DOUBLE_EQ((double)checkData, source.getDouble(checkData));
+                ASSERT_EQ(checkData, dest.getUint32(checkData));
+                ASSERT_EQ(checkData, source.getUint32(checkData));
             }
 
         }
@@ -296,13 +304,21 @@ TEST(numericHandlerTest, testCopyTo)
 
         for(size_t sourceVR(0); sourceVR != sizeof(allTags) / sizeof(tagVR_t); ++sourceVR)
         {
+            if(
+                    (allTags[destVR] == tagVR_t::AT && allTags[sourceVR] != tagVR_t::AT) ||
+                    (allTags[destVR] != tagVR_t::AT && allTags[sourceVR] == tagVR_t::AT)
+                    )
+            {
+                continue;
+            }
+
             MutableDataSet testDataSet;
 
             {
                 WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerNumeric(TagId(10, 11), 0, allTags[sourceVR]);
                 for(std::uint32_t fillData(0); fillData != 10; ++fillData)
                 {
-                    handler.setInt32(fillData, (std::int32_t)fillData);
+                    handler.setUint32(fillData, fillData);
                 }
             }
 
@@ -322,8 +338,8 @@ TEST(numericHandlerTest, testCopyTo)
 
             for(size_t checkData(0); checkData != 10; ++checkData)
             {
-                ASSERT_DOUBLE_EQ((double)checkData, dest.getDouble(checkData));
-                ASSERT_DOUBLE_EQ((double)checkData, source.getDouble(checkData));
+                ASSERT_EQ(checkData, dest.getUint32(checkData));
+                ASSERT_EQ(checkData, source.getUint32(checkData));
             }
 
         }
@@ -531,7 +547,134 @@ TEST(numericHandlerTest, testLimits)
         ASSERT_FLOAT_EQ(1.0f, testDataSet.getFloat(TagId(0x10, 0x10), 0));
         ASSERT_DOUBLE_EQ(1.0, testDataSet.getDouble(TagId(0x10, 0x10), 0));
     }
+}
 
+TEST(numericHandlerTest, testAT)
+{
+    {
+        // AT little endian size 1
+        MutableDataSet testDataSet(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1);
+        ASSERT_THROW(testDataSet.setInt32(TagId(0x10, 0x10), 1, tagVR_t::AT), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setUint16(TagId(0x10, 0x10), 1u, tagVR_t::AT), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setInt16(TagId(0x10, 0x10), 1, tagVR_t::AT), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setUint8(TagId(0x10, 0x10), 1u, tagVR_t::AT), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setInt8(TagId(0x10, 0x10), 1, tagVR_t::AT), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setDouble(TagId(0x10, 0x10), 1.0, tagVR_t::AT), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setFloat(TagId(0x10, 0x10), 1.0f, tagVR_t::AT), DataHandlerConversionError);
+        testDataSet.setUint32(TagId(0x10, 0x10), 0x001800ffu, tagVR_t::AT);
+
+        MutableMemory dataSetMemory;
+        {
+            MemoryStreamOutput output(dataSetMemory);
+            StreamWriter writer(output);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+        }
+        MemoryStreamInput input(dataSetMemory);
+        StreamReader reader(input);
+        DataSet loadedDataSet = CodecFactory::load(reader);
+
+        ASSERT_EQ(0x001800ffu, loadedDataSet.getUint32(TagId(0x10, 0x10), 0));
+
+        ASSERT_THROW(testDataSet.getInt32(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint16(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt16(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint8(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt8(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getDouble(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getFloat(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+
+        size_t memorySize;
+        std::string memoryString(dataSetMemory.data(&memorySize), dataSetMemory.size());
+        ASSERT_TRUE(memoryString.find(std::string("\x18\x00\xff\x00", 4u)) != std::string::npos);
+
+    }
+
+    {
+        // AT little endian size 2
+        MutableDataSet testDataSet(uidExplicitVRLittleEndian_1_2_840_10008_1_2_1);
+        {
+            WritingDataHandlerNumeric writeAT(testDataSet.getWritingDataHandlerNumeric(TagId(0x10, 0x10), 0, tagVR_t::AT));
+            writeAT.setUint32(0, 0x001800ffu);
+            writeAT.setUint32(1, 0x001900feu);
+        }
+
+        MutableMemory dataSetMemory;
+        {
+            MemoryStreamOutput output(dataSetMemory);
+            StreamWriter writer(output);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+        }
+        MemoryStreamInput input(dataSetMemory);
+        StreamReader reader(input);
+        DataSet loadedDataSet = CodecFactory::load(reader);
+
+        ReadingDataHandlerNumeric readAT = loadedDataSet.getReadingDataHandlerNumeric(TagId(0x10, 0x10), 0);
+        ASSERT_EQ(2u, readAT.getSize());
+        ASSERT_EQ(4u, readAT.getUnitSize());
+
+        ASSERT_EQ(0x001800ffu, loadedDataSet.getUint32(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(0x001900feu, loadedDataSet.getUint32(TagId(0x10, 0x10), 1));
+
+        size_t memorySize;
+        std::string memoryString(dataSetMemory.data(&memorySize), dataSetMemory.size());
+        ASSERT_TRUE(memoryString.find(std::string("\x18\x00\xff\x00\x19\x00\xfe\x00", 8u)) != std::string::npos);
+    }
+
+    {
+        // AT big endian
+        MutableDataSet testDataSet(uidExplicitVRBigEndian_1_2_840_10008_1_2_2);
+        testDataSet.setUint32(TagId(0x10, 0x10), 0x001800ffu, tagVR_t::AT);
+
+        MutableMemory dataSetMemory;
+        {
+            MemoryStreamOutput output(dataSetMemory);
+            StreamWriter writer(output);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+        }
+        MemoryStreamInput input(dataSetMemory);
+        StreamReader reader(input);
+        DataSet loadedDataSet = CodecFactory::load(reader);
+
+        ASSERT_EQ(0x001800ffu, loadedDataSet.getUint32(TagId(0x10, 0x10), 0));
+        ReadingDataHandlerNumeric readAT = loadedDataSet.getReadingDataHandlerNumeric(TagId(0x10, 0x10), 0);
+        ASSERT_EQ(1u, readAT.getSize());
+        ASSERT_EQ(4u, readAT.getUnitSize());
+
+        size_t memorySize;
+        std::string memoryString(dataSetMemory.data(&memorySize), dataSetMemory.size());
+        ASSERT_TRUE(memoryString.find(std::string("\x00\x18\x00\xff", 4u)) != std::string::npos);
+    }
+
+    {
+        // AT big endian size 2
+        MutableDataSet testDataSet(uidExplicitVRBigEndian_1_2_840_10008_1_2_2);
+        {
+            WritingDataHandlerNumeric writeAT(testDataSet.getWritingDataHandlerNumeric(TagId(0x10, 0x10), 0, tagVR_t::AT));
+            writeAT.setUint32(0, 0x001800ffu);
+            writeAT.setUint32(1, 0x001900feu);
+        }
+
+        MutableMemory dataSetMemory;
+        {
+            MemoryStreamOutput output(dataSetMemory);
+            StreamWriter writer(output);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+        }
+        MemoryStreamInput input(dataSetMemory);
+        StreamReader reader(input);
+        DataSet loadedDataSet = CodecFactory::load(reader);
+
+        ASSERT_EQ(0x001800ffu, loadedDataSet.getUint32(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(0x001900feu, loadedDataSet.getUint32(TagId(0x10, 0x10), 1));
+
+        ReadingDataHandlerNumeric readAT = loadedDataSet.getReadingDataHandlerNumeric(TagId(0x10, 0x10), 0);
+        ASSERT_EQ(2u, readAT.getSize());
+        ASSERT_EQ(4u, readAT.getUnitSize());
+
+        size_t memorySize;
+        std::string memoryString(dataSetMemory.data(&memorySize), dataSetMemory.size());
+        ASSERT_TRUE(memoryString.find(std::string("\x00\x18\x00\xff\x00\x19\x00\xfe", 8u)) != std::string::npos);
+    }
 
 }
 

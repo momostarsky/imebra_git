@@ -1433,6 +1433,52 @@ protected:
 };
 
 
+class readingDataHandlerAT: public readingDataHandlerNumeric<std::uint32_t>
+{
+public:
+    using readingDataHandlerNumeric<std::uint32_t>::readingDataHandlerNumeric;
+
+    virtual std::uint32_t getUint32(const size_t index) const override;
+
+    virtual std::int32_t getInt32(const size_t index) const override;
+
+    virtual std::int16_t getInt16(const size_t index) const override;
+
+    virtual std::uint16_t getUint16(const size_t index) const override;
+
+    virtual std::int8_t getInt8(const size_t index) const override;
+
+    virtual std::uint8_t getUint8(const size_t index) const override;
+
+    virtual double getDouble(const size_t index) const override;
+
+    virtual float getFloat(const size_t index) const override;
+};
+
+
+class writingDataHandlerAT: public writingDataHandlerNumeric<std::uint32_t>
+{
+public:
+    using writingDataHandlerNumeric<std::uint32_t>::writingDataHandlerNumeric;
+
+    virtual void setUint32(const size_t index, const std::uint32_t value) override;
+
+    virtual void setInt32(const size_t index, const std::int32_t value) override;
+
+    virtual void setInt16(const size_t index, const std::int16_t value) override;
+
+    virtual void setUint16(const size_t index, const std::uint16_t value) override;
+
+    virtual void setInt8(const size_t index, const std::int8_t value) override;
+
+    virtual void setUint8(const size_t index, const std::uint8_t value) override;
+
+    virtual void setDouble(const size_t index, const double value) override;
+
+    virtual void setFloat(const size_t index, const float value) override;
+};
+
+
 typedef readingDataHandlerNumeric<std::uint8_t> readingDataHandlerRaw;
 typedef readingDataHandlerNumeric<std::uint8_t> readingDataHandlerUint8;
 typedef readingDataHandlerNumeric<std::int8_t> readingDataHandlerInt8;

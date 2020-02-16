@@ -132,6 +132,9 @@ public:
 
     /// \brief Write an unsigned long integer (32 bit).
     ///
+    /// When setting a value for an AT tag (Attribute Tag) then the tag's group
+    /// must always be in the higher 16 bits of the value.
+    ///
     /// If the value cannot be converted from an unsigned long integer
     /// then throws DataHandlerConversionError.
     ///

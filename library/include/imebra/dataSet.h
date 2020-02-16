@@ -361,6 +361,9 @@ public:
 
     /// \brief Retrieve a tag's value as unsigned integer (32 bit).
     ///
+    /// When calling getUint32() on an AT tag (Attribute Tag) then the tag group
+    /// is always in the high word of the returned value.
+    ///
     /// If the tag's value cannot be converted to an unsigned integer
     /// then throws DataHandlerConversionError.
     ///
@@ -1149,6 +1152,9 @@ public:
 
     /// \brief Write a new unsigned 32 bit integer value into the element 0 of the
     ///        specified Tag's buffer 0.
+    ///
+    /// When setting a value for an AT tag (Attribute Tag) then the tag's group
+    /// must always be in the higher 16 bits of the value.
     ///
     /// If the specified Tag doesn't exist then a new tag is created using
     /// the specified data type (VR).

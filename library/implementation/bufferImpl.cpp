@@ -272,7 +272,7 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler(tagV
         return std::make_shared<handlers::readingDataHandlerNumeric<std::uint16_t> >(localMemory, tagVR);
 
     case tagVR_t::AT:
-        return std::make_shared<handlers::readingDataHandlerNumeric<std::uint32_t> >(localMemory, tagVR);
+        return std::make_shared<handlers::readingDataHandlerAT >(localMemory, tagVR);
 
     case tagVR_t::FL:
         return std::make_shared<handlers::readingDataHandlerNumeric<float> >(localMemory, tagVR);
@@ -387,7 +387,7 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(tagV
         return std::make_shared<handlers::writingDataHandlerNumeric<std::uint16_t> >(shared_from_this(), size, tagVR);
 
     case tagVR_t::AT:
-        return std::make_shared<handlers::writingDataHandlerNumeric<std::uint32_t> >(shared_from_this(), size, tagVR);
+        return std::make_shared<handlers::writingDataHandlerAT >(shared_from_this(), size, tagVR);
 
     case tagVR_t::FL:
         return std::make_shared<handlers::writingDataHandlerNumeric<float> >(shared_from_this(), size, tagVR);

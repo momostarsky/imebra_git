@@ -149,7 +149,7 @@ public:
     ///        converting the data to the destination handler data type.
     ///
     /// \warning the size of the destination data handler stays unchanged: if
-    ///          the destination too small to contain all the data to be copied
+    ///          the destination is too small to contain all the data to be copied
     ///          then only a part of the data will be copied.
     ///
     /// \param destination the destination data handler
