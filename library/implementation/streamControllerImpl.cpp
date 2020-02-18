@@ -26,7 +26,7 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 static const std::uint16_t m_endianCheck(0x00ff);
 static std::uint8_t const * const pBytePointer((std::uint8_t*)&m_endianCheck);
-static const streamController::tByteOrdering m_platformByteOrder((*pBytePointer)==0xff ? streamController::lowByteEndian : streamController::highByteEndian);
+static const streamController::tByteOrdering m_platformByteOrder((*pBytePointer)==0xff ? streamController::tByteOrdering::lowByteEndian : streamController::tByteOrdering::highByteEndian);
 
 ///////////////////////////////////////////////////////////
 //

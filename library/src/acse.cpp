@@ -296,8 +296,8 @@ AssociationSCU::AssociationSCU(
                         getPresentationContextsImplementation(presentationContexts),
                 thisAET,
                 otherAET,
-                invokedOperations,
-                performedOperations,
+                static_cast<std::uint16_t>(invokedOperations),
+                static_cast<std::uint16_t>(performedOperations),
                 pInput.m_pReader,
                 pOutput.m_pWriter,
                         dimseTimeoutSeconds))
@@ -330,8 +330,8 @@ AssociationSCP::AssociationSCP(
     AssociationBase(std::make_shared<implementation::associationSCP>(
                         getPresentationContextsImplementation(presentationContexts),
                 thisAET,
-                invokedOperations,
-                performedOperations,
+                static_cast<std::uint16_t>(invokedOperations),
+                static_cast<std::uint16_t>(performedOperations),
                 pInput.m_pReader,
                 pOutput.m_pWriter,
                 dimseTimeoutSeconds,

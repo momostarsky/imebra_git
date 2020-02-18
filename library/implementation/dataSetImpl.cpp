@@ -708,7 +708,7 @@ void dataSet::setImage(std::uint32_t frameNumber, std::shared_ptr<image> pImage,
         originalOffsetHandler->copyTo(offsetHandler->getMemoryBuffer(), offsetHandler->getSize());
         std::uint8_t* pOffsetFrame(offsetHandler->getMemoryBuffer() + (frameNumber * 4));
         *( reinterpret_cast<std::uint32_t*>(pOffsetFrame) ) = calculatePosition;
-        streamController::adjustEndian(pOffsetFrame, 4, streamController::lowByteEndian, 1);
+        streamController::adjustEndian(pOffsetFrame, 4, streamController::tByteOrdering::lowByteEndian, 1);
     }
     IMEBRA_FUNCTION_END();
 }
@@ -896,7 +896,7 @@ std::uint32_t dataSet::getFrameOffset(std::uint32_t frameNumber) const
         {
             const std::uint32_t* pOffsets = reinterpret_cast<const std::uint32_t*>(framesPointer->getMemoryBuffer());
             std::uint32_t returnOffset(pOffsets[frameNumber]);
-            streamController::adjustEndian((std::uint8_t*)&returnOffset, 4, streamController::lowByteEndian);
+            streamController::adjustEndian((std::uint8_t*)&returnOffset, 4, streamController::tByteOrdering::lowByteEndian);
             return returnOffset;
         }
         return 0;

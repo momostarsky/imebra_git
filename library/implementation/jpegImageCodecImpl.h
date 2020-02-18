@@ -98,8 +98,8 @@ public:
 
     // FDCT/IDCT
     ///////////////////////////////////////////////////////////
-    void FDCT(std::int32_t* pIOMatrix, float* pDescaleFactors) const;
-    void IDCT(std::int32_t* pIOMatrix, long long* pScaleFactors) const;
+    void FDCT(std::int32_t* pIOMatrix, std::array<float, 64>& pDescaleFactors) const;
+    void IDCT(std::int32_t* pIOMatrix, std::array<long long, 64>& pScaleFactors) const;
 
 private:
     // Read a lossy block of pixels

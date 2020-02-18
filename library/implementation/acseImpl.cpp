@@ -102,7 +102,7 @@ std::shared_ptr<acseItem> acseItem::decodeItem(std::shared_ptr<streamReader> pRe
         ///////////////////////////////////////////////////////////
         std::uint16_t itemLength;
         pReader->read((std::uint8_t*)&itemLength, sizeof(itemLength));
-        pReader->adjustEndian((std::uint8_t*)&itemLength, 2, streamController::highByteEndian);
+        pReader->adjustEndian((std::uint8_t*)&itemLength, 2, streamController::tByteOrdering::highByteEndian);
 
         // Get reader for virtual stream with size = item's length
         ///////////////////////////////////////////////////////////
@@ -160,7 +160,7 @@ void acseItem::encodeItem(std::shared_ptr<streamWriter> pWriter) const
     // Write the item's length
     ///////////////////////////////////////////////////////////
     std::uint16_t itemLength((std::uint16_t)pMemory->size());
-    pWriter->adjustEndian((std::uint8_t*)&itemLength, 2, streamController::highByteEndian);
+    pWriter->adjustEndian((std::uint8_t*)&itemLength, 2, streamController::tByteOrdering::highByteEndian);
     pWriter->write((std::uint8_t*)&itemLength, sizeof(itemLength));
 
     // Write the item's payload
@@ -705,7 +705,7 @@ void acseItemMaxLength::encodeItemPayload(std::shared_ptr<streamWriter> writer) 
 {
     IMEBRA_FUNCTION_START();
 
-    std::uint32_t maxLength = writer->adjustEndian(m_maxLength, streamController::highByteEndian);
+    std::uint32_t maxLength = writer->adjustEndian(m_maxLength, streamController::tByteOrdering::highByteEndian);
     writer->write((std::uint8_t*)&maxLength, sizeof(maxLength));
 
     IMEBRA_FUNCTION_END();
@@ -718,7 +718,7 @@ void acseItemMaxLength::decodeItemPayload(std::shared_ptr<streamReader> reader)
 
     std::uint32_t maxLength;
     reader->read((std::uint8_t*)&maxLength, sizeof(maxLength));
-    m_maxLength = reader->adjustEndian(maxLength, streamController::highByteEndian);
+    m_maxLength = reader->adjustEndian(maxLength, streamController::tByteOrdering::highByteEndian);
 
     IMEBRA_FUNCTION_END();
 }
@@ -845,10 +845,10 @@ void acseItemAsynchronousOperationsWindow::encodeItemPayload(std::shared_ptr<str
 {
     IMEBRA_FUNCTION_START();
 
-    std::uint16_t maxOperationsInvoked(pWriter->adjustEndian(m_maxOperationsInvoked, streamController::highByteEndian));
+    std::uint16_t maxOperationsInvoked(pWriter->adjustEndian(m_maxOperationsInvoked, streamController::tByteOrdering::highByteEndian));
     pWriter->write((std::uint8_t*)&maxOperationsInvoked, sizeof(maxOperationsInvoked));
 
-    std::uint16_t maxOperationsPerformed(pWriter->adjustEndian(m_maxOperationsPerformed, streamController::highByteEndian));
+    std::uint16_t maxOperationsPerformed(pWriter->adjustEndian(m_maxOperationsPerformed, streamController::tByteOrdering::highByteEndian));
     pWriter->write((std::uint8_t*)&maxOperationsPerformed, sizeof(maxOperationsPerformed));
 
     IMEBRA_FUNCTION_END();
@@ -861,11 +861,11 @@ void acseItemAsynchronousOperationsWindow::decodeItemPayload(std::shared_ptr<str
 
     std::uint16_t maxOperationsInvoked;
     pReader->read((std::uint8_t*)&maxOperationsInvoked, sizeof(maxOperationsInvoked));
-    m_maxOperationsInvoked = pReader->adjustEndian(maxOperationsInvoked, streamController::highByteEndian);
+    m_maxOperationsInvoked = pReader->adjustEndian(maxOperationsInvoked, streamController::tByteOrdering::highByteEndian);
 
     std::uint16_t maxOperationsPerformed;
     pReader->read((std::uint8_t*)&maxOperationsPerformed, sizeof(maxOperationsPerformed));
-    m_maxOperationsPerformed = pReader->adjustEndian(maxOperationsPerformed, streamController::highByteEndian);
+    m_maxOperationsPerformed = pReader->adjustEndian(maxOperationsPerformed, streamController::tByteOrdering::highByteEndian);
 
     IMEBRA_FUNCTION_END();
 }
@@ -920,7 +920,7 @@ void acseItemSCPSCURoleSelection::encodeItemPayload(std::shared_ptr<streamWriter
     std::string sopClassUID(handlers::normalizeUid(m_sopClassUID));
 
     std::uint16_t sopClassLength((std::uint16_t)sopClassUID.size());
-    pWriter->adjustEndian((std::uint8_t*)&sopClassLength, sizeof(sopClassLength), streamController::highByteEndian);
+    pWriter->adjustEndian((std::uint8_t*)&sopClassLength, sizeof(sopClassLength), streamController::tByteOrdering::highByteEndian);
     pWriter->write((const std::uint8_t*)&sopClassLength, sizeof(sopClassLength));
 
     pWriter->write((const std::uint8_t*)&(sopClassUID[0]), sopClassUID.size());
@@ -940,7 +940,7 @@ void acseItemSCPSCURoleSelection::decodeItemPayload(std::shared_ptr<streamReader
     std::uint16_t sopClassLength;
     pReader->read((std::uint8_t*)&sopClassLength, sizeof(sopClassLength));
 
-    std::string sopClassUID((size_t)pReader->adjustEndian(sopClassLength, streamController::highByteEndian), ' ');
+    std::string sopClassUID((size_t)pReader->adjustEndian(sopClassLength, streamController::tByteOrdering::highByteEndian), ' ');
     pReader->read((std::uint8_t*)&(sopClassUID[0]), sopClassUID.size());
     m_sopClassUID = handlers::normalizeUid(sopClassUID);
 
@@ -1010,7 +1010,7 @@ std::shared_ptr<acsePDU> acsePDU::decodePDU(std::shared_ptr<streamReader> pReade
 
         std::uint32_t pduLength;
         pReader->read((std::uint8_t*)&pduLength, sizeof(pduLength));
-        pReader->adjustEndian((std::uint8_t*)&pduLength, 4, streamController::highByteEndian);
+        pReader->adjustEndian((std::uint8_t*)&pduLength, 4, streamController::tByteOrdering::highByteEndian);
 
         std::shared_ptr<streamReader> pPDUStream(pReader->getReader(pduLength)); //
 
@@ -1050,7 +1050,7 @@ void acsePDU::encodePDU(std::shared_ptr<streamWriter> pWriter) const
     }
 
     std::uint32_t pduLength = (std::uint32_t)pMemory->size();
-    pWriter->adjustEndian((std::uint8_t*)&pduLength, sizeof(pduLength), streamController::highByteEndian);
+    pWriter->adjustEndian((std::uint8_t*)&pduLength, sizeof(pduLength), streamController::tByteOrdering::highByteEndian);
     pWriter->write((std::uint8_t*)&pduLength, sizeof(pduLength));
 
     pWriter->write(pMemory->data(), pMemory->size());
@@ -1125,7 +1125,7 @@ void acsePDUAssociateBase::encodePDUPayload(std::shared_ptr<streamWriter> pWrite
     IMEBRA_LOG_INFO("  -- Sending Association PDU")
 
     IMEBRA_LOG_INFO("     Protocol version = 1");
-    std::uint16_t protocolVersion(pWriter->adjustEndian(std::uint16_t(1), streamController::highByteEndian));
+    std::uint16_t protocolVersion(pWriter->adjustEndian(std::uint16_t(1), streamController::tByteOrdering::highByteEndian));
     pWriter->write((std::uint8_t*)&protocolVersion, sizeof(protocolVersion));
 
     const std::uint16_t zero(0);
@@ -1164,7 +1164,7 @@ void acsePDUAssociateBase::decodePDUPayload(std::shared_ptr<streamReader> pReade
 
     std::uint16_t protocolVersion;
     pReader->read((std::uint8_t*)&protocolVersion, sizeof(protocolVersion));
-    pReader->adjustEndian((std::uint8_t*)&protocolVersion, sizeof(protocolVersion), streamController::highByteEndian);
+    pReader->adjustEndian((std::uint8_t*)&protocolVersion, sizeof(protocolVersion), streamController::tByteOrdering::highByteEndian);
     IMEBRA_LOG_INFO("     Protocol version = " << +protocolVersion);
     if((protocolVersion & 0x0001) == 0)
     {
@@ -1248,7 +1248,8 @@ acsePDU::pduType_t acsePDUAssociateAC::getPDUType() const
 //
 ///////////////////////////////////////////////////////////
 
-acsePDUAssociateRJ::acsePDUAssociateRJ()
+acsePDUAssociateRJ::acsePDUAssociateRJ():
+    m_result(result_t::rejectedPermanent), m_reason(reason_t::serviceProviderAcseNoReasonGiven)
 {
 }
 
@@ -1286,7 +1287,7 @@ void acsePDUAssociateRJ::encodePDUPayload(std::shared_ptr<streamWriter> pWriter)
     pWriter->write(&zero, sizeof(zero));
     pWriter->write((std::uint8_t*)&m_result, sizeof(m_result));
 
-    std::uint16_t reason(pWriter->adjustEndian((std::uint16_t)m_reason, streamController::highByteEndian));
+    std::uint16_t reason(pWriter->adjustEndian((std::uint16_t)m_reason, streamController::tByteOrdering::highByteEndian));
     pWriter->write((std::uint8_t*)&reason, sizeof(reason));
 
     IMEBRA_FUNCTION_END();
@@ -1309,7 +1310,7 @@ void acsePDUAssociateRJ::decodePDUPayload(std::shared_ptr<streamReader> pReader)
 
     std::uint16_t reason;
     pReader->read((std::uint8_t*)&reason, sizeof(reason));
-    m_reason = (reason_t)(pReader->adjustEndian(reason, streamController::highByteEndian));
+    m_reason = (reason_t)(pReader->adjustEndian(reason, streamController::tByteOrdering::highByteEndian));
     if(
             m_reason != reason_t::serviceProviderAcseNoReasonGiven &&
             m_reason != reason_t::serviceProviderAcseProtocolVersionNotSupported &&
@@ -1404,7 +1405,7 @@ void acsePDUPData::encodePDUPayload(std::shared_ptr<streamWriter> pWriter) const
         IMEBRA_LOG_INFO("     -- PValue");
         IMEBRA_LOG_INFO("        size = " << (*scanPValues)->m_memorySize << " bytes");
 
-        std::uint32_t length(pWriter->adjustEndian((std::uint32_t)((*scanPValues)->m_memorySize + 2), streamController::highByteEndian));
+        std::uint32_t length(pWriter->adjustEndian((std::uint32_t)((*scanPValues)->m_memorySize + 2), streamController::tByteOrdering::highByteEndian));
         pWriter->write((std::uint8_t*)&length, sizeof(length));
         pWriter->write((std::uint8_t*)&(*scanPValues)->m_presentationContextId, sizeof(acseItemPDataValue::m_presentationContextId));
 
@@ -1432,7 +1433,7 @@ void acsePDUPData::decodePDUPayload(std::shared_ptr<streamReader> reader)
         try
         {
             reader->read((std::uint8_t*)&length, sizeof(length));
-            reader->adjustEndian((std::uint8_t*)&length, sizeof(length), streamController::highByteEndian);
+            reader->adjustEndian((std::uint8_t*)&length, sizeof(length), streamController::tByteOrdering::highByteEndian);
         }
         catch(const StreamEOFError&)
         {
@@ -1563,7 +1564,7 @@ void acsePDUAAbort::encodePDUPayload(std::shared_ptr<streamWriter> pWriter) cons
     const std::uint16_t zero(0);
     pWriter->write((std::uint8_t*)&zero, sizeof(zero));
 
-    std::uint16_t reason(pWriter->adjustEndian((std::uint16_t)m_reason, streamController::highByteEndian));
+    std::uint16_t reason(pWriter->adjustEndian((std::uint16_t)m_reason, streamController::tByteOrdering::highByteEndian));
     pWriter->write((std::uint8_t*)&reason, sizeof(reason));
 
     IMEBRA_FUNCTION_END();
@@ -1581,7 +1582,7 @@ void acsePDUAAbort::decodePDUPayload(std::shared_ptr<streamReader> reader)
 
     std::uint16_t reason;
     reader->read((std::uint8_t*)&reason, sizeof(reason));
-    m_reason = (reason_t)(reader->adjustEndian(reason, streamController::highByteEndian));
+    m_reason = (reason_t)(reader->adjustEndian(reason, streamController::tByteOrdering::highByteEndian));
     if(
             (reason_t)((std::uint16_t)m_reason & (std::uint16_t)0xff00) != reason_t::serviceUser &&
             m_reason != reason_t::serviceProviderReasonNotSpecified &&
@@ -1730,8 +1731,8 @@ associationBase::associationBase(
         role_t role,
         const std::string& thisAET,
         const std::string& otherAET,
-        std::uint32_t maxOperationsWeInvoke,
-        std::uint32_t maxOperationsWeCanPerform,
+        std::uint16_t maxOperationsWeInvoke,
+        std::uint16_t maxOperationsWeCanPerform,
         std::shared_ptr<streamReader> pReader,
         std::shared_ptr<streamWriter> pWriter,
         std::uint32_t dimseTimeout):
@@ -1809,7 +1810,7 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
     for(size_t dataSetCount(0); dataSetCount != 2; ++dataSetCount)
     {
         bool bExplicitDataType(false);
-        streamController::tByteOrdering endianType(streamController::lowByteEndian);
+        streamController::tByteOrdering endianType(streamController::tByteOrdering::lowByteEndian);
 
         if(dataSetCount != 0)
         {
@@ -1819,7 +1820,7 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
 
             // Explicit VR big endian
             ///////////////////////////////////////////////////////////
-            endianType = (transferSyntax == "1.2.840.10008.1.2.2") ? streamController::highByteEndian : streamController::lowByteEndian;
+            endianType = (transferSyntax == "1.2.840.10008.1.2.2") ? streamController::tByteOrdering::highByteEndian : streamController::tByteOrdering::lowByteEndian;
         }
 
         std::shared_ptr<const dataSet> pDataSet(dataSetCount == 0 ? message->getCommandDataSet() : message->getPayloadDataSetNoThrow());
@@ -2071,7 +2072,7 @@ std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU(boo
             --numberOfLastPData;
 
             bool bExplicitDataType(false);
-            streamController::tByteOrdering endianType(streamController::lowByteEndian);
+            streamController::tByteOrdering endianType(streamController::tByteOrdering::lowByteEndian);
 
             if(!bCommand)
             {
@@ -2081,7 +2082,7 @@ std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU(boo
 
                 // Explicit VR big endian
                 ///////////////////////////////////////////////////////////
-                endianType = (transferSyntax == "1.2.840.10008.1.2.2") ? streamController::highByteEndian : streamController::lowByteEndian;
+                endianType = (transferSyntax == "1.2.840.10008.1.2.2") ? streamController::tByteOrdering::highByteEndian : streamController::tByteOrdering::lowByteEndian;
             }
 
             std::shared_ptr<memoryStreamInput> dataSetStream(std::make_shared<memoryStreamInput>(datasetMemory));
@@ -2385,8 +2386,8 @@ associationSCU::associationSCU(
         const std::shared_ptr<const presentationContexts>& contexts,
         const std::string& thisAET,
         const std::string& otherAET,
-        std::uint32_t maxOperationsWeInvoke,
-        std::uint32_t maxOperationsWeCanPerform,
+        std::uint16_t maxOperationsWeInvoke,
+        std::uint16_t maxOperationsWeCanPerform,
         std::shared_ptr<streamReader> pReader,
         std::shared_ptr<streamWriter> pWriter,
         std::uint32_t dimseTimeout):
@@ -2604,8 +2605,8 @@ associationSCU::associationSCU(
 associationSCP::associationSCP(
         const std::shared_ptr<const presentationContexts>& contexts,
         const std::string& thisAET,
-        std::uint32_t maxOperationsWeInvoke,
-        std::uint32_t maxOperationsWeCanPerform,
+        std::uint16_t maxOperationsWeInvoke,
+        std::uint16_t maxOperationsWeCanPerform,
         std::shared_ptr<streamReader> pReader,
         std::shared_ptr<streamWriter> pWriter,
         std::uint32_t dimseTimeout,

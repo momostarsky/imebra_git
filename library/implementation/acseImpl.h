@@ -1248,8 +1248,8 @@ protected:
             role_t role,
             const std::string& thisAET,
             const std::string& otherAET,
-            std::uint32_t maxOperationsWeInvoke,
-            std::uint32_t maxOperationsWeCanPerform,
+            std::uint16_t maxOperationsWeInvoke,
+            std::uint16_t maxOperationsWeCanPerform,
             std::shared_ptr<streamReader> pReader,
             std::shared_ptr<streamWriter> pWriter,
             std::uint32_t dimseTimeout);
@@ -1270,8 +1270,8 @@ protected:
     const std::string m_thisAET;
     std::string m_otherAET;
 
-    std::uint32_t m_maxOperationsInvoked;
-    std::uint32_t m_maxOperationsPerformed;
+    std::uint16_t m_maxOperationsInvoked;
+    std::uint16_t m_maxOperationsPerformed;
 
     ///
     /// \brief 1 if the association is active, 0 if the
@@ -1376,8 +1376,8 @@ public:
             const std::shared_ptr<const presentationContexts>& contexts,
             const std::string& thisAET,
             const std::string& otherAET,
-            std::uint32_t maxOperationsWeInvoke,
-            std::uint32_t maxOperationsWeCanPerform,
+            std::uint16_t maxOperationsWeInvoke,
+            std::uint16_t maxOperationsWeCanPerform,
             std::shared_ptr<streamReader> pReader,
             std::shared_ptr<streamWriter> pWriter,
             std::uint32_t dimseTimeoutSeconds);
@@ -1427,8 +1427,8 @@ public:
     associationSCP(
             const std::shared_ptr<const presentationContexts>& contexts,
             const std::string& thisAET,
-            std::uint32_t maxOperationsWeInvoke,
-            std::uint32_t maxOperationsWeCanPerform,
+            std::uint16_t maxOperationsWeInvoke,
+            std::uint16_t maxOperationsWeCanPerform,
             std::shared_ptr<streamReader> pReader,
             std::shared_ptr<streamWriter> pWriter,
             std::uint32_t dimseTimeoutSeconds,

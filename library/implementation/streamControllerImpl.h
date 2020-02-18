@@ -120,7 +120,7 @@ public:
     /// \brief Specify a byte ordering
     ///
     ///////////////////////////////////////////////////////////
-    enum tByteOrdering
+    enum class tByteOrdering: int
     {
         lowByteEndian=1,  ///< the byte ordering is low endian: the least significant bytes of a word are stored first
         highByteEndian=2  ///< the byte ordering is high endian: the most significant bytes of a word are stored first

@@ -229,7 +229,7 @@ void dicomRLEImageCodec::writeRLECompressed(
     {
         if(phase == 1)
         {
-            pDestStream->adjustEndian((std::uint8_t*)segmentsOffset, 4, streamController::lowByteEndian, sizeof(segmentsOffset) / sizeof(segmentsOffset[0]));
+            pDestStream->adjustEndian((std::uint8_t*)segmentsOffset, 4, streamController::tByteOrdering::lowByteEndian, sizeof(segmentsOffset) / sizeof(segmentsOffset[0]));
             pDestStream->write((std::uint8_t*)segmentsOffset, sizeof(segmentsOffset));
         }
 
@@ -397,7 +397,7 @@ void dicomRLEImageCodec::readRLECompressed(
     std::uint32_t segmentsOffset[16];
     ::memset(segmentsOffset, 0, sizeof(segmentsOffset));
     pSourceStream->read((std::uint8_t*)segmentsOffset, 64);
-    pSourceStream->adjustEndian((std::uint8_t*)segmentsOffset, 4, streamController::lowByteEndian, sizeof(segmentsOffset) / sizeof(segmentsOffset[0]));
+    pSourceStream->adjustEndian((std::uint8_t*)segmentsOffset, 4, streamController::tByteOrdering::lowByteEndian, sizeof(segmentsOffset) / sizeof(segmentsOffset[0]));
 
     //
     // Scan all the RLE segments
