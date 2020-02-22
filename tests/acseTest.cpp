@@ -711,7 +711,7 @@ TEST(acseTest, overlappingOperations)
 
         for(std::uint16_t launchThreads(0); launchThreads != maxInvoked; ++launchThreads)
         {
-            scuThreads.push_back(std::make_shared<std::thread>(imebra::tests::scuThread, std::ref(scu), launchThreads * numMessages, numMessages));
+            scuThreads.push_back(std::make_shared<std::thread>(imebra::tests::scuThread, std::ref(scu), static_cast<std::uint16_t>(launchThreads * numMessages), numMessages));
         }
 
         for(size_t launchThreads(0); launchThreads != maxInvoked; ++launchThreads)
