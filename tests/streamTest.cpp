@@ -121,7 +121,7 @@ TEST(streamTest, testTimeout)
         }
         EXPECT_TRUE(false);
     }
-    catch(const StreamEOFError& e)
+    catch(const StreamEOFError&)
     {
     }
     EXPECT_EQ("ABCD", string);
@@ -152,7 +152,7 @@ TEST(streamTest, testTimeout1)
             string += std::string(data, dataSize);
         }
     }
-    catch(const StreamEOFError& e)
+    catch(const StreamEOFError&)
     {
         EXPECT_TRUE(false);
     }
