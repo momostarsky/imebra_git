@@ -85,11 +85,10 @@ void scpThread(
 
             // Now send the real response
             {
-                DataSet commandDataSet = command.getCommand();
                 MutableDataSet responseDataSet;
                 responseDataSet.setUint32(TagId(tagId_t::CommandField_0000_0100), 0x8001, tagVR_t::US);
-                std::uint32_t messageId(commandDataSet.getUint32(TagId(tagId_t::MessageID_0000_0110), 0));
-                responseDataSet.setUint32(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), messageId, tagVR_t::US);
+                std::uint32_t responseId(commandDataSet.getUint32(TagId(tagId_t::MessageID_0000_0110), 0));
+                responseDataSet.setUint32(TagId(tagId_t::MessageIDBeingRespondedTo_0000_0120), responseId, tagVR_t::US);
                 responseDataSet.setString(TagId(tagId_t::StudyInstanceUID_0020_000D), commandDataSet.getString(TagId(tagId_t::StudyInstanceUID_0020_000D), 0, ""));
                 responseDataSet.setString(TagId(tagId_t::SeriesInstanceUID_0020_000E), "1.2.3.4.5");
                 responseDataSet.setUint32(TagId(tagId_t::CommandDataSetType_0000_0800), command.hasPayload() ? 0 : 0x0101);
@@ -700,13 +699,13 @@ TEST(acseTest, overlappingOperations)
 
     const std::string scpName("SCP");
 
-    const size_t maxInvoked(10);
-    const size_t numMessages(1000);
+    const std::uint32_t maxInvoked(10u);
+    const size_t numMessages(1000u);
 
     std::thread scp(imebra::tests::scpThreadMultipleOperations, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), maxInvoked);
 
     {
-        AssociationSCU scu("SCU", scpName, maxInvoked, 1, scuPresentationContexts, readSCU, writeSCU, 0);
+        AssociationSCU scu("SCU", scpName, maxInvoked, 1u, scuPresentationContexts, readSCU, writeSCU, 0);
 
         std::vector<std::shared_ptr<std::thread> > scuThreads;
 
