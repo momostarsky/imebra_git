@@ -10,6 +10,7 @@ Version |release| (this version)
 - Fixed bug #317 (readingDataHandlerStringAS::getAge does not properly check for the age units) as per SOP :ref:`FIXBUG_2`
 - Implemented enhancement #318 (The data handler for VR "AT" should provide a way to retrieve the group and the id) as per sop :ref:`DEVENH_2`
 - Implemented enhancement #319 (Remove the compilation warnings on Windows) as per sop :ref:`DEVENH_2`
+- Fixed bug #321 (The test objectivec.stringToNSStringTest fails) as per SOP :ref:`FIXBUG_2`
 
 Version 5.0.1.1
 --------------------------------
