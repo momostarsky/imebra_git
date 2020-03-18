@@ -173,54 +173,54 @@ jpegCodecBase::jpegCodecBase()
 
     // Unknown tag must be registered
     ///////////////////////////////////////////////////////////
-    registerTag(unknown, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagUnknown>()));
+    registerTag(tTagId::unknown, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagUnknown>()));
 
     // Register SOF
     ///////////////////////////////////////////////////////////
-    registerTag(sof0, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
-    registerTag(sof1, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
-    registerTag(sof2, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
-    registerTag(sof3, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
-    registerTag(sof5, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
-    registerTag(sof6, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
-    registerTag(sof7, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
-    registerTag(sof9, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
-    registerTag(sofA, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
-    registerTag(sofB, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
-    registerTag(sofD, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
-    registerTag(sofE, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
-    registerTag(sofF, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sof0, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sof1, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sof2, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sof3, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sof5, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sof6, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sof7, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sof9, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sofA, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sofB, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sofD, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sofE, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
+    registerTag(tTagId::sofF, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOF>()));
 
     // Register DHT
     ///////////////////////////////////////////////////////////
-    registerTag(dht, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagDHT>()));
+    registerTag(tTagId::dht, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagDHT>()));
 
     // Register DQT
     ///////////////////////////////////////////////////////////
-    registerTag(dqt, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagDQT>()));
+    registerTag(tTagId::dqt, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagDQT>()));
 
     // Register SOS
     ///////////////////////////////////////////////////////////
-    registerTag(sos, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOS>()));
+    registerTag(tTagId::sos, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagSOS>()));
 
     // Register EOI
     ///////////////////////////////////////////////////////////
-    registerTag(eoi, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagEOI>()));
+    registerTag(tTagId::eoi, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagEOI>()));
 
     // Register RST
     ///////////////////////////////////////////////////////////
-    registerTag(rst0, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
-    registerTag(rst1, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
-    registerTag(rst2, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
-    registerTag(rst3, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
-    registerTag(rst4, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
-    registerTag(rst5, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
-    registerTag(rst6, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
-    registerTag(rst7, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(tTagId::rst0, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(tTagId::rst1, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(tTagId::rst2, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(tTagId::rst3, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(tTagId::rst4, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(tTagId::rst5, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(tTagId::rst6, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
+    registerTag(tTagId::rst7, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagRST>()));
 
     // Register DRI
     ///////////////////////////////////////////////////////////
-    registerTag(dri, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagDRI>()));
+    registerTag(tTagId::dri, std::shared_ptr<jpeg::tag>(std::make_shared<jpeg::tagDRI>()));
 
     IMEBRA_FUNCTION_END();
 }
@@ -244,7 +244,7 @@ void jpegCodecBase::registerTag(tTagId tagId, std::shared_ptr<jpeg::tag> pTag)
 {
     IMEBRA_FUNCTION_START();
 
-    m_tagsMap[(std::uint8_t)tagId]=pTag;
+    m_tagsMap[static_cast<std::uint8_t>(tagId)] = pTag;
 
     IMEBRA_FUNCTION_END();
 }
@@ -270,7 +270,7 @@ void jpegCodecBase::writeTag(streamWriter* pDestinationStream, tTagId tagId, jpe
         return;
     }
     const std::uint8_t ff(0xff);
-    std::uint8_t byteTagId(tagId);
+    std::uint8_t byteTagId(static_cast<std::uint8_t>(tagId));
     pDestinationStream->write(&ff, 1);
     pDestinationStream->write(&byteTagId, 1);
     findTag->second->writeTag(pDestinationStream, information);
@@ -582,8 +582,8 @@ void jpegInformation::recalculateQuantizationTables(int table)
     {
         for(std::uint8_t col = 0; col<8; ++col)
         {
-            m_decompressionQuantizationTable[table][tableIndex]=(long long)((float)((m_quantizationTable[table][tableIndex])<<JPEG_DECOMPRESSION_BITS_PRECISION)*JpegDctScaleFactor[col]*JpegDctScaleFactor[row]);
-            m_compressionQuantizationTable[table][tableIndex]=1.0f/((float)((m_quantizationTable[table][tableIndex])<<3)*JpegDctScaleFactor[col]*JpegDctScaleFactor[row]);
+            m_decompressionQuantizationTable[table][tableIndex] = (long long)((float)((m_quantizationTable[table][tableIndex])<<JPEG_DECOMPRESSION_BITS_PRECISION)*JpegDctScaleFactor[col]*JpegDctScaleFactor[row]);
+            m_compressionQuantizationTable[table][tableIndex] = 1.0f/((float)((m_quantizationTable[table][tableIndex])<<3)*JpegDctScaleFactor[col]*JpegDctScaleFactor[row]);
             ++tableIndex;
         }
     }
@@ -742,7 +742,7 @@ void tag::writeLength(streamWriter* pStream, std::uint16_t length) const
     IMEBRA_FUNCTION_START();
 
     length = (std::uint16_t)(length + sizeof(length));
-    pStream->adjustEndian((std::uint8_t*)&length, sizeof(length), streamController::highByteEndian);
+    pStream->adjustEndian((std::uint8_t*)&length, sizeof(length), streamController::tByteOrdering::highByteEndian);
     pStream->write((std::uint8_t*)&length, sizeof(length));
 
     IMEBRA_FUNCTION_END();
@@ -764,7 +764,7 @@ std::uint32_t tag::readLength(streamReader& stream) const
 
     std::uint16_t length = 0;
     stream.read((std::uint8_t*)&length, sizeof(length));
-    stream.adjustEndian((std::uint8_t*)&length, sizeof(length), streamController::highByteEndian);
+    stream.adjustEndian((std::uint8_t*)&length, sizeof(length), streamController::tByteOrdering::highByteEndian);
     if(length > 1)
         length = (std::uint16_t)(length - 2);
     return (std::uint32_t)length;
@@ -871,8 +871,8 @@ void tagSOF::writeTag(streamWriter* pStream, jpegInformation& information) const
     ///////////////////////////////////////////////////////////
     std::uint16_t imageWidth=(std::uint16_t)information.m_imageWidth;
     std::uint16_t imageHeight=(std::uint16_t)information.m_imageHeight;
-    pStream->adjustEndian((std::uint8_t*)&imageHeight, 2, streamController::highByteEndian);
-    pStream->adjustEndian((std::uint8_t*)&imageWidth, 2, streamController::highByteEndian);
+    pStream->adjustEndian((std::uint8_t*)&imageHeight, 2, streamController::tByteOrdering::highByteEndian);
+    pStream->adjustEndian((std::uint8_t*)&imageWidth, 2, streamController::tByteOrdering::highByteEndian);
     pStream->write((std::uint8_t*)&imageHeight, 2);
     pStream->write((std::uint8_t*)&imageWidth, 2);
 
@@ -936,8 +936,8 @@ void tagSOF::readTag(streamReader& stream, jpegInformation* pInformation, std::u
     std::uint16_t imageWidth, imageHeight;
     tagReader->read((std::uint8_t*)&imageHeight, 2);
     tagReader->read((std::uint8_t*)&imageWidth, 2);
-    tagReader->adjustEndian((std::uint8_t*)&imageHeight, 2, streamController::highByteEndian);
-    tagReader->adjustEndian((std::uint8_t*)&imageWidth, 2, streamController::highByteEndian);
+    tagReader->adjustEndian((std::uint8_t*)&imageHeight, 2, streamController::tByteOrdering::highByteEndian);
+    tagReader->adjustEndian((std::uint8_t*)&imageWidth, 2, streamController::tByteOrdering::highByteEndian);
 
     if(
             precisionBits < 8 ||
@@ -1408,7 +1408,7 @@ void tagDRI::writeTag(streamWriter* pStream, jpegInformation& information) const
     // Write the MCU per restart interval
     /////////////////////////////////////////////////////////////////
     std::uint16_t unitsPerRestartInterval = information.m_mcuPerRestartInterval;
-    pStream->adjustEndian((std::uint8_t*)&unitsPerRestartInterval, 2, streamController::highByteEndian);
+    pStream->adjustEndian((std::uint8_t*)&unitsPerRestartInterval, 2, streamController::tByteOrdering::highByteEndian);
     pStream->write((std::uint8_t*)&unitsPerRestartInterval, 2);
 
     IMEBRA_FUNCTION_END();
@@ -1436,7 +1436,7 @@ void tagDRI::readTag(streamReader& stream, jpegInformation* pInformation, std::u
 
     std::uint16_t unitsPerRestartInterval;
     tagReader->read((std::uint8_t*)&unitsPerRestartInterval, 2);
-    tagReader->adjustEndian((std::uint8_t*)&unitsPerRestartInterval, 2, streamController::highByteEndian);
+    tagReader->adjustEndian((std::uint8_t*)&unitsPerRestartInterval, 2, streamController::tByteOrdering::highByteEndian);
     pInformation->m_mcuPerRestartInterval=unitsPerRestartInterval;
 
     IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);

@@ -102,8 +102,8 @@ TEST(jpegCodecTest, testBaselineSubsampled)
                     size_t dummy;
                     ::memcpy(savedJpegUnknownTag.data(&dummy), savedJpeg.data(&dummy), 2);
                     ::memcpy(savedJpegUnknownTag.data(&dummy) + 130, savedJpeg.data(&dummy) + 2, savedJpeg.size() - 2);
-                    savedJpegUnknownTag.data(&dummy)[2] = (char)0xff;
-                    savedJpegUnknownTag.data(&dummy)[3] = (char)0x10;
+                    savedJpegUnknownTag.data(&dummy)[2] = static_cast<char>(0xff);
+                    savedJpegUnknownTag.data(&dummy)[3] = 0x10;
                     savedJpegUnknownTag.data(&dummy)[4] = 0;
                     savedJpegUnknownTag.data(&dummy)[5] = 124;
 

@@ -382,9 +382,9 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
     {
         try
         {
-            std::shared_ptr<dataSet> pDataSet(m_pDataSet->getSequenceItem(0x0004, 0, 0x1220, scanItems));
-            std::shared_ptr<directoryRecord> newRecord(std::make_shared<directoryRecord>(pDataSet));
-            offsetsToRecords[pDataSet->getItemOffset()] = newRecord;
+            std::shared_ptr<dataSet> pItemDataSet(m_pDataSet->getSequenceItem(0x0004, 0, 0x1220, scanItems));
+            std::shared_ptr<directoryRecord> newRecord(std::make_shared<directoryRecord>(pItemDataSet));
+            offsetsToRecords[pItemDataSet->getItemOffset()] = newRecord;
             m_recordsList.push_back(newRecord);
         }
         catch(const MissingDataElementError&)

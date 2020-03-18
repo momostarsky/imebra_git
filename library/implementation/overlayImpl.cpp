@@ -81,7 +81,7 @@ overlay::overlay(
     m_roiArea(0), m_roiAreaPresent(false),
     m_roiMean(0.0), m_roiMeanPresent(false),
     m_roiStandardDeviation(0.0), m_roiStandardDeviationPresent(false),
-    m_pBuffer(std::make_shared<buffer>(std::shared_ptr<charsetsList_t>(), streamController::lowByteEndian))
+    m_pBuffer(std::make_shared<buffer>(std::shared_ptr<charsetsList_t>(), streamController::tByteOrdering::lowByteEndian))
 {
 }
 
@@ -102,7 +102,7 @@ overlay::overlay(
     m_roiArea(0), m_roiAreaPresent(false),
     m_roiMean(0.0), m_roiMeanPresent(false),
     m_roiStandardDeviation(0.0), m_roiStandardDeviationPresent(false),
-    m_pBuffer(std::make_shared<buffer>(std::shared_ptr<charsetsList_t>(), streamController::lowByteEndian))
+    m_pBuffer(std::make_shared<buffer>(std::shared_ptr<charsetsList_t>(), streamController::tByteOrdering::lowByteEndian))
 {
 }
 

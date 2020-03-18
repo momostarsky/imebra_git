@@ -1328,7 +1328,7 @@ TEST(dimseTest, dimseTimeoutTest)
         scu.getCommand();
         EXPECT_TRUE(false);
     }
-    catch(const StreamClosedError& e)
+    catch(const StreamClosedError&)
     {
 
     }

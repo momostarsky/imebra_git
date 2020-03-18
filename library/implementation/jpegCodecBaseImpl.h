@@ -235,9 +235,8 @@ namespace jpeg
         std::uint32_t m_jpegImageWidth;
         std::uint32_t m_jpegImageHeight;
 
-        long long m_decompressionQuantizationTable[16][64];
-        float m_compressionQuantizationTable[16][64];
-
+        std::array<std::array<long long, 64>, 16> m_decompressionQuantizationTable;
+        std::array<std::array<float, 64> , 16> m_compressionQuantizationTable;
     };
 }
 
@@ -252,7 +251,7 @@ public:
     /// \brief This enumeration contains the tags used by
     ///         the jpeg codec
     ///////////////////////////////////////////////////////////
-    enum tTagId
+    enum class tTagId: std::uint8_t
     {
         unknown = 0xff,
 

@@ -77,7 +77,7 @@ void dicomStreamCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::s
 
     // Explicit VR big endian
     ///////////////////////////////////////////////////////////
-    streamController::tByteOrdering endianType = (transferSyntax == "1.2.840.10008.1.2.2") ? streamController::highByteEndian : streamController::lowByteEndian;
+    streamController::tByteOrdering endianType = (transferSyntax == "1.2.840.10008.1.2.2") ? streamController::tByteOrdering::highByteEndian : streamController::tByteOrdering::lowByteEndian;
 
     // Write the dicom header
     ///////////////////////////////////////////////////////////
@@ -181,7 +181,7 @@ void dicomStreamCodec::writeGroup(std::shared_ptr<streamWriter> pDestStream, con
     if(groupId == 2)
     {
         bExplicitDataType = true;
-        endianType = streamController::lowByteEndian;
+        endianType = streamController::tByteOrdering::lowByteEndian;
     }
 
     // Group id adjusted for byte endianess
@@ -579,7 +579,7 @@ std::uint32_t dicomStreamCodec::getDataSetLength(std::shared_ptr<dataSet> pDataS
 
     std::shared_ptr<streamWriter> pWriter(std::make_shared<streamWriter>(pNullStream));
 
-    buildStream(pWriter, pDataSet, bExplicitDataType, streamController::lowByteEndian, streamType_t::normal);
+    buildStream(pWriter, pDataSet, bExplicitDataType, streamController::tByteOrdering::lowByteEndian, streamType_t::normal);
 
     return static_cast<std::uint32_t>(pWriter->position());
 
@@ -635,7 +635,7 @@ void dicomStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sh
     }
 
     bool bExplicitDataType = true;
-    streamController::tByteOrdering endianType=streamController::lowByteEndian;
+    streamController::tByteOrdering endianType=streamController::tByteOrdering::lowByteEndian;
     if(bFailed)
     {
         // Tags 0x8 and 0x2 are accepted in the begin of the file
@@ -739,7 +739,7 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
             pStream->adjustEndian((std::uint8_t*)&tagId, sizeof(tagId), endianType);
 
             // Fix the byte adjustment
-            endianType=streamController::highByteEndian;
+            endianType=streamController::tByteOrdering::highByteEndian;
 
             // Redo the byte adjustment
             pStream->adjustEndian((std::uint8_t*)&tagId, sizeof(tagId), endianType);
@@ -759,10 +759,10 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
                         0x0010,
                         0,
                         0,
-                        endianType == streamController::lowByteEndian ? "1.2.840.10008.1.2.1" : "1.2.840.10008.1.2.2");
+                        endianType == streamController::tByteOrdering::lowByteEndian ? "1.2.840.10008.1.2.1" : "1.2.840.10008.1.2.2");
 
             if(transferSyntax == "1.2.840.10008.1.2.2")
-                endianType = streamController::highByteEndian;
+                endianType = streamController::tByteOrdering::highByteEndian;
             if(transferSyntax == "1.2.840.10008.1.2")
                 bExplicitDataType=false;
 
@@ -837,7 +837,7 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
                 // The data type is not valid. Switch to implicit data type
                 ///////////////////////////////////////////////////////////
                 bExplicitDataType = false;
-                if(endianType == streamController::lowByteEndian)
+                if(endianType == streamController::tByteOrdering::lowByteEndian)
                     tagLengthDWord=(((std::uint32_t)tagLengthWord)<<16) | ((std::uint32_t)tagTypeString[0]) | (((std::uint32_t)tagTypeString[1])<<8);
                 else
                     tagLengthDWord=(std::uint32_t)tagLengthWord | (((std::uint32_t)tagTypeString[0])<<24) | (((std::uint32_t)tagTypeString[1])<<16);

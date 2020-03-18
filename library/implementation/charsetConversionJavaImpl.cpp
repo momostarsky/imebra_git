@@ -89,7 +89,7 @@ std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString
     std::string unicodeBytes;
     unicodeBytes.resize(unicodeString.size() * sizeof(wchar_t));
     ::memcpy(&(unicodeBytes[0]), &(unicodeString[0]), unicodeBytes.size());
-    streamController::adjustEndian((std::uint8_t*)&(unicodeBytes[0]), sizeof(wchar_t), streamController::lowByteEndian, unicodeString.size());
+    streamController::adjustEndian((std::uint8_t*)&(unicodeBytes[0]), sizeof(wchar_t), streamController::tByteOrdering::lowByteEndian, unicodeString.size());
 
     std::string bytes = convertString(javaEnv, unicodeBytes, sizeof(wchar_t) == 2 ? "UTF-16LE" : "UTF-32LE", m_tableName.c_str());
 
@@ -116,7 +116,7 @@ std::wstring charsetConversionJava::toUnicode(const std::string& asciiString) co
     javaJNIWrapper javaEnv;
 
     std::string unicodeBytes = convertString(javaEnv, asciiString, m_tableName.c_str(), sizeof(wchar_t) == 2 ? "UTF-16LE" : "UTF-32LE");
-    streamController::adjustEndian((std::uint8_t*)&(unicodeBytes[0]), sizeof(wchar_t), streamController::lowByteEndian, unicodeBytes.size() / sizeof(wchar_t));
+    streamController::adjustEndian((std::uint8_t*)&(unicodeBytes[0]), sizeof(wchar_t), streamController::tByteOrdering::lowByteEndian, unicodeBytes.size() / sizeof(wchar_t));
 
     std::wstring returnValue;
     if(unicodeBytes.size() != 0)

@@ -148,7 +148,7 @@ void tagDQT::writeTag(streamWriter* pStream, jpegInformation& information) const
                     for(int tableIndex = 0; tableIndex < 64; ++tableIndex)
                     {
                         tableValue16 = (std::uint16_t)information.m_quantizationTable[tableId][JpegDeZigZagOrder[tableIndex]];
-                        pStream->adjustEndian((std::uint8_t*)&tableValue16, 2, streamController::highByteEndian);
+                        pStream->adjustEndian((std::uint8_t*)&tableValue16, 2, streamController::tByteOrdering::highByteEndian);
                         pStream->write((std::uint8_t*)&tableValue16, 2);
                     }
                 }
@@ -205,7 +205,7 @@ void tagDQT::readTag(streamReader& stream, jpegInformation* pInformation, std::u
             if((tablePrecision & 0xf0) != 0)
             {
                 tagReader->read((std::uint8_t*)&tableValue16, 2);
-                tagReader->adjustEndian((std::uint8_t*)&tableValue16, 2, streamController::highByteEndian);
+                tagReader->adjustEndian((std::uint8_t*)&tableValue16, 2, streamController::tByteOrdering::highByteEndian);
                 pInformation->m_quantizationTable[tablePrecision & 0x0f][JpegDeZigZagOrder[tableIndex]]=tableValue16;
             }
 
@@ -404,7 +404,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const std::string& transferSynta
 
                 pTag->readTag(*pSourceStream, &information, tagId);
             }
-            catch(const StreamEOFError& e)
+            catch(const StreamEOFError& )
             {
                 if(information.m_mcuProcessed == information.m_mcuNumberTotal && information.m_mcuNumberTotal != 0)
                 {
@@ -916,11 +916,11 @@ void jpegImageCodec::setImage(
 
     // Write the SOF tag
     ////////////////////////////////////////////////////////////////
-    writeTag(pDestinationStream, information.m_bLossless ? sof3 : (information.m_precision <= 8 ? sof0 : sof1), information);
+    writeTag(pDestinationStream, information.m_bLossless ? tTagId::sof3 : (information.m_precision <= 8 ? tTagId::sof0 : tTagId::sof1), information);
 
     // Write the quantization tables
     ////////////////////////////////////////////////////////////////
-    writeTag(pDestinationStream, dqt, information);
+    writeTag(pDestinationStream, tTagId::dqt, information);
 
     for(int phase = 0; phase < 2; ++phase)
     {
@@ -928,7 +928,7 @@ void jpegImageCodec::setImage(
         {
             // Write the huffman tables
             ////////////////////////////////////////////////////////////////
-            writeTag(pDestinationStream, dht, information);
+            writeTag(pDestinationStream, tTagId::dht, information);
         }
 
         // Write the scans
@@ -958,7 +958,7 @@ void jpegImageCodec::setImage(
         }
     }
 
-    writeTag(pDestinationStream, eoi, information);
+    writeTag(pDestinationStream, tTagId::eoi, information);
 
     IMEBRA_FUNCTION_END();
 }
@@ -986,7 +986,7 @@ void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInfor
     }
     if(!bCalcHuffman)
     {
-        writeTag(pDestinationStream, sos, information);
+        writeTag(pDestinationStream, tTagId::sos, information);
     }
 
     while(information.m_mcuProcessed < information.m_mcuNumberTotal)
@@ -1358,7 +1358,7 @@ inline void jpegImageCodec::writeBlock(streamWriter* pStream, jpeg::jpegInformat
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-void jpegImageCodec::FDCT(std::int32_t* pIOMatrix, float* pDescaleFactors) const
+void jpegImageCodec::FDCT(std::int32_t* pIOMatrix, std::array<float, 64>& pDescaleFactors) const
 {
     // Temporary values
     /////////////////////////////////////////////////////////////////
@@ -1512,7 +1512,7 @@ void jpegImageCodec::FDCT(std::int32_t* pIOMatrix, float* pDescaleFactors) const
 //
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
-void jpegImageCodec::IDCT(std::int32_t* pIOMatrix, long long* pScaleFactors) const
+void jpegImageCodec::IDCT(std::int32_t* pIOMatrix, std::array<long long, 64>& pScaleFactors) const
 {
     const double multiplier((float)((long long)1 << JPEG_DECOMPRESSION_BITS_PRECISION));
     const long long multiplier_1_414213562f((long long)(multiplier * 1.414213562f + .5f));
@@ -1543,6 +1543,7 @@ void jpegImageCodec::IDCT(std::int32_t* pIOMatrix, long long* pScaleFactors) con
     std::int32_t checkZero;
     long long* pTempMatrix(idctTempMatrix);
 
+    size_t scaleFactorIndex(0);
     for(int scanBlockY(8); scanBlockY != 0; --scanBlockY)
     {
         checkZero = *(++pCheckMatrix);
@@ -1559,7 +1560,7 @@ void jpegImageCodec::IDCT(std::int32_t* pIOMatrix, long long* pScaleFactors) con
         /////////////////////////////////////////////////////////////////
         if(checkZero == 0)
         {
-            tmp0 = (long long)(*pMatrix) * (*pScaleFactors);
+            tmp0 = (long long)(*pMatrix) * (pScaleFactors[scaleFactorIndex]);
             *(pTempMatrix++) = tmp0;
             *(pTempMatrix++) = tmp0;
             *(pTempMatrix++) = tmp0;
@@ -1569,18 +1570,18 @@ void jpegImageCodec::IDCT(std::int32_t* pIOMatrix, long long* pScaleFactors) con
             *(pTempMatrix++) = tmp0;
             *(pTempMatrix++) = tmp0;
             pMatrix = pCheckMatrix;
-            pScaleFactors += 8;
+            scaleFactorIndex += 8;
             continue;
         }
 
-        tmp0 = (long long)*pMatrix++ * (*pScaleFactors++);
-        tmp4 = (long long)*pMatrix++ * (*pScaleFactors++);
-        tmp1 = (long long)*pMatrix++ * (*pScaleFactors++);
-        tmp5 = (long long)*pMatrix++ * (*pScaleFactors++);
-        tmp2 = (long long)*pMatrix++ * (*pScaleFactors++);
-        tmp6 = (long long)*pMatrix++ * (*pScaleFactors++);
-        tmp3 = (long long)*pMatrix++ * (*pScaleFactors++);
-        tmp7 = (long long)*pMatrix++ * (*pScaleFactors++);
+        tmp0 = (long long)*pMatrix++ * (pScaleFactors[scaleFactorIndex++]);
+        tmp4 = (long long)*pMatrix++ * (pScaleFactors[scaleFactorIndex++]);
+        tmp1 = (long long)*pMatrix++ * (pScaleFactors[scaleFactorIndex++]);
+        tmp5 = (long long)*pMatrix++ * (pScaleFactors[scaleFactorIndex++]);
+        tmp2 = (long long)*pMatrix++ * (pScaleFactors[scaleFactorIndex++]);
+        tmp6 = (long long)*pMatrix++ * (pScaleFactors[scaleFactorIndex++]);
+        tmp3 = (long long)*pMatrix++ * (pScaleFactors[scaleFactorIndex++]);
+        tmp7 = (long long)*pMatrix++ * (pScaleFactors[scaleFactorIndex++]);
 
         // Phase 3
         tmp10 = tmp0 + tmp2;

@@ -1212,7 +1212,7 @@ public:
     template<int subsampleX>
     inline void copyFromInt32Interleaved(
         const std::int32_t* pSource,
-        std::uint32_t sourceReplicateY,
+        typename std::enable_if < subsampleX == 1, std::uint32_t>::type sourceReplicateY,
         std::uint32_t destStartCol,
         std::uint32_t destStartRow,
         std::uint32_t destEndCol,
@@ -1228,11 +1228,7 @@ public:
         const std::int32_t* pSourceRowScan = pSource;
 
         std::uint32_t replicateYCount = sourceReplicateY;
-        std::uint32_t replicateYIncrease = (destEndCol - destStartCol) / subsampleX;
-
-        dataHandlerType *pDestColScan;
-        const std::int32_t* pSourceColScan;
-        const std::int32_t* pSourceEndColScan;
+        const std::uint32_t replicateYIncrease = (destEndCol - destStartCol);
 
         if(destHeight < destEndRow)
         {
@@ -1243,55 +1239,93 @@ public:
             destEndCol = destWidth;
         }
 
-        std::uint32_t numColumns(destEndCol - destStartCol);
-
-        std::uint32_t horizontalCopyOperations = numColumns / subsampleX;
-        std::uint32_t horizontalFinalCopyDest = numColumns - horizontalCopyOperations * subsampleX;
-
-        dataHandlerType copyValue;
-        std::int32_t scanDest;
-
-        std::uint32_t scanHorizontalFinalCopyDest;
-
-        std::uint32_t destRowScanIncrease(destWidth * destNumChannels);
-
+        const std::uint32_t numColumns(destEndCol - destStartCol);
+        const std::uint32_t horizontalCopyOperations = numColumns;
+        const std::uint32_t destRowScanIncrease(destWidth * destNumChannels);
 
         for(std::uint32_t numYCopies(destEndRow - destStartRow); numYCopies != 0; --numYCopies)
         {
-            pDestColScan = pDestRowScan;
-            pSourceColScan = pSourceRowScan;
-            pSourceEndColScan = pSourceColScan + horizontalCopyOperations;
+            dataHandlerType* pDestColScan = pDestRowScan;
+            const std::int32_t* pSourceColScan = pSourceRowScan;
+            const std::int32_t* pSourceEndColScan = pSourceColScan + horizontalCopyOperations;
 
-            if(subsampleX == 1)
+            while(pSourceColScan != pSourceEndColScan)
             {
-                while(pSourceColScan != pSourceEndColScan)
-                {
-                    *pDestColScan = (dataHandlerType)(*(pSourceColScan++));
-                    pDestColScan += destNumChannels;
-                }
-            }
-            else
-            {
-                while(pSourceColScan != pSourceEndColScan)
-                {
-                    copyValue = (dataHandlerType)(*(pSourceColScan++));
-                    for(scanDest = subsampleX; scanDest != 0; --scanDest)
-                    {
-                        *pDestColScan = copyValue;
-                        pDestColScan += destNumChannels;
-                    }
-                }
-
-                for(scanHorizontalFinalCopyDest = horizontalFinalCopyDest; scanHorizontalFinalCopyDest != 0; --scanHorizontalFinalCopyDest)
-                {
-                    *pDestColScan = (dataHandlerType) *pSourceColScan;
-                    pDestColScan += destNumChannels;
-                }
-
+                *pDestColScan = (dataHandlerType)(*(pSourceColScan++));
+                pDestColScan += destNumChannels;
             }
 
             pDestRowScan += destRowScanIncrease;
             if(--replicateYCount == 0)
+            {
+                replicateYCount = sourceReplicateY;
+                pSourceRowScan += replicateYIncrease;
+            }
+        }
+
+        IMEBRA_FUNCTION_END();
+    }
+
+
+    template<int subsampleX>
+    inline void copyFromInt32Interleaved(
+        const std::int32_t* pSource,
+        typename std::enable_if < subsampleX != 1, std::uint32_t>::type sourceReplicateY,
+        std::uint32_t destStartCol,
+        std::uint32_t destStartRow,
+        std::uint32_t destEndCol,
+        std::uint32_t destEndRow,
+        std::uint32_t destStartChannel,
+        std::uint32_t destWidth,
+        std::uint32_t destHeight,
+        std::uint32_t destNumChannels)
+    {
+        IMEBRA_FUNCTION_START();
+
+        dataHandlerType* pDestRowScan = &(((dataHandlerType*)m_pMemory->data())[(destStartRow * destWidth + destStartCol) * destNumChannels + destStartChannel]);
+        const std::int32_t* pSourceRowScan = pSource;
+
+        std::uint32_t replicateYCount = sourceReplicateY;
+        const std::uint32_t replicateYIncrease = (destEndCol - destStartCol) / subsampleX;
+
+        if (destHeight < destEndRow)
+        {
+            destEndRow = destHeight;
+        }
+        if (destWidth < destEndCol)
+        {
+            destEndCol = destWidth;
+        }
+
+        const std::uint32_t numColumns(destEndCol - destStartCol);
+        const std::uint32_t horizontalCopyOperations = numColumns / subsampleX;
+        const std::uint32_t horizontalFinalCopyDest = numColumns - horizontalCopyOperations * subsampleX;
+        const std::uint32_t destRowScanIncrease(destWidth * destNumChannels);
+
+        for (std::uint32_t numYCopies(destEndRow - destStartRow); numYCopies != 0; --numYCopies)
+        {
+            dataHandlerType* pDestColScan = pDestRowScan;
+            const std::int32_t* pSourceColScan = pSourceRowScan;
+            const std::int32_t* pSourceEndColScan = pSourceColScan + horizontalCopyOperations;
+
+            while (pSourceColScan != pSourceEndColScan)
+            {
+                const dataHandlerType copyValue = (dataHandlerType)(*(pSourceColScan++));
+                for (std::int32_t scanDest = subsampleX; scanDest != 0; --scanDest)
+                {
+                    *pDestColScan = copyValue;
+                    pDestColScan += destNumChannels;
+                }
+            }
+
+            for (std::uint32_t scanHorizontalFinalCopyDest = horizontalFinalCopyDest; scanHorizontalFinalCopyDest != 0; --scanHorizontalFinalCopyDest)
+            {
+                *pDestColScan = (dataHandlerType)*pSourceColScan;
+                pDestColScan += destNumChannels;
+            }
+
+            pDestRowScan += destRowScanIncrease;
+            if (--replicateYCount == 0)
             {
                 replicateYCount = sourceReplicateY;
                 pSourceRowScan += replicateYIncrease;
