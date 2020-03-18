@@ -27,6 +27,8 @@ TEST(objectivec, stringToNSStringTest)
 
         NSMutableArray* pCharsets = [[NSMutableArray alloc] init];
         [pCharsets addObject: @"ISO_IR 6"];
+        [pCharsets addObject: @"ISO 2022 IR 127"];
+        
         ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2.1" charsets:pCharsets];
 
         @autoreleasepool
