@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #324 (The wrappers don't have definitions for VOIDescription and VOIs) as per SOP :ref:`FIXBUG_2`
+
+Version 5.1.0.0
+--------------------------------
+
 - Implemented enhancement #316 (Add functions to retrieve floats, uint8, uint16, int8, int16) as per SOP :ref:`DEVENH_2`
 - Fixed bug #317 (readingDataHandlerStringAS::getAge does not properly check for the age units) as per SOP :ref:`FIXBUG_2`
 - Implemented enhancement #318 (The data handler for VR "AT" should provide a way to retrieve the group and the id) as per sop :ref:`DEVENH_2`
