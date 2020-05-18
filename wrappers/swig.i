@@ -144,6 +144,7 @@
 %include "../library/include/imebra/transformsChain.h"
 %include "../library/include/imebra/modalityVOILUT.h"
 %include "../library/include/imebra/VOILUT.h"
+%include "../library/include/imebra/VOIDescription.h"
 %include "../library/include/imebra/colorTransformsFactory.h"
 %include "../library/include/imebra/dicomDirEntry.h"
 %include "../library/include/imebra/dicomDir.h"
