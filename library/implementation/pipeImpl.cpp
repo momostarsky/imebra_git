@@ -70,7 +70,14 @@ size_t pipeSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
     {
         if(m_bTerminate.load())
         {
-            IMEBRA_THROW(StreamClosedError, "The pipe has been closed");
+            if(m_availableData == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                IMEBRA_THROW(StreamClosedError, "The pipe has been closed");
+            }
         }
         if(m_availableData != 0)
         {

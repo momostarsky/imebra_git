@@ -2615,205 +2615,213 @@ associationSCP::associationSCP(
 {
     IMEBRA_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("-- Starting SCP association negotiation");
-
-    // Wait for association request PDU
-    ///////////////////////////////////////////////////////////
-    std::shared_ptr<acsePDU> request;
+    try
     {
-        streamTimeout artim(pReader->getControlledStream(), std::chrono::seconds(artimTimeoutSeconds));
-        request = acsePDU::decodePDU(m_pReader);
 
-        if(request->getPDUType() != acsePDU::pduType_t::associateRQ)
-        {
-            IMEBRA_THROW(AcseCorruptedMessageError, "Unexpected message type (was expecting an association request)");
-        }
-    }
+        IMEBRA_LOG_INFO("-- Starting SCP association negotiation");
 
-    // Cast received PDU to association request
-    ///////////////////////////////////////////////////////////
-    std::shared_ptr<acsePDUAssociateRQ> associationRQ(std::dynamic_pointer_cast<acsePDUAssociateRQ>(request));
-
-    // Only the DICOM syntax is supported: reject if
-    // different
-    ///////////////////////////////////////////////////////////
-    if(associationRQ->getApplicationContext()->getName() != m_applicationContext)
-    {
-        std::shared_ptr<acsePDUAssociateRJ> reject(
-                    std::make_shared<acsePDUAssociateRJ>(
-                        acsePDUAssociateRJ::result_t::rejectedPermanent,
-                        acsePDUAssociateRJ::reason_t::serviceUserApplicationContextNameNotSupported));
-        reject->encodePDU(m_pWriter);
-        IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUApplicationContextNameNotSupportedError, "Application context " << m_applicationContext << " not supported", true);
-    }
-
-    // Check the requested AET. Reject if different from
-    // the SCP AET
-    ///////////////////////////////////////////////////////////
-    std::string requestedAET(associationRQ->getCalledAETitle());
-    if(!m_thisAET.empty() && m_thisAET != requestedAET)
-    {
-        std::shared_ptr<acsePDUAssociateRJ> reject(
-                    std::make_shared<acsePDUAssociateRJ>(
-                        acsePDUAssociateRJ::result_t::rejectedPermanent,
-                        acsePDUAssociateRJ::reason_t::serviceUserCalledAETitleNotRecognized));
-        reject->encodePDU(m_pWriter);
-        IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUCalledAETNotRecognizedError, "SCP AET is " << thisAET << " but " << requestedAET << " was requested instead", true);
-    }
-
-    // Get the SCU AET
-    ///////////////////////////////////////////////////////////
-    m_otherAET = associationRQ->getCallingAETitle();
-
-    // Get the SCU maximum PDU size
-    ///////////////////////////////////////////////////////////
-    std::shared_ptr<acseItemUserInformation> pUserInformation(associationRQ->getItemUserInformation());
-    m_maxPDULength = pUserInformation->getMaximumPDULength();
-
-    // Get the operations invoked and performed
-    ///////////////////////////////////////////////////////////
-    std::uint16_t requestedMaxInvoked(pUserInformation->getMaxOperationsInvoked());
-    if(requestedMaxInvoked != 0 && requestedMaxInvoked < m_maxOperationsPerformed)
-    {
-        m_maxOperationsPerformed = requestedMaxInvoked;
-    }
-    std::uint16_t requestedMaxPerformed(pUserInformation->getMaxOperationsPerformed());
-    if(requestedMaxPerformed != 0 && requestedMaxPerformed < m_maxOperationsInvoked)
-    {
-        m_maxOperationsInvoked = requestedMaxPerformed;
-    }
-
-    // Put the requested scp/scu roles in a map
-    ///////////////////////////////////////////////////////////
-    typedef std::map<std::string, std::shared_ptr<acseItemSCPSCURoleSelection> > scpScuRolesMap_t;
-    scpScuRolesMap_t requestedScpScuRoles;
-    for(const std::shared_ptr<acseItemSCPSCURoleSelection> requestedRole: pUserInformation->getScpScuRoles())
-    {
-        requestedScpScuRoles[requestedRole->getSopClassUID()] = requestedRole;
-    }
-
-    // Match the requested presentation contexts with the ones
-    // we support
-    ///////////////////////////////////////////////////////////
-    acsePDUAssociateAC::presentationContexts_t acceptedContexts;
-    scpScuRolesMap_t scpScuRoles;
-
-    // Scan all the requested presentation contexts
-    for(const std::shared_ptr<acseItemPresentationContextBase>& context: associationRQ->getPresentationContexts())
-    {
-        std::uint8_t id(context->getId());
-
-        // Build a presentationContext object for the requested presentation context
-        std::shared_ptr<presentationContext> pPresentationContext(std::make_shared<presentationContext>(context->getAbstractSyntax()));
-        for(const std::string& transferSyntax: context->getTransferSyntaxes())
-        {
-            pPresentationContext->addTransferSyntax(transferSyntax);
-        }
-
-        // Store the created presentation context with its ID
-        m_presentationContextsIds[id] =
-                std::pair<std::shared_ptr<presentationContext>, std::string>
-                (pPresentationContext, "");
-
-        // Check if we support the context and one of the transfer
-        //  syntaxes
+        // Wait for association request PDU
         ///////////////////////////////////////////////////////////
-        bool bAbstractSyntaxSupported(false);
-        for(const std::shared_ptr<const presentationContext> pFindContext: contexts->m_presentationContexts)
+        std::shared_ptr<acsePDU> request;
         {
-            if(pFindContext->m_abstractSyntax == pPresentationContext->m_abstractSyntax)
+            streamTimeout artim(pReader->getControlledStream(), std::chrono::seconds(artimTimeoutSeconds));
+            request = acsePDU::decodePDU(m_pReader);
+
+            if(request->getPDUType() != acsePDU::pduType_t::associateRQ)
             {
-                bAbstractSyntaxSupported = true;
-
-                // We support the abstract syntax, now look for the transfer syntaxes
-                for(const std::string& scpTransferSyntax: m_presentationContextsIds[id].first->m_proposedTransferSyntaxes)
-                {
-                    if(std::find(pFindContext->m_proposedTransferSyntaxes.begin(), pFindContext->m_proposedTransferSyntaxes.end(), scpTransferSyntax) != pFindContext->m_proposedTransferSyntaxes.end())
-                    {
-                        m_presentationContextsIds[id].second = scpTransferSyntax;
-
-                        scpScuRolesMap_t::const_iterator findRole(requestedScpScuRoles.find(pPresentationContext->m_abstractSyntax));
-                        if(findRole != requestedScpScuRoles.end())
-                        {
-                            pPresentationContext->m_bRequestorIsSCU = pFindContext->m_bRequestorIsSCU && findRole->second->getSCU();
-                            pPresentationContext->m_bRequestorIsSCP = pFindContext->m_bRequestorIsSCP && findRole->second->getSCP();
-                            scpScuRolesMap_t::iterator declaredScpScuRole = scpScuRoles.find(pPresentationContext->m_abstractSyntax);
-                            if(declaredScpScuRole != scpScuRoles.end())
-                            {
-                                std::shared_ptr<acseItemSCPSCURoleSelection> updateScpScuRole = std::make_shared<acseItemSCPSCURoleSelection>(
-                                                pPresentationContext->m_abstractSyntax,
-                                                pPresentationContext->m_bRequestorIsSCU || declaredScpScuRole->second->getSCU(),
-                                                pPresentationContext->m_bRequestorIsSCP || declaredScpScuRole->second->getSCP());
-                                scpScuRoles[pPresentationContext->m_abstractSyntax] = updateScpScuRole;
-                            }
-                            else
-                            {
-                                scpScuRoles[pPresentationContext->m_abstractSyntax] = std::make_shared<acseItemSCPSCURoleSelection>(
-                                                pPresentationContext->m_abstractSyntax,
-                                                pPresentationContext->m_bRequestorIsSCU,
-                                                pPresentationContext->m_bRequestorIsSCP);
-
-                            }
-                        }
-                        break;
-                    }
-                }
+                IMEBRA_THROW(AcseCorruptedMessageError, "Unexpected message type (was expecting an association request)");
             }
         }
 
-        if(!m_presentationContextsIds[id].second.empty())
-        {
-            acceptedContexts.push_back(
-                        std::make_shared<acseItemPresentationContextAC>(
-                            id,
-                            acseItemPresentationContextAC::result_t::acceptance,
-                            m_presentationContextsIds[id].second));
-        }
-        else if(bAbstractSyntaxSupported)
-        {
-            acceptedContexts.push_back(
-                        std::make_shared<acseItemPresentationContextAC>(
-                            id,
-                            acseItemPresentationContextAC::result_t::transferSyntaxesNotSupported,
-                            ""));
-        }
-        else
-        {
-            acceptedContexts.push_back(
-                        std::make_shared<acseItemPresentationContextAC>(
-                            id,
-                            acseItemPresentationContextAC::result_t::abstractSyntaxNotSupported,
-                            ""));
-        }
-    }
+        // Cast received PDU to association request
+        ///////////////////////////////////////////////////////////
+        std::shared_ptr<acsePDUAssociateRQ> associationRQ(std::dynamic_pointer_cast<acsePDUAssociateRQ>(request));
 
-    acseItemUserInformation::scpScuSelectionList_t scpScuRolesList;
-    for(const auto& scpScuRole: scpScuRoles)
+        // Only the DICOM syntax is supported: reject if
+        // different
+        ///////////////////////////////////////////////////////////
+        if(associationRQ->getApplicationContext()->getName() != m_applicationContext)
+        {
+            std::shared_ptr<acsePDUAssociateRJ> reject(
+                        std::make_shared<acsePDUAssociateRJ>(
+                            acsePDUAssociateRJ::result_t::rejectedPermanent,
+                            acsePDUAssociateRJ::reason_t::serviceUserApplicationContextNameNotSupported));
+            reject->encodePDU(m_pWriter);
+            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUApplicationContextNameNotSupportedError, "Application context " << m_applicationContext << " not supported", true);
+        }
+
+        // Check the requested AET. Reject if different from
+        // the SCP AET
+        ///////////////////////////////////////////////////////////
+        std::string requestedAET(associationRQ->getCalledAETitle());
+        if(!m_thisAET.empty() && m_thisAET != requestedAET)
+        {
+            std::shared_ptr<acsePDUAssociateRJ> reject(
+                        std::make_shared<acsePDUAssociateRJ>(
+                            acsePDUAssociateRJ::result_t::rejectedPermanent,
+                            acsePDUAssociateRJ::reason_t::serviceUserCalledAETitleNotRecognized));
+            reject->encodePDU(m_pWriter);
+            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUCalledAETNotRecognizedError, "SCP AET is " << thisAET << " but " << requestedAET << " was requested instead", true);
+        }
+
+        // Get the SCU AET
+        ///////////////////////////////////////////////////////////
+        m_otherAET = associationRQ->getCallingAETitle();
+
+        // Get the SCU maximum PDU size
+        ///////////////////////////////////////////////////////////
+        std::shared_ptr<acseItemUserInformation> pUserInformation(associationRQ->getItemUserInformation());
+        m_maxPDULength = pUserInformation->getMaximumPDULength();
+
+        // Get the operations invoked and performed
+        ///////////////////////////////////////////////////////////
+        std::uint16_t requestedMaxInvoked(pUserInformation->getMaxOperationsInvoked());
+        if(requestedMaxInvoked != 0 && requestedMaxInvoked < m_maxOperationsPerformed)
+        {
+            m_maxOperationsPerformed = requestedMaxInvoked;
+        }
+        std::uint16_t requestedMaxPerformed(pUserInformation->getMaxOperationsPerformed());
+        if(requestedMaxPerformed != 0 && requestedMaxPerformed < m_maxOperationsInvoked)
+        {
+            m_maxOperationsInvoked = requestedMaxPerformed;
+        }
+
+        // Put the requested scp/scu roles in a map
+        ///////////////////////////////////////////////////////////
+        typedef std::map<std::string, std::shared_ptr<acseItemSCPSCURoleSelection> > scpScuRolesMap_t;
+        scpScuRolesMap_t requestedScpScuRoles;
+        for(const std::shared_ptr<acseItemSCPSCURoleSelection> requestedRole: pUserInformation->getScpScuRoles())
+        {
+            requestedScpScuRoles[requestedRole->getSopClassUID()] = requestedRole;
+        }
+
+        // Match the requested presentation contexts with the ones
+        // we support
+        ///////////////////////////////////////////////////////////
+        acsePDUAssociateAC::presentationContexts_t acceptedContexts;
+        scpScuRolesMap_t scpScuRoles;
+
+        // Scan all the requested presentation contexts
+        for(const std::shared_ptr<acseItemPresentationContextBase>& context: associationRQ->getPresentationContexts())
+        {
+            std::uint8_t id(context->getId());
+
+            // Build a presentationContext object for the requested presentation context
+            std::shared_ptr<presentationContext> pPresentationContext(std::make_shared<presentationContext>(context->getAbstractSyntax()));
+            for(const std::string& transferSyntax: context->getTransferSyntaxes())
+            {
+                pPresentationContext->addTransferSyntax(transferSyntax);
+            }
+
+            // Store the created presentation context with its ID
+            m_presentationContextsIds[id] =
+                    std::pair<std::shared_ptr<presentationContext>, std::string>
+                    (pPresentationContext, "");
+
+            // Check if we support the context and one of the transfer
+            //  syntaxes
+            ///////////////////////////////////////////////////////////
+            bool bAbstractSyntaxSupported(false);
+            for(const std::shared_ptr<const presentationContext> pFindContext: contexts->m_presentationContexts)
+            {
+                if(pFindContext->m_abstractSyntax == pPresentationContext->m_abstractSyntax)
+                {
+                    bAbstractSyntaxSupported = true;
+
+                    // We support the abstract syntax, now look for the transfer syntaxes
+                    for(const std::string& scpTransferSyntax: m_presentationContextsIds[id].first->m_proposedTransferSyntaxes)
+                    {
+                        if(std::find(pFindContext->m_proposedTransferSyntaxes.begin(), pFindContext->m_proposedTransferSyntaxes.end(), scpTransferSyntax) != pFindContext->m_proposedTransferSyntaxes.end())
+                        {
+                            m_presentationContextsIds[id].second = scpTransferSyntax;
+
+                            scpScuRolesMap_t::const_iterator findRole(requestedScpScuRoles.find(pPresentationContext->m_abstractSyntax));
+                            if(findRole != requestedScpScuRoles.end())
+                            {
+                                pPresentationContext->m_bRequestorIsSCU = pFindContext->m_bRequestorIsSCU && findRole->second->getSCU();
+                                pPresentationContext->m_bRequestorIsSCP = pFindContext->m_bRequestorIsSCP && findRole->second->getSCP();
+                                scpScuRolesMap_t::iterator declaredScpScuRole = scpScuRoles.find(pPresentationContext->m_abstractSyntax);
+                                if(declaredScpScuRole != scpScuRoles.end())
+                                {
+                                    std::shared_ptr<acseItemSCPSCURoleSelection> updateScpScuRole = std::make_shared<acseItemSCPSCURoleSelection>(
+                                                    pPresentationContext->m_abstractSyntax,
+                                                    pPresentationContext->m_bRequestorIsSCU || declaredScpScuRole->second->getSCU(),
+                                                    pPresentationContext->m_bRequestorIsSCP || declaredScpScuRole->second->getSCP());
+                                    scpScuRoles[pPresentationContext->m_abstractSyntax] = updateScpScuRole;
+                                }
+                                else
+                                {
+                                    scpScuRoles[pPresentationContext->m_abstractSyntax] = std::make_shared<acseItemSCPSCURoleSelection>(
+                                                    pPresentationContext->m_abstractSyntax,
+                                                    pPresentationContext->m_bRequestorIsSCU,
+                                                    pPresentationContext->m_bRequestorIsSCP);
+
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if(!m_presentationContextsIds[id].second.empty())
+            {
+                acceptedContexts.push_back(
+                            std::make_shared<acseItemPresentationContextAC>(
+                                id,
+                                acseItemPresentationContextAC::result_t::acceptance,
+                                m_presentationContextsIds[id].second));
+            }
+            else if(bAbstractSyntaxSupported)
+            {
+                acceptedContexts.push_back(
+                            std::make_shared<acseItemPresentationContextAC>(
+                                id,
+                                acseItemPresentationContextAC::result_t::transferSyntaxesNotSupported,
+                                ""));
+            }
+            else
+            {
+                acceptedContexts.push_back(
+                            std::make_shared<acseItemPresentationContextAC>(
+                                id,
+                                acseItemPresentationContextAC::result_t::abstractSyntaxNotSupported,
+                                ""));
+            }
+        }
+
+        acseItemUserInformation::scpScuSelectionList_t scpScuRolesList;
+        for(const auto& scpScuRole: scpScuRoles)
+        {
+            if(!scpScuRole.second->getSCU() || scpScuRole.second->getSCP())
+            {
+                scpScuRolesList.push_back(scpScuRole.second);
+            }
+        }
+        std::shared_ptr<acseItemUserInformation> pUserInformationAC(std::make_shared<acseItemUserInformation>(
+                                                                        m_maxPDULength,
+                                                                        IMEBRA_IMPLEMENTATION_CLASS_UID,
+                                                                        IMEBRA_IMPLEMENTATION_NAME,
+                                                                        m_maxOperationsPerformed,
+                                                                        m_maxOperationsInvoked,
+                                                                        scpScuRolesList));
+        std::shared_ptr<acsePDUAssociateAC> responseAC(std::make_shared<acsePDUAssociateAC>(
+                                                           associationRQ->getCalledAETitle(),
+                                                           associationRQ->getCallingAETitle(),
+                                                           m_applicationContext,
+                                                           acceptedContexts,
+                                                           pUserInformationAC));
+        responseAC->encodePDU(m_pWriter);
+
+        IMEBRA_LOG_INFO("-- Terminated SCP association negotiation");
+
+        m_readDataSetsThread.reset(new std::thread(&associationBase::getMessagesThread, this));
+    }
+    catch(const StreamEOFError& e)
     {
-        if(!scpScuRole.second->getSCU() || scpScuRole.second->getSCP())
-        {
-            scpScuRolesList.push_back(scpScuRole.second);
-        }
+        // Retrow as stream closed
+        throw StreamClosedError(e.what());
     }
-    std::shared_ptr<acseItemUserInformation> pUserInformationAC(std::make_shared<acseItemUserInformation>(
-                                                                    m_maxPDULength,
-                                                                    IMEBRA_IMPLEMENTATION_CLASS_UID,
-                                                                    IMEBRA_IMPLEMENTATION_NAME,
-                                                                    m_maxOperationsPerformed,
-                                                                    m_maxOperationsInvoked,
-                                                                    scpScuRolesList));
-    std::shared_ptr<acsePDUAssociateAC> responseAC(std::make_shared<acsePDUAssociateAC>(
-                                                       associationRQ->getCalledAETitle(),
-                                                       associationRQ->getCallingAETitle(),
-                                                       m_applicationContext,
-                                                       acceptedContexts,
-                                                       pUserInformationAC));
-    responseAC->encodePDU(m_pWriter);
-
-    IMEBRA_LOG_INFO("-- Terminated SCP association negotiation");
-
-    m_readDataSetsThread.reset(new std::thread(&associationBase::getMessagesThread, this));
-
     IMEBRA_FUNCTION_END_MODIFY(CodecCorruptedFileError, AcseCorruptedMessageError);
 }
 

@@ -6,6 +6,7 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #323 (The PipeStream implementation throws StreamClosedError instead of returning 0 when the pipe has been closed) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #324 (The wrappers don't have definitions for VOIDescription and VOIs) as per SOP :ref:`FIXBUG_2`
 
 Version 5.1.0.0
