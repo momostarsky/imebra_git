@@ -64,6 +64,64 @@ TEST(pipeTest, sendReceive)
 }
 
 
+void feedDataThreadAligned(PipeStream& source, size_t blockBytes, unsigned int closeWait)
+{
+    {
+        StreamWriter writer(source.getStreamOutput());
+
+        std::vector<std::uint8_t> values(blockBytes);
+        for(size_t resetBlock(0); resetBlock != blockBytes; ++resetBlock)
+        {
+            values[resetBlock] = (std::uint8_t)(resetBlock & 0xff);
+        }
+        Memory block((char*)values.data(), blockBytes);
+        writer.write(block);
+    }
+    source.close(closeWait);
+}
+
+TEST(pipeTest, sendReceiveAligned)
+{
+    PipeStream source(20);
+
+    std::thread feedData(imebra::tests::feedDataThreadAligned, std::ref(source), 20, 20);
+
+    std::string buffer;
+
+    StreamReader reader(source.getStreamInput());
+
+    Memory block = reader.readSome(20);
+    size_t blockSize;
+    const char* pData(block.data(&blockSize));
+    buffer.append(pData, blockSize);
+    ASSERT_EQ(20u, blockSize);
+
+    for(size_t checkBlock(0); checkBlock != 20; ++checkBlock)
+    {
+        ASSERT_EQ((std::uint8_t)(checkBlock & 0xff), (std::uint8_t)(buffer[checkBlock]));
+    }
+
+    try
+    {
+        Memory blockEof = reader.readSome(20);
+        EXPECT_TRUE(false);
+    }
+    catch (const StreamClosedError& e)
+    {
+        EXPECT_TRUE(false);
+    }
+    catch (const StreamEOFError& e)
+    {
+        EXPECT_TRUE(true);
+    }
+    catch(...)
+    {
+        EXPECT_TRUE(false);
+    }
+
+    feedData.join();
+}
+
 TEST(pipeTest, sendReceiveCloseAndWait)
 {
     PipeStream source(1024);
@@ -128,7 +186,7 @@ TEST(pipeTest, sendReceiveCloseNoWait)
         }
         EXPECT_TRUE(false);
     }
-    catch(const imebra::StreamEOFError&)
+    catch(const imebra::StreamClosedError&)
     {
         EXPECT_TRUE(true);
     }
