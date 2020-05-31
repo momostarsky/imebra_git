@@ -210,13 +210,18 @@ else()
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fembed-bitcode")
     endif("${EMBED_BITCODE}" STREQUAL "1")
 
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-        if(CMAKE_BUILD_TYPE MATCHES DEBUG)
-            message("Debug mode, enabling coverage")
+    if(${CMAKE_BUILD_TYPE} MATCHES Debug)
+        if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+            message("Debug mode, enabling coverage and memory sanitizer")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
             set(imebra_libraries ${imebra_libraries} gcov)
+        elseif(("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang") or ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
+            message("Debug mode, enabling memory sanitizer")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=memory -fno-omit-frame-pointer")
         endif()
     endif()
+
 
 endif()
 
