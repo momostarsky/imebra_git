@@ -369,7 +369,7 @@ else()
     add_test(RunImebraTests ImebraTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles)
 endif()
 
-    set_tests_properties(RunImebraTests PROPERTIES ENVIRONMENT "ASAN_OPTIONS=alloc_dealloc_mismatch=0")
+    set_tests_properties(RunImebraTests PROPERTIES ENVIRONMENT "ASAN_OPTIONS=alloc_dealloc_mismatch=0:detect_leaks=0")
 
 
     ##############################################
