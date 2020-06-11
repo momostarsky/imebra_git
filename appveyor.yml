@@ -29,20 +29,18 @@ build_script:
 
     cd ..
 
-    mkdir artifacts
+    mkdir build_imebra_release\Release\include
     
-    mkdir artifacts\bin
-    
-    mkdir artifacts\bin\release
-    
-    mkdir artifacts\bin\debug
-    
-    mkdir artifacts\include
-    
-    xcopy library\include artifacts\include /s /e
+    mkdir build_imebra_debug\Debug\include
+
+    xcopy library\include build_imebra_release\Release\include /s /e
+
+    xcopy library\include build_imebra_debug\Debug\include /s /e
 
 test_script:
 - cmd: 
 artifacts:
 - path: build_imebra_release/Release
-  name: imebra_windows
+  name: imebra_release
+- path: build_imebra_debug/Debug
+  name: imebra_debug
