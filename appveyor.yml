@@ -2,46 +2,40 @@
 version: 1.0.{build}
 configuration: Debug
 platform: x64
-image: Visual Studio 2019
+image:
+  - Visual Studio 2019
+  - Visual Studio 2015
+
 build_script:
 - cmd: >-
-    cmake --help
 
-    mkdir build_imebra
+    mkdir build_imebra_release
+    mkdir build_imebra_debug
 
-    cd build_imebra
-
-    cmake ..
-
+    cd build_imebra_release
+    cmake --config Release ..
     cmake --build . --config Release
 
     ctest -V .
 
+    cd ../build_imebra_debug
+    cmake --config Debug ..
     cmake --build . --config Debug
 
     cd ..
 
-
-
     mkdir artifacts
-
     mkdir artifacts\bin
-
     mkdir artifacts\bin\release
-
     mkdir artifacts\bin\debug
-
     mkdir artifacts\include
-
     cp build_imebra\release\imebra.dll artifacts\bin\release
-
     cp build_imebra\release\imebra.lib artifacts\bin\release
-
     cp build_imebra\debug\imebra.dll artifacts\bin\debug
-
     cp build_imebra\debug\imebra.lib artifacts\bin\debug
 
     xcopy library\include artifacts\include /s /e
+
 test_script:
 - cmd: 
 artifacts:
