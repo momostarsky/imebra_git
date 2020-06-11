@@ -39,13 +39,13 @@ build_script:
     
     mkdir artifacts\include
     
-    cp build_imebra\release\*.dll artifacts\bin\release
+    cp build_imebra_release\release\*.dll artifacts\bin\release
     
-    cp build_imebra\release\*.lib artifacts\bin\release
+    cp build_imebra_release\release\*.lib artifacts\bin\release
     
-    cp build_imebra\debug\*.dll artifacts\bin\debug
+    cp build_imebra_debug\debug\*.dll artifacts\bin\debug
     
-    cp build_imebra\debug\*.lib artifacts\bin\debug
+    cp build_imebra_debug\debug\*.lib artifacts\bin\debug
 
     xcopy library\include artifacts\include /s /e
 
