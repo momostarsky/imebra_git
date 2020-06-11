@@ -10,28 +10,41 @@ build_script:
 - cmd: >-
 
     mkdir build_imebra_release
+
     mkdir build_imebra_debug
 
     cd build_imebra_release
+    
     cmake --config Release ..
+    
     cmake --build . --config Release
 
     ctest -V .
 
     cd ../build_imebra_debug
+    
     cmake --config Debug ..
+    
     cmake --build . --config Debug
 
     cd ..
 
     mkdir artifacts
+    
     mkdir artifacts\bin
+    
     mkdir artifacts\bin\release
+    
     mkdir artifacts\bin\debug
+    
     mkdir artifacts\include
+    
     cp build_imebra\release\imebra.dll artifacts\bin\release
+    
     cp build_imebra\release\imebra.lib artifacts\bin\release
+    
     cp build_imebra\debug\imebra.dll artifacts\bin\debug
+    
     cp build_imebra\debug\imebra.lib artifacts\bin\debug
 
     xcopy library\include artifacts\include /s /e
