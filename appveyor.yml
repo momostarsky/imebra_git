@@ -39,7 +39,7 @@ build_script:
     
     mkdir artifacts\include
     
-    xcopy library/include artifacts/include /s /e
+    xcopy library\include artifacts\include /s /e
 
 test_script:
 - cmd: 
