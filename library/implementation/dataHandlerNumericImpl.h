@@ -333,6 +333,7 @@ public:
 
     template<typename U>
     typename std::enable_if<
+                   !std::is_same<U, dataHandlerType>::value &&
                    std::is_integral<U>::value &&
                    std::is_integral<dataHandlerType>::value &&
                    !std::is_signed<U>::value &&
