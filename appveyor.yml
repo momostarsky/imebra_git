@@ -31,23 +31,23 @@ build_script:
 
     mkdir artifacts
     
-    mkdir artifacts\bin
+    mkdir artifacts/bin
     
-    mkdir artifacts\bin\release
+    mkdir artifacts/bin/release
     
-    mkdir artifacts\bin\debug
+    mkdir artifacts/bin/debug
     
-    mkdir artifacts\include
+    mkdir artifacts/include
     
-    cp build_imebra_release\release\*.dll artifacts\bin\release
+    cp build_imebra_release/release/*.dll artifacts\bin\release
     
-    cp build_imebra_release\release\*.lib artifacts\bin\release
+    cp build_imebra_release/release/*.lib artifacts\bin\release
     
-    cp build_imebra_debug\debug\*.dll artifacts\bin\debug
+    cp build_imebra_debug/debug/*.dll artifacts\bin\debug
     
-    cp build_imebra_debug\debug\*.lib artifacts\bin\debug
+    cp build_imebra_debug/debug/*.lib artifacts\bin\debug
 
-    xcopy library\include artifacts\include /s /e
+    xcopy library/include artifacts/include /s /e
 
 test_script:
 - cmd: 
