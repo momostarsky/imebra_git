@@ -333,6 +333,7 @@ public:
 
     template<typename U>
     typename std::enable_if<
+                   !std::is_same<U, dataHandlerType>::value &&
                    std::is_integral<U>::value &&
                    std::is_integral<dataHandlerType>::value &&
                    !std::is_signed<U>::value &&
@@ -725,7 +726,6 @@ protected:
 
         IMEBRA_FUNCTION_END();
     }
-
 };
 
 template<class dataHandlerType>
@@ -840,6 +840,7 @@ public:
     void setValue(
             const size_t index,
             typename std::enable_if<
+                           !std::is_same<U, dataHandlerType>::value &&
                            std::is_integral<dataHandlerType>::value &&
                            std::is_integral<U>::value &&
                            !std::is_signed<dataHandlerType>::value &&
