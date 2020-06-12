@@ -10,6 +10,7 @@ Version |release| (this version)
 - Fixed bug #324 (The wrappers don't have definitions for VOIDescription and VOIs) as per SOP :ref:`FIXBUG_2`
 - Implemented enhancement #325 (Add an example that show the SCP feature) as per SOP :ref:`DEVENH_2`
 - Fixed bug #327 (The build fails on VS2015 because two dataHandlerNumeric functions look the same to the compiler, even if they are not) as per SOP :ref:`FIXBUG_2`
+- Implemented enhancement #328 (Move the macos build from bitrise to appveyor) as per SOP :ref:`DEVENH_2`
 
 Version 5.1.0.0
 --------------------------------
