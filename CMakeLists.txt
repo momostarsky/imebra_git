@@ -407,6 +407,20 @@ endif()
     target_link_libraries(dicomDirItems imebra)
 
 
+    ##############################################
+    #
+    # scpExample example
+    #
+    ##############################################
+    file(GLOB scpExample_sources "${CMAKE_CURRENT_SOURCE_DIR}/examples/c++/scpExample/*.cpp")
+
+    # Add the source files to the project
+    #------------------------------------
+    add_executable(scpExample ${scpExample_sources})
+
+    target_link_libraries(scpExample imebra)
+
+
 
 
 endif(NOT IOS)
