@@ -8,7 +8,7 @@ image:
   - macos
 
 matrix:
-  - fast:finish: true
+  - fast_finish: true
 
 for:
   -
