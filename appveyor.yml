@@ -43,8 +43,6 @@ for:
 
           mkdir build_imebra_release
 
-          mkdir build_imebra_debug
-
           cd build_imebra_release
     
           cmake --config Release ..
@@ -65,7 +63,7 @@ for:
 
     artifacts:
       - path: build_imebra_release/Release
-        name: imebra_release
+        name: imebra__vs2015_release
 
 build_script:
 - cmd: >-
@@ -102,6 +100,6 @@ test_script:
 - cmd: 
 artifacts:
 - path: build_imebra_release/Release
-  name: imebra_windowsrelease
+  name: imebra_vs2019_release
 - path: build_imebra_debug/Debug
-  name: imebra_debug
+  name: imebra_vs2019_debug
