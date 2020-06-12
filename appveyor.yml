@@ -33,6 +33,40 @@ for:
       - path: build_imebra_ios_release
         name: imebra_ios_release
 
+  -
+    matrix:
+      only:
+        - image: Visual Studio 2015
+
+    build_script:
+      - cmd: >-
+
+          mkdir build_imebra_release
+
+          mkdir build_imebra_debug
+
+          cd build_imebra_release
+    
+          cmake --config Release ..
+    
+          cmake --build . --config Release
+
+          ctest -V .
+
+          cd ..
+
+          mkdir build_imebra_release\Release\include
+    
+          mkdir build_imebra_debug\Debug\include
+
+          xcopy library\include build_imebra_release\Release\include /s /e
+
+          xcopy library\include build_imebra_debug\Debug\include /s /e
+
+    artifacts:
+      - path: build_imebra_release/Release
+        name: imebra_release
+
 build_script:
 - cmd: >-
 
