@@ -24,10 +24,8 @@ for:
       - cmake --config Release -DIOS=IPHONE ..
       - cmake --build . --config Release
       - cd ..
-      - mkdir build_imebra_release/include
-      - mkdir build_imebra_ios_release/include
-      - xcopy library/include build_imebra_release/include /s /e
-      - xcopy library/include build_imebra_ios_release/include /s /e
+      - cp -R library/include build_imebra_release
+      - cp -R library/include build_imebra_ios_release
 
     artifacts:
       - path: build_imebra_release
