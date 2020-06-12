@@ -3,9 +3,9 @@ version: 1.0.{build}
 configuration: Debug
 platform: x64
 image:
+  - macos
   - Visual Studio 2019
   - Visual Studio 2015
-  - macos
 
 for:
   -
@@ -14,34 +14,20 @@ for:
         - image: macos
 
     build_script:
-      - cmd: >-
-          mkdir build_imebra_release
-
-          mkdir build_imebra_ios_release
-
-          cd build_imebra_release
-    
-          cmake --config Release ..
-    
-          cmake --build . --config Release
-
-          ctest -V .
-
-          cd ../build_imebra_ios_release
-    
-          cmake --config Release -DIOS=IPHONE ..
-    
-          cmake --build . --config Release
-
-          cd ..
-
-          mkdir build_imebra_release/include
-
-          mkdir build_imebra_ios_release/include
-
-          xcopy library/include build_imebra_release/include /s /e
-
-          xcopy library/include build_imebra_ios_release/include /s /e
+      - mkdir build_imebra_release
+      - mkdir build_imebra_ios_release
+      - cd build_imebra_release
+      - cmake --config Release ..
+      - cmake --build . --config Release
+      - ctest -V .
+      - cd ../build_imebra_ios_release
+      - cmake --config Release -DIOS=IPHONE ..
+      - cmake --build . --config Release
+      - cd ..
+      - mkdir build_imebra_release/include
+      - mkdir build_imebra_ios_release/include
+      - xcopy library/include build_imebra_release/include /s /e
+      - xcopy library/include build_imebra_ios_release/include /s /e
 
     artifacts:
       - path: build_imebra_release
