@@ -1504,6 +1504,8 @@ void storeScuThread(std::string transferSyntax, std::string sopClassUid, std::st
 {
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
+    for(int i= 0; i != 20; ++i){
+
     char* tempFileName = ::tempnam(0, "dcmimebra");
     std::string fileName(tempFileName);
     free(tempFileName);
@@ -1514,10 +1516,12 @@ void storeScuThread(std::string transferSyntax, std::string sopClassUid, std::st
     dataSet.setString(TagId(tagId_t::PatientName_0010_0010), "Test^Patient");
     CodecFactory::save(dataSet, fileName, codecType_t::dicom);
 
-    std::string command("storescu -v +v -d -aet scu -aec SCP 127.0.0.1 30004 ");
+    std::string command("storescu -d -aet scu -aec SCP 127.0.0.1 30004 ");
     command += fileName;
 
     system(command.c_str());
+
+    }
 }
 
 
@@ -1534,6 +1538,8 @@ TEST(dimseTest, storeSCPInteroperabilityTest)
                 sopInstanceUid);
 
     TCPListener tcpListener(TCPPassiveAddress("", "30004"));
+
+    for(int i=0; i != 20; ++i ){
     TCPStream tcpStream(tcpListener.waitForConnection());
 
     StreamReader readSCU(tcpStream.getStreamInput());
@@ -1554,9 +1560,7 @@ TEST(dimseTest, storeSCPInteroperabilityTest)
     ASSERT_EQ("Test^Patient", payload.getString(TagId(tagId_t::PatientName_0010_0010), 0));
 
     dimse.sendCommandOrResponse(CStoreResponse(command, dimseStatusCode_t::success));
-
-    std::this_thread::sleep_for(std::chrono::seconds(5));
-
+}
     thread.join();
 
 }

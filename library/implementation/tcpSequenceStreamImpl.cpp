@@ -264,7 +264,7 @@ tcpAddress::tcpAddress(const sockaddr& address, socklen_t addressLength)
 
     char host[NI_MAXHOST];
     char service[NI_MAXSERV];
-    throwAddrException(getnameinfo(&address, addressLength, host, sizeof(host), service, sizeof(service), 0));
+    throwAddrException(getnameinfo(&address, addressLength, host, sizeof(host), service, sizeof(service), NI_NUMERICHOST | NI_NUMERICSERV));
 
     m_sockAddr.resize(addressLength);
     ::memcpy(&(m_sockAddr[0]), &address, addressLength);

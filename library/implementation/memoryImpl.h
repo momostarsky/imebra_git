@@ -6,8 +6,8 @@ Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
@@ -23,6 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <map>
 #include <memory>
 #include <array>
+#include <string>
 
 #ifdef __APPLE__
 #include <pthread.h>
@@ -55,11 +56,11 @@ typedef std::basic_string<std::uint8_t> stringUint8;
 /// \brief This class holds an allocated array of bytes.
 ///
 /// New instances of this class should be obtained through
-///  the class \ref memoryPool; 
+///  the class \ref memoryPool;
 ///  call \ref memoryPool::getMemory() in order to
 ///  obtain a new instance of memory.
 ///
-/// This class is usually used by \ref implementation::buffer 
+/// This class is usually used by \ref implementation::buffer
 ///  objects to store the tags values.
 ///
 ///////////////////////////////////////////////////////////
@@ -70,7 +71,7 @@ public:
     /// \brief Construct an empty memory object
     ///
     ///////////////////////////////////////////////////////////
-	memory();
+    memory();
 
     /// \brief Construct a memory object using the passed
     ///        buffer.
@@ -86,12 +87,12 @@ public:
     memory(stringUint8* pBuffer);
 
     /// \brief Constructs the memory object and allocate
-	///         the requested amount of memory
-	///
-	/// @param initialSize the initial size of the allocated
-	///                      memory, in bytes
-	///
-	///////////////////////////////////////////////////////////
+    ///         the requested amount of memory
+    ///
+    /// @param initialSize the initial size of the allocated
+    ///                      memory, in bytes
+    ///
+    ///////////////////////////////////////////////////////////
     memory(size_t initialSize);
 
     /// \brief Destruct the memory object.
@@ -103,76 +104,76 @@ public:
     ///////////////////////////////////////////////////////////
     ~memory();
 
-	/// \brief Copy the content of the memory managed
-	///         by another memory object into the memory 
-	///         managed by this object.
-	///
-	/// @param sourceMemory a pointer to the memory object from
-	///                      which the data has to be copied
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Copy the content of the memory managed
+    ///         by another memory object into the memory
+    ///         managed by this object.
+    ///
+    /// @param sourceMemory a pointer to the memory object from
+    ///                      which the data has to be copied
+    ///
+    ///////////////////////////////////////////////////////////
     void copyFrom(const std::shared_ptr<const memory>& sourceMemory);
 
-	/// \brief Clear the content of the memory object and
-	///         set its size to 0 bytes.
-	///
-	///////////////////////////////////////////////////////////
-	void clear();
+    /// \brief Clear the content of the memory object and
+    ///         set its size to 0 bytes.
+    ///
+    ///////////////////////////////////////////////////////////
+    void clear();
 
-	/// \brief Resize the memory buffer.
-	///
-	/// @param newSize  the new size of the buffer, in bytes
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Resize the memory buffer.
+    ///
+    /// @param newSize  the new size of the buffer, in bytes
+    ///
+    ///////////////////////////////////////////////////////////
     void resize(size_t newSize);
 
-	/// \brief Reserve the specified quantity of bytes for
-	///         the memory object. This doesn't modify the
-	///         actual size of the memory object.
-	///
-	/// @param reserveSize   the number of bytes to reserve for
-	///                       the memory object.
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Reserve the specified quantity of bytes for
+    ///         the memory object. This doesn't modify the
+    ///         actual size of the memory object.
+    ///
+    /// @param reserveSize   the number of bytes to reserve for
+    ///                       the memory object.
+    ///
+    ///////////////////////////////////////////////////////////
     void reserve(size_t reserveSize);
 
-	/// \brief Return the size of the managed
-	///         memory in bytes.
-	///
-	/// @return the size of the managed memory, in bytes
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Return the size of the managed
+    ///         memory in bytes.
+    ///
+    /// @return the size of the managed memory, in bytes
+    ///
+    ///////////////////////////////////////////////////////////
     size_t size() const;
 
-	/// \brief Return a pointer to the memory managed by the
-	///         object.
-	///
-	/// @return a pointer to the data managed by the object
-	///
-	///////////////////////////////////////////////////////////
-	std::uint8_t* data();
+    /// \brief Return a pointer to the memory managed by the
+    ///         object.
+    ///
+    /// @return a pointer to the data managed by the object
+    ///
+    ///////////////////////////////////////////////////////////
+    std::uint8_t* data();
 
     const std::uint8_t* data() const;
 
-	/// \brief Return true if the size of the managed memory
-	///         is 0.
-	///
-	/// @return true if the managed memory's size is 0 or
-	///          false otherwise
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Return true if the size of the managed memory
+    ///         is 0.
+    ///
+    /// @return true if the managed memory's size is 0 or
+    ///          false otherwise
+    ///
+    ///////////////////////////////////////////////////////////
     bool empty() const;
 
-	/// \brief Copy the specified array of bytes into the
-	///         managed memory.
-	///
-	/// @param pSource      a pointer to the buffer containing
-	///                      the bytes to be copied
-	/// @param sourceLength the number of bytes stored in the
-	///                      buffer pSource and to be copied
-	///                      into the managed memory
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Copy the specified array of bytes into the
+    ///         managed memory.
+    ///
+    /// @param pSource      a pointer to the buffer containing
+    ///                      the bytes to be copied
+    /// @param sourceLength the number of bytes stored in the
+    ///                      buffer pSource and to be copied
+    ///                      into the managed memory
+    ///
+    ///////////////////////////////////////////////////////////
     void assign(const std::uint8_t* pSource, const size_t sourceLength);
 
     /// \brief Copy the specified array of bytes into a region
@@ -197,21 +198,21 @@ protected:
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-/// \brief Stores unused memory objects (see 
-///         \ref imebra::memory) so they can be reused 
+/// \brief Stores unused memory objects (see
+///         \ref imebra::memory) so they can be reused
 ///         when needed.
 ///
 /// One instance of this class is statically allocated
 ///  by the library. Don't allocate new instance of this
 ///  class.
 ///
-/// To obtain a pointer to the statically allocated 
+/// To obtain a pointer to the statically allocated
 ///  instance of memoryPool call the static function
 ///  memoryPool::getMemoryPool().
 ///
 /// When the reference counter of a \ref memory object
-///  reaches 0, the memory object may not be deleted 
-///  immediatly; infact, if the memory managed by the 
+///  reaches 0, the memory object may not be deleted
+///  immediatly; infact, if the memory managed by the
 ///  memory pool matches some predefined requisites, the
 ///  memory object is temporarily stored in the memory
 ///  pool and reused when a request for a \ref memory
@@ -227,7 +228,7 @@ protected:
 ///////////////////////////////////////////////////////////
 class memoryPool
 {
-	friend class memory;
+    friend class memory;
     friend class memoryPoolGetter;
 
     memoryPool(size_t memoryMinSize, size_t poolMaxSize);
@@ -238,11 +239,11 @@ public:
 
     size_t getUnusedMemorySize();
 
-	/// \brief Discard all the currently unused memory.
-	///
+    /// \brief Discard all the currently unused memory.
+    ///
     /// \return true if some unused memory has been deleted,
     ///         false if the memory pool was already empty
-	///////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
     bool flush();
 
 protected:
@@ -269,16 +270,16 @@ protected:
     stringUint8* getMemory(size_t requestedSize);
 
     /// \internal
-	/// \brief Called by \ref memory before the object
-	///         is deleted.
-	///
+    /// \brief Called by \ref memory before the object
+    ///         is deleted.
+    ///
     /// This function returns takes ownership of the object and
     ///  will delete it when necessary
-	///
-	/// @param pMemoryToReuse a pointer to the memory object
-	///                        that call this function
-	///
-	///////////////////////////////////////////////////////////
+    ///
+    /// @param pMemoryToReuse a pointer to the memory object
+    ///                        that call this function
+    ///
+    ///////////////////////////////////////////////////////////
     void reuseMemory(stringUint8* pMemoryToReuse);
 
     std::array<size_t, IMEBRA_MEMORY_POOL_SLOTS> m_memorySize;
