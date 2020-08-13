@@ -1,7 +1,7 @@
 /*
 Copyright 2005 - 2019 by Paolo Brandoli/Binarno s.p.
 
-Imebra is available for free under the GNU General Public License.
+DICOMHero/Imebra is available for free under the GNU General Public License.
 
 The full text of the license is available in the file license.rst
  in the project root folder.
