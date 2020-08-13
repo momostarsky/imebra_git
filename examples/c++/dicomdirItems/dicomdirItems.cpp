@@ -5,9 +5,9 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include <imebra/imebra.h>
+#include <dicomhero/dicomhero.h>
 
-using namespace imebra;
+using namespace dicomhero;
 
 ///////////////////////////////////////////////////////////
 //
@@ -17,37 +17,37 @@ using namespace imebra;
 ///////////////////////////////////////////////////////////
 std::wstring xmlEntities(std::wstring value)
 {
-	std::wostringstream outputStream;
-	for(std::wstring::iterator scanValue(value.begin()); scanValue != value.end(); ++scanValue)
-	{
-		switch(*scanValue)
-		{
-		case L'"':
-			outputStream << L"&quot;";
-			break;
-		case L'&':
-			outputStream << L"&amp;";
-			break;
-		case L'\'':
-			outputStream << L"&apos;";
-			break;
-		case L'<':
-			outputStream << L"&lt;";
-			break;
-		case '>':
-			outputStream << L"&gt;";
-			break;
-		default:
-			if(*scanValue < 33)
-			{
-				outputStream << L"&#" << (int)(*scanValue) << L";";
-				break;
-			}
-			outputStream << *scanValue;
-		}
-	}
+    std::wostringstream outputStream;
+    for(std::wstring::iterator scanValue(value.begin()); scanValue != value.end(); ++scanValue)
+    {
+        switch(*scanValue)
+        {
+        case L'"':
+            outputStream << L"&quot;";
+            break;
+        case L'&':
+            outputStream << L"&amp;";
+            break;
+        case L'\'':
+            outputStream << L"&apos;";
+            break;
+        case L'<':
+            outputStream << L"&lt;";
+            break;
+        case '>':
+            outputStream << L"&gt;";
+            break;
+        default:
+            if(*scanValue < 33)
+            {
+                outputStream << L"&#" << (int)(*scanValue) << L";";
+                break;
+            }
+            outputStream << *scanValue;
+        }
+    }
 
-	return outputStream.str();
+    return outputStream.str();
 }
 
 
@@ -97,22 +97,22 @@ void outputTag(const DataSet& dataSet, std::uint16_t group, std::uint16_t tag, s
 void scanChildren(const DicomDirEntry& record, std::wostream* pOutputStream)
 {
     do
-	{
+    {
         DataSet recordDataSet = record.getEntryDataSet();
 
-		// Output the file parts
+        // Output the file parts
         outputTag(recordDataSet, 0x4, 0x1500, pOutputStream, L"file");
 
-		// Output the class UID
+        // Output the class UID
         outputTag(recordDataSet, 0x4, 0x1510, pOutputStream, L"class");
 
-		// Output the instance UID
+        // Output the instance UID
         outputTag(recordDataSet, 0x4, 0x1511, pOutputStream, L"instance");
 
-		// Output the transfer syntax
+        // Output the transfer syntax
         outputTag(recordDataSet, 0x4, 0x1512, pOutputStream, L"transfer");
 
-		// Output the groups (everything but group 2 and 4)
+        // Output the groups (everything but group 2 and 4)
         tagsIds_t tags = recordDataSet.getTags();
         std::uint16_t previousGroup = 0;
         for(tagsIds_t::const_iterator scanTags(tags.begin()), endTags(tags.end()); scanTags != endTags; ++scanTags)
@@ -139,16 +139,16 @@ void scanChildren(const DicomDirEntry& record, std::wostream* pOutputStream)
             *pOutputStream << L"</group>" << std::endl;
         }
 
-		// Output the child records
+        // Output the child records
         if(record.hasChildren())
         {
             (*pOutputStream) << L"<children>\n";
             scanChildren(record.getFirstChildEntry(), pOutputStream);
             (*pOutputStream) << L"</children>\n";
         }
-		(*pOutputStream) << L"</record>\n";
+        (*pOutputStream) << L"</record>\n";
 
-	}
+    }
     while(record.hasNextEntry());
 }
 
@@ -162,37 +162,37 @@ int main(int argc, char* argv[])
 {
 
 
-	// Output the help if the parameters have not been
-	//  specified
-	if(argc < 2)
-	{
+    // Output the help if the parameters have not been
+    //  specified
+    if(argc < 2)
+    {
         std::wstring version(L"1.0.0.1");
         std::wcout << L"dicomdirItems version " << version << L"\n";
-		std::wcout << L"Usage: dicomdirItems dicomdirFileName outputFileName\n";
-		std::wcout << L" dicomdirFileName = name of the DICOMDIR file\n";
-		return 1;
-	}
+        std::wcout << L"Usage: dicomdirItems dicomdirFileName outputFileName\n";
+        std::wcout << L" dicomdirFileName = name of the DICOMDIR file\n";
+        return 1;
+    }
 
     // Open the file containing the dicom directory
     DataSet loadedDataSet = CodecFactory::load(argv[1], 2048);
 
-	// Now create a dicomdir object
+    // Now create a dicomdir object
     DicomDir directory(loadedDataSet);
 
-	try
-	{
-		std::wcout << L"<dicomdir>";
+    try
+    {
+        std::wcout << L"<dicomdir>";
         if(directory.hasRootEntry())
         {
             scanChildren(directory.getFirstRootEntry(), &(std::wcout));
         }
-		std::wcout << L"</dicomdir>";
-		return 0;
-	}
-	catch(...)
-	{
+        std::wcout << L"</dicomdir>";
+        return 0;
+    }
+    catch(...)
+    {
         std::cout << ExceptionsManager::getExceptionTrace();
-		return 1;
-	}
+        return 1;
+    }
 }
 

@@ -5,7 +5,7 @@ $fileHeader$
 #include <iostream>
 
 
-#include <imebra/imebra.h>
+#include <dicomhero/dicomhero.h>
 #include <sstream>
 
 #if defined(WIN32) || defined(WIN64)
@@ -18,7 +18,7 @@ $fileHeader$
 #include <memory>
 #include <list>
 
-using namespace imebra;
+using namespace dicomhero;
 
 int findArgument(const char* argument, int argc, char* argv[])
 {
@@ -71,7 +71,7 @@ void outputDatasetTags(const DataSet& dataset, const std::wstring& prefix)
         for(size_t bufferId(0); bufferId != tag.getBuffersCount(); ++bufferId)
         {
             ReadingDataHandler handler = tag.getReadingDataHandler(bufferId);
-            if(handler.getDataType() != imebra::tagVR_t::OW && handler.getDataType() != imebra::tagVR_t::OB)
+            if(handler.getDataType() != tagVR_t::OW && handler.getDataType() != tagVR_t::OB)
             {
                 for(size_t scanHandler(0); scanHandler != handler.getSize(); ++scanHandler)
                 {
@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
     std::wstring version(L"1.0.0.1");
     std::wcout << L"dicom2jpeg version " << version << std::endl;
 
-    imebra::CodecFactory::setMaximumImageSize(8000, 8000);
+    CodecFactory::setMaximumImageSize(8000, 8000);
 
     try
     {
@@ -329,7 +329,7 @@ int main(int argc, char* argv[])
     catch(const std::exception& e)
     {
         MutableDataSet convertMessage;
-        convertMessage.setString(TagId(10, 10), imebra::ExceptionsManager::getExceptionTrace(), imebra::tagVR_t::LT);
+        convertMessage.setString(TagId(10, 10), ExceptionsManager::getExceptionTrace(), tagVR_t::LT);
         std::wcout << std::endl << "Error: " << std::endl << convertMessage.getUnicodeString(TagId(10, 10), 0) << std::endl;
         return 1;
     }

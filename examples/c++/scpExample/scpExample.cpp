@@ -17,223 +17,223 @@
 #include <list>
 #include <set>
 
-#include <imebra/imebra.h>
+#include <dicomhero/dicomhero.h>
 
 // List of accepted abstract syntaxes
 const std::list<std::string> abstractSyntaxes {
-    imebra::dicom2018e::uidStoredPrintStorageSOPClass,
-    imebra::dicom2018e::uidHardcopyGrayscaleImageStorageSOPClass,
-    imebra::dicom2018e::uidHardcopyColorImageStorageSOPClass,
-    imebra::dicom2018e::uidComputedRadiographyImageStorage,
-    imebra::dicom2018e::uidDigitalXRayImageStorageForPresentation,
-    imebra::dicom2018e::uidDigitalXRayImageStorageForProcessing,
-    imebra::dicom2018e::uidDigitalMammographyXRayImageStorageForPresentation,
-    imebra::dicom2018e::uidDigitalMammographyXRayImageStorageForProcessing,
-    imebra::dicom2018e::uidDigitalIntraOralXRayImageStorageForPresentation,
-    imebra::dicom2018e::uidDigitalIntraOralXRayImageStorageForProcessing,
-    imebra::dicom2018e::uidCTImageStorage,
-    imebra::dicom2018e::uidEnhancedCTImageStorage,
-    imebra::dicom2018e::uidLegacyConvertedEnhancedCTImageStorage,
-    imebra::dicom2018e::uidUltrasoundMultiframeImageStorage,
-    imebra::dicom2018e::uidMRImageStorage,
-    imebra::dicom2018e::uidEnhancedMRImageStorage,
-    imebra::dicom2018e::uidMRSpectroscopyStorage,
-    imebra::dicom2018e::uidEnhancedMRColorImageStorage,
-    imebra::dicom2018e::uidLegacyConvertedEnhancedMRImageStorage,
-    imebra::dicom2018e::uidUltrasoundImageStorage,
-    imebra::dicom2018e::uidEnhancedUSVolumeStorage,
-    imebra::dicom2018e::uidSecondaryCaptureImageStorage,
-    imebra::dicom2018e::uidMultiframeSingleBitSecondaryCaptureImageStorage,
-    imebra::dicom2018e::uidMultiframeGrayscaleByteSecondaryCaptureImageStorage,
-    imebra::dicom2018e::uidMultiframeGrayscaleWordSecondaryCaptureImageStorage,
-    imebra::dicom2018e::uidMultiframeTrueColorSecondaryCaptureImageStorage,
-    imebra::dicom2018e::uidStandaloneOverlayStorage,
-    imebra::dicom2018e::uidStandaloneCurveStorage,
-    imebra::dicom2018e::uidWaveformStorageTrial,
-    imebra::dicom2018e::uid12leadECGWaveformStorage,
-    imebra::dicom2018e::uidGeneralECGWaveformStorage,
-    imebra::dicom2018e::uidAmbulatoryECGWaveformStorage,
-    imebra::dicom2018e::uidHemodynamicWaveformStorage,
-    imebra::dicom2018e::uidCardiacElectrophysiologyWaveformStorage,
-    imebra::dicom2018e::uidBasicVoiceAudioWaveformStorage,
-    imebra::dicom2018e::uidGeneralAudioWaveformStorage,
-    imebra::dicom2018e::uidArterialPulseWaveformStorage,
-    imebra::dicom2018e::uidRespiratoryWaveformStorage,
-    imebra::dicom2018e::uidStandaloneModalityLUTStorage,
-    imebra::dicom2018e::uidStandaloneVOILUTStorage,
-    imebra::dicom2018e::uidGrayscaleSoftcopyPresentationStateStorage,
-    imebra::dicom2018e::uidColorSoftcopyPresentationStateStorage,
-    imebra::dicom2018e::uidPseudoColorSoftcopyPresentationStateStorage,
-    imebra::dicom2018e::uidBlendingSoftcopyPresentationStateStorage,
-    imebra::dicom2018e::uidXAXRFGrayscaleSoftcopyPresentationStateStorage,
-    imebra::dicom2018e::uidGrayscalePlanarMPRVolumetricPresentationStateStorage,
-    imebra::dicom2018e::uidCompositingPlanarMPRVolumetricPresentationStateStorage,
-    imebra::dicom2018e::uidAdvancedBlendingPresentationStateStorage,
-    imebra::dicom2018e::uidVolumeRenderingVolumetricPresentationStateStorage,
-    imebra::dicom2018e::uidSegmentedVolumeRenderingVolumetricPresentationStateStorage,
-    imebra::dicom2018e::uidMultipleVolumeRenderingVolumetricPresentationStateStorage,
-    imebra::dicom2018e::uidXRayAngiographicImageStorage,
-    imebra::dicom2018e::uidEnhancedXAImageStorage,
-    imebra::dicom2018e::uidXRayRadiofluoroscopicImageStorage,
-    imebra::dicom2018e::uidEnhancedXRFImageStorage,
-    imebra::dicom2018e::uidXRayAngiographicBiPlaneImageStorage,
-    imebra::dicom2018e::uidXRay3DAngiographicImageStorage,
-    imebra::dicom2018e::uidXRay3DCraniofacialImageStorage,
-    imebra::dicom2018e::uidBreastTomosynthesisImageStorage,
-    imebra::dicom2018e::uidNuclearMedicineImageStorageRetired,
-    imebra::dicom2018e::uidNuclearMedicineImageStorage,
-    imebra::dicom2018e::uidParametricMapStorage,
-    imebra::dicom2018e::uidRawDataStorage,
-    imebra::dicom2018e::uidSpatialRegistrationStorage,
-    imebra::dicom2018e::uidSpatialFiducialsStorage,
-    imebra::dicom2018e::uidDeformableSpatialRegistrationStorage,
-    imebra::dicom2018e::uidSegmentationStorage,
-    imebra::dicom2018e::uidSurfaceSegmentationStorage,
-    imebra::dicom2018e::uidTractographyResultsStorage,
-    imebra::dicom2018e::uidRealWorldValueMappingStorage,
-    imebra::dicom2018e::uidSurfaceScanMeshStorage,
-    imebra::dicom2018e::uidSurfaceScanPointCloudStorage,
-    imebra::dicom2018e::uidVLImageStorageTrial,
-    imebra::dicom2018e::uidVLMultiframeImageStorageTrial,
-    imebra::dicom2018e::uidVLEndoscopicImageStorage,
-    imebra::dicom2018e::uidVideoEndoscopicImageStorage,
-    imebra::dicom2018e::uidVLMicroscopicImageStorage,
-    imebra::dicom2018e::uidVideoMicroscopicImageStorage,
-    imebra::dicom2018e::uidVLSlideCoordinatesMicroscopicImageStorage,
-    imebra::dicom2018e::uidVLPhotographicImageStorage,
-    imebra::dicom2018e::uidVideoPhotographicImageStorage,
-    imebra::dicom2018e::uidOphthalmicPhotography8BitImageStorage,
-    imebra::dicom2018e::uidOphthalmicPhotography16BitImageStorage,
-    imebra::dicom2018e::uidStereometricRelationshipStorage,
-    imebra::dicom2018e::uidOphthalmicTomographyImageStorage,
-    imebra::dicom2018e::uidTextSRStorageTrial,
-    imebra::dicom2018e::uidAudioSRStorageTrial,
-    imebra::dicom2018e::uidDetailSRStorageTrial,
-    imebra::dicom2018e::uidComprehensiveSRStorageTrial,
-    imebra::dicom2018e::uidBasicTextSRStorage,
-    imebra::dicom2018e::uidEnhancedSRStorage,
-    imebra::dicom2018e::uidComprehensiveSRStorage,
-    imebra::dicom2018e::uidComprehensive3DSRStorage,
-    imebra::dicom2018e::uidExtensibleSRStorage,
-    imebra::dicom2018e::uidProcedureLogStorage,
-    imebra::dicom2018e::uidMammographyCADSRStorage,
-    imebra::dicom2018e::uidKeyObjectSelectionDocumentStorage,
-    imebra::dicom2018e::uidChestCADSRStorage,
-    imebra::dicom2018e::uidXRayRadiationDoseSRStorage,
-    imebra::dicom2018e::uidRadiopharmaceuticalRadiationDoseSRStorage,
-    imebra::dicom2018e::uidColonCADSRStorage,
-    imebra::dicom2018e::uidImplantationPlanSRStorage,
-    imebra::dicom2018e::uidAcquisitionContextSRStorage,
-    imebra::dicom2018e::uidSimplifiedAdultEchoSRStorage,
-    imebra::dicom2018e::uidPatientRadiationDoseSRStorage,
-    imebra::dicom2018e::uidPlannedImagingAgentAdministrationSRStorage,
-    imebra::dicom2018e::uidPerformedImagingAgentAdministrationSRStorage,
-    imebra::dicom2018e::uidContentAssessmentResultsStorage,
-    imebra::dicom2018e::uidEncapsulatedPDFStorage,
-    imebra::dicom2018e::uidEncapsulatedCDAStorage,
-    imebra::dicom2018e::uidEncapsulatedSTLStorage,
-    imebra::dicom2018e::uidPositronEmissionTomographyImageStorage,
-    imebra::dicom2018e::uidLegacyConvertedEnhancedPETImageStorage,
-    imebra::dicom2018e::uidStandalonePETCurveStorage,
-    imebra::dicom2018e::uidEnhancedPETImageStorage,
-    imebra::dicom2018e::uidBasicStructuredDisplayStorage,
-    imebra::dicom2018e::uidCTDefinedProcedureProtocolStorage,
-    imebra::dicom2018e::uidCTPerformedProcedureProtocolStorage,
-    imebra::dicom2018e::uidProtocolApprovalStorage,
-    imebra::dicom2018e::uidProtocolApprovalInformationModelFIND,
-    imebra::dicom2018e::uidProtocolApprovalInformationModelMOVE,
-    imebra::dicom2018e::uidProtocolApprovalInformationModelGET,
-    imebra::dicom2018e::uidRTImageStorage,
-    imebra::dicom2018e::uidRTDoseStorage,
-    imebra::dicom2018e::uidRTStructureSetStorage,
-    imebra::dicom2018e::uidRTBeamsTreatmentRecordStorage,
-    imebra::dicom2018e::uidRTPlanStorage,
-    imebra::dicom2018e::uidRTBrachyTreatmentRecordStorage,
-    imebra::dicom2018e::uidRTTreatmentSummaryRecordStorage,
-    imebra::dicom2018e::uidRTIonPlanStorage,
-    imebra::dicom2018e::uidRTIonBeamsTreatmentRecordStorage,
-    imebra::dicom2018e::uidRTPhysicianIntentStorage,
-    imebra::dicom2018e::uidRTSegmentAnnotationStorage,
-    imebra::dicom2018e::uidDICOSCTImageStorage,
-    imebra::dicom2018e::uidDICOSDigitalXRayImageStorageForPresentation,
-    imebra::dicom2018e::uidDICOSDigitalXRayImageStorageForProcessing,
-    imebra::dicom2018e::uidDICOSThreatDetectionReportStorage,
-    imebra::dicom2018e::uidDICOS2DAITStorage,
-    imebra::dicom2018e::uidDICOS3DAITStorage,
-    imebra::dicom2018e::uidDICOSQuadrupoleResonanceQRStorage,
-    imebra::dicom2018e::uidEddyCurrentImageStorage,
-    imebra::dicom2018e::uidEddyCurrentMultiframeImageStorage,
-    imebra::dicom2018e::uidPatientRootQueryRetrieveInformationModelFIND,
-    imebra::dicom2018e::uidPatientRootQueryRetrieveInformationModelMOVE,
-    imebra::dicom2018e::uidPatientRootQueryRetrieveInformationModelGET,
-    imebra::dicom2018e::uidStudyRootQueryRetrieveInformationModelFIND,
-    imebra::dicom2018e::uidStudyRootQueryRetrieveInformationModelMOVE,
-    imebra::dicom2018e::uidStudyRootQueryRetrieveInformationModelGET,
-    imebra::dicom2018e::uidPatientStudyOnlyQueryRetrieveInformationModelFIND,
-    imebra::dicom2018e::uidPatientStudyOnlyQueryRetrieveInformationModelMOVE,
-    imebra::dicom2018e::uidPatientStudyOnlyQueryRetrieveInformationModelGET,
-    imebra::dicom2018e::uidCompositeInstanceRootRetrieveMOVE,
-    imebra::dicom2018e::uidCompositeInstanceRootRetrieveGET,
-    imebra::dicom2018e::uidCompositeInstanceRetrieveWithoutBulkDataGET,
-    imebra::dicom2018e::uidDefinedProcedureProtocolInformationModelFIND,
-    imebra::dicom2018e::uidDefinedProcedureProtocolInformationModelMOVE,
-    imebra::dicom2018e::uidDefinedProcedureProtocolInformationModelGET,
-    imebra::dicom2018e::uidModalityWorklistInformationModelFIND,
-    imebra::dicom2018e::uidGeneralPurposeWorklistInformationModelFIND,
-    imebra::dicom2018e::uidRTBeamsDeliveryInstructionStorageTrial,
-    imebra::dicom2018e::uidRTBeamsDeliveryInstructionStorage,
-    imebra::dicom2018e::uidRTBrachyApplicationSetupDeliveryInstructionStorage,
-    imebra::dicom2018e::uidGeneralRelevantPatientInformationQuery,
-    imebra::dicom2018e::uidBreastImagingRelevantPatientInformationQuery,
-    imebra::dicom2018e::uidCardiacRelevantPatientInformationQuery,
-    imebra::dicom2018e::uidColorPaletteStorage,
-    imebra::dicom2018e::uidColorPaletteQueryRetrieveInformationModelFIND,
-    imebra::dicom2018e::uidColorPaletteQueryRetrieveInformationModelMOVE,
-    imebra::dicom2018e::uidColorPaletteQueryRetrieveInformationModelGET,
+    dicomhero::dicom2018e::uidStoredPrintStorageSOPClass,
+    dicomhero::dicom2018e::uidHardcopyGrayscaleImageStorageSOPClass,
+    dicomhero::dicom2018e::uidHardcopyColorImageStorageSOPClass,
+    dicomhero::dicom2018e::uidComputedRadiographyImageStorage,
+    dicomhero::dicom2018e::uidDigitalXRayImageStorageForPresentation,
+    dicomhero::dicom2018e::uidDigitalXRayImageStorageForProcessing,
+    dicomhero::dicom2018e::uidDigitalMammographyXRayImageStorageForPresentation,
+    dicomhero::dicom2018e::uidDigitalMammographyXRayImageStorageForProcessing,
+    dicomhero::dicom2018e::uidDigitalIntraOralXRayImageStorageForPresentation,
+    dicomhero::dicom2018e::uidDigitalIntraOralXRayImageStorageForProcessing,
+    dicomhero::dicom2018e::uidCTImageStorage,
+    dicomhero::dicom2018e::uidEnhancedCTImageStorage,
+    dicomhero::dicom2018e::uidLegacyConvertedEnhancedCTImageStorage,
+    dicomhero::dicom2018e::uidUltrasoundMultiframeImageStorage,
+    dicomhero::dicom2018e::uidMRImageStorage,
+    dicomhero::dicom2018e::uidEnhancedMRImageStorage,
+    dicomhero::dicom2018e::uidMRSpectroscopyStorage,
+    dicomhero::dicom2018e::uidEnhancedMRColorImageStorage,
+    dicomhero::dicom2018e::uidLegacyConvertedEnhancedMRImageStorage,
+    dicomhero::dicom2018e::uidUltrasoundImageStorage,
+    dicomhero::dicom2018e::uidEnhancedUSVolumeStorage,
+    dicomhero::dicom2018e::uidSecondaryCaptureImageStorage,
+    dicomhero::dicom2018e::uidMultiframeSingleBitSecondaryCaptureImageStorage,
+    dicomhero::dicom2018e::uidMultiframeGrayscaleByteSecondaryCaptureImageStorage,
+    dicomhero::dicom2018e::uidMultiframeGrayscaleWordSecondaryCaptureImageStorage,
+    dicomhero::dicom2018e::uidMultiframeTrueColorSecondaryCaptureImageStorage,
+    dicomhero::dicom2018e::uidStandaloneOverlayStorage,
+    dicomhero::dicom2018e::uidStandaloneCurveStorage,
+    dicomhero::dicom2018e::uidWaveformStorageTrial,
+    dicomhero::dicom2018e::uid12leadECGWaveformStorage,
+    dicomhero::dicom2018e::uidGeneralECGWaveformStorage,
+    dicomhero::dicom2018e::uidAmbulatoryECGWaveformStorage,
+    dicomhero::dicom2018e::uidHemodynamicWaveformStorage,
+    dicomhero::dicom2018e::uidCardiacElectrophysiologyWaveformStorage,
+    dicomhero::dicom2018e::uidBasicVoiceAudioWaveformStorage,
+    dicomhero::dicom2018e::uidGeneralAudioWaveformStorage,
+    dicomhero::dicom2018e::uidArterialPulseWaveformStorage,
+    dicomhero::dicom2018e::uidRespiratoryWaveformStorage,
+    dicomhero::dicom2018e::uidStandaloneModalityLUTStorage,
+    dicomhero::dicom2018e::uidStandaloneVOILUTStorage,
+    dicomhero::dicom2018e::uidGrayscaleSoftcopyPresentationStateStorage,
+    dicomhero::dicom2018e::uidColorSoftcopyPresentationStateStorage,
+    dicomhero::dicom2018e::uidPseudoColorSoftcopyPresentationStateStorage,
+    dicomhero::dicom2018e::uidBlendingSoftcopyPresentationStateStorage,
+    dicomhero::dicom2018e::uidXAXRFGrayscaleSoftcopyPresentationStateStorage,
+    dicomhero::dicom2018e::uidGrayscalePlanarMPRVolumetricPresentationStateStorage,
+    dicomhero::dicom2018e::uidCompositingPlanarMPRVolumetricPresentationStateStorage,
+    dicomhero::dicom2018e::uidAdvancedBlendingPresentationStateStorage,
+    dicomhero::dicom2018e::uidVolumeRenderingVolumetricPresentationStateStorage,
+    dicomhero::dicom2018e::uidSegmentedVolumeRenderingVolumetricPresentationStateStorage,
+    dicomhero::dicom2018e::uidMultipleVolumeRenderingVolumetricPresentationStateStorage,
+    dicomhero::dicom2018e::uidXRayAngiographicImageStorage,
+    dicomhero::dicom2018e::uidEnhancedXAImageStorage,
+    dicomhero::dicom2018e::uidXRayRadiofluoroscopicImageStorage,
+    dicomhero::dicom2018e::uidEnhancedXRFImageStorage,
+    dicomhero::dicom2018e::uidXRayAngiographicBiPlaneImageStorage,
+    dicomhero::dicom2018e::uidXRay3DAngiographicImageStorage,
+    dicomhero::dicom2018e::uidXRay3DCraniofacialImageStorage,
+    dicomhero::dicom2018e::uidBreastTomosynthesisImageStorage,
+    dicomhero::dicom2018e::uidNuclearMedicineImageStorageRetired,
+    dicomhero::dicom2018e::uidNuclearMedicineImageStorage,
+    dicomhero::dicom2018e::uidParametricMapStorage,
+    dicomhero::dicom2018e::uidRawDataStorage,
+    dicomhero::dicom2018e::uidSpatialRegistrationStorage,
+    dicomhero::dicom2018e::uidSpatialFiducialsStorage,
+    dicomhero::dicom2018e::uidDeformableSpatialRegistrationStorage,
+    dicomhero::dicom2018e::uidSegmentationStorage,
+    dicomhero::dicom2018e::uidSurfaceSegmentationStorage,
+    dicomhero::dicom2018e::uidTractographyResultsStorage,
+    dicomhero::dicom2018e::uidRealWorldValueMappingStorage,
+    dicomhero::dicom2018e::uidSurfaceScanMeshStorage,
+    dicomhero::dicom2018e::uidSurfaceScanPointCloudStorage,
+    dicomhero::dicom2018e::uidVLImageStorageTrial,
+    dicomhero::dicom2018e::uidVLMultiframeImageStorageTrial,
+    dicomhero::dicom2018e::uidVLEndoscopicImageStorage,
+    dicomhero::dicom2018e::uidVideoEndoscopicImageStorage,
+    dicomhero::dicom2018e::uidVLMicroscopicImageStorage,
+    dicomhero::dicom2018e::uidVideoMicroscopicImageStorage,
+    dicomhero::dicom2018e::uidVLSlideCoordinatesMicroscopicImageStorage,
+    dicomhero::dicom2018e::uidVLPhotographicImageStorage,
+    dicomhero::dicom2018e::uidVideoPhotographicImageStorage,
+    dicomhero::dicom2018e::uidOphthalmicPhotography8BitImageStorage,
+    dicomhero::dicom2018e::uidOphthalmicPhotography16BitImageStorage,
+    dicomhero::dicom2018e::uidStereometricRelationshipStorage,
+    dicomhero::dicom2018e::uidOphthalmicTomographyImageStorage,
+    dicomhero::dicom2018e::uidTextSRStorageTrial,
+    dicomhero::dicom2018e::uidAudioSRStorageTrial,
+    dicomhero::dicom2018e::uidDetailSRStorageTrial,
+    dicomhero::dicom2018e::uidComprehensiveSRStorageTrial,
+    dicomhero::dicom2018e::uidBasicTextSRStorage,
+    dicomhero::dicom2018e::uidEnhancedSRStorage,
+    dicomhero::dicom2018e::uidComprehensiveSRStorage,
+    dicomhero::dicom2018e::uidComprehensive3DSRStorage,
+    dicomhero::dicom2018e::uidExtensibleSRStorage,
+    dicomhero::dicom2018e::uidProcedureLogStorage,
+    dicomhero::dicom2018e::uidMammographyCADSRStorage,
+    dicomhero::dicom2018e::uidKeyObjectSelectionDocumentStorage,
+    dicomhero::dicom2018e::uidChestCADSRStorage,
+    dicomhero::dicom2018e::uidXRayRadiationDoseSRStorage,
+    dicomhero::dicom2018e::uidRadiopharmaceuticalRadiationDoseSRStorage,
+    dicomhero::dicom2018e::uidColonCADSRStorage,
+    dicomhero::dicom2018e::uidImplantationPlanSRStorage,
+    dicomhero::dicom2018e::uidAcquisitionContextSRStorage,
+    dicomhero::dicom2018e::uidSimplifiedAdultEchoSRStorage,
+    dicomhero::dicom2018e::uidPatientRadiationDoseSRStorage,
+    dicomhero::dicom2018e::uidPlannedImagingAgentAdministrationSRStorage,
+    dicomhero::dicom2018e::uidPerformedImagingAgentAdministrationSRStorage,
+    dicomhero::dicom2018e::uidContentAssessmentResultsStorage,
+    dicomhero::dicom2018e::uidEncapsulatedPDFStorage,
+    dicomhero::dicom2018e::uidEncapsulatedCDAStorage,
+    dicomhero::dicom2018e::uidEncapsulatedSTLStorage,
+    dicomhero::dicom2018e::uidPositronEmissionTomographyImageStorage,
+    dicomhero::dicom2018e::uidLegacyConvertedEnhancedPETImageStorage,
+    dicomhero::dicom2018e::uidStandalonePETCurveStorage,
+    dicomhero::dicom2018e::uidEnhancedPETImageStorage,
+    dicomhero::dicom2018e::uidBasicStructuredDisplayStorage,
+    dicomhero::dicom2018e::uidCTDefinedProcedureProtocolStorage,
+    dicomhero::dicom2018e::uidCTPerformedProcedureProtocolStorage,
+    dicomhero::dicom2018e::uidProtocolApprovalStorage,
+    dicomhero::dicom2018e::uidProtocolApprovalInformationModelFIND,
+    dicomhero::dicom2018e::uidProtocolApprovalInformationModelMOVE,
+    dicomhero::dicom2018e::uidProtocolApprovalInformationModelGET,
+    dicomhero::dicom2018e::uidRTImageStorage,
+    dicomhero::dicom2018e::uidRTDoseStorage,
+    dicomhero::dicom2018e::uidRTStructureSetStorage,
+    dicomhero::dicom2018e::uidRTBeamsTreatmentRecordStorage,
+    dicomhero::dicom2018e::uidRTPlanStorage,
+    dicomhero::dicom2018e::uidRTBrachyTreatmentRecordStorage,
+    dicomhero::dicom2018e::uidRTTreatmentSummaryRecordStorage,
+    dicomhero::dicom2018e::uidRTIonPlanStorage,
+    dicomhero::dicom2018e::uidRTIonBeamsTreatmentRecordStorage,
+    dicomhero::dicom2018e::uidRTPhysicianIntentStorage,
+    dicomhero::dicom2018e::uidRTSegmentAnnotationStorage,
+    dicomhero::dicom2018e::uidDICOSCTImageStorage,
+    dicomhero::dicom2018e::uidDICOSDigitalXRayImageStorageForPresentation,
+    dicomhero::dicom2018e::uidDICOSDigitalXRayImageStorageForProcessing,
+    dicomhero::dicom2018e::uidDICOSThreatDetectionReportStorage,
+    dicomhero::dicom2018e::uidDICOS2DAITStorage,
+    dicomhero::dicom2018e::uidDICOS3DAITStorage,
+    dicomhero::dicom2018e::uidDICOSQuadrupoleResonanceQRStorage,
+    dicomhero::dicom2018e::uidEddyCurrentImageStorage,
+    dicomhero::dicom2018e::uidEddyCurrentMultiframeImageStorage,
+    dicomhero::dicom2018e::uidPatientRootQueryRetrieveInformationModelFIND,
+    dicomhero::dicom2018e::uidPatientRootQueryRetrieveInformationModelMOVE,
+    dicomhero::dicom2018e::uidPatientRootQueryRetrieveInformationModelGET,
+    dicomhero::dicom2018e::uidStudyRootQueryRetrieveInformationModelFIND,
+    dicomhero::dicom2018e::uidStudyRootQueryRetrieveInformationModelMOVE,
+    dicomhero::dicom2018e::uidStudyRootQueryRetrieveInformationModelGET,
+    dicomhero::dicom2018e::uidPatientStudyOnlyQueryRetrieveInformationModelFIND,
+    dicomhero::dicom2018e::uidPatientStudyOnlyQueryRetrieveInformationModelMOVE,
+    dicomhero::dicom2018e::uidPatientStudyOnlyQueryRetrieveInformationModelGET,
+    dicomhero::dicom2018e::uidCompositeInstanceRootRetrieveMOVE,
+    dicomhero::dicom2018e::uidCompositeInstanceRootRetrieveGET,
+    dicomhero::dicom2018e::uidCompositeInstanceRetrieveWithoutBulkDataGET,
+    dicomhero::dicom2018e::uidDefinedProcedureProtocolInformationModelFIND,
+    dicomhero::dicom2018e::uidDefinedProcedureProtocolInformationModelMOVE,
+    dicomhero::dicom2018e::uidDefinedProcedureProtocolInformationModelGET,
+    dicomhero::dicom2018e::uidModalityWorklistInformationModelFIND,
+    dicomhero::dicom2018e::uidGeneralPurposeWorklistInformationModelFIND,
+    dicomhero::dicom2018e::uidRTBeamsDeliveryInstructionStorageTrial,
+    dicomhero::dicom2018e::uidRTBeamsDeliveryInstructionStorage,
+    dicomhero::dicom2018e::uidRTBrachyApplicationSetupDeliveryInstructionStorage,
+    dicomhero::dicom2018e::uidGeneralRelevantPatientInformationQuery,
+    dicomhero::dicom2018e::uidBreastImagingRelevantPatientInformationQuery,
+    dicomhero::dicom2018e::uidCardiacRelevantPatientInformationQuery,
+    dicomhero::dicom2018e::uidColorPaletteStorage,
+    dicomhero::dicom2018e::uidColorPaletteQueryRetrieveInformationModelFIND,
+    dicomhero::dicom2018e::uidColorPaletteQueryRetrieveInformationModelMOVE,
+    dicomhero::dicom2018e::uidColorPaletteQueryRetrieveInformationModelGET,
 };
 
 // List of accepted transfer syntaxes
 const std::list<std::string> transferSyntaxes
 {
-    imebra::dicom2018e::uidImplicitVRLittleEndian,
-    imebra::dicom2018e::uidExplicitVRLittleEndian,
-    imebra::dicom2018e::uidExplicitVRBigEndian,
-    imebra::dicom2018e::uidJPEGBaselineProcess1,
-    imebra::dicom2018e::uidJPEGExtendedProcess2_4,
-    imebra::dicom2018e::uidJPEGExtendedProcess3_5,
-    imebra::dicom2018e::uidJPEGSpectralSelectionNonHierarchicalProcess6_8,
-    imebra::dicom2018e::uidJPEGSpectralSelectionNonHierarchicalProcess7_9,
-    imebra::dicom2018e::uidJPEGFullProgressionNonHierarchicalProcess10_12,
-    imebra::dicom2018e::uidJPEGFullProgressionNonHierarchicalProcess11_13,
-    imebra::dicom2018e::uidJPEGLosslessNonHierarchicalProcess14,
-    imebra::dicom2018e::uidJPEGLosslessNonHierarchicalProcess15,
-    imebra::dicom2018e::uidJPEGExtendedHierarchicalProcess16_18,
-    imebra::dicom2018e::uidJPEGExtendedHierarchicalProcess17_19,
-    imebra::dicom2018e::uidJPEGSpectralSelectionHierarchicalProcess20_22,
-    imebra::dicom2018e::uidJPEGSpectralSelectionHierarchicalProcess21_23,
-    imebra::dicom2018e::uidJPEGFullProgressionHierarchicalProcess24_26,
-    imebra::dicom2018e::uidJPEGFullProgressionHierarchicalProcess25_27,
-    imebra::dicom2018e::uidJPEGLosslessHierarchicalProcess28,
-    imebra::dicom2018e::uidJPEGLosslessHierarchicalProcess29,
-    imebra::dicom2018e::uidJPEGLosslessNonHierarchicalFirstOrderPredictionProcess14SelectionValue1,
-    imebra::dicom2018e::uidJPEGLSLosslessImageCompression,
-    imebra::dicom2018e::uidJPEGLSLossyNearLosslessImageCompression,
-    imebra::dicom2018e::uidJPEG2000ImageCompressionLosslessOnly,
-    imebra::dicom2018e::uidJPEG2000ImageCompression,
-    imebra::dicom2018e::uidJPEG2000Part2MulticomponentImageCompressionLosslessOnly,
-    imebra::dicom2018e::uidJPEG2000Part2MulticomponentImageCompression,
-    imebra::dicom2018e::uidJPIPReferenced,
-    imebra::dicom2018e::uidJPIPReferencedDeflate,
-    imebra::dicom2018e::uidMPEG2MainProfileMainLevel,
-    imebra::dicom2018e::uidMPEG2MainProfileHighLevel,
-    imebra::dicom2018e::uidMPEG4AVCH264HighProfileLevel41,
-    imebra::dicom2018e::uidMPEG4AVCH264BDcompatibleHighProfileLevel41,
-    imebra::dicom2018e::uidMPEG4AVCH264HighProfileLevel42For2DVideo,
-    imebra::dicom2018e::uidMPEG4AVCH264HighProfileLevel42For3DVideo,
-    imebra::dicom2018e::uidMPEG4AVCH264StereoHighProfileLevel42,
-    imebra::dicom2018e::uidHEVCH265MainProfileLevel51,
-    imebra::dicom2018e::uidHEVCH265Main10ProfileLevel51,
-    imebra::dicom2018e::uidRLELossless
+    dicomhero::dicom2018e::uidImplicitVRLittleEndian,
+    dicomhero::dicom2018e::uidExplicitVRLittleEndian,
+    dicomhero::dicom2018e::uidExplicitVRBigEndian,
+    dicomhero::dicom2018e::uidJPEGBaselineProcess1,
+    dicomhero::dicom2018e::uidJPEGExtendedProcess2_4,
+    dicomhero::dicom2018e::uidJPEGExtendedProcess3_5,
+    dicomhero::dicom2018e::uidJPEGSpectralSelectionNonHierarchicalProcess6_8,
+    dicomhero::dicom2018e::uidJPEGSpectralSelectionNonHierarchicalProcess7_9,
+    dicomhero::dicom2018e::uidJPEGFullProgressionNonHierarchicalProcess10_12,
+    dicomhero::dicom2018e::uidJPEGFullProgressionNonHierarchicalProcess11_13,
+    dicomhero::dicom2018e::uidJPEGLosslessNonHierarchicalProcess14,
+    dicomhero::dicom2018e::uidJPEGLosslessNonHierarchicalProcess15,
+    dicomhero::dicom2018e::uidJPEGExtendedHierarchicalProcess16_18,
+    dicomhero::dicom2018e::uidJPEGExtendedHierarchicalProcess17_19,
+    dicomhero::dicom2018e::uidJPEGSpectralSelectionHierarchicalProcess20_22,
+    dicomhero::dicom2018e::uidJPEGSpectralSelectionHierarchicalProcess21_23,
+    dicomhero::dicom2018e::uidJPEGFullProgressionHierarchicalProcess24_26,
+    dicomhero::dicom2018e::uidJPEGFullProgressionHierarchicalProcess25_27,
+    dicomhero::dicom2018e::uidJPEGLosslessHierarchicalProcess28,
+    dicomhero::dicom2018e::uidJPEGLosslessHierarchicalProcess29,
+    dicomhero::dicom2018e::uidJPEGLosslessNonHierarchicalFirstOrderPredictionProcess14SelectionValue1,
+    dicomhero::dicom2018e::uidJPEGLSLosslessImageCompression,
+    dicomhero::dicom2018e::uidJPEGLSLossyNearLosslessImageCompression,
+    dicomhero::dicom2018e::uidJPEG2000ImageCompressionLosslessOnly,
+    dicomhero::dicom2018e::uidJPEG2000ImageCompression,
+    dicomhero::dicom2018e::uidJPEG2000Part2MulticomponentImageCompressionLosslessOnly,
+    dicomhero::dicom2018e::uidJPEG2000Part2MulticomponentImageCompression,
+    dicomhero::dicom2018e::uidJPIPReferenced,
+    dicomhero::dicom2018e::uidJPIPReferencedDeflate,
+    dicomhero::dicom2018e::uidMPEG2MainProfileMainLevel,
+    dicomhero::dicom2018e::uidMPEG2MainProfileHighLevel,
+    dicomhero::dicom2018e::uidMPEG4AVCH264HighProfileLevel41,
+    dicomhero::dicom2018e::uidMPEG4AVCH264BDcompatibleHighProfileLevel41,
+    dicomhero::dicom2018e::uidMPEG4AVCH264HighProfileLevel42For2DVideo,
+    dicomhero::dicom2018e::uidMPEG4AVCH264HighProfileLevel42For3DVideo,
+    dicomhero::dicom2018e::uidMPEG4AVCH264StereoHighProfileLevel42,
+    dicomhero::dicom2018e::uidHEVCH265MainProfileLevel51,
+    dicomhero::dicom2018e::uidHEVCH265Main10ProfileLevel51,
+    dicomhero::dicom2018e::uidRLELossless
 };
 
 
@@ -245,35 +245,35 @@ const std::list<std::string> transferSyntaxes
 ///                in recursive calls of this method)
 ///
 //////////////////////////////////////////////////////////////////////////////////////
-void outputDatasetTags(const imebra::DataSet& dataset, const std::wstring& prefix)
+void outputDatasetTags(const dicomhero::DataSet& dataset, const std::wstring& prefix)
 {
     // Get all the tags
-    imebra::tagsIds_t tags = dataset.getTags();
+    dicomhero::tagsIds_t tags = dataset.getTags();
 
     // Output all the tags
-    for(const imebra::TagId& tagId: tags)
+    for(const dicomhero::TagId& tagId: tags)
     {
         try
         {
-            std::wstring tagName = imebra::DicomDictionary::getUnicodeTagDescription(tagId);
+            std::wstring tagName = dicomhero::DicomDictionary::getUnicodeTagDescription(tagId);
             std::wcout << prefix << L"Tag " << tagId.getGroupId() << L"," << tagId.getTagId() << L" (" << tagName << L")" << std::endl;
         }
-        catch(const imebra::DictionaryUnknownTagError&)
+        catch(const dicomhero::DictionaryUnknownTagError&)
         {
             std::wcout << prefix << L"Tag " << tagId.getGroupId() << L"," << tagId.getTagId() << L" (Unknown tag)" << std::endl;
         }
 
-        imebra::Tag tag(dataset.getTag(tagId));
+        dicomhero::Tag tag(dataset.getTag(tagId));
 
         for(size_t itemId(0); ; ++itemId)
         {
             try
             {
-                imebra::DataSet sequence = tag.getSequenceItem(itemId);
+                dicomhero::DataSet sequence = tag.getSequenceItem(itemId);
                 std::wcout << prefix << L"  SEQUENCE " << itemId << std::endl;
                 outputDatasetTags(sequence, prefix + L"    ");
             }
-            catch(const imebra::MissingDataElementError&)
+            catch(const dicomhero::MissingDataElementError&)
             {
                 break;
             }
@@ -281,8 +281,8 @@ void outputDatasetTags(const imebra::DataSet& dataset, const std::wstring& prefi
 
         for(size_t bufferId(0); bufferId != tag.getBuffersCount(); ++bufferId)
         {
-            imebra::ReadingDataHandler handler = tag.getReadingDataHandler(bufferId);
-            if(handler.getDataType() != imebra::tagVR_t::OW && handler.getDataType() != imebra::tagVR_t::OB)
+            dicomhero::ReadingDataHandler handler = tag.getReadingDataHandler(bufferId);
+            if(handler.getDataType() != dicomhero::tagVR_t::OW && handler.getDataType() != dicomhero::tagVR_t::OB)
             {
                 for(size_t scanHandler(0); scanHandler != handler.getSize(); ++scanHandler)
                 {
@@ -307,7 +307,7 @@ void outputDatasetTags(const imebra::DataSet& dataset, const std::wstring& prefi
 /// \param command DIMSE command containing the command and payload datasets
 ///
 //////////////////////////////////////////////////////////////////////////////////////
-void outputCommandTags(const std::string& title, const imebra::DimseCommand& command)
+void outputCommandTags(const std::string& title, const dicomhero::DimseCommand& command)
 {
     if(!title.empty())
     {
@@ -321,20 +321,20 @@ void outputCommandTags(const std::string& title, const imebra::DimseCommand& com
     try
     {
         // Get the header dataset
-        imebra::DataSet header = command.getCommandDataSet();
+        dicomhero::DataSet header = command.getCommandDataSet();
         std::wcout << std::endl;
         std::wcout << L"    HEADER:" << std::endl;
         std::wcout << L"    -------" << std::endl;
         outputDatasetTags(header, L"    ");
 
         // Get the payload dataset
-        imebra::DataSet payload = command.getPayloadDataSet();
+        dicomhero::DataSet payload = command.getPayloadDataSet();
         std::wcout << std::endl;
         std::wcout << L"    PAYLOAD:" << std::endl;
         std::wcout << L"    --------" << std::endl;
         outputDatasetTags(payload, L"    ");
     }
-    catch (const imebra::MissingItemError&)
+    catch (const dicomhero::MissingItemError&)
     {
         // We arrive here if the payload we request above does not exist.
     }
@@ -344,7 +344,7 @@ void outputCommandTags(const std::string& title, const imebra::DimseCommand& com
 // When an association is created then its address is inserted
 // in the set below, when it is destroyed it is removed from the set.
 // When the app must terminate then we abort all the active associations.
-static std::set<imebra::AssociationBase*> activeAssociations;
+static std::set<dicomhero::AssociationBase*> activeAssociations;
 static std::mutex lockActiveAssociations; // Lock the access to the associations set.
 
 ///
@@ -356,20 +356,20 @@ static std::mutex lockActiveAssociations; // Lock the access to the associations
 /// \param aet       the SCP aet to communicate during the ACSE negotiation
 ///
 //////////////////////////////////////////////////////////////////////////////////////
-void processDimseCommands(imebra::TCPStream tcpStream, std::string aet)
+void processDimseCommands(dicomhero::TCPStream tcpStream, std::string aet)
 {
     try
     {
         // tcpStream represents the connected socket. Allocate a stream reader and a writer
         // to read and write on the connected socket
-        imebra::StreamReader readSCU(tcpStream.getStreamInput());
-        imebra::StreamWriter writeSCU(tcpStream.getStreamOutput());
+        dicomhero::StreamReader readSCU(tcpStream.getStreamInput());
+        dicomhero::StreamWriter writeSCU(tcpStream.getStreamOutput());
 
         // Specify which presentation contexts we accept (declared on the top of this file)
-        imebra::PresentationContexts presentationContexts;
+        dicomhero::PresentationContexts presentationContexts;
         for(const std::string& abstractSyntax: abstractSyntaxes)
         {
-            imebra::PresentationContext context(abstractSyntax);
+            dicomhero::PresentationContext context(abstractSyntax);
             for(const std::string& transferSyntax: transferSyntaxes)
             {
                 context.addTransferSyntax(transferSyntax);
@@ -378,7 +378,7 @@ void processDimseCommands(imebra::TCPStream tcpStream, std::string aet)
         }
 
         // The AssociationSCP constructor will negotiate the assocation
-        imebra::AssociationSCP scp(aet, 1, 1, presentationContexts, readSCU, writeSCU, 0, 10);
+        dicomhero::AssociationSCP scp(aet, 1, 1, presentationContexts, readSCU, writeSCU, 0, 10);
 
         {
             std::lock_guard<std::mutex> lock(lockActiveAssociations);
@@ -388,201 +388,201 @@ void processDimseCommands(imebra::TCPStream tcpStream, std::string aet)
         try
         {
             // Receive commands via the dimse service, which uses the scp association
-            imebra::DimseService dimse(scp);
+            dicomhero::DimseService dimse(scp);
 
             // Receive commands until the association is closed
             for(;;)
             {
                 // Blocks until a command is received, throws EOF when the connection
                 // is closed.
-                imebra::DimseCommand command(dimse.getCommand());
+                dicomhero::DimseCommand command(dimse.getCommand());
 
                 // Act accordingly to the type of the received command
                 switch(command.getCommandType())
                 {
-                case imebra::dimseCommandType_t::cStore:
+                case dicomhero::dimseCommandType_t::cStore:
                     // Received a CSTORE command
                     ////////////////////////////
                     {
                         outputCommandTags("**** Received CSTORE command from " + scp.getOtherAET(), command);
 
-                        imebra::CStoreCommand cstore = command.getAsCStoreCommand(); // Convert to cstore to retrieve cstore-specific data
-                        dimse.sendCommandOrResponse(imebra::CStoreResponse(cstore, imebra::dimseStatusCode_t::success));
+                        dicomhero::CStoreCommand cstore = command.getAsCStoreCommand(); // Convert to cstore to retrieve cstore-specific data
+                        dimse.sendCommandOrResponse(dicomhero::CStoreResponse(cstore, dicomhero::dimseStatusCode_t::success));
                     }
                     break;
-                case imebra::dimseCommandType_t::cGet:
+                case dicomhero::dimseCommandType_t::cGet:
                     // Received a CGET command
                     ////////////////////////////
                     {
                         outputCommandTags("**** Received CGET command from " + scp.getOtherAET(), command);
 
-                        imebra::CGetCommand cget = command.getAsCGetCommand(); // Convert to cget to retrieve cget-specific data
+                        dicomhero::CGetCommand cget = command.getAsCGetCommand(); // Convert to cget to retrieve cget-specific data
 
                         // Respond with an error
-                        dimse.sendCommandOrResponse(imebra::CGetResponse(cget, imebra::dimseStatusCode_t::unappropriateActionForInstance, 0, 0, 0, 0));
+                        dimse.sendCommandOrResponse(dicomhero::CGetResponse(cget, dicomhero::dimseStatusCode_t::unappropriateActionForInstance, 0, 0, 0, 0));
                     }
                     break;
 
-                case imebra::dimseCommandType_t::cFind:
+                case dicomhero::dimseCommandType_t::cFind:
                     // Received a CFIND command
                     ////////////////////////////
                     {
                         outputCommandTags("**** Received CFIND command from " + scp.getOtherAET(), command);
 
-                        imebra::CFindCommand cfind = command.getAsCFindCommand(); // Convert to cfind to retrieve cfind-specific data
+                        dicomhero::CFindCommand cfind = command.getAsCFindCommand(); // Convert to cfind to retrieve cfind-specific data
 
                         // CFIND processing example
                         //-------------------------
-                        const imebra::DataSet payload = cfind.getPayloadDataSet();
+                        const dicomhero::DataSet payload = cfind.getPayloadDataSet();
 
                         // Find the root of the query
                         std::string abstractSyntax = cfind.getAbstractSyntax();
-                        if(abstractSyntax == imebra::dicom2018e::uidPatientRootQueryRetrieveInformationModelFIND)
+                        if(abstractSyntax == dicomhero::dicom2018e::uidPatientRootQueryRetrieveInformationModelFIND)
                         {
                             // Patient root
                             // ....
                         }
-                        else if(abstractSyntax == imebra::dicom2018e::uidStudyRootQueryRetrieveInformationModelFIND)
+                        else if(abstractSyntax == dicomhero::dicom2018e::uidStudyRootQueryRetrieveInformationModelFIND)
                         {
                             // Study root
                             // ....
                         }
 
                         // Find out what we should retrieve (e.g. "PATIENT", "STUDY")
-                        std::string queryLevel = payload.getString(imebra::TagId(imebra::tagId_t::QueryRetrieveLevel_0008_0052), 0);
+                        std::string queryLevel = payload.getString(dicomhero::TagId(dicomhero::tagId_t::QueryRetrieveLevel_0008_0052), 0);
 
                         // Find out the query parameters
-                        std::string patientId = payload.getString(imebra::TagId(imebra::tagId_t::PatientID_0010_0020), 0, "");
-                        std::string patientIdIssuer = payload.getString(imebra::TagId(imebra::tagId_t::IssuerOfPatientID_0010_0021), 0, "");
-                        std::string patientName = payload.getString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0, "");
+                        std::string patientId = payload.getString(dicomhero::TagId(dicomhero::tagId_t::PatientID_0010_0020), 0, "");
+                        std::string patientIdIssuer = payload.getString(dicomhero::TagId(dicomhero::tagId_t::IssuerOfPatientID_0010_0021), 0, "");
+                        std::string patientName = payload.getString(dicomhero::TagId(dicomhero::tagId_t::PatientName_0010_0010), 0, "");
 
                         // Search the database for results
                         // .....
 
                         // For each result:
-                            imebra::charsetsList_t charsets;
+                            dicomhero::charsetsList_t charsets;
                             charsets.push_back("ISO_IR 192");
-                            imebra::MutableDataSet responseDataSet(scp.getTransferSyntax(abstractSyntax), charsets);
+                            dicomhero::MutableDataSet responseDataSet(scp.getTransferSyntax(abstractSyntax), charsets);
 
-                            responseDataSet.setString(imebra::TagId(imebra::tagId_t::QueryRetrieveLevel_0008_0052), queryLevel);
+                            responseDataSet.setString(dicomhero::TagId(dicomhero::tagId_t::QueryRetrieveLevel_0008_0052), queryLevel);
 
                             //...Set the key attributes for the found record
-                            responseDataSet.setString(imebra::TagId(imebra::tagId_t::PatientID_0010_0020), "FoundPatientId");
+                            responseDataSet.setString(dicomhero::TagId(dicomhero::tagId_t::PatientID_0010_0020), "FoundPatientId");
                             //...
-                            responseDataSet.setString(imebra::TagId(imebra::tagId_t::RetrieveAETitle_0008_0054), "AET where the file can be retrieved with c-get or c-move");
-                            responseDataSet.setString(imebra::TagId(imebra::tagId_t::SOPInstanceUID_0008_0018), "SOP.INSTANCE.FOUND.RECORD");
+                            responseDataSet.setString(dicomhero::TagId(dicomhero::tagId_t::RetrieveAETitle_0008_0054), "AET where the file can be retrieved with c-get or c-move");
+                            responseDataSet.setString(dicomhero::TagId(dicomhero::tagId_t::SOPInstanceUID_0008_0018), "SOP.INSTANCE.FOUND.RECORD");
 
                             // Send the response
-                            imebra::CFindResponse response(cfind, responseDataSet);
+                            dicomhero::CFindResponse response(cfind, responseDataSet);
                             dimse.sendCommandOrResponse(response);
 
                         // At the end, send the final confirmation for c-find
-                        imebra::CFindResponse finalResponse(cfind, imebra::dimseStatusCode_t::success);
+                        dicomhero::CFindResponse finalResponse(cfind, dicomhero::dimseStatusCode_t::success);
                         dimse.sendCommandOrResponse(finalResponse);
 
                     }
                     break;
-                case imebra::dimseCommandType_t::cMove:
+                case dicomhero::dimseCommandType_t::cMove:
                     // Received a CMOVE command
                     ////////////////////////////
                     {
                         outputCommandTags("**** Received CMOVE command from " + scp.getOtherAET(), command);
 
-                        imebra::CMoveCommand cmove = command.getAsCMoveCommand(); // Convert to cmove to retrieve cmove-specific data
+                        dicomhero::CMoveCommand cmove = command.getAsCMoveCommand(); // Convert to cmove to retrieve cmove-specific data
 
                         // Respond with an error
-                        dimse.sendCommandOrResponse(imebra::CMoveResponse(cmove, imebra::dimseStatusCode_t::unappropriateActionForInstance, 0, 0, 0, 0));
+                        dimse.sendCommandOrResponse(dicomhero::CMoveResponse(cmove, dicomhero::dimseStatusCode_t::unappropriateActionForInstance, 0, 0, 0, 0));
                     }
                     break;
-                case imebra::dimseCommandType_t::cCancel:
+                case dicomhero::dimseCommandType_t::cCancel:
                     // Received a CMOVE command
                     ////////////////////////////
                     {
                         outputCommandTags("**** Received CCANCEL command from " + scp.getOtherAET(), command);
                     }
                     break;
-                case imebra::dimseCommandType_t::cEcho:
+                case dicomhero::dimseCommandType_t::cEcho:
                     // Received a CECHO command
                     ////////////////////////////
                     {
                         outputCommandTags("**** Received CECHO command from " + scp.getOtherAET(), command);
 
-                        imebra::CEchoCommand cecho = command.getAsCEchoCommand(); // Convert to cmove to retrieve cecho-specific data
+                        dicomhero::CEchoCommand cecho = command.getAsCEchoCommand(); // Convert to cmove to retrieve cecho-specific data
 
                         // Respond with an error
-                        dimse.sendCommandOrResponse(imebra::CEchoResponse(cecho, imebra::dimseStatusCode_t::success));
+                        dimse.sendCommandOrResponse(dicomhero::CEchoResponse(cecho, dicomhero::dimseStatusCode_t::success));
                     }
                     break;
-                case imebra::dimseCommandType_t::nEventReport:
+                case dicomhero::dimseCommandType_t::nEventReport:
                     // Received a NEVENTREPORT command
                     ///////////////////////////////////
                     {
                         outputCommandTags("**** Received NEVENTREPORT command from " + scp.getOtherAET(), command);
 
-                        imebra::NEventReportCommand neventreport = command.getAsNEventReportCommand(); // Convert to neventreport to retrieve neventreport-specific data
+                        dicomhero::NEventReportCommand neventreport = command.getAsNEventReportCommand(); // Convert to neventreport to retrieve neventreport-specific data
 
                         // Respond with an error
-                        dimse.sendCommandOrResponse(imebra::NEventReportResponse(neventreport, imebra::dimseStatusCode_t::unappropriateActionForInstance));
+                        dimse.sendCommandOrResponse(dicomhero::NEventReportResponse(neventreport, dicomhero::dimseStatusCode_t::unappropriateActionForInstance));
                     }
                     break;
-                case imebra::dimseCommandType_t::nGet:
+                case dicomhero::dimseCommandType_t::nGet:
                     // Received a NGET command
                     ///////////////////////////////////
                     {
                         outputCommandTags("**** Received NGET command from " + scp.getOtherAET(), command);
 
-                        imebra::NGetCommand nget = command.getAsNGetCommand(); // Convert to nget to retrieve nget-specific data
+                        dicomhero::NGetCommand nget = command.getAsNGetCommand(); // Convert to nget to retrieve nget-specific data
 
                         // Respond with an error
-                        dimse.sendCommandOrResponse(imebra::NGetResponse(nget, imebra::dimseStatusCode_t::unappropriateActionForInstance));
+                        dimse.sendCommandOrResponse(dicomhero::NGetResponse(nget, dicomhero::dimseStatusCode_t::unappropriateActionForInstance));
                     }
                     break;
-                case imebra::dimseCommandType_t::nSet:
+                case dicomhero::dimseCommandType_t::nSet:
                     // Received a NSET command
                     ///////////////////////////////////
                     {
                         outputCommandTags("**** Received NSET command from " + scp.getOtherAET(), command);
 
-                        imebra::NSetCommand nset = command.getAsNSetCommand(); // Convert to nset to retrieve nset-specific data
+                        dicomhero::NSetCommand nset = command.getAsNSetCommand(); // Convert to nset to retrieve nset-specific data
 
                         // Respond with an error
-                        dimse.sendCommandOrResponse(imebra::NSetResponse(nset, imebra::dimseStatusCode_t::unappropriateActionForInstance));
+                        dimse.sendCommandOrResponse(dicomhero::NSetResponse(nset, dicomhero::dimseStatusCode_t::unappropriateActionForInstance));
                     }
                     break;
-                case imebra::dimseCommandType_t::nAction:
+                case dicomhero::dimseCommandType_t::nAction:
                     // Received a NACTION command
                     ///////////////////////////////////
                     {
                         outputCommandTags("**** Received NACTION command from " + scp.getOtherAET(), command);
 
-                        imebra::NActionCommand naction = command.getAsNActionCommand(); // Convert to naction to retrieve naction-specific data
+                        dicomhero::NActionCommand naction = command.getAsNActionCommand(); // Convert to naction to retrieve naction-specific data
 
                         // Respond with an error
-                        dimse.sendCommandOrResponse(imebra::NActionResponse(naction, imebra::dimseStatusCode_t::unappropriateActionForInstance));
+                        dimse.sendCommandOrResponse(dicomhero::NActionResponse(naction, dicomhero::dimseStatusCode_t::unappropriateActionForInstance));
                     }
                     break;
-                case imebra::dimseCommandType_t::nCreate:
+                case dicomhero::dimseCommandType_t::nCreate:
                     // Received a NCREATE command
                     ///////////////////////////////////
                     {
                         outputCommandTags("**** Received NCREATE command from " + scp.getOtherAET(), command);
 
-                        imebra::NCreateCommand ncreate = command.getAsNCreateCommand(); // Convert to ncreate to retrieve ncreate-specific data
+                        dicomhero::NCreateCommand ncreate = command.getAsNCreateCommand(); // Convert to ncreate to retrieve ncreate-specific data
 
                         // Respond with an error
-                        dimse.sendCommandOrResponse(imebra::NCreateResponse(ncreate, imebra::dimseStatusCode_t::unappropriateActionForInstance));
+                        dimse.sendCommandOrResponse(dicomhero::NCreateResponse(ncreate, dicomhero::dimseStatusCode_t::unappropriateActionForInstance));
                     }
                     break;
-                case imebra::dimseCommandType_t::nDelete:
+                case dicomhero::dimseCommandType_t::nDelete:
                     // Received a NDELETE command
                     ///////////////////////////////////
                     {
                         outputCommandTags("**** Received NDELETE command from " + scp.getOtherAET(), command);
 
-                        imebra::NDeleteCommand ndelete = command.getAsNDeleteCommand(); // Convert to ndelete to retrieve ndelete-specific data
+                        dicomhero::NDeleteCommand ndelete = command.getAsNDeleteCommand(); // Convert to ndelete to retrieve ndelete-specific data
 
                         // Respond with an error
-                        dimse.sendCommandOrResponse(imebra::NDeleteResponse(ndelete, imebra::dimseStatusCode_t::unappropriateActionForInstance));
+                        dimse.sendCommandOrResponse(dicomhero::NDeleteResponse(ndelete, dicomhero::dimseStatusCode_t::unappropriateActionForInstance));
                     }
                     break;
                 default:
@@ -590,7 +590,7 @@ void processDimseCommands(imebra::TCPStream tcpStream, std::string aet)
                 }
             }
         }
-        catch(const imebra::StreamEOFError&)
+        catch(const dicomhero::StreamEOFError&)
         {
             // The association has been closed during the association
         }
@@ -605,7 +605,7 @@ void processDimseCommands(imebra::TCPStream tcpStream, std::string aet)
         }
 
     }
-    catch(const imebra::StreamEOFError&)
+    catch(const dicomhero::StreamEOFError&)
     {
         // The association has been closed
     }
@@ -638,8 +638,8 @@ int main(int argc, char* argv[])
         }
 
         // Create a listening socket bound to the port in the first argument
-        imebra::TCPPassiveAddress listeningAddress("", argv[1]);
-        imebra::TCPListener listenForConnections(listeningAddress);
+        dicomhero::TCPPassiveAddress listeningAddress("", argv[1]);
+        dicomhero::TCPListener listenForConnections(listeningAddress);
 
         // Get the AET (second argument)
         std::string aet(argv[2]);
@@ -653,7 +653,7 @@ int main(int argc, char* argv[])
                 for(;;)
                 {
                     // Blocks until the TCPListener is terminated (throws EOF) or until a connection arrives
-                    imebra::TCPStream newTCPStream = listenForConnections.waitForConnection();
+                    dicomhero::TCPStream newTCPStream = listenForConnections.waitForConnection();
 
                     // Launch a thread that processes the dimse commands on the new connection
                     std::thread processDimseCommandsThread(processDimseCommands, newTCPStream, aet);
@@ -662,7 +662,7 @@ int main(int argc, char* argv[])
                     processDimseCommandsThread.detach();
                 }
             }
-            catch (const imebra::StreamEOFError&)
+            catch (const dicomhero::StreamEOFError&)
             {
             }
             catch (const std::exception& e)
@@ -674,7 +674,7 @@ int main(int argc, char* argv[])
             // Abort all open associations
             {
                 std::lock_guard<std::mutex> lock(lockActiveAssociations);
-                for(imebra::AssociationBase* pAssociation: activeAssociations)
+                for(dicomhero::AssociationBase* pAssociation: activeAssociations)
                 {
                     pAssociation->abort();
                 }

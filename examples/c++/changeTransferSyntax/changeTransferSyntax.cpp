@@ -5,7 +5,7 @@ $fileHeader$
 #include <iostream>
 
 
-#include <imebra/imebra.h>
+#include <dicomhero/dicomhero.h>
 #include <sstream>
 
 #if defined(WIN32) || defined(WIN64)
@@ -18,7 +18,7 @@ $fileHeader$
 #include <memory>
 #include <list>
 
-using namespace imebra;
+using namespace dicomhero;
 
 int findArgument(const char* argument, int argc, char* argv[])
 {
