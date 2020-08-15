@@ -422,6 +422,7 @@ void processDimseCommands(imebra::TCPStream tcpStream, std::string aet)
                         dimse.sendCommandOrResponse(imebra::CGetResponse(cget, imebra::dimseStatusCode_t::unappropriateActionForInstance, 0, 0, 0, 0));
                     }
                     break;
+
                 case imebra::dimseCommandType_t::cFind:
                     // Received a CFIND command
                     ////////////////////////////
@@ -430,8 +431,55 @@ void processDimseCommands(imebra::TCPStream tcpStream, std::string aet)
 
                         imebra::CFindCommand cfind = command.getAsCFindCommand(); // Convert to cfind to retrieve cfind-specific data
 
-                        // Respond with an error
-                        dimse.sendCommandOrResponse(imebra::CFindResponse(cfind, imebra::dimseStatusCode_t::unappropriateActionForInstance));
+                        // CFIND processing example
+                        //-------------------------
+                        const imebra::DataSet payload = cfind.getPayloadDataSet();
+
+                        // Find the root of the query
+                        std::string abstractSyntax = cfind.getAbstractSyntax();
+                        if(abstractSyntax == imebra::dicom2018e::uidPatientRootQueryRetrieveInformationModelFIND)
+                        {
+                            // Patient root
+                            // ....
+                        }
+                        else if(abstractSyntax == imebra::dicom2018e::uidStudyRootQueryRetrieveInformationModelFIND)
+                        {
+                            // Study root
+                            // ....
+                        }
+
+                        // Find out what we should retrieve (e.g. "PATIENT", "STUDY")
+                        std::string queryLevel = payload.getString(imebra::TagId(imebra::tagId_t::QueryRetrieveLevel_0008_0052), 0);
+
+                        // Find out the query parameters
+                        std::string patientId = payload.getString(imebra::TagId(imebra::tagId_t::PatientID_0010_0020), 0, "");
+                        std::string patientIdIssuer = payload.getString(imebra::TagId(imebra::tagId_t::IssuerOfPatientID_0010_0021), 0, "");
+                        std::string patientName = payload.getString(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0, "");
+
+                        // Search the database for results
+                        // .....
+
+                        // For each result:
+                            imebra::charsetsList_t charsets;
+                            charsets.push_back("ISO_IR 192");
+                            imebra::MutableDataSet responseDataSet(scp.getTransferSyntax(abstractSyntax), charsets);
+
+                            responseDataSet.setString(imebra::TagId(imebra::tagId_t::QueryRetrieveLevel_0008_0052), queryLevel);
+
+                            //...Set the key attributes for the found record
+                            responseDataSet.setString(imebra::TagId(imebra::tagId_t::PatientID_0010_0020), "FoundPatientId");
+                            //...
+                            responseDataSet.setString(imebra::TagId(imebra::tagId_t::RetrieveAETitle_0008_0054), "AET where the file can be retrieved with c-get or c-move");
+                            responseDataSet.setString(imebra::TagId(imebra::tagId_t::SOPInstanceUID_0008_0018), "SOP.INSTANCE.FOUND.RECORD");
+
+                            // Send the response
+                            imebra::CFindResponse response(cfind, responseDataSet);
+                            dimse.sendCommandOrResponse(response);
+
+                        // At the end, send the final confirmation for c-find
+                        imebra::CFindResponse finalResponse(cfind, imebra::dimseStatusCode_t::success);
+                        dimse.sendCommandOrResponse(finalResponse);
+
                     }
                     break;
                 case imebra::dimseCommandType_t::cMove:

@@ -31,8 +31,6 @@ void sendDataThread(unsigned long maxConnections, std::string port)
             MutableDataSet dataSet("1.2.840.10008.1.2.1");
             dataSet.setUint32(TagId(11, 11), connectionNumber, tagVR_t::UL);
 
-            std::this_thread::sleep_for(std::chrono::seconds(5));
-
             StreamWriter writer(newStream.getStreamOutput());
             CodecFactory::save(dataSet, writer, codecType_t::dicom);
         }
