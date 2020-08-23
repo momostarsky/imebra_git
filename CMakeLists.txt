@@ -19,6 +19,8 @@ if("*${CMAKE_BUILD_TYPE}*" STREQUAL "**")
 endif()
 if(WIN32)
     set(CMAKE_DEBUG_POSTFIX "d")
+else()
+    set(CMAKE_DEBUG_POSTFIX "")
 endif()
 
 
