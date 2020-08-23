@@ -14,6 +14,10 @@ cmake_minimum_required(VERSION 3.0)
 project("imebra")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
+if("*${CMAKE_BUILD_TYPE}*" STREQUAL "**")
+    set(CMAKE_BUILD_TYPE "Debug") # Default build mode is debug
+endif()
+
 
 set(imebra_libraries "")
 
@@ -211,7 +215,7 @@ else()
     endif("${EMBED_BITCODE}" STREQUAL "1")
 
     if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-        if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+        if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
             message("Debug mode, enabling coverage")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
             set(imebra_libraries ${imebra_libraries} gcov)
@@ -318,10 +322,12 @@ if(NOT IOS)
     )
     add_dependencies(ImebraTests GTest)
     target_include_directories(ImebraTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest_install/include)
-    target_link_libraries(ImebraTests imebra "${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}")
-if(${DCMTK_FOUND})
-    target_link_libraries(ImebraTests dcmdata dcmimage)
-endif()
+
+    target_link_libraries(ImebraTests imebra "gtest${CMAKE_${CMAKE_BUILD_TYPE}_POSTFIX}")
+
+    if(${DCMTK_FOUND})
+        target_link_libraries(ImebraTests dcmdata dcmimage)
+    endif()
 
     ##############################################
     #
@@ -392,12 +398,7 @@ endif()
 
     target_link_libraries(scpExample imebra)
 
-
-
-
 endif(NOT IOS)
-
-
 
 
 ##############################################
