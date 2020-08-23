@@ -295,7 +295,7 @@ if(NOT IOS)
     ExternalProject_Add(
         GTest
         URL https://github.com/google/googletest/archive/release-1.10.0.zip
-        CMAKE_ARGS "-Dgtest_force_shared_crt=ON" "-DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/gtest_install"
+        CMAKE_ARGS "-Dgtest_force_shared_crt=ON" "-DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/gtest_install" "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
         INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/gtest_install
     )
