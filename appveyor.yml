@@ -17,11 +17,11 @@ for:
       - mkdir build_imebra_release
       - mkdir build_imebra_ios_release
       - cd build_imebra_release
-      - cmake --config Release ..
+      - cmake -DCMAKE_BUILD_TYPE=Release ..
       - cmake --build . --config Release
       - ctest -V .
       - cd ../build_imebra_ios_release
-      - cmake --config Release -DIOS=IPHONE ..
+      - cmake -DCMAKE_BUILD_TYPE=Release -DIOS=IPHONE ..
       - cmake --build . --config Release
       - cd ..
       - cp -R library/include build_imebra_release
@@ -45,7 +45,7 @@ for:
 
           cd build_imebra_release
     
-          cmake --config Release ..
+          cmake -DCMAKE_BUILD_TYPE=Release ..
     
           cmake --build . --config Release
 
@@ -74,7 +74,7 @@ build_script:
 
     cd build_imebra_release
     
-    cmake --config Release ..
+    cmake -DCMAKE_BUILD_TYPE=Release ..
     
     cmake --build . --config Release
 
@@ -82,7 +82,7 @@ build_script:
 
     cd ../build_imebra_debug
     
-    cmake --config Debug ..
+    cmake -DCMAKE_BUILD_TYPE=Debug ..
     
     cmake --build . --config Debug
 
