@@ -17,12 +17,6 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release)
 if("*${CMAKE_BUILD_TYPE}*" STREQUAL "**")
     set(CMAKE_BUILD_TYPE "Debug") # Default build mode is debug
 endif()
-if(WIN32)
-    set(CMAKE_DEBUG_POSTFIX "d")
-else()
-    set(CMAKE_DEBUG_POSTFIX "")
-endif()
-
 
 set(imebra_libraries "")
 
@@ -328,8 +322,12 @@ if(NOT IOS)
     add_dependencies(ImebraTests GTest)
     target_include_directories(ImebraTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest_install/include)
 
-    string(TOUPPER ${CMAKE_BUILD_TYPE} UCASE_BUILD_TYPE)
-    target_link_libraries(ImebraTests imebra "gtest${CMAKE_${UCASE_BUILD_TYPE}_POSTFIX}")
+    # GTest always adds "d" to debug build, no matter what's the platform
+    if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        target_link_libraries(ImebraTests imebra "gtestd")
+    else()
+        target_link_libraries(ImebraTests imebra "gtest")
+    endif()
 
     if(${DCMTK_FOUND})
         target_link_libraries(ImebraTests dcmdata dcmimage)
