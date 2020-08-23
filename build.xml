@@ -361,7 +361,7 @@ Slovenia
     </target>
 
     <!-- Build -->
-    <target name="make_distribution" depends="create_source_distribution, run_test_cases, test_python">
+    <target name="make_distribution" depends="create_source_distribution, run_test_cases, test_python, build_test_cases_release">
         <zip destfile="imebra_${version_major}_${version_minor}_${version_patch}_${version_build}.zip" basedir="${source_distribution}" />
     </target>
 
