@@ -269,51 +269,6 @@ if(NOT IOS)
     #
     ##############################################
 
-    # We need thread support
-    find_package(Threads REQUIRED)
-
-    # Enable ExternalProject CMake module
-    include(ExternalProject)
-
-    # Download and install GoogleTest
-    ExternalProject_Add(
-        gtest
-        URL https://github.com/google/googletest/archive/release-1.10.0.zip
-            CMAKE_ARGS "-Dgtest_force_shared_crt=ON"
-        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
-            INSTALL_COMMAND ""
-    )
-
-    # Get GTest source and binary directories from CMake project
-    ExternalProject_Get_Property(gtest source_dir binary_dir)
-
-    # Create a libgtest target to be used as a dependency by test programs
-    add_library(libgtest IMPORTED STATIC GLOBAL)
-    add_dependencies(libgtest gtest)
-
-
-    # Set libgtest properties
-    if(APPLE)
-    set_target_properties(libgtest PROPERTIES
-        "IMPORTED_LOCATION" "${binary_dir}/lib/libgtest.a"
-        "IMPORTED_LOCATION_DEBUG" "${binary_dir}/Debug/lib/libgtest.a"
-        "IMPORTED_LOCATION_RELEASE" "${binary_dir}/Release/lib/libgtest.a"
-        "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-    )
-    elseif(MSVC)
-    set_target_properties(libgtest PROPERTIES
-        "IMPORTED_LOCATION" "${binary_dir}/gtest.lib"
-        "IMPORTED_LOCATION_DEBUG" "${binary_dir}/lib/Debug/gtestd.lib"
-        "IMPORTED_LOCATION_RELEASE" "${binary_dir}/lib/Release/gtest.lib"
-        "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-    )
-    else()
-    set_target_properties(libgtest PROPERTIES
-        "IMPORTED_LOCATION" "${binary_dir}/lib/libgtest.a"
-        "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-    )
-    endif(APPLE)
-
     # Find DCMTK for interoperability tests.
     find_package(DCMTK)
     if(${DCMTK_FOUND})
@@ -323,8 +278,22 @@ if(NOT IOS)
             message(WARNING "WARNING: DCMTK not found. Disabling interoperability tests")
     endif(${DCMTK_FOUND})
 
-    set(imebra_tests_objc_src "")
+    # We need thread support
+    find_package(Threads REQUIRED)
 
+    # Enable ExternalProject CMake module (so we can load GoogleTest)
+    include(ExternalProject)
+
+    # Download and install GoogleTest
+    ExternalProject_Add(
+        GTest
+        URL https://github.com/google/googletest/archive/release-1.10.0.zip
+        CMAKE_ARGS "-Dgtest_force_shared_crt=ON" "-DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/gtest_install"
+        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
+        INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/gtest_install
+    )
+
+    set(imebra_tests_objc_src "")
     file(GLOB imebra_tests_include "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h")
     file(GLOB imebra_tests_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
     if("${IMEBRA_OBJC}" STREQUAL "1")
@@ -341,16 +310,19 @@ if(NOT IOS)
 
     endif("${IMEBRA_OBJC}" STREQUAL "1")
 
+    link_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest_install/lib)
     add_executable(ImebraTests
             ${imebra_tests_include}
             ${imebra_tests_src}
             ${imebra_tests_objc_src}
     )
-    target_include_directories(ImebraTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest/src/gtest/googletest/include)
-    target_link_libraries(ImebraTests imebra libgtest)
+    add_dependencies(ImebraTests GTest)
+    target_include_directories(ImebraTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest_install/include)
+    target_link_libraries(ImebraTests imebra gtest)
 if(${DCMTK_FOUND})
     target_link_libraries(ImebraTests dcmdata dcmimage)
 endif()
+
     ##############################################
     #
     # RUN TESTS
