@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #334 (The build of ImebraTests fails on some Windows machines) as per SOP :ref:`FIXBUG_2`
+
+Version 5.2.1.0
+--------------------------------
+
 - Fixed bug #329 (Slow SCP connection when running on Windows 10) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #330 (memoryImpl.h should include <string>)
 - Implemented enhancement #331 (Add example of C-FIND processing to scpexample) as per SOP :ref:`DEVENH_2`
