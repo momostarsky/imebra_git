@@ -69,13 +69,14 @@ Windows specific instructions
 On Windows cmake will, by default, generate a 32 bit solution for the most recent Visual Studio compiler installed on
 the system.
 
-Additionally, when specifying the --build option it is possible to specify the debug or relase configuration via
-the option "--config Debug" or "--config Release"
-
 It is possible to build a 64 bit version of the library by explicitly specifying a 64 bit generator when launching cmake.
 
 The cmake generators available on Windows include:
 
+- Visual Studio 16 2019 [arch] = Generates Visual Studio 2019 project files.
+                                 Optional [arch] can be "Win64" or "ARM".
+- Visual Studio 15 2017 [arch] = Generates Visual Studio 2017 project files.
+                                 Optional [arch] can be "Win64" or "ARM".
 - Visual Studio 14 2015 [arch] = Generates Visual Studio 2015 project files.
                                  Optional [arch] can be "Win64" or "ARM".
 - Visual Studio 12 2013 [arch] = Generates Visual Studio 2013 project files.
@@ -96,7 +97,7 @@ For instance the following script will compile a Release 64 bit version of imebr
 
     mkdir artifacts_64bit_release
     cd artifacts_64bit_release
-    cmake -G "Visual Studio 14 2015 Win64" imebra_location
+    cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_BUILD_TYPE=Release imebra_location
     cmake --build . --config Release
 
 The following example will compile a Debug 64 bit version of imebra using Visual Studio 14 (2015):
@@ -105,7 +106,7 @@ The following example will compile a Debug 64 bit version of imebra using Visual
 
     mkdir artifacts_64bit_debug
     cd artifacts_64bit_debug
-    cmake -G "Visual Studio 14 2015 Win64" imebra_location
+    cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_BUILD_TYPE=Debug imebra_location
     cmake --build . --config Debug
 
 To generate the 32 bit version of the library, just omit the architecture after the name of the cmake generator:
@@ -114,7 +115,7 @@ To generate the 32 bit version of the library, just omit the architecture after 
 
     mkdir artifacts_32bit_debug
     cd artifacts_32bit_debug
-    cmake -G "Visual Studio 14 2015" imebra_location
+    cmake -G "Visual Studio 14 2015" -DCMAKE_BUILD_TYPE=Debug  imebra_location
     cmake --build . --config Debug
 
 

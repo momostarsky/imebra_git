@@ -73,6 +73,26 @@
         <mkdir dir="${build_jni}" />
     </target>
 
+    <!-- Create the directory for the test build in release mode -->
+    <target name="create_test_dir_release" depends="version" description="Create the directory for the build in release mode">
+        <property name="build_dir_release" location="./ant-build-tests_release" />
+        <delete dir="${build_dir_release}" failonerror="false" />
+        <mkdir dir="${build_dir_release}" />
+
+        <property name="build_library_for_tests_release" location="${build_dir_release}/library-build" />
+        <mkdir dir="${build_library_for_tests_release}" />
+
+        <property name="build_tests_release" location="${build_dir_release}/tests-build" />
+        <mkdir dir="${build_tests_release}" />
+
+        <property name="build_java_release" location="${build_dir_release}/java-build" />
+        <mkdir dir="${build_java_release}" />
+        <property name="build_jar_release" location="${build_dir_release}/jar-build" />
+        <mkdir dir="${build_jar_release}" />
+        <property name="build_jni_release" location="${build_dir_release}/jni-build" />
+        <mkdir dir="${build_jni_release}" />
+    </target>
+
     <!-- Replace the version number and license info -->
     <target name="replace_version" depends="create_build_dir">
         <replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="$version$" value="${fullVersionReadable}" />
@@ -181,7 +201,7 @@ Slovenia
     <target name="imebrajar" depends="java_swig, create_test_dir" >
         <exec executable="cmake" failonerror="true" dir="${build_jni}">
             <arg value="--verbose"/>
-            <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
+            <arg value="-DCMAKE_BUILD_TYPE=Debug" />
             <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
             <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
             <arg path="${build_release}/wrappers/javaWrapper"/>
@@ -236,16 +256,28 @@ Slovenia
     </target>
 
 
-    <!-- Build the test cases -->
+    <!-- Build the test cases (debug mode)-->
     <target name="build_test_cases" depends="create_source_distribution, create_test_dir" description="Build the Imebra test cases">
         <exec executable="cmake" failonerror="true" dir="${build_library_for_tests}">
             <arg value="--verbose"/>
-            <arg value="-DCMAKE_BUILD_TYPE=DEBUG" />
+            <arg value="-DCMAKE_BUILD_TYPE=Debug" />
             <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
             <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
             <arg path="${build_release}"/>
         </exec>
         <exec executable="make" failonerror="true" dir="${build_library_for_tests}" />
+    </target>
+
+    <!-- Build the test cases (release mode)-->
+    <target name="build_test_cases_release" depends="create_source_distribution, create_test_dir_release" description="Build the Imebra test cases in release mode">
+        <exec executable="cmake" failonerror="true" dir="${build_library_for_tests_release}">
+            <arg value="--verbose"/>
+            <arg value="-DCMAKE_BUILD_TYPE=Release" />
+            <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
+            <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
+            <arg path="${build_release}"/>
+        </exec>
+        <exec executable="make" failonerror="true" dir="${build_library_for_tests_release}" />
     </target>
 
     <!-- Run the test cases posix -->
@@ -329,7 +361,7 @@ Slovenia
     </target>
 
     <!-- Build -->
-    <target name="make_distribution" depends="create_source_distribution, run_test_cases, test_python">
+    <target name="make_distribution" depends="create_source_distribution, run_test_cases, test_python, build_test_cases_release">
         <zip destfile="imebra_${version_major}_${version_minor}_${version_patch}_${version_build}.zip" basedir="${source_distribution}" />
     </target>
 
