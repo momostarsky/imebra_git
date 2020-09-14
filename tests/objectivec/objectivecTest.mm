@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
-#include <imebra/imebra.h>
-#include <imebraobjc/imebra.h>
+#include <dicomhero_objc/dicomhero.h>
 #include "../buildImageForTest.h"
 #include "../../objectivec/src/imebra_strings.h"
 #include <thread>
@@ -20,8 +19,8 @@ TEST(objectivec, stringToNSStringTest)
     NSString* patient0 = [[NSString alloc] initWithUTF8String:"??\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"];
     NSString* patient1 = [[NSString alloc] initWithUTF8String:"\xD0\xA1\xD0\xBC\xD1\x8B\xD1\x81\xD0\xBB\x20\xD0\xB2\xD1\x81\xD0\xB5\xD0\xB9"];
 
-    ImebraMutableMemory* pStreamMemory = [[ImebraMutableMemory alloc] init];
-    ImebraTagId* pPatientTag = [[ImebraTagId alloc] initWithId:ImebraTagEnumPatientName_0010_0010];
+    DicomheroMutableMemory* pStreamMemory = [[DicomheroMutableMemory alloc] init];
+    DicomheroTagId* pPatientTag = [[DicomheroTagId alloc] initWithId:DicomheroTagEnumPatientName_0010_0010];
 
     {
 
@@ -31,13 +30,13 @@ TEST(objectivec, stringToNSStringTest)
         [pCharsets addObject: @"ISO 2022 IR 144"];
         [pCharsets addObject: @"ISO 2022 IR 100"];
         [pCharsets addObject: @"ISO 2022 IR 126"];
-        
-        ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2.1" charsets:pCharsets];
+
+        DicomheroMutableDataSet* pDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2.1" charsets:pCharsets];
 
         @autoreleasepool
         {
             NSError* pError = 0;
-            ImebraWritingDataHandler* pHandler = [pDataSet getWritingDataHandler:pPatientTag bufferId:0 error:&pError];
+            DicomheroWritingDataHandler* pHandler = [pDataSet getWritingDataHandler:pPatientTag bufferId:0 error:&pError];
 
             [pHandler setString:0 newValue:patient0 error:&pError];
             [pHandler setString:1 newValue:patient1 error:&pError];
@@ -45,10 +44,10 @@ TEST(objectivec, stringToNSStringTest)
 
         @autoreleasepool
         {
-            ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithMutableMemory:pStreamMemory];
-            ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream: pWriteStream];
+            DicomheroMemoryStreamOutput* pWriteStream = [[DicomheroMemoryStreamOutput alloc] initWithMutableMemory:pStreamMemory];
+            DicomheroStreamWriter* pWriter = [[DicomheroStreamWriter alloc] initWithOutputStream: pWriteStream];
             NSError* pError = 0;
-            [ImebraCodecFactory saveToStream:pWriter dataSet:pDataSet codecType:ImebraCodecTypeDicom error:&pError];
+            [DicomheroCodecFactory saveToStream:pWriter dataSet:pDataSet codecType:DicomheroCodecTypeDicom error:&pError];
 
         }
 
@@ -57,7 +56,7 @@ TEST(objectivec, stringToNSStringTest)
         bool bPatientFound(false);
         for(size_t scanTags(0); scanTags != numTags; ++scanTags)
         {
-            ImebraTagId* pTag = [pTags objectAtIndex:scanTags];
+            DicomheroTagId* pTag = [pTags objectAtIndex:scanTags];
             if(pTag.groupId == 0x10 && pTag.tagId == 0x10 && pTag.groupOrder == 0)
             {
                 bPatientFound = true;
@@ -68,12 +67,12 @@ TEST(objectivec, stringToNSStringTest)
     }
 
     {
-        ImebraMemoryStreamInput* pReadStream = [[ImebraMemoryStreamInput alloc] initWithReadMemory:pStreamMemory];
+        DicomheroMemoryStreamInput* pReadStream = [[DicomheroMemoryStreamInput alloc] initWithReadMemory:pStreamMemory];
 
-        ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pReadStream];
+        DicomheroStreamReader* pReader = [[DicomheroStreamReader alloc] initWithInputStream:pReadStream];
 
         NSError* pError = 0;
-        ImebraDataSet* pTestDataSet = [ImebraCodecFactory loadFromStream:pReader error:&pError];
+        DicomheroDataSet* pTestDataSet = [DicomheroCodecFactory loadFromStream:pReader error:&pError];
 
         NSString* nsPatientName0 = [pTestDataSet getString:pPatientTag elementNumber:0 error:&pError];
         NSString* nsPatientName1 = [pTestDataSet getString:pPatientTag elementNumber:1 error:&pError];
@@ -130,9 +129,9 @@ TEST(objectivec, CodecFactory)
     CodecFactory::save(testDataSet, "testCodecFactory.dcm", codecType_t::dicom);
 
     NSError* error = nil;
-    ImebraDataSet* pDataSet = [ImebraCodecFactory loadFromFile:@"testCodecFactory.dcm" error:&error];
-    NSString* checkPatientName = [pDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&error];
-    NSString* checkPatientID = [pDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x20] elementNumber:0 error:&error];
+    DicomheroDataSet* pDataSet = [DicomheroCodecFactory loadFromFile:@"testCodecFactory.dcm" error:&error];
+    NSString* checkPatientName = [pDataSet getString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&error];
+    NSString* checkPatientID = [pDataSet getString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x20] elementNumber:0 error:&error];
 
     EXPECT_EQ(imebra::NSStringToString(checkPatientName), "Test^Patient");
     EXPECT_EQ(imebra::NSStringToString(checkPatientID), "TestID");
@@ -143,7 +142,7 @@ TEST(objectivec, CodecFactory)
 TEST(objectivec, CodecFactoryFailLoad)
 {
     NSError* error = nil;
-    ImebraDataSet* pDataSet = [ImebraCodecFactory loadFromFile:@"fail.dcm" error:&error];
+    DicomheroDataSet* pDataSet = [DicomheroCodecFactory loadFromFile:@"fail.dcm" error:&error];
     EXPECT_EQ(pDataSet, nullptr);
     EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
 }
@@ -152,24 +151,24 @@ TEST(objectivec, CodecFactoryFailLoad)
 // Initialize and check an image content
 TEST(objectivec, image)
 {
-    ImebraMutableImage* pImage = [[ImebraMutableImage alloc] initWithWidth:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
+    DicomheroMutableImage* pImage = [[DicomheroMutableImage alloc] initWithWidth:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
 
     NSError* error = nil;
 
     @autoreleasepool
     {
-        ImebraWritingDataHandler* writingDataHandler = [pImage getWritingDataHandler:&error];
+        DicomheroWritingDataHandler* writingDataHandler = [pImage getWritingDataHandler:&error];
         for(unsigned int pixel(0); pixel != 25; ++pixel)
         {
             [writingDataHandler setUint32:pixel newValue:pixel error:&error];
         }
     }
 
-    ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
-    [pDataSet setImage:0 image:pImage quality:ImebraImageQualityVeryHigh error:&error];
+    DicomheroMutableDataSet* pDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+    [pDataSet setImage:0 image:pImage quality:DicomheroImageQualityVeryHigh error:&error];
 
-    ImebraImage* pCheckImage = [pDataSet getImage:0 error:&error];
-    ImebraReadingDataHandlerNumeric* readingDataHandler = [pCheckImage getReadingDataHandler:&error];
+    DicomheroImage* pCheckImage = [pDataSet getImage:0 error:&error];
+    DicomheroReadingDataHandlerNumeric* readingDataHandler = [pCheckImage getReadingDataHandler:&error];
     for(unsigned int pixel(0); pixel != 25; ++pixel)
     {
         EXPECT_EQ([readingDataHandler getUint32:pixel error:&error], pixel);
@@ -180,7 +179,7 @@ TEST(objectivec, image)
 // Initialize and check an image content
 TEST(objectivec, imageNSData)
 {
-    ImebraMutableImage* pImage = [[ImebraMutableImage alloc] initWithWidth:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
+    DicomheroMutableImage* pImage = [[DicomheroMutableImage alloc] initWithWidth:5 height:5 depth:DicomheroBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
 
     NSError* error = nil;
 
@@ -192,15 +191,15 @@ TEST(objectivec, imageNSData)
             buffer[pixel] = (std::uint16_t)(pixel + 1u);
         }
         NSData* pSource = [[NSData alloc] initWithBytes:buffer length:sizeof(buffer)];
-        ImebraWritingDataHandlerNumeric* writingDataHandler = [pImage getWritingDataHandler:&error];
+        DicomheroWritingDataHandlerNumeric* writingDataHandler = [pImage getWritingDataHandler:&error];
         [writingDataHandler assign:pSource error:&error];
     }
 
-    ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
-    [pDataSet setImage:0 image:pImage quality:ImebraImageQualityVeryHigh error:&error];
+    DicomheroMutableDataSet* pDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+    [pDataSet setImage:0 image:pImage quality:DicomheroImageQualityVeryHigh error:&error];
 
-    ImebraImage* pCheckImage = [pDataSet getImage:0 error:&error];
-    ImebraReadingDataHandlerNumeric* readingDataHandler = [pCheckImage getReadingDataHandler:&error];
+    DicomheroImage* pCheckImage = [pDataSet getImage:0 error:&error];
+    DicomheroReadingDataHandlerNumeric* readingDataHandler = [pCheckImage getReadingDataHandler:&error];
     NSData* pData = [readingDataHandler getMemory:&error].data;
     for(unsigned int pixel(0); pixel != 25; ++pixel)
     {
