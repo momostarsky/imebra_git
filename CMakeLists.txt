@@ -11,7 +11,7 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-project("imebra")
+project("dicomhero_imebra")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
@@ -102,6 +102,7 @@ add_definitions(-DIMEBRA_DLL)
 add_definitions(-DIMEBRA_DLL_EXPORTS)
 add_definitions(-DNOMINMAX)
 
+file(GLOB dicomhero_interface "${CMAKE_CURRENT_SOURCE_DIR}/library/include/dicomhero/*.h")
 file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/*.h")
 file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.h")
 file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.cpp")
@@ -109,6 +110,7 @@ file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/library/impleme
 file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.h")
 set(imebra_objc_src "")
 set(imebra_implementation_src_objc "")
+set(dicomhero_objc_include "")
 set(imebra_objc_include "")
 set(imebra_objc_include_dir "")
 set(imebra_objc_gnustep_dir "")
@@ -117,6 +119,7 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
 
     file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/src/*.*")
     file(GLOB imebra_implementation_src_objc "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.mm")
+    file(GLOB dicomhero_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include/dicomhero_objc/*.h")
     file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include/imebraobjc/*.h")
     add_definitions(-DIMEBRA_OBJC)
 
@@ -176,9 +179,11 @@ add_library(imebra ${IMEBRA_SHARED_STATIC}
     ${imebra_implementation_include}
     ${imebra_objc_src}
     ${imebra_objc_include}
+    ${dicomhero_objc_include}
     ${imebra_include}
     ${imebra_src}
     ${imebra_interface}
+    ${dicomhero_interface}
 )
 
 if(NOT "${ADDITIONAL_INCLUDE_PATH}" STREQUAL "")
@@ -439,11 +444,11 @@ endif(NOT IOS)
 set(CPACK_PACKAGE_NAME "libimebra")
 set(CPACK_PACKAGE_CONTACT "paolo@binarno.com")
 set(CPACK_PACKAGE_VERSION ${IMEBRA_VERSION})
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Imebra library for DICOM medical files")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "DICOMHero library for DICOM medical files")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/readme.rst")
 
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6")
-set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://imebra.com")
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://dicomhero.com")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Paolo Brandoli <paolo@binarno.com>")
 set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
@@ -495,10 +500,12 @@ install(TARGETS imebra EXPORT imebraConfig      LIBRARY DESTINATION lib
                                                 PUBLIC_HEADER DESTINATION include
                                                 COMPONENT "Imebra Shared library")
 
-install(FILES ${imebra_interface} DESTINATION include/imebra COMPONENT "Imebra include files")
+install(FILES ${imebra_interface} DESTINATION include/imebra COMPONENT "DICOMHero include files")
+install(FILES ${dicomhero_interface} DESTINATION include/dicomhero COMPONENT "DICOMHero include files")
 
 if("${IMEBRA_OBJC}" STREQUAL "1")
-    install(FILES ${imebra_objc_include} DESTINATION include/imebraobjc COMPONENT "Imebra objc include files")
+    install(FILES ${imebra_objc_include} DESTINATION include/imebraobjc COMPONENT "DICOMHero objc include files")
+    install(FILES ${dicomhero_objc_include} DESTINATION include/dicomhero_objc COMPONENT "DICOMHero objc include files")
 endif("${IMEBRA_OBJC}" STREQUAL "1")
 
 install(EXPORT imebraConfig DESTINATION share/imebra/cmake)
