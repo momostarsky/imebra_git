@@ -25,12 +25,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataSetImpl.h"
 #include "codecFactoryImpl.h"
 #include "memoryStreamImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <vector>
 #include <stdlib.h>
 #include <string.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -83,7 +83,7 @@ jpegStreamCodec::jpegStreamCodec()
 ///////////////////////////////////////////////////////////
 void jpegStreamCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Retrieve the transfer syntax
     ///////////////////////////////////////////////////////////
@@ -117,7 +117,7 @@ void jpegStreamCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::sh
     std::shared_ptr<image> decodedImage = pDataSet->getImage(0);
     imageCodec.setImage(pStream, decodedImage, "1.2.840.10008.1.2.4.50", imageQuality_t::high, 8, true, true, false, false);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
@@ -133,7 +133,7 @@ void jpegStreamCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::sh
 /////////////////////////////////////////////////////////////////
 void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t /* maxSizeBufferLoad = 0xffffffff */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<memory> jpegData = std::make_shared<memory>();
 
@@ -156,12 +156,12 @@ void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sha
         std::uint8_t checkSignature[2]={(std::uint8_t)0xff, (std::uint8_t)0xd8};
         if(::memcmp(jpegSignature, checkSignature, 2) != 0)
         {
-            IMEBRA_THROW(CodecWrongFormatError, "detected a wrong format");
+            DICOMHERO_THROW(CodecWrongFormatError, "detected a wrong format");
         }
     }
     catch(StreamEOFError&)
     {
-        IMEBRA_THROW(CodecWrongFormatError, "detected a wrong format");
+        DICOMHERO_THROW(CodecWrongFormatError, "detected a wrong format");
     }
 
     // Used to read discharged chars
@@ -233,7 +233,7 @@ void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sha
         pDataSet->setString(0x0002, 0, 0x0010, 0, "1.2.840.10008.1.2.4.57");
         break;
     default:
-        IMEBRA_THROW(JpegCodecCannotHandleSyntaxError, "Jpeg SOF not supported");
+        DICOMHERO_THROW(JpegCodecCannotHandleSyntaxError, "Jpeg SOF not supported");
     }
 
     // Number of planes
@@ -279,7 +279,7 @@ void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sha
     memoryStreamWriter->flushDataBuffer();
     imageHandler->getMemory()->copyFrom(jpegData);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -287,7 +287,7 @@ void jpegStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sha
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 

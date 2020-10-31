@@ -7,7 +7,7 @@
 #include <sstream>
 #include "testsSettings.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -212,7 +212,7 @@ TEST(acseTest, negotiationOneTransferSyntax)
     const std::string scpName("SCP");
 
     std::vector<std::string> scpAbstractSyntaxes;
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
+    std::thread scp(dicomhero::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
 
@@ -275,7 +275,7 @@ TEST(acseTest, scpScuRole)
     scpThrowAbstractSyntaxes.push_back(uidHardcopyGrayscaleImageStorageSOPClass_1_2_840_10008_5_1_1_29);
 
     const std::string scpName("SCP");
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpThrowAbstractSyntaxes));
+    std::thread scp(dicomhero::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpThrowAbstractSyntaxes));
 
     {
         AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
@@ -356,7 +356,7 @@ TEST(acseTest, negotiationMultipleTransferSyntaxes)
     const std::string scpName("SCP");
 
     std::vector<std::string> scpAbstractSyntaxes;
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
+    std::thread scp(dicomhero::tests::scpThread, std::ref(scpName), std::ref(presentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, presentationContexts, readSCU, writeSCU, 0);
 
@@ -412,7 +412,7 @@ TEST(acseTest, negotiationPartialMatchTransferSyntaxes)
     const std::string scpName("SCP");
 
     std::vector<std::string> scpAbstractSyntaxes;
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
+    std::thread scp(dicomhero::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
@@ -484,7 +484,7 @@ TEST(acseTest, negotiationPartialMatchSameAbstractSyntax)
     const std::string scpName("SCP");
 
     std::vector<std::string> scpAbstractSyntaxes;
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
+    std::thread scp(dicomhero::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
@@ -566,7 +566,7 @@ TEST(acseTest, sendPayload)
     const size_t maxPayloadSize(128000);
 
     std::vector<std::string> scpAbstractSyntaxes;
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
+    std::thread scp(dicomhero::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     try{
 
@@ -702,7 +702,7 @@ TEST(acseTest, overlappingOperations)
     const std::uint32_t maxInvoked(10u);
     const size_t numMessages(1000u);
 
-    std::thread scp(imebra::tests::scpThreadMultipleOperations, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), maxInvoked);
+    std::thread scp(dicomhero::tests::scpThreadMultipleOperations, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), maxInvoked);
 
     {
         AssociationSCU scu("SCU", scpName, maxInvoked, 1u, scuPresentationContexts, readSCU, writeSCU, 0);
@@ -711,7 +711,7 @@ TEST(acseTest, overlappingOperations)
 
         for(std::uint16_t launchThreads(0); launchThreads != maxInvoked; ++launchThreads)
         {
-            scuThreads.push_back(std::make_shared<std::thread>(imebra::tests::scuThread, std::ref(scu), static_cast<std::uint16_t>(launchThreads * numMessages), numMessages));
+            scuThreads.push_back(std::make_shared<std::thread>(dicomhero::tests::scuThread, std::ref(scu), static_cast<std::uint16_t>(launchThreads * numMessages), numMessages));
         }
 
         for(size_t launchThreads(0); launchThreads != maxInvoked; ++launchThreads)
@@ -759,7 +759,7 @@ TEST(acseTest, negotiationMultiplePresentationContexts)
     const std::string scpName("SCP");
 
     std::vector<std::string> scpAbstractSyntaxes;
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
+    std::thread scp(dicomhero::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
@@ -805,7 +805,7 @@ TEST(acseTest, negotiationMultiplePresentationContexts)
 
     scp.join();
 
-#if defined(IMEBRA_LOGGING_LOG4CXX)
+#if defined(DICOMHERO_LOGGING_LOG4CXX)
     ::tests::settings& settings = ::tests::settings::getSettings();
     if(!settings.get("--testLogFile").empty())
     {
@@ -854,7 +854,7 @@ TEST(acseTest, negotiationNoTransferSyntax)
     const std::string scpName("SCP");
 
     std::vector<std::string> scpAbstractSyntaxes;
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
+    std::thread scp(dicomhero::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
@@ -945,7 +945,7 @@ TEST(acseTest, negotiationNoPresentationContext)
     const std::string scpName("SCP");
 
     std::vector<std::string> scpAbstractSyntaxes;
-    std::thread scp(imebra::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
+    std::thread scp(dicomhero::tests::scpThread, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP), std::ref(scpAbstractSyntaxes), std::ref(scpAbstractSyntaxes));
 
     AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
 
@@ -1048,9 +1048,9 @@ TEST(acseTest, rejectAssociationName)
 
     const std::string scpName("SCP");
 
-    std::thread scp(imebra::tests::scpThreadRejectCalledAET, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
+    std::thread scp(dicomhero::tests::scpThreadRejectCalledAET, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
-    EXPECT_THROW(AssociationSCU scu("SCU", scpName + "wrong", 1, 1, scuPresentationContexts, readSCU, writeSCU, 0), imebra::AcseSCUCalledAETNotRecognizedError);
+    EXPECT_THROW(AssociationSCU scu("SCU", scpName + "wrong", 1, 1, scuPresentationContexts, readSCU, writeSCU, 0), dicomhero::AcseSCUCalledAETNotRecognizedError);
 
     scp.join();
 }
@@ -1084,7 +1084,7 @@ TEST(acseTest, invokeTooManyOperations)
 
     const std::string scpName("SCP");
 
-    std::thread scp(imebra::tests::scpThreadDontAnswer, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
+    std::thread scp(dicomhero::tests::scpThreadDontAnswer, std::ref(scpName), std::ref(scpPresentationContexts), std::ref(readSCP), std::ref(writeSCP));
 
     {
         AssociationSCU scu("SCU", scpName, 1, 1, scuPresentationContexts, readSCU, writeSCU, 0);
@@ -1162,4 +1162,4 @@ TEST(acseTest, artimTest)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

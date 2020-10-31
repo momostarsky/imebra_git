@@ -48,20 +48,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraDataSet*)getCommandDataSet:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(DimseCommandBase)->getCommandDataSet())];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraDataSet*)getPayloadDataSet:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(DimseCommandBase)->getPayloadDataSet())];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(NSString*)getAbstractSyntax
@@ -71,38 +71,38 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(NSString*)getAffectedSopInstanceUid:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return imebra::stringToNSString(get_imebra_object_holder(DimseCommandBase)->getAffectedSopInstanceUid());
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(NSString*)getAffectedSopClassUid:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return imebra::stringToNSString(get_imebra_object_holder(DimseCommandBase)->getAffectedSopClassUid());
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(NSString*)getRequestedSopInstanceUid:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return imebra::stringToNSString(get_imebra_object_holder(DimseCommandBase)->getRequestedSopInstanceUid());
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(NSString*)getRequestedSopClassUid:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return imebra::stringToNSString(get_imebra_object_holder(DimseCommandBase)->getRequestedSopClassUid());
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 
@@ -143,39 +143,39 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(unsigned int)getRemainingSubOperations:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return (unsigned int)((imebra::CPartialResponse*)get_imebra_object_holder(DimseCommandBase))->getRemainingSubOperations();
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 -(unsigned int)getCompletedSubOperations:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return (unsigned int)((imebra::CPartialResponse*)get_imebra_object_holder(DimseCommandBase))->getCompletedSubOperations();
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 -(unsigned int)getFailedSubOperations:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return (unsigned int)((imebra::CPartialResponse*)get_imebra_object_holder(DimseCommandBase))->getFailedSubOperations();
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 
 -(unsigned int)getWarningSubOperations:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return (unsigned int)((imebra::CPartialResponse*)get_imebra_object_holder(DimseCommandBase))->getWarningSubOperations();
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 @end
@@ -405,11 +405,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(NSString*)getDestinationAET:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return imebra::stringToNSString(((imebra::CMoveCommand*)get_imebra_object_holder(DimseCommandBase))->getDestinationAET());
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 @end
@@ -1069,11 +1069,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(NSString*)getTransferSyntax:(NSString*)abstractSyntax error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return imebra::stringToNSString(get_imebra_object_holder(DimseService)->getTransferSyntax(imebra::NSStringToString(abstractSyntax)));
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(unsigned short)getNextCommandID
@@ -1083,7 +1083,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraDimseCommand*)getCommand:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     std::unique_ptr<imebra::DimseCommand> pCommand(new imebra::DimseCommand(get_imebra_object_holder(DimseService)->getCommand()));
 
@@ -1117,126 +1117,126 @@ If you do not want to be bound by the GPL terms (such as the requirement
         break;
     }
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(void)sendCommandOrResponse:(ImebraDimseCommandBase*)pCommand error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     get_imebra_object_holder(DimseService)->sendCommandOrResponse(*get_other_imebra_object_holder(pCommand, DimseCommandBase));
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(ImebraCStoreResponse*)getCStoreResponse:(ImebraCStoreCommand*)pCommand error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraCStoreResponse alloc] initWithImebraCommand:
             new imebra::CStoreResponse(get_imebra_object_holder(DimseService)->getCStoreResponse(*(imebra::CStoreCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraCGetResponse*)getCGetResponse:(ImebraCGetCommand*)pCommand error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraCGetResponse alloc] initWithImebraCommand:
             new imebra::CGetResponse(get_imebra_object_holder(DimseService)->getCGetResponse(*(imebra::CGetCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraCFindResponse*)getCFindResponse:(ImebraCFindCommand*)pCommand error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraCFindResponse alloc] initWithImebraCommand:
             new imebra::CFindResponse(get_imebra_object_holder(DimseService)->getCFindResponse(*(imebra::CFindCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraCMoveResponse*)getCMoveResponse:(ImebraCMoveCommand*)pCommand error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraCMoveResponse alloc] initWithImebraCommand:
             new imebra::CMoveResponse(get_imebra_object_holder(DimseService)->getCMoveResponse(*(imebra::CMoveCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraCEchoResponse*)getCEchoResponse:(ImebraCEchoCommand*)pCommand error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraCEchoResponse alloc] initWithImebraCommand:
             new imebra::CEchoResponse(get_imebra_object_holder(DimseService)->getCEchoResponse(*(imebra::CEchoCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraNEventReportResponse*)getNEventReportResponse:(ImebraNEventReportCommand*)pCommand error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraNEventReportResponse alloc] initWithImebraCommand:
             new imebra::NEventReportResponse(get_imebra_object_holder(DimseService)->getNEventReportResponse(*(imebra::NEventReportCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraNGetResponse*)getNGetResponse:(ImebraNGetCommand*)pCommand error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraNGetResponse alloc] initWithImebraCommand:
             new imebra::NGetResponse(get_imebra_object_holder(DimseService)->getNGetResponse(*(imebra::NGetCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraNSetResponse*)getNSetResponse:(ImebraNSetCommand*)pCommand error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraNSetResponse alloc] initWithImebraCommand:
             new imebra::NSetResponse(get_imebra_object_holder(DimseService)->getNSetResponse(*(imebra::NSetCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraNActionResponse*)getNActionResponse:(ImebraNActionCommand*)pCommand error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraNActionResponse alloc] initWithImebraCommand:
             new imebra::NActionResponse(get_imebra_object_holder(DimseService)->getNActionResponse(*(imebra::NActionCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraNCreateResponse*)getNCreateResponse:(ImebraNCreateCommand*)pCommand error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraNCreateResponse alloc] initWithImebraCommand:
             new imebra::NCreateResponse(get_imebra_object_holder(DimseService)->getNCreateResponse(*(imebra::NCreateCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraNDeleteResponse*)getNDeleteResponse:(ImebraNDeleteCommand*)pCommand error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraNDeleteResponse alloc] initWithImebraCommand:
             new imebra::NDeleteResponse(get_imebra_object_holder(DimseService)->getNDeleteResponse(*(imebra::NDeleteCommand*)get_other_imebra_object_holder(pCommand, DimseCommandBase)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 @end

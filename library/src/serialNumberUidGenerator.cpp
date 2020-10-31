@@ -13,10 +13,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 
 
-#include "../include/imebra/serialNumberUidGenerator.h"
+#include "../include/dicomhero/serialNumberUidGenerator.h"
 #include "../implementation/serialNumberUidGeneratorImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 SerialNumberUIDGenerator::SerialNumberUIDGenerator(const std::string& root, std::uint32_t departmentId, std::uint32_t modelId, std::uint32_t serialNumber):

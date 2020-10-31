@@ -16,14 +16,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/streamWriter.h"
-#include "../include/imebra/baseStreamOutput.h"
-#include "../include/imebra/memory.h"
+#include "../include/dicomhero/streamWriter.h"
+#include "../include/dicomhero/baseStreamOutput.h"
+#include "../include/dicomhero/memory.h"
 #include "../implementation/streamWriterImpl.h"
 #include "../implementation/memoryImpl.h"
 #include "../implementation/exceptionImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 StreamWriter::StreamWriter(const std::shared_ptr<implementation::streamWriter>& pWriter): m_pWriter(pWriter)
@@ -44,31 +44,31 @@ StreamWriter::StreamWriter(const StreamWriter& source): m_pWriter(getStreamWrite
 
 void StreamWriter::write(const char* data, size_t dataSize)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pWriter->write((const std::uint8_t*)data, dataSize);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void StreamWriter::write(const Memory& memory)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     const std::uint8_t* data(getMemoryImplementation(memory)->data());
     const size_t dataSize(getMemoryImplementation(memory)->size());
     m_pWriter->write(data, dataSize);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void StreamWriter::flush()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pWriter->flushDataBuffer();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 const std::shared_ptr<implementation::streamWriter>& getStreamWriterImplementation(const StreamWriter& streamWriter)

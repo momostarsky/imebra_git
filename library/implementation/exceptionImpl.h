@@ -20,7 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(CImbxException_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_)
 #define CImbxException_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_
 
-#include "../include/imebra/definitions.h"
+#include "../include/dicomhero/definitions.h"
 #include "configurationImpl.h"
 #include "logging.h"
 #include <memory>
@@ -34,7 +34,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <sstream>
 #include <thread>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -47,10 +47,10 @@ namespace implementation
 ///         being caught&thrown.
 ///
 /// The application can use the macros
-///  IMEBRA_FUNCTION_START(),
-///  IMEBRA_FUNCTION_END(),
-///  IMEBRA_THROW() and
-///  IMEBRA_RETHROW()
+///  DICOMHERO_FUNCTION_START(),
+///  DICOMHERO_FUNCTION_END(),
+///  DICOMHERO_THROW() and
+///  DICOMHERO_RETHROW()
 ///  inside its function: the macros take care of logging
 ///  in the exceptions manager the source code's lines
 ///  travelled by an exception while it is being thrown
@@ -103,9 +103,9 @@ public:
 ///
 /// In order to log the stack position the application
 ///  must use the following macros inside its functions:
-/// - IMEBRA_FUNCTION_START()
-/// - IMEBRA_FUNCTION_END()
-/// - IMEBRA_THROW()
+/// - DICOMHERO_FUNCTION_START()
+/// - DICOMHERO_FUNCTION_END()
+/// - DICOMHERO_THROW()
 ///
 /// The final catch block that processes the exception and
 ///  doesn't rethrow it should call
@@ -114,7 +114,7 @@ public:
 ///
 /// The retrieved message will contain the position of the
 ///  first throw statement and the positions of the
-///  IMEBRA_FUNCTION_END() macros that rethrown the
+///  DICOMHERO_FUNCTION_END() macros that rethrown the
 ///  exception.
 ///
 /// All the catch blocks that don't rethrow the catched
@@ -132,7 +132,7 @@ public:
     /// \brief Add an exceptionInfo object to the active
     ///         thread's information list.
     ///
-    /// This function is called by IMEBRA_FUNCTION_END() when
+    /// This function is called by DICOMHERO_FUNCTION_END() when
     ///  an uncaught exception is found.
     ///
     /// @param info the info object that must be added
@@ -201,40 +201,40 @@ protected:
 
 
 
-/// \def IMEBRA_FUNCTION_START(functionName)
+/// \def DICOMHERO_FUNCTION_START(functionName)
 ///
 /// \brief Initialize a try block. The try block must be
 ///         matched by a call to the
-///         IMEBRA_FUNCTION_END() macro.
+///         DICOMHERO_FUNCTION_END() macro.
 ///
 /// This macro should be placed at the very beginning
 ///  of a function.
 ///
 /// All the exceptions not catched by the body of the
-///  function are catched by IMEBRA_FUNCTION_END() and
+///  function are catched by DICOMHERO_FUNCTION_END() and
 ///  rethrown, but before being rethrown the function's
 ///  name and the line number in the source file are
 ///  logged.
-/// All the positions of the IMEBRA_FUNCTION_END() that
+/// All the positions of the DICOMHERO_FUNCTION_END() that
 ///  catch the same exception are logged togheter.
 ///
 /// Exceptions thrown inside the function should be thrown
-///  by IMEBRA_THROW(), but this is not necessary.
+///  by DICOMHERO_THROW(), but this is not necessary.
 ///
 /// @param functionName the name of the function in which
 ///         the macro is placed.
 ///
 ///////////////////////////////////////////////////////////
 #ifdef _MSC_VER
-#define IMEBRA_METHOD_NAME() __FUNCTION__
+#define DICOMHERO_METHOD_NAME() __FUNCTION__
 #else
-#define IMEBRA_METHOD_NAME() __PRETTY_FUNCTION__
+#define DICOMHERO_METHOD_NAME() __PRETTY_FUNCTION__
 #endif
 
 ///
 /// \brief
 ///
-/// Used in IMEBRA_FUNCTION_START to force to logging of
+/// Used in DICOMHERO_FUNCTION_START to force to logging of
 /// the entering and exiting events (trace log).
 ///
 ///////////////////////////////////////////////////////////
@@ -256,16 +256,16 @@ private:
     const std::string m_functionName;
 };
 
-#if IMEBRA_LOG_LEVEL >= IMEBRA_LOG_LEVEL_TRACE_VALUE
-#define IMEBRA_FUNCTION_START() \
+#if DICOMHERO_LOG_LEVEL >= DICOMHERO_LOG_LEVEL_TRACE_VALUE
+#define DICOMHERO_FUNCTION_START() \
     try{ \
-       const ::imebra::implementation::logTrace trace(IMEBRA_METHOD_NAME());
+       const ::dicomhero::implementation::logTrace trace(DICOMHERO_METHOD_NAME());
 #else
-#define IMEBRA_FUNCTION_START() \
+#define DICOMHERO_FUNCTION_START() \
     try{
 #endif
 
-/// \def IMEBRA_FUNCTION_END()
+/// \def DICOMHERO_FUNCTION_END()
 ///
 /// \brief Insert a catch block that rethrows the catched
 ///         exception and log the function's name and
@@ -273,26 +273,26 @@ private:
 ///         exception has been catched and rethrown.
 ///
 /// This function must be placed at the end of a function
-///  if the IMEBRA_FUNCTION_START() has been used in
+///  if the DICOMHERO_FUNCTION_START() has been used in
 ///  the function.
 ///
 ///////////////////////////////////////////////////////////
-#define IMEBRA_FUNCTION_END() \
+#define DICOMHERO_FUNCTION_END() \
     }\
     catch(std::exception& e)\
     {\
-        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
-        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
+        dicomhero::implementation::exceptionInfo info(DICOMHERO_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
+        dicomhero::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
         throw;\
     }\
     catch(...)\
     {\
-        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, "unknown", "");\
-        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
+        dicomhero::implementation::exceptionInfo info(DICOMHERO_METHOD_NAME(), __FILE__, __LINE__, "unknown", "");\
+        dicomhero::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
         throw;\
     }
 
-/// \def IMEBRA_FUNCTION_END_LOG()
+/// \def DICOMHERO_FUNCTION_END_LOG()
 ///
 /// \brief Insert a catch block that rethrows the catched
 ///         exception and log the function's name and
@@ -303,28 +303,28 @@ private:
 /// error.
 ///
 /// This function must be placed at the end of a function
-///  if the IMEBRA_FUNCTION_START() has been used in
+///  if the DICOMHERO_FUNCTION_START() has been used in
 ///  the function.
 ///
 ///////////////////////////////////////////////////////////
-#define IMEBRA_FUNCTION_END_LOG() \
+#define DICOMHERO_FUNCTION_END_LOG() \
     }\
     catch(std::exception& e)\
     {\
-        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
-        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
-        IMEBRA_LOG_ERROR("Throwing exception " << typeid(e).name() << " with message \"" << e.what() << "\" in function " << IMEBRA_METHOD_NAME() << " line " << __LINE__ << " file " << __FILE__);\
+        dicomhero::implementation::exceptionInfo info(DICOMHERO_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
+        dicomhero::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
+        DICOMHERO_LOG_ERROR("Throwing exception " << typeid(e).name() << " with message \"" << e.what() << "\" in function " << DICOMHERO_METHOD_NAME() << " line " << __LINE__ << " file " << __FILE__);\
         throw;\
     }\
     catch(...)\
     {\
-        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, "unknown", "");\
-        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
-        IMEBRA_LOG_ERROR("Throwing unknown exception in function " << IMEBRA_METHOD_NAME() << " line " << __LINE__ << " file " << __FILE__);\
+        dicomhero::implementation::exceptionInfo info(DICOMHERO_METHOD_NAME(), __FILE__, __LINE__, "unknown", "");\
+        dicomhero::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
+        DICOMHERO_LOG_ERROR("Throwing unknown exception in function " << DICOMHERO_METHOD_NAME() << " line " << __LINE__ << " file " << __FILE__);\
         throw;\
     }
 
-/// \def IMEBRA_FUNCTION_END_MODIFY()
+/// \def DICOMHERO_FUNCTION_END_MODIFY()
 ///
 /// \brief Insert a catch block that rethrows the catched
 ///         exception and log the function's name and
@@ -341,79 +341,79 @@ private:
 ///                  of catchType
 ///
 ///////////////////////////////////////////////////////////
-#define IMEBRA_FUNCTION_END_MODIFY(catchType, throwType) \
+#define DICOMHERO_FUNCTION_END_MODIFY(catchType, throwType) \
     }\
     catch(catchType& e)\
     {\
-        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
-        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
-        IMEBRA_THROW(throwType, e.what());\
+        dicomhero::implementation::exceptionInfo info(DICOMHERO_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
+        dicomhero::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
+        DICOMHERO_THROW(throwType, e.what());\
     }\
     catch(std::exception& e)\
     {\
-        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
-        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
+        dicomhero::implementation::exceptionInfo info(DICOMHERO_METHOD_NAME(), __FILE__, __LINE__, typeid(e).name(), e.what());\
+        dicomhero::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
         throw;\
     }\
     catch(...)\
     {\
-        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, "unknown", "");\
-        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
+        dicomhero::implementation::exceptionInfo info(DICOMHERO_METHOD_NAME(), __FILE__, __LINE__, "unknown", "");\
+        dicomhero::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
         throw;\
     }
 
-/// \def IMEBRA_THROW(exceptionType, what)
+/// \def DICOMHERO_THROW(exceptionType, what)
 ///
 /// \brief Throw an exception of the specified type and log
 ///         the function's name and the position in the
 ///         file on which the exception has been thrown.
 ///
 /// This macro can be used only in the functions or blocks
-///  that use the macros IMEBRA_FUNCTION_START() and
-///  IMEBRA_FUNCTION_END().
+///  that use the macros DICOMHERO_FUNCTION_START() and
+///  DICOMHERO_FUNCTION_END().
 ///
 /// @param exceptionType the type of exception to throw
 /// @param what          a message to be associated with
 ///                       the exception
 ///
 ///////////////////////////////////////////////////////////
-#define IMEBRA_THROW(exceptionType, message) \
+#define DICOMHERO_THROW(exceptionType, message) \
     {\
         std::ostringstream buildMessage; \
         buildMessage << message; \
         exceptionType imebraTrackException(buildMessage.str());\
-        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(imebraTrackException).name(), imebraTrackException.what());\
-        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().startExceptionInfo(info);\
+        dicomhero::implementation::exceptionInfo info(DICOMHERO_METHOD_NAME(), __FILE__, __LINE__, typeid(imebraTrackException).name(), imebraTrackException.what());\
+        dicomhero::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().startExceptionInfo(info);\
         throw imebraTrackException;\
     }
 
-#define IMEBRA_THROW_ADDITIONAL_PARAM(exceptionType, message, additional) \
+#define DICOMHERO_THROW_ADDITIONAL_PARAM(exceptionType, message, additional) \
     {\
         std::ostringstream buildMessage; \
         buildMessage << message; \
         exceptionType imebraTrackException(buildMessage.str(), additional);\
-        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, typeid(imebraTrackException).name(), imebraTrackException.what());\
-        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().startExceptionInfo(info);\
+        dicomhero::implementation::exceptionInfo info(DICOMHERO_METHOD_NAME(), __FILE__, __LINE__, typeid(imebraTrackException).name(), imebraTrackException.what());\
+        dicomhero::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().startExceptionInfo(info);\
         throw imebraTrackException;\
     }
 
-/// \def IMEBRA_RETHROW(what)
+/// \def DICOMHERO_RETHROW(what)
 ///
 /// \brief Rethrow an exception caught by a catch block
 ///         and add some descriptions to it.
 ///
 /// This macro can be used only in the functions or blocks
-///  that use the macros IMEBRA_FUNCTION_START() and
-///  IMEBRA_FUNCTION_END().
+///  that use the macros DICOMHERO_FUNCTION_START() and
+///  DICOMHERO_FUNCTION_END().
 ///
 /// @param what          a message to be associated with
 ///                       the exception
 ///
 ///////////////////////////////////////////////////////////
-#define IMEBRA_RETHROW(what) \
+#define DICOMHERO_RETHROW(what) \
     {\
-        imebra::implementation::exceptionInfo info(IMEBRA_METHOD_NAME(), __FILE__, __LINE__, "rethrowing", what);\
-        imebra::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
+        dicomhero::implementation::exceptionInfo info(DICOMHERO_METHOD_NAME(), __FILE__, __LINE__, "rethrowing", what);\
+        dicomhero::implementation::exceptionsManagerGetter::getExceptionsManagerGetter().getExceptionsManager().addExceptionInfo(info);\
         throw;\
     }
 
@@ -421,7 +421,7 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 #endif // !defined(CImbxException_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_)

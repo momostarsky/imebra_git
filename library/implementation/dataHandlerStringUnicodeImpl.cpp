@@ -23,7 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "memoryImpl.h"
 #include "bufferImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -49,7 +49,7 @@ namespace handlers
 readingDataHandlerStringUnicode::readingDataHandlerStringUnicode(const memory& parseMemory, const std::shared_ptr<const charsetsList_t>& pCharsets, tagVR_t dataType, const wchar_t separator, const std::uint8_t paddingByte):
     readingDataHandler(dataType)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string asciiString((const char*)parseMemory.data(), parseMemory.size());
     std::wstring parseString(dicomConversion::convertToUnicode(asciiString, *pCharsets));
@@ -77,7 +77,7 @@ readingDataHandlerStringUnicode::readingDataHandlerStringUnicode(const memory& p
         firstPosition = ++nextPosition;
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
@@ -85,116 +85,116 @@ readingDataHandlerStringUnicode::readingDataHandlerStringUnicode(const memory& p
 ///////////////////////////////////////////////////////////
 std::int32_t readingDataHandlerStringUnicode::getInt32(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return convertFromString<std::wstring, std::int32_t>(getUnicodeString(index));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Get the data element as an unsigned long
 ///////////////////////////////////////////////////////////
 std::uint32_t readingDataHandlerStringUnicode::getUint32(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return convertFromString<std::wstring, std::uint32_t>(getUnicodeString(index));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Get the data element as a int16
 ///////////////////////////////////////////////////////////
 std::int16_t readingDataHandlerStringUnicode::getInt16(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return convertFromString<std::wstring, std::int16_t>(getUnicodeString(index));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Get the data element as a uint16
 ///////////////////////////////////////////////////////////
 std::uint16_t readingDataHandlerStringUnicode::getUint16(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return convertFromString<std::wstring, std::uint16_t>(getUnicodeString(index));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Get the data element as a int8
 ///////////////////////////////////////////////////////////
 std::int8_t readingDataHandlerStringUnicode::getInt8(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return convertFromString<std::wstring, std::int8_t>(getUnicodeString(index));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Get the data element as a uint8
 ///////////////////////////////////////////////////////////
 std::uint8_t readingDataHandlerStringUnicode::getUint8(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return convertFromString<std::wstring, std::uint8_t>(getUnicodeString(index));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Get the data element as a double
 ///////////////////////////////////////////////////////////
 double readingDataHandlerStringUnicode::getDouble(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return convertFromString<std::wstring, double>(getUnicodeString(index));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Get the data element as a float
 ///////////////////////////////////////////////////////////
 float readingDataHandlerStringUnicode::getFloat(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return convertFromString<std::wstring, float>(getUnicodeString(index));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Get the data element as a string
 ///////////////////////////////////////////////////////////
 std::string readingDataHandlerStringUnicode::getString(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     charsetsList_t charsets;
     charsets.push_back("ISO_IR 192");
     return dicomConversion::convertFromUnicode(getUnicodeString(index), charsets);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Get the data element as an unicode string
 ///////////////////////////////////////////////////////////
 std::wstring readingDataHandlerStringUnicode::getUnicodeString(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(index >= getSize())
     {
-        IMEBRA_THROW(MissingItemError, "Missing item " << index);
+        DICOMHERO_THROW(MissingItemError, "Missing item " << index);
     }
     return m_strings.at(index);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Retrieve the data element as a string
@@ -220,109 +220,109 @@ writingDataHandlerStringUnicode::~writingDataHandlerStringUnicode()
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringUnicode::setInt32(const size_t index, const std::int32_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::wostringstream conversion;
     conversion << value;
     setUnicodeString(index, conversion.str());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Set the data element as an unsigned long
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringUnicode::setUint32(const size_t index, const std::uint32_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::wostringstream conversion;
     conversion << value;
     setUnicodeString(index, conversion.str());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Set the data element as a int16
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringUnicode::setInt16(const size_t index, const std::int16_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     convertToString<std::int16_t>(index, value);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Set the data element as a uint16
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringUnicode::setUint16(const size_t index, const std::uint16_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     convertToString<std::uint16_t>(index, value);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Set the data element as a int8
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringUnicode::setInt8(const size_t index, const std::int8_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     convertToString<std::int8_t>(index, value);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Set the data element as a uint8
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringUnicode::setUint8(const size_t index, const std::uint8_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     convertToString<std::uint8_t>(index, value);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Set the data element as a double
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringUnicode::setDouble(const size_t index, const double value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::wostringstream conversion;
     conversion << value;
     setUnicodeString(index, conversion.str());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Set the data element as a float
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringUnicode::setFloat(const size_t index, const float value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::wostringstream conversion;
     conversion << value;
     setUnicodeString(index, conversion.str());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Set the buffer's size, in data elements
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringUnicode::setSize(const size_t elementsNumber)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_strings.resize(elementsNumber);
 
     buildCommitMemory();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 size_t writingDataHandlerStringUnicode::getSize() const
@@ -332,22 +332,22 @@ size_t writingDataHandlerStringUnicode::getSize() const
 
 void writingDataHandlerStringUnicode::setString(const size_t index, const std::string& value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     charsetsList_t charsets;
     charsets.push_back("ISO_IR 192");
     setUnicodeString(index, dicomConversion::convertToUnicode(value, charsets));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 void writingDataHandlerStringUnicode::setUnicodeString(const size_t index, const std::wstring& value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_separator == 0 && index != 0)
     {
-        IMEBRA_THROW(DataHandlerInvalidDataError, "Cannot insert more than one item in this string tag");
+        DICOMHERO_THROW(DataHandlerInvalidDataError, "Cannot insert more than one item in this string tag");
     }
     if(index >= getSize())
     {
@@ -359,21 +359,21 @@ void writingDataHandlerStringUnicode::setUnicodeString(const size_t index, const
 
     buildCommitMemory();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 void writingDataHandlerStringUnicode::validate() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     validateStringContainer(m_strings, m_maxSize, m_unitSize, m_separator != 0);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 void writingDataHandlerStringUnicode::buildCommitMemory()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Build the raw bytes
     ///////////////////////////////////////////////////////////
@@ -392,7 +392,7 @@ void writingDataHandlerStringUnicode::buildCommitMemory()
     m_commitMemory = std::make_shared<memory>(asciiString.size());
     m_commitMemory->assign((const std::uint8_t*)asciiString.data(), asciiString.size());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -402,4 +402,4 @@ void writingDataHandlerStringUnicode::buildCommitMemory()
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

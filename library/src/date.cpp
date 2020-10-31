@@ -16,10 +16,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/date.h"
+#include "../include/dicomhero/date.h"
 #include "../implementation/dateImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 

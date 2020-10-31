@@ -19,7 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(CImbxLogging_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_)
 #define CImbxLogging_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_
 
-#include "../include/imebra/definitions.h"
+#include "../include/dicomhero/definitions.h"
 #include "configurationImpl.h"
 #include <iostream>
 #include <sstream>
@@ -27,80 +27,80 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 
 // Logging levels
-#define IMEBRA_LOG_LEVEL_DISABLED_VALUE 0
-#define IMEBRA_LOG_LEVEL_FATAL_VALUE    1
-#define IMEBRA_LOG_LEVEL_ERROR_VALUE    2
-#define IMEBRA_LOG_LEVEL_WARNING_VALUE  3
-#define IMEBRA_LOG_LEVEL_INFO_VALUE     4
-#define IMEBRA_LOG_LEVEL_DEBUG_DEBUG    5
-#define IMEBRA_LOG_LEVEL_TRACE_VALUE    6
+#define DICOMHERO_LOG_LEVEL_DISABLED_VALUE 0
+#define DICOMHERO_LOG_LEVEL_FATAL_VALUE    1
+#define DICOMHERO_LOG_LEVEL_ERROR_VALUE    2
+#define DICOMHERO_LOG_LEVEL_WARNING_VALUE  3
+#define DICOMHERO_LOG_LEVEL_INFO_VALUE     4
+#define DICOMHERO_LOG_LEVEL_DEBUG_DEBUG    5
+#define DICOMHERO_LOG_LEVEL_TRACE_VALUE    6
 
-// Define IMEBRA_LOG_LEVEL to one of the previous values
+// Define DICOMHERO_LOG_LEVEL to one of the previous values
 // to enable logging
-#if !defined(IMEBRA_LOG_LEVEL)
+#if !defined(DICOMHERO_LOG_LEVEL)
 
-#if defined(IMEBRA_LOG_LEVEL_TRACE)
-#define IMEBRA_LOG_LEVEL IMEBRA_LOG_LEVEL_TRACE_VALUE
-#elif defined(IMEBRA_LOG_LEVEL_DEBUG)
-#define IMEBRA_LOG_LEVEL IMEBRA_LOG_LEVEL_DEBUG_VALUE
-#elif defined(IMEBRA_LOG_LEVEL_INFO)
-#define IMEBRA_LOG_LEVEL IMEBRA_LOG_LEVEL_INFO_VALUE
-#elif defined(IMEBRA_LOG_LEVEL_WARNING)
-#define IMEBRA_LOG_LEVEL IMEBRA_LOG_LEVEL_WARNING_VALUE
-#elif defined(IMEBRA_LOG_LEVEL_ERROR)
-#define IMEBRA_LOG_LEVEL IMEBRA_LOG_LEVEL_ERROR_VALUE
-#elif defined(IMEBRA_LOG_LEVEL_FATAL)
-#define IMEBRA_LOG_LEVEL IMEBRA_LOG_LEVEL_FATAL_VALUE
+#if defined(DICOMHERO_LOG_LEVEL_TRACE)
+#define DICOMHERO_LOG_LEVEL DICOMHERO_LOG_LEVEL_TRACE_VALUE
+#elif defined(DICOMHERO_LOG_LEVEL_DEBUG)
+#define DICOMHERO_LOG_LEVEL DICOMHERO_LOG_LEVEL_DEBUG_VALUE
+#elif defined(DICOMHERO_LOG_LEVEL_INFO)
+#define DICOMHERO_LOG_LEVEL DICOMHERO_LOG_LEVEL_INFO_VALUE
+#elif defined(DICOMHERO_LOG_LEVEL_WARNING)
+#define DICOMHERO_LOG_LEVEL DICOMHERO_LOG_LEVEL_WARNING_VALUE
+#elif defined(DICOMHERO_LOG_LEVEL_ERROR)
+#define DICOMHERO_LOG_LEVEL DICOMHERO_LOG_LEVEL_ERROR_VALUE
+#elif defined(DICOMHERO_LOG_LEVEL_FATAL)
+#define DICOMHERO_LOG_LEVEL DICOMHERO_LOG_LEVEL_FATAL_VALUE
 #else
-#define IMEBRA_LOG_LEVEL IMEBRA_LOG_LEVEL_DISABLED_VALUE
+#define DICOMHERO_LOG_LEVEL DICOMHERO_LOG_LEVEL_DISABLED_VALUE
 #endif
 
 #endif
 
 
-#if !defined(IMEBRA_LOG_FATAL_IMPLEMENTATION)
+#if !defined(DICOMHERO_LOG_FATAL_IMPLEMENTATION)
 
-#if !defined(IMEBRA_LOGGING_LOG4CXX) && !defined(IMEBRA_LOGGING_ANDROID) && !defined(IMEBRA_LOGGING_APPLE) && !defined(IMEBRA_LOGGING_SYSLOG) && !defined(IMEBRA_LOGGING_COUT)
+#if !defined(DICOMHERO_LOGGING_LOG4CXX) && !defined(DICOMHERO_LOGGING_ANDROID) && !defined(DICOMHERO_LOGGING_APPLE) && !defined(DICOMHERO_LOGGING_SYSLOG) && !defined(DICOMHERO_LOGGING_COUT)
 
-  #if defined(IMEBRA_ANDROID)
-    #define IMEBRA_LOGGING_ANDROID
+  #if defined(DICOMHERO_ANDROID)
+    #define DICOMHERO_LOGGING_ANDROID
     #if defined(NDEBUG)
-      #undef IMEBRA_LOG_LEVEL
-      #define IMEBRA_LOG_LEVEL IMEBRA_LOG_LEVEL_DISABLED_VALUE
+      #undef DICOMHERO_LOG_LEVEL
+      #define DICOMHERO_LOG_LEVEL DICOMHERO_LOG_LEVEL_DISABLED_VALUE
     #endif
   #elif defined(__APPLE__)
-    #define IMEBRA_LOGGING_APPLE
-  #elif defined(IMEBRA_POSIX)
-    #define IMEBRA_LOGGING_SYSLOG
+    #define DICOMHERO_LOGGING_APPLE
+  #elif defined(DICOMHERO_POSIX)
+    #define DICOMHERO_LOGGING_SYSLOG
   #else
-    #define IMEBRA_LOGGING_COUT
+    #define DICOMHERO_LOGGING_COUT
   #endif
 
 #endif
 
-#if defined(IMEBRA_LOGGING_LOG4CXX)
+#if defined(DICOMHERO_LOGGING_LOG4CXX)
   #include <log4cxx/logger.h>
 
-  #define IMEBRA_LOG_FATAL_IMPLEMENTATION(message) LOG4CXX_FATAL(::log4cxx::Logger::getRootLogger(), message.c_str())
-  #define IMEBRA_LOG_ERROR_IMPLEMENTATION(message) LOG4CXX_ERROR(::log4cxx::Logger::getRootLogger(), message.c_str())
-  #define IMEBRA_LOG_WARNING_IMPLEMENTATION(message) LOG4CXX_WARN(::log4cxx::Logger::getRootLogger(), message.c_str())
-  #define IMEBRA_LOG_INFO_IMPLEMENTATION(message) LOG4CXX_INFO(::log4cxx::Logger::getRootLogger(), message.c_str())
-  #define IMEBRA_LOG_DEBUG_IMPLEMENTATION(message) LOG4CXX_DEBUG(::log4cxx::Logger::getRootLogger(), message.c_str())
-  #define IMEBRA_LOG_TRACE_IMPLEMENTATION(message) LOG4CXX_TRACE(::log4cxx::Logger::getRootLogger(), message.c_str())
+  #define DICOMHERO_LOG_FATAL_IMPLEMENTATION(message) LOG4CXX_FATAL(::log4cxx::Logger::getRootLogger(), message.c_str())
+  #define DICOMHERO_LOG_ERROR_IMPLEMENTATION(message) LOG4CXX_ERROR(::log4cxx::Logger::getRootLogger(), message.c_str())
+  #define DICOMHERO_LOG_WARNING_IMPLEMENTATION(message) LOG4CXX_WARN(::log4cxx::Logger::getRootLogger(), message.c_str())
+  #define DICOMHERO_LOG_INFO_IMPLEMENTATION(message) LOG4CXX_INFO(::log4cxx::Logger::getRootLogger(), message.c_str())
+  #define DICOMHERO_LOG_DEBUG_IMPLEMENTATION(message) LOG4CXX_DEBUG(::log4cxx::Logger::getRootLogger(), message.c_str())
+  #define DICOMHERO_LOG_TRACE_IMPLEMENTATION(message) LOG4CXX_TRACE(::log4cxx::Logger::getRootLogger(), message.c_str())
 
-#elif defined(IMEBRA_LOGGING_ANDROID)
+#elif defined(DICOMHERO_LOGGING_ANDROID)
   #include <android/log.h>
 
-  #define IMEBRA_LOG_FATAL_IMPLEMENTATION(message) ::__android_log_write(ANDROID_LOG_ASSERT, "Imebra", message.c_str())
-  #define IMEBRA_LOG_ERROR_IMPLEMENTATION(message) ::__android_log_write(ANDROID_LOG_ERROR, "Imebra", message.c_str())
-  #define IMEBRA_LOG_WARNING_IMPLEMENTATION(message) ::__android_log_write(ANDROID_LOG_WARN, "Imebra", message.c_str())
-  #define IMEBRA_LOG_INFO_IMPLEMENTATION(message) ::__android_log_write(ANDROID_LOG_INFO, "Imebra", message.c_str())
-  #define IMEBRA_LOG_DEBUG_IMPLEMENTATION(message) ::__android_log_write(ANDROID_LOG_DEBUG, "Imebra", message.c_str())
-  #define IMEBRA_LOG_TRACE_IMPLEMENTATION(message) ::__android_log_write(ANDROID_LOG_VERBOSE, "Imebra", message.c_str())
+  #define DICOMHERO_LOG_FATAL_IMPLEMENTATION(message) ::__android_log_write(ANDROID_LOG_ASSERT, "Imebra", message.c_str())
+  #define DICOMHERO_LOG_ERROR_IMPLEMENTATION(message) ::__android_log_write(ANDROID_LOG_ERROR, "Imebra", message.c_str())
+  #define DICOMHERO_LOG_WARNING_IMPLEMENTATION(message) ::__android_log_write(ANDROID_LOG_WARN, "Imebra", message.c_str())
+  #define DICOMHERO_LOG_INFO_IMPLEMENTATION(message) ::__android_log_write(ANDROID_LOG_INFO, "Imebra", message.c_str())
+  #define DICOMHERO_LOG_DEBUG_IMPLEMENTATION(message) ::__android_log_write(ANDROID_LOG_DEBUG, "Imebra", message.c_str())
+  #define DICOMHERO_LOG_TRACE_IMPLEMENTATION(message) ::__android_log_write(ANDROID_LOG_VERBOSE, "Imebra", message.c_str())
 
-#elif defined(IMEBRA_LOGGING_APPLE)
+#elif defined(DICOMHERO_LOGGING_APPLE)
 
-  namespace imebra
+  namespace dicomhero
   {
 
   namespace implementation
@@ -108,28 +108,28 @@ If you do not want to be bound by the GPL terms (such as the requirement
   void appleLog(const std::string& format, const std::string& message);
   } // namespace implementation
 
-  } // namespace imebra
+  } // namespace dicomhero
 
-  #define IMEBRA_LOG_FATAL_IMPLEMENTATION(message) ::imebra::implementation::appleLog("FATAL: %@", message.c_str())
-  #define IMEBRA_LOG_ERROR_IMPLEMENTATION(message) ::imebra::implementation::appleLog("ERROR: %@", message.c_str())
-  #define IMEBRA_LOG_WARNING_IMPLEMENTATION(message) ::imebra::implementation::appleLog("WARNING: %@", message.c_str())
-  #define IMEBRA_LOG_INFO_IMPLEMENTATION(message) ::imebra::implementation::appleLog("INFO: %@", message.c_str())
-  #define IMEBRA_LOG_DEBUG_IMPLEMENTATION(message) ::imebra::implementation::appleLog("DEBUG: %@", message.c_str())
-  #define IMEBRA_LOG_TRACE_IMPLEMENTATION(message) ::imebra::implementation::appleLog("TRACE: %@", message.c_str())
+  #define DICOMHERO_LOG_FATAL_IMPLEMENTATION(message) ::dicomhero::implementation::appleLog("FATAL: %@", message.c_str())
+  #define DICOMHERO_LOG_ERROR_IMPLEMENTATION(message) ::dicomhero::implementation::appleLog("ERROR: %@", message.c_str())
+  #define DICOMHERO_LOG_WARNING_IMPLEMENTATION(message) ::dicomhero::implementation::appleLog("WARNING: %@", message.c_str())
+  #define DICOMHERO_LOG_INFO_IMPLEMENTATION(message) ::dicomhero::implementation::appleLog("INFO: %@", message.c_str())
+  #define DICOMHERO_LOG_DEBUG_IMPLEMENTATION(message) ::dicomhero::implementation::appleLog("DEBUG: %@", message.c_str())
+  #define DICOMHERO_LOG_TRACE_IMPLEMENTATION(message) ::dicomhero::implementation::appleLog("TRACE: %@", message.c_str())
 
-#elif defined(IMEBRA_LOGGING_SYSLOG)
+#elif defined(DICOMHERO_LOGGING_SYSLOG)
   #include <syslog.h>
 
-  #define IMEBRA_LOG_FATAL_IMPLEMENTATION(message) ::syslog(LOG_CRIT, "%s", message.c_str())
-  #define IMEBRA_LOG_ERROR_IMPLEMENTATION(message) ::syslog(LOG_ERR, "%s", message.c_str())
-  #define IMEBRA_LOG_WARNING_IMPLEMENTATION(message) ::syslog(LOG_WARNING, "%s", message.c_str())
-  #define IMEBRA_LOG_INFO_IMPLEMENTATION(message) ::syslog(LOG_INFO, "%s", message.c_str())
-  #define IMEBRA_LOG_DEBUG_IMPLEMENTATION(message) ::syslog(LOG_DEBUG, "%s", message.c_str())
-  #define IMEBRA_LOG_TRACE_IMPLEMENTATION(message) ::syslog(LOG_DEBUG, "%s", message.c_str())
+  #define DICOMHERO_LOG_FATAL_IMPLEMENTATION(message) ::syslog(LOG_CRIT, "%s", message.c_str())
+  #define DICOMHERO_LOG_ERROR_IMPLEMENTATION(message) ::syslog(LOG_ERR, "%s", message.c_str())
+  #define DICOMHERO_LOG_WARNING_IMPLEMENTATION(message) ::syslog(LOG_WARNING, "%s", message.c_str())
+  #define DICOMHERO_LOG_INFO_IMPLEMENTATION(message) ::syslog(LOG_INFO, "%s", message.c_str())
+  #define DICOMHERO_LOG_DEBUG_IMPLEMENTATION(message) ::syslog(LOG_DEBUG, "%s", message.c_str())
+  #define DICOMHERO_LOG_TRACE_IMPLEMENTATION(message) ::syslog(LOG_DEBUG, "%s", message.c_str())
 
 #else
 
-  namespace imebra
+  namespace dicomhero
   {
 
   namespace implementation
@@ -145,87 +145,87 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
   } // namespace implementation
 
-  } // namespace imebra
+  } // namespace dicomhero
 
-  #define IMEBRA_LOG_FATAL_IMPLEMENTATION(message) std::cout << "Imebra FATAL " << ::imebra::implementation::getCurrentTime() << " " << message << std::endl;
-  #define IMEBRA_LOG_ERROR_IMPLEMENTATION(message) std::cout << "Imebra ERROR " << ::imebra::implementation::getCurrentTime() << " " << message << std::endl;
-  #define IMEBRA_LOG_WARNING_IMPLEMENTATION(message) std::cout << "Imebra WARNING " << ::imebra::implementation::getCurrentTime() << " " << message << std::endl;
-  #define IMEBRA_LOG_INFO_IMPLEMENTATION(message) std::cout << "Imebra INFO " << ::imebra::implementation::getCurrentTime() << " " << message << std::endl;
-  #define IMEBRA_LOG_DEBUG_IMPLEMENTATION(message) std::cout << "Imebra DEBUG " << ::imebra::implementation::getCurrentTime() << " " << message << std::endl;
-  #define IMEBRA_LOG_TRACE_IMPLEMENTATION(message) std::cout << "Imebra TRACE " << ::imebra::implementation::getCurrentTime() << " " << message << std::endl;
+  #define DICOMHERO_LOG_FATAL_IMPLEMENTATION(message) std::cout << "Imebra FATAL " << ::dicomhero::implementation::getCurrentTime() << " " << message << std::endl;
+  #define DICOMHERO_LOG_ERROR_IMPLEMENTATION(message) std::cout << "Imebra ERROR " << ::dicomhero::implementation::getCurrentTime() << " " << message << std::endl;
+  #define DICOMHERO_LOG_WARNING_IMPLEMENTATION(message) std::cout << "Imebra WARNING " << ::dicomhero::implementation::getCurrentTime() << " " << message << std::endl;
+  #define DICOMHERO_LOG_INFO_IMPLEMENTATION(message) std::cout << "Imebra INFO " << ::dicomhero::implementation::getCurrentTime() << " " << message << std::endl;
+  #define DICOMHERO_LOG_DEBUG_IMPLEMENTATION(message) std::cout << "Imebra DEBUG " << ::dicomhero::implementation::getCurrentTime() << " " << message << std::endl;
+  #define DICOMHERO_LOG_TRACE_IMPLEMENTATION(message) std::cout << "Imebra TRACE " << ::dicomhero::implementation::getCurrentTime() << " " << message << std::endl;
 
 #endif
 
-#endif // !defined(IMEBRA_LOG_FATAL_IMPLEMENTATION)
+#endif // !defined(DICOMHERO_LOG_FATAL_IMPLEMENTATION)
 
 // Logging macros used by Imebra functions
 //
 ///////////////////////////////////////////////////////////
 
-#if IMEBRA_LOG_LEVEL >= IMEBRA_LOG_LEVEL_FATAL_VALUE
-#define IMEBRA_LOG_FATAL(message) \
+#if DICOMHERO_LOG_LEVEL >= DICOMHERO_LOG_LEVEL_FATAL_VALUE
+#define DICOMHERO_LOG_FATAL(message) \
 { \
     std::ostringstream buildMessage; \
     buildMessage << message; \
-    IMEBRA_LOG_FATAL_IMPLEMENTATION(buildMessage.str()); \
+    DICOMHERO_LOG_FATAL_IMPLEMENTATION(buildMessage.str()); \
 }
 #else
-#define IMEBRA_LOG_FATAL(message)
+#define DICOMHERO_LOG_FATAL(message)
 #endif
 
-#if IMEBRA_LOG_LEVEL >= IMEBRA_LOG_LEVEL_ERROR_VALUE
-#define IMEBRA_LOG_ERROR(message) \
+#if DICOMHERO_LOG_LEVEL >= DICOMHERO_LOG_LEVEL_ERROR_VALUE
+#define DICOMHERO_LOG_ERROR(message) \
 { \
     std::ostringstream buildMessage; \
     buildMessage << message; \
-    IMEBRA_LOG_ERROR_IMPLEMENTATION(buildMessage.str()); \
+    DICOMHERO_LOG_ERROR_IMPLEMENTATION(buildMessage.str()); \
 }
 #else
-#define IMEBRA_LOG_ERROR(message)
+#define DICOMHERO_LOG_ERROR(message)
 #endif
 
-#if IMEBRA_LOG_LEVEL >= IMEBRA_LOG_LEVEL_WARNING_VALUE
-#define IMEBRA_LOG_WARNING(message) \
+#if DICOMHERO_LOG_LEVEL >= DICOMHERO_LOG_LEVEL_WARNING_VALUE
+#define DICOMHERO_LOG_WARNING(message) \
 { \
     std::ostringstream buildMessage; \
     buildMessage << message; \
-    IMEBRA_LOG_WARNING_IMPLEMENTATION(buildMessage.str()); \
+    DICOMHERO_LOG_WARNING_IMPLEMENTATION(buildMessage.str()); \
 }
 #else
-#define IMEBRA_LOG_WARNING(message)
+#define DICOMHERO_LOG_WARNING(message)
 #endif
 
-#if IMEBRA_LOG_LEVEL >= IMEBRA_LOG_LEVEL_INFO_VALUE
-#define IMEBRA_LOG_INFO(message) \
+#if DICOMHERO_LOG_LEVEL >= DICOMHERO_LOG_LEVEL_INFO_VALUE
+#define DICOMHERO_LOG_INFO(message) \
 { \
     std::ostringstream buildMessage; \
     buildMessage << message; \
-    IMEBRA_LOG_INFO_IMPLEMENTATION(buildMessage.str()); \
+    DICOMHERO_LOG_INFO_IMPLEMENTATION(buildMessage.str()); \
 }
 #else
-#define IMEBRA_LOG_INFO(message)
+#define DICOMHERO_LOG_INFO(message)
 #endif
 
-#if IMEBRA_LOG_LEVEL >= IMEBRA_LOG_LEVEL_DEBUG_DEBUG
-#define IMEBRA_LOG_DEBUG(message) \
+#if DICOMHERO_LOG_LEVEL >= DICOMHERO_LOG_LEVEL_DEBUG_DEBUG
+#define DICOMHERO_LOG_DEBUG(message) \
 { \
     std::ostringstream buildMessage; \
     buildMessage << message; \
-    IMEBRA_LOG_DEBUG_IMPLEMENTATION(buildMessage.str()); \
+    DICOMHERO_LOG_DEBUG_IMPLEMENTATION(buildMessage.str()); \
 }
 #else
-#define IMEBRA_LOG_DEBUG(message)
+#define DICOMHERO_LOG_DEBUG(message)
 #endif
 
-#if IMEBRA_LOG_LEVEL >= IMEBRA_LOG_LEVEL_TRACE_VALUE
-#define IMEBRA_LOG_TRACE(message) \
+#if DICOMHERO_LOG_LEVEL >= DICOMHERO_LOG_LEVEL_TRACE_VALUE
+#define DICOMHERO_LOG_TRACE(message) \
 { \
     std::ostringstream buildMessage; \
     buildMessage << message; \
-    IMEBRA_LOG_TRACE_IMPLEMENTATION(buildMessage.str()); \
+    DICOMHERO_LOG_TRACE_IMPLEMENTATION(buildMessage.str()); \
 }
 #else
-#define IMEBRA_LOG_TRACE(message)
+#define DICOMHERO_LOG_TRACE(message)
 #endif
 
 

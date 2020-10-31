@@ -17,20 +17,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/dicomDirEntry.h"
-#include "../include/imebra/dataSet.h"
+#include "../include/dicomhero/dicomDirEntry.h"
+#include "../include/dicomhero/dataSet.h"
 #include "../implementation/dicomDirImpl.h"
 #include "../implementation/exceptionImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 DicomDirEntry::DicomDirEntry(const DicomDirEntry &source): m_pDirectoryRecord(getDicomDirEntryImplementation(source))
 {
 }
 
-DicomDirEntry::DicomDirEntry(const std::shared_ptr<imebra::implementation::directoryRecord>& pDirectoryRecord): m_pDirectoryRecord(pDirectoryRecord)
+DicomDirEntry::DicomDirEntry(const std::shared_ptr<dicomhero::implementation::directoryRecord>& pDirectoryRecord): m_pDirectoryRecord(pDirectoryRecord)
 {
 }
 
@@ -45,26 +45,26 @@ DicomDirEntry::~DicomDirEntry()
 
 DataSet DicomDirEntry::getEntryDataSet() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return DataSet(m_pDirectoryRecord->getRecordDataSet());
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 bool DicomDirEntry::hasNextEntry() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::directoryRecord> pNextEntry(m_pDirectoryRecord->getNextRecord());
     return pNextEntry != 0;
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 DicomDirEntry DicomDirEntry::getNextEntry() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::directoryRecord> pNextEntry(m_pDirectoryRecord->getNextRecord());
     if(pNextEntry == 0)
@@ -73,22 +73,22 @@ DicomDirEntry DicomDirEntry::getNextEntry() const
     }
     return DicomDirEntry(pNextEntry);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 bool DicomDirEntry::hasChildren() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::directoryRecord> pChildEntry(m_pDirectoryRecord->getFirstChildRecord());
     return pChildEntry != 0;
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 DicomDirEntry DicomDirEntry::getFirstChildEntry() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::directoryRecord> pChildEntry(m_pDirectoryRecord->getFirstChildRecord());
     if(pChildEntry == 0)
@@ -97,25 +97,25 @@ DicomDirEntry DicomDirEntry::getFirstChildEntry() const
     }
     return DicomDirEntry(pChildEntry);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 fileParts_t DicomDirEntry::getFileParts() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDirectoryRecord->getFileParts();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::string DicomDirEntry::getTypeString() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDirectoryRecord->getTypeString();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 MutableDicomDirEntry::MutableDicomDirEntry(const MutableDicomDirEntry &source): DicomDirEntry(getDicomDirEntryImplementation(source))
@@ -126,45 +126,45 @@ MutableDicomDirEntry::~MutableDicomDirEntry()
 {
 }
 
-MutableDicomDirEntry::MutableDicomDirEntry(const std::shared_ptr<imebra::implementation::directoryRecord>& pDirectoryRecord): DicomDirEntry(pDirectoryRecord)
+MutableDicomDirEntry::MutableDicomDirEntry(const std::shared_ptr<dicomhero::implementation::directoryRecord>& pDirectoryRecord): DicomDirEntry(pDirectoryRecord)
 {
 }
 
 MutableDataSet MutableDicomDirEntry::getEntryDataSet()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return MutableDataSet(getDicomDirEntryImplementation(*this)->getRecordDataSet());
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 
 }
 
 void MutableDicomDirEntry::setNextEntry(const DicomDirEntry& nextEntry)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     getDicomDirEntryImplementation(*this)->setNextRecord(getDicomDirEntryImplementation(nextEntry));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void MutableDicomDirEntry::setFirstChildEntry(const DicomDirEntry& firstChildEntry)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     getDicomDirEntryImplementation(*this)->setFirstChildRecord(getDicomDirEntryImplementation(firstChildEntry));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void MutableDicomDirEntry::setFileParts(const fileParts_t& fileParts)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     getDicomDirEntryImplementation(*this)->setFileParts(fileParts);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 }

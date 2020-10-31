@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Imebra" default="make_distribution" basedir="." >
+<project name="DICOMHERO" default="make_distribution" basedir="." >
 
     <!-- This is an ant build file -->
 
-    <!--
-
-            Initialize the version number.
-
-            This target takes the environment variables IMEBRA_MAJOR_VERSION, IMEBRA_MINOR_VERSION,
-            IMEBRA_REVISION and BUILD_BRANCH and uses them to build the final product name.
-
-    -->
     <target name="version" description="Initialize the build number">
         <exec executable="python3" dir=".">
             <arg path="./getVersion.py" />
@@ -19,7 +11,7 @@
         <property environment="env"/>
     <property name="fileVersion" value="${version}"/>
     <property name="fullVersionReadable" value="${version}"/>
-    <property name="productName" value="Imebra ${fullVersionReadable}"/>
+    <property name="productName" value="DICOMHERO ${fullVersionReadable}"/>
     </target>
 
 
@@ -105,73 +97,28 @@
         <replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="$major_version$" value="${version_major}" />
         <replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="$minor_version$" value="${version_minor}" />
         <replace file="${build_release}/wrappers/javaWrapper/AndroidManifest.xml" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
-        <replace dir="${build_release}" token="$fileHeader$">
-            <replacevalue><![CDATA[
-$imebraVersion$
-
-Imebra: a C++ Dicom library
-
-Copyright (c) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016
-by Paolo Brandoli/Binarno s.p.
-
-All rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License version 2 as published by
-the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
--------------------
-
-If you want to use Imebra commercially then you have to buy the commercial
-license available at http://imebra.com
-
-After you buy the commercial license then you can use Imebra according
-to the terms described in the Imebra Commercial License.
-A copy of the Imebra Commercial License is available at http://imebra.com.
-
-Imebra is available at http://imebra.com
-
-The author can be contacted by email at info@binarno.com or by mail at
-the following address:
-Binarno s.p., Paolo Brandoli
-Rakuseva 14
-1000 Ljubljana
-Slovenia
-
-
-]]></replacevalue>
-        </replace>
         <replace dir="${build_release}" token="$imebraVersion$" value="${productName}" />
     </target>
 
     <!-- JAVA SWIG -->
     <target name="java_swig" depends="replace_version">
         <delete dir="${build_release}/wrappers/javaWrapper/src" failonerror="false" />
-        <mkdir dir="${build_release}/wrappers/javaWrapper/src/com/imebra" />
+        <mkdir dir="${build_release}/wrappers/javaWrapper/src/com/dicomhero" />
         <mkdir dir="${build_release}/wrappers/javaWrapper/jni" />
         <exec executable="swig" failonerror="true" dir="${build_release}/wrappers/">
             <arg value="-java" />
             <arg value="-c++" />
             <arg value="-I${build_release}/library/include" />
             <arg value="-package" />
-            <arg value="com.imebra" />
+            <arg value="com.dicomhero" />
             <arg value="-outdir" />
-            <arg path="${build_release}/wrappers/javaWrapper/src/com/imebra" />
+            <arg path="${build_release}/wrappers/javaWrapper/src/com/dicomhero" />
             <arg value="-o" />
             <arg path="${build_release}/wrappers/javaWrapper/java_wrapper.cxx" />
             <arg path="${build_release}/wrappers/swig.i" />
         </exec>
 
-        <fileset id="existing" dir="${build_release}/wrappers/javaWrapper/src/com/imebra">
+        <fileset id="existing" dir="${build_release}/wrappers/javaWrapper/src/com/dicomhero">
             <patternset id="files">
                 <include name="**/*.java" />
             </patternset>
@@ -186,7 +133,7 @@ Slovenia
             <arg value="-c++" />
             <arg value="-I${build_release}/library/include" />
             <arg value="-module" />
-            <arg value="imebra" />
+            <arg value="dicomhero" />
             <arg value="-outdir" />
             <arg path="${build_release}/wrappers/pythonWrapper" />
             <arg value="-o" />
@@ -198,18 +145,18 @@ Slovenia
 
     <target name="swig" depends="java_swig, python_swig" />
 
-    <target name="imebrajar" depends="java_swig, create_test_dir" >
+    <target name="dicomherojar" depends="java_swig, create_test_dir" >
         <exec executable="cmake" failonerror="true" dir="${build_jni}">
             <arg value="--verbose"/>
             <arg value="-DCMAKE_BUILD_TYPE=Debug" />
-            <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
-            <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
+            <arg value="-DDICOMHERO_LOG_LEVEL=INFO" />
+            <arg value="-DDICOMHERO_LOG_FRAMEWORK=LOG4CXX" />
             <arg path="${build_release}/wrappers/javaWrapper"/>
         </exec>
         <exec executable="make" failonerror="true" dir="${build_jni}" />
-        <copy todir="${build_java}" file="${build_jni}/libimebrajni.so" />
+        <copy todir="${build_java}" file="${build_jni}/libdicomherojni.so" />
         <javac srcdir="${build_release}/wrappers/javaWrapper/src" destdir="${build_java}"/>
-        <jar destfile="${build_jar}/imebrajni.jar" basedir="${build_java}" />
+        <jar destfile="${build_jar}/dicomherojni.jar" basedir="${build_java}" />
 
     </target>
 
@@ -257,24 +204,24 @@ Slovenia
 
 
     <!-- Build the test cases (debug mode)-->
-    <target name="build_test_cases" depends="create_source_distribution, create_test_dir" description="Build the Imebra test cases">
+    <target name="build_test_cases" depends="create_source_distribution, create_test_dir" description="Build the DICOMHERO test cases">
         <exec executable="cmake" failonerror="true" dir="${build_library_for_tests}">
             <arg value="--verbose"/>
             <arg value="-DCMAKE_BUILD_TYPE=Debug" />
-            <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
-            <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
+            <arg value="-DDICOMHERO_LOG_FRAMEWORK=LOG4CXX" />
+            <arg value="-DDICOMHERO_LOG_LEVEL=INFO" />
             <arg path="${build_release}"/>
         </exec>
         <exec executable="make" failonerror="true" dir="${build_library_for_tests}" />
     </target>
 
     <!-- Build the test cases (release mode)-->
-    <target name="build_test_cases_release" depends="create_source_distribution, create_test_dir_release" description="Build the Imebra test cases in release mode">
+    <target name="build_test_cases_release" depends="create_source_distribution, create_test_dir_release" description="Build the DICOMHERO test cases in release mode">
         <exec executable="cmake" failonerror="true" dir="${build_library_for_tests_release}">
             <arg value="--verbose"/>
             <arg value="-DCMAKE_BUILD_TYPE=Release" />
-            <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
-            <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
+            <arg value="-DDICOMHERO_LOG_FRAMEWORK=LOG4CXX" />
+            <arg value="-DDICOMHERO_LOG_LEVEL=INFO" />
             <arg path="${build_release}"/>
         </exec>
         <exec executable="make" failonerror="true" dir="${build_library_for_tests_release}" />
@@ -362,7 +309,7 @@ Slovenia
 
     <!-- Build -->
     <target name="make_distribution" depends="create_source_distribution, run_test_cases, test_python, build_test_cases_release">
-        <zip destfile="imebra_${version_major}_${version_minor}_${version_patch}_${version_build}.zip" basedir="${source_distribution}" />
+        <zip destfile="dicomhero_${version_major}_${version_minor}_${version_patch}_${version_build}.zip" basedir="${source_distribution}" />
     </target>
 
 </project>

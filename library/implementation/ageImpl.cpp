@@ -18,9 +18,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "ageImpl.h"
 #include "exceptionImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -33,7 +33,7 @@ age::age(std::uint32_t initialAge, ageUnit_t initialUnits):
 
 double age::getYears() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     switch(m_units)
     {
@@ -46,10 +46,10 @@ double age::getYears() const
     case ageUnit_t::days:
         return m_age / (double)365;
     default:
-        IMEBRA_THROW(DataHandlerCorruptedBufferError, "Invalid age units");
+        DICOMHERO_THROW(DataHandlerCorruptedBufferError, "Invalid age units");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::uint32_t age::getAgeValue() const
@@ -64,5 +64,5 @@ ageUnit_t age::getAgeUnits() const
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 

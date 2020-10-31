@@ -18,13 +18,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "configurationImpl.h"
 
-#if defined(IMEBRA_USE_WINDOWS_CHARSET)
+#if defined(DICOMHERO_USE_WINDOWS_CHARSET)
 
 #include "exceptionImpl.h"
 #include "charsetConversionWindowsImpl.h"
 #include <memory>
 
-namespace imebra
+namespace dicomhero
 {
 
 ///////////////////////////////////////////////////////////
@@ -34,14 +34,14 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 charsetConversionWindows::charsetConversionWindows(const std::string& dicomName)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     const charsetInformation& info(getDictionary().getCharsetInformation(dicomName));
 
     m_codePage = info.m_codePage;
     m_bZeroFlag = info.m_bZeroFlag;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -52,7 +52,7 @@ charsetConversionWindows::charsetConversionWindows(const std::string& dicomName)
 ///////////////////////////////////////////////////////////
 std::string charsetConversionWindows::fromUnicode(const std::wstring& unicodeString) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
 	if(unicodeString.empty())
 	{
@@ -73,7 +73,7 @@ std::string charsetConversionWindows::fromUnicode(const std::wstring& unicodeStr
 	}
 	return returnString;
 
-	IMEBRA_FUNCTION_END();
+	DICOMHERO_FUNCTION_END();
 }
 
 
@@ -84,7 +84,7 @@ std::string charsetConversionWindows::fromUnicode(const std::wstring& unicodeStr
 ///////////////////////////////////////////////////////////
 std::wstring charsetConversionWindows::toUnicode(const std::string& asciiString) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
 	if(asciiString.empty())
 	{
@@ -100,9 +100,9 @@ std::wstring charsetConversionWindows::toUnicode(const std::string& asciiString)
     ::MultiByteToWideChar(m_codePage, 0, asciiString.c_str(), (int)(asciiString.length()), &(returnString[0]), requiredWChars);
     return returnString;
 
-	IMEBRA_FUNCTION_END();
+	DICOMHERO_FUNCTION_END();
 }
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif

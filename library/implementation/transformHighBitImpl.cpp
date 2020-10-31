@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "imageImpl.h"
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -38,15 +38,15 @@ std::shared_ptr<image> transformHighBit::allocateOutputImage(
         std::shared_ptr<palette> /* inputPalette */,
         std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 } // namespace transforms
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

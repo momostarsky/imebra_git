@@ -23,7 +23,7 @@ The class hides the platform specific implementations and supplies a common
 #if !defined(imebraCharsetConversionICU_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
 #define imebraCharsetConversionICU_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
-#if defined(IMEBRA_USE_ICU)
+#if defined(DICOMHERO_USE_ICU)
 
 #include "charsetConversionBaseImpl.h"
 
@@ -31,7 +31,7 @@ The class hides the platform specific implementations and supplies a common
 #include <unicode/ucnv.h>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 class charsetConversionICU: public charsetConversionBase
@@ -50,8 +50,8 @@ protected:
 
 typedef charsetConversionICU defaultCharsetConversion;
 
-} // namespace imebra
+} // namespace dicomhero
 
-#endif // defined(IMEBRA_USE_ICU)
+#endif // defined(DICOMHERO_USE_ICU)
 
 #endif // !defined(imebraCharsetConversionICU_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

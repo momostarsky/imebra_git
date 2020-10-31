@@ -17,10 +17,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #include "tcpSequenceStreamImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <string.h>
 
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
 
 #include <Ws2tcpip.h>
 
@@ -35,26 +35,26 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #endif
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
 {
 
 
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
 
 initWinsock::initWinsock()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     WSADATA wsaData;
 
     if(WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
     {
-        IMEBRA_THROW(std::runtime_error, "WSA socket initialization failure");
+        DICOMHERO_THROW(std::runtime_error, "WSA socket initialization failure");
     }
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 initWinsock::~initWinsock()
@@ -64,13 +64,13 @@ initWinsock::~initWinsock()
 
 std::shared_ptr<initWinsock> initWinsock::getWinsockInitialization()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     static std::shared_ptr<initWinsock> m_initWinsock(std::make_shared<initWinsock>());
 
     return m_initWinsock;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 #endif
@@ -100,46 +100,46 @@ public:
 ///////////////////////////////////////////////////////////
 long throwTcpException(long socketOperationResult)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(socketOperationResult >= 0)
     {
         return socketOperationResult;
     }
 
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
     int error(WSAGetLastError());
     switch(error)
     {
     case WSAETIMEDOUT:
-        IMEBRA_THROW(SocketTimeout, "Timed out");
+        DICOMHERO_THROW(SocketTimeout, "Timed out");
     case WSAEHOSTDOWN:
-        IMEBRA_THROW(SocketTimeout, "Host is down");
+        DICOMHERO_THROW(SocketTimeout, "Host is down");
     case WSAECONNREFUSED:
-        IMEBRA_THROW(TCPConnectionRefused, "Connection refused");
+        DICOMHERO_THROW(TCPConnectionRefused, "Connection refused");
     case WSAENOBUFS:
     case WSAEMFILE:
         throw std::bad_alloc();
     case WSAEINPROGRESS:
         return socketOperationResult;
     case WSAEFAULT:
-        IMEBRA_THROW(std::logic_error, "Invalid address space");
+        DICOMHERO_THROW(std::logic_error, "Invalid address space");
     case WSAEACCES:
-        IMEBRA_THROW(PermissionDeniedError, "Permission denied");
+        DICOMHERO_THROW(PermissionDeniedError, "Permission denied");
     case WSAEINVAL:
-        IMEBRA_THROW(std::logic_error, "Invalid argument");
+        DICOMHERO_THROW(std::logic_error, "Invalid argument");
     case WSAENOTSOCK:
-        IMEBRA_THROW(std::logic_error, "Operation on invalid socket");
+        DICOMHERO_THROW(std::logic_error, "Operation on invalid socket");
     case WSAEWOULDBLOCK:
-        IMEBRA_THROW(SocketTimeout, "Timed out");
+        DICOMHERO_THROW(SocketTimeout, "Timed out");
     case EPIPE:
     case WSAECONNRESET:
     case WSAENOTCONN:
     case WSAECONNABORTED:
     case WSAENETRESET:
-        IMEBRA_THROW(StreamClosedError, "Socket closed");
+        DICOMHERO_THROW(StreamClosedError, "Socket closed");
     case WSAEADDRINUSE:
-        IMEBRA_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.");
+        DICOMHERO_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.");
 
     }
 #else
@@ -147,9 +147,9 @@ long throwTcpException(long socketOperationResult)
     switch(error)
     {
     case ECONNREFUSED:
-        IMEBRA_THROW(TCPConnectionRefused, "Connection refused")
+        DICOMHERO_THROW(TCPConnectionRefused, "Connection refused")
     case EHOSTDOWN:
-        IMEBRA_THROW(TCPConnectionRefused, "The host is down")
+        DICOMHERO_THROW(TCPConnectionRefused, "The host is down")
     case ENOBUFS:
     case ENOMEM:
     case EMFILE:
@@ -157,28 +157,28 @@ long throwTcpException(long socketOperationResult)
     case EINPROGRESS:
         return socketOperationResult;
     case EFAULT:
-        IMEBRA_THROW(std::logic_error, "Invalid address space");
+        DICOMHERO_THROW(std::logic_error, "Invalid address space");
     case EACCES:
-        IMEBRA_THROW(PermissionDeniedError, "Permission denied");
+        DICOMHERO_THROW(PermissionDeniedError, "Permission denied");
     case EINVAL:
-        IMEBRA_THROW(std::logic_error, "Invalid argument");
+        DICOMHERO_THROW(std::logic_error, "Invalid argument");
     case ENOTSOCK:
-        IMEBRA_THROW(std::logic_error, "Operation on invalid socket");
+        DICOMHERO_THROW(std::logic_error, "Operation on invalid socket");
     case ENOTCONN:
     case EWOULDBLOCK:
     case EINTR:
-        IMEBRA_THROW(SocketTimeout, "Timed out");
+        DICOMHERO_THROW(SocketTimeout, "Timed out");
     case EPIPE:
     case ECONNRESET:
     case ECONNABORTED:
-        IMEBRA_THROW(StreamClosedError, "Socket closed");
+        DICOMHERO_THROW(StreamClosedError, "Socket closed");
     case EADDRINUSE:
-        IMEBRA_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.")
+        DICOMHERO_THROW(TCPAddressAlreadyInUse, "The specified address is already in use.")
     }
 #endif
-    IMEBRA_THROW(StreamError, "Unexpected TCP error (code " << error << ")");
+    DICOMHERO_THROW(StreamError, "Unexpected TCP error (code " << error << ")");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -190,7 +190,7 @@ long throwTcpException(long socketOperationResult)
 ///////////////////////////////////////////////////////////
 void throwAddrException(int addrOperationResult)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(addrOperationResult == 0)
     {
@@ -202,25 +202,25 @@ void throwAddrException(int addrOperationResult)
     switch(addrOperationResult)
     {
     case EAI_AGAIN:
-        IMEBRA_THROW(AddressTryAgainError, errorDescription);
+        DICOMHERO_THROW(AddressTryAgainError, errorDescription);
     case EAI_FAIL:
-        IMEBRA_THROW(AddressError, errorDescription);
+        DICOMHERO_THROW(AddressError, errorDescription);
     case EAI_MEMORY:
         throw std::bad_alloc();
     case EAI_NONAME:
-        IMEBRA_THROW(AddressNoNameError, errorDescription);
+        DICOMHERO_THROW(AddressNoNameError, errorDescription);
     case EAI_SERVICE:
-        IMEBRA_THROW(AddressServiceNotSupportedError, errorDescription);
-#ifndef IMEBRA_WINDOWS
+        DICOMHERO_THROW(AddressServiceNotSupportedError, errorDescription);
+#ifndef DICOMHERO_WINDOWS
     case EAI_SYSTEM:
         throwTcpException(-1);
         break;
 #endif
     default:
-        IMEBRA_THROW(AddressError, "Unexpected TCP Address error " << errorDescription << " code: " << addrOperationResult);
+        DICOMHERO_THROW(AddressError, "Unexpected TCP Address error " << errorDescription << " code: " << addrOperationResult);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -233,7 +233,7 @@ tcpAddress::tcpAddress(const std::string& node, const std::string& service, pass
     m_node(node),
     m_service(service)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     INIT_WINSOCK;
 
@@ -253,12 +253,12 @@ tcpAddress::tcpAddress(const std::string& node, const std::string& service, pass
     ::memcpy(&(m_sockAddr[0]), address->ai_addr, address->ai_addrlen);
     freeaddrinfo(address);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 tcpAddress::tcpAddress(const sockaddr& address, socklen_t addressLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     INIT_WINSOCK;
 
@@ -271,7 +271,7 @@ tcpAddress::tcpAddress(const sockaddr& address, socklen_t addressLength)
     m_node = host;
     m_service = service;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -373,18 +373,18 @@ int tcpAddress::getProtocol() const
 tcpBaseSocket::tcpTerminateWaiting::tcpTerminateWaiting(tcpBaseSocket& terminateObject):
     m_terminateObject(terminateObject)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     INIT_WINSOCK;
 
     std::unique_lock<std::mutex> lock(m_terminateObject.m_waitingMutex);
     if(m_terminateObject.m_bTerminate.load())
     {
-        IMEBRA_THROW(StreamClosedError, "The socket has been closed");
+        DICOMHERO_THROW(StreamClosedError, "The socket has been closed");
     }
     std::atomic_fetch_add(&(m_terminateObject.m_waiting), 1);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -405,17 +405,17 @@ tcpBaseSocket::tcpBaseSocket(int socket):
     m_socket(socket), m_bTerminate(false), m_waiting(0)
 {
     // Set timeout
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
 
     INIT_WINSOCK;
-    std::uint32_t timeout(IMEBRA_TCP_TIMEOUT_MS);
+    std::uint32_t timeout(DICOMHERO_TCP_TIMEOUT_MS);
     setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
     setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
 
 #else
     timeval timeout;
-    timeout.tv_sec = (time_t)IMEBRA_TCP_TIMEOUT_MS / (time_t)1000;
-    timeout.tv_usec = (suseconds_t)IMEBRA_TCP_TIMEOUT_MS * (suseconds_t)1000 - (suseconds_t)(timeout.tv_sec * (suseconds_t)1000000);
+    timeout.tv_sec = (time_t)DICOMHERO_TCP_TIMEOUT_MS / (time_t)1000;
+    timeout.tv_usec = (suseconds_t)DICOMHERO_TCP_TIMEOUT_MS * (suseconds_t)1000 - (suseconds_t)(timeout.tv_sec * (suseconds_t)1000000);
     setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
     setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 #endif
@@ -426,7 +426,7 @@ tcpBaseSocket::~tcpBaseSocket()
 {
     if(m_socket >= 0)
     {
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
         ::closesocket(m_socket);
 #else
         ::close(m_socket);
@@ -437,7 +437,7 @@ tcpBaseSocket::~tcpBaseSocket()
 
 void tcpBaseSocket::setBlockingMode(bool bBlocking)
 {
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
     unsigned long block(bBlocking ? 0 : 1);
     throwTcpException(ioctlsocket(m_socket, FIONBIO, &block));
 #else
@@ -467,22 +467,22 @@ void tcpBaseSocket::terminate()
 
 void tcpBaseSocket::isTerminating()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_bTerminate.load())
     {
-        IMEBRA_THROW(StreamClosedError, "The socket has been closed");
+        DICOMHERO_THROW(StreamClosedError, "The socket has been closed");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void tcpBaseSocket::poll(pollType_t pollType)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
     fd_set readSockets;
     fd_set writeSockets;
     fd_set errorSockets;
@@ -498,8 +498,8 @@ void tcpBaseSocket::poll(pollType_t pollType)
         FD_SET(m_socket, &writeSockets);
     }
     timeval timeout;
-    timeout.tv_sec = IMEBRA_TCP_TIMEOUT_MS / 1000;
-    timeout.tv_usec = (IMEBRA_TCP_TIMEOUT_MS - timeout.tv_sec * 1000) * 1000;
+    timeout.tv_sec = DICOMHERO_TCP_TIMEOUT_MS / 1000;
+    timeout.tv_usec = (DICOMHERO_TCP_TIMEOUT_MS - timeout.tv_sec * 1000) * 1000;
     throwTcpException(::select(m_socket + 1, &readSockets, &writeSockets, &errorSockets, &timeout));
 #else
     short flags = pollType == pollType_t::read ? POLLIN : POLLOUT;
@@ -507,7 +507,7 @@ void tcpBaseSocket::poll(pollType_t pollType)
     fds[0].fd = m_socket;
     fds[0].events = flags | POLLHUP | POLLERR;
     fds[0].revents = 0;
-    long pollResult = throwTcpException(::poll(fds, 1, IMEBRA_TCP_TIMEOUT_MS));
+    long pollResult = throwTcpException(::poll(fds, 1, DICOMHERO_TCP_TIMEOUT_MS));
 
     if(pollResult == 0)
     {
@@ -521,17 +521,17 @@ void tcpBaseSocket::poll(pollType_t pollType)
 
     if((fds[0].revents & POLLHUP) != 0)
     {
-        IMEBRA_THROW(StreamClosedError, "Stream closed");
+        DICOMHERO_THROW(StreamClosedError, "Stream closed");
     }
 
     if((fds[0].revents & POLLERR) != 0)
     {
-        IMEBRA_THROW(TCPConnectionRefused, "Stream closed");
+        DICOMHERO_THROW(TCPConnectionRefused, "Stream closed");
     }
 
 #endif
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 ///////////////////////////////////////////////////////////
@@ -549,9 +549,9 @@ tcpSequenceStream::tcpSequenceStream(std::shared_ptr<tcpAddress> pAddress):
     tcpBaseSocket((int)throwTcpException(socket(pAddress->getFamily(), pAddress->getType(), pAddress->getProtocol()))),
     m_pAddress(pAddress)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-#if !defined(IMEBRA_WINDOWS) && (__linux__ != 1)
+#if !defined(DICOMHERO_WINDOWS) && (__linux__ != 1)
     // Disable SIGPIPE
     int sigpipe = 1;
     setsockopt(m_socket, SOL_SOCKET, SO_NOSIGPIPE, (void *)&sigpipe, sizeof(sigpipe));
@@ -560,7 +560,7 @@ tcpSequenceStream::tcpSequenceStream(std::shared_ptr<tcpAddress> pAddress):
     // Connect in non-blocking mode, then enable blocking
     setBlockingMode(false);
 
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
     int connectReturn(connect(m_socket, pAddress->getSockAddr(), pAddress->getSockAddrLen()));
     if (connectReturn < 0 && WSAGetLastError() != WSAEWOULDBLOCK)
     {
@@ -572,7 +572,7 @@ tcpSequenceStream::tcpSequenceStream(std::shared_ptr<tcpAddress> pAddress):
 
     setBlockingMode(true);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -585,7 +585,7 @@ tcpSequenceStream::~tcpSequenceStream()
 {
     terminate();
 
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
     shutdown(m_socket, SD_BOTH);
 #else
     shutdown(m_socket, SHUT_RDWR);
@@ -600,7 +600,7 @@ tcpSequenceStream::~tcpSequenceStream()
 ///////////////////////////////////////////////////////////
 size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     tcpTerminateWaiting waiting(*this);
 
@@ -640,7 +640,7 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -651,7 +651,7 @@ size_t tcpSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 ///////////////////////////////////////////////////////////
 void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     tcpTerminateWaiting waiting(*this);
 
@@ -689,7 +689,7 @@ void tcpSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -745,7 +745,7 @@ void tcpSequenceStreamOutput::write(const std::uint8_t* pBuffer, size_t bufferLe
 tcpListener::tcpListener(std::shared_ptr<tcpAddress> pAddress):
     tcpBaseSocket((int)throwTcpException(socket(pAddress->getFamily(), pAddress->getType(), pAddress->getProtocol())))
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Connect in non-blocking mode, then enable blocking
     setBlockingMode(false);
@@ -755,7 +755,7 @@ tcpListener::tcpListener(std::shared_ptr<tcpAddress> pAddress):
 
     setBlockingMode(true);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -777,7 +777,7 @@ tcpListener::~tcpListener()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<tcpSequenceStream> tcpListener::waitForConnection()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     tcpTerminateWaiting waiting(*this);
 
@@ -802,12 +802,12 @@ std::shared_ptr<tcpSequenceStream> tcpListener::waitForConnection()
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 

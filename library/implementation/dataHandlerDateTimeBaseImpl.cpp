@@ -19,13 +19,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "exceptionImpl.h"
 #include "dataHandlerDateTimeBaseImpl.h"
 #include "dicomDictImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <time.h>
 #include <stdlib.h>
 #include <sstream>
 #include <iomanip>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -77,11 +77,11 @@ void readingDataHandlerDateTimeBase::parseDate(
         std::uint32_t* pMonth,
         std::uint32_t* pDay) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(dateString.size() != 8)
     {
-        IMEBRA_THROW(DataHandlerCorruptedBufferError, "The date/time string has the wrong size");
+        DICOMHERO_THROW(DataHandlerCorruptedBufferError, "The date/time string has the wrong size");
     }
 
     std::string dateYear=dateString.substr(0, 4);
@@ -97,7 +97,7 @@ void readingDataHandlerDateTimeBase::parseDate(
     std::istringstream dayStream(dateDay);
     dayStream >> (*pDay);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -115,7 +115,7 @@ std::string writingDataHandlerDateTimeBase::buildDate(
         std::uint32_t month,
         std::uint32_t day) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
         if((year > 9999) || (month < 1) || (month>12) || (day<1) || (day>31))
     {
@@ -130,7 +130,7 @@ std::string writingDataHandlerDateTimeBase::buildDate(
 
     return dateStream.str();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -152,7 +152,7 @@ void readingDataHandlerDateTimeBase::parseTime(
         std::int32_t* pOffsetHours,
         std::int32_t* pOffsetMinutes) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string fullTimeString(timeString);
 
@@ -207,7 +207,7 @@ void readingDataHandlerDateTimeBase::parseTime(
         *pOffsetMinutes= - *pOffsetMinutes;
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -229,7 +229,7 @@ std::string writingDataHandlerDateTimeBase::buildTime(
         std::int32_t offsetMinutes
         ) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(
         (hour >= 24)
@@ -241,7 +241,7 @@ std::string writingDataHandlerDateTimeBase::buildTime(
         || (offsetMinutes < -59)
         || (offsetMinutes > 59))
     {
-        IMEBRA_THROW(DataHandlerConversionError, "Invalid Time values. Hour:" << hour << " minutes:" << minutes << " seconds:" << seconds << " nanoseconds:" << nanoseconds <<
+        DICOMHERO_THROW(DataHandlerConversionError, "Invalid Time values. Hour:" << hour << " minutes:" << minutes << " seconds:" << seconds << " nanoseconds:" << nanoseconds <<
                                          " offsetHours:" << offsetHours << " offsetMinutes:" << offsetMinutes);
     }
 
@@ -260,7 +260,7 @@ std::string writingDataHandlerDateTimeBase::buildTime(
 
     return timeStream.str();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -280,7 +280,7 @@ std::string writingDataHandlerDateTimeBase::buildTimeSimple(
         std::uint32_t nanoseconds
         ) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(
         (hour >= 24)
@@ -288,7 +288,7 @@ std::string writingDataHandlerDateTimeBase::buildTimeSimple(
         || (seconds >= 60)
         || (nanoseconds > 999999))
     {
-        IMEBRA_THROW(DataHandlerConversionError, "Invalid Time values hour:" << hour << " minutes:" << minutes << " seconds:" << seconds << " nanoseconds:" << nanoseconds);
+        DICOMHERO_THROW(DataHandlerConversionError, "Invalid Time values hour:" << hour << " minutes:" << minutes << " seconds:" << seconds << " nanoseconds:" << nanoseconds);
     }
 
     std::ostringstream timeStream;
@@ -304,7 +304,7 @@ std::string writingDataHandlerDateTimeBase::buildTimeSimple(
 
     return timeStream.str();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -320,7 +320,7 @@ std::string writingDataHandlerDateTimeBase::buildTimeSimple(
 ///////////////////////////////////////////////////////////
 std::string writingDataHandlerDateTimeBase::padLeft(const std::string& source, const char fillChar, const size_t length) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
         if(source.size() >= length)
         {
@@ -332,14 +332,14 @@ std::string writingDataHandlerDateTimeBase::padLeft(const std::string& source, c
 
     return paddedString;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 } // namespace handlers
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 

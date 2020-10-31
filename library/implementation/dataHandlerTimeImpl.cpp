@@ -24,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataHandlerTimeImpl.h"
 #include "dateImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -62,7 +62,7 @@ readingDataHandlerTime::readingDataHandlerTime(const memory& parseMemory): readi
 ///////////////////////////////////////////////////////////
 std::shared_ptr<date> readingDataHandlerTime::getDate(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t hour(0), minutes(0), seconds(0), nanoseconds(0);
     std::int32_t offsetHours(0), offsetMinutes(0);
@@ -71,7 +71,7 @@ std::shared_ptr<date> readingDataHandlerTime::getDate(const size_t index) const
 
     return std::make_shared<date>(0, 0, 0, hour, minutes, seconds, nanoseconds, offsetHours, offsetMinutes);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
@@ -93,12 +93,12 @@ writingDataHandlerTime::writingDataHandlerTime(const std::shared_ptr<buffer> &pB
 ///////////////////////////////////////////////////////////
 void writingDataHandlerTime::setDate(const size_t index, const std::shared_ptr<const date>& pDate)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string timeString = buildTimeSimple(pDate->getHour(), pDate->getMinutes(), pDate->getSeconds(), pDate->getNanoseconds());
     setString(index, timeString);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -106,4 +106,4 @@ void writingDataHandlerTime::setDate(const size_t index, const std::shared_ptr<c
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

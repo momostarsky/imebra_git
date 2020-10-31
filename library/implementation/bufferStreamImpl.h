@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "memoryStreamImpl.h"
 #include "dataHandlerNumericImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -47,6 +47,6 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraBufferStream_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)

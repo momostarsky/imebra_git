@@ -31,7 +31,7 @@ The class hides the platform specific implementations and supplies a common
 #include <list>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 /// \addtogroup group_baseclasses
@@ -155,7 +155,7 @@ public:
 
 ///@}
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 

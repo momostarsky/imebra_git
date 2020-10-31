@@ -18,10 +18,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "memoryImpl.h"
 #include "exceptionImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <cstring>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -92,7 +92,7 @@ memory::~memory()
 ///////////////////////////////////////////////////////////
 void memory::copyFrom(const std::shared_ptr<const memory>& sourceMemory)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_pMemoryBuffer.get() == 0)
     {
@@ -100,7 +100,7 @@ void memory::copyFrom(const std::shared_ptr<const memory>& sourceMemory)
     }
     m_pMemoryBuffer->assign(sourceMemory->data(), sourceMemory->size());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -133,7 +133,7 @@ void memory::clear()
 ///////////////////////////////////////////////////////////
 void memory::resize(size_t newSize)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_pMemoryBuffer.get() == 0)
     {
@@ -144,7 +144,7 @@ void memory::resize(size_t newSize)
         m_pMemoryBuffer->resize((size_t)newSize, (std::uint8_t)0);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -159,7 +159,7 @@ void memory::resize(size_t newSize)
 ///////////////////////////////////////////////////////////
 void memory::reserve(size_t reserveSize)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_pMemoryBuffer.get() == 0)
     {
@@ -167,7 +167,7 @@ void memory::reserve(size_t reserveSize)
     }
     m_pMemoryBuffer->reserve(reserveSize);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -243,7 +243,7 @@ bool memory::empty() const
 ///////////////////////////////////////////////////////////
 void memory::assign(const std::uint8_t* pSource, const size_t sourceLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_pMemoryBuffer.get() == 0)
     {
@@ -251,12 +251,12 @@ void memory::assign(const std::uint8_t* pSource, const size_t sourceLength)
     }
     m_pMemoryBuffer->assign(pSource, sourceLength);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 void memory::assignRegion(const std::uint8_t* pSource, const size_t sourceLength, const size_t destinationOffset)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_pMemoryBuffer.get() == 0)
     {
@@ -264,11 +264,11 @@ void memory::assignRegion(const std::uint8_t* pSource, const size_t sourceLength
     }
     if(m_pMemoryBuffer->size() < destinationOffset + sourceLength)
     {
-        IMEBRA_THROW(MemorySizeError, "The memory size is too small to accept the source region");
+        DICOMHERO_THROW(MemorySizeError, "The memory size is too small to accept the source region");
     }
     ::memcpy(&(m_pMemoryBuffer->at(destinationOffset)), pSource, sourceLength);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
@@ -335,7 +335,7 @@ void memoryPool::setMinMaxMemory(size_t memoryMinSize, size_t poolMaxSize)
 ///////////////////////////////////////////////////////////
 void memoryPool::reuseMemory(stringUint8* pString)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(pString == 0)
     {
@@ -381,13 +381,13 @@ void memoryPool::reuseMemory(stringUint8* pString)
     {
         m_actualSize -= m_memorySize[m_firstUsedCell];
         delete m_memoryPointer[m_firstUsedCell];
-        if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
+        if(++m_firstUsedCell >= DICOMHERO_MEMORY_POOL_SLOTS)
         {
             m_firstUsedCell = 0;
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -417,7 +417,7 @@ size_t memoryPool::getUnusedMemorySize()
 ///////////////////////////////////////////////////////////
 bool memoryPool::flush()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     bool bCleared(m_firstUsedCell != m_firstFreeCell);
     while(m_firstUsedCell != m_firstFreeCell)
@@ -432,7 +432,7 @@ bool memoryPool::flush()
     }
     return bCleared;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -447,7 +447,7 @@ bool memoryPool::flush()
 ///////////////////////////////////////////////////////////
 stringUint8* memoryPool::getMemory(size_t requestedSize)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(requestedSize < m_minMemoryBlockSize || requestedSize > m_maxMemoryUsageSize)
     {
@@ -473,7 +473,7 @@ stringUint8* memoryPool::getMemory(size_t requestedSize)
         m_actualSize -= m_memorySize[findCell];
         if(findCell == m_firstUsedCell)
         {
-            if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
+            if(++m_firstUsedCell >= DICOMHERO_MEMORY_POOL_SLOTS)
             {
                 m_firstUsedCell = 0;
             }
@@ -481,7 +481,7 @@ stringUint8* memoryPool::getMemory(size_t requestedSize)
             return pMemory.release();
         }
 
-        size_t lastUsedCell = m_firstFreeCell == 0 ? (IMEBRA_MEMORY_POOL_SLOTS - 1) : (m_firstFreeCell - 1);
+        size_t lastUsedCell = m_firstFreeCell == 0 ? (DICOMHERO_MEMORY_POOL_SLOTS - 1) : (m_firstFreeCell - 1);
         if(findCell == lastUsedCell)
         {
             m_firstFreeCell = lastUsedCell;
@@ -491,7 +491,7 @@ stringUint8* memoryPool::getMemory(size_t requestedSize)
 
         m_memorySize[findCell] = m_memorySize[m_firstUsedCell];
         m_memoryPointer[findCell] = m_memoryPointer[m_firstUsedCell];
-        if(++m_firstUsedCell >= IMEBRA_MEMORY_POOL_SLOTS)
+        if(++m_firstUsedCell >= DICOMHERO_MEMORY_POOL_SLOTS)
         {
             m_firstUsedCell = 0;
         }
@@ -501,7 +501,7 @@ stringUint8* memoryPool::getMemory(size_t requestedSize)
 
     return new stringUint8(requestedSize, 0);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -533,25 +533,25 @@ thread_local std::unique_ptr<memoryPool> memoryPoolGetter::m_pool = std::unique_
 
 memoryPool& memoryPoolGetter::getMemoryPoolLocal()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
 #ifdef __APPLE__
     memoryPool* pPool = (memoryPool*)pthread_getspecific(m_key);
     if(pPool == 0)
     {
-        pPool = new memoryPool(IMEBRA_MEMORY_POOL_MIN_SIZE, IMEBRA_MEMORY_POOL_MAX_SIZE);
+        pPool = new memoryPool(DICOMHERO_MEMORY_POOL_MIN_SIZE, DICOMHERO_MEMORY_POOL_MAX_SIZE);
         pthread_setspecific(m_key, pPool);
     }
     return *pPool;
 #else
     if(m_pool.get() == 0)
     {
-        m_pool.reset(new memoryPool(IMEBRA_MEMORY_POOL_MIN_SIZE, IMEBRA_MEMORY_POOL_MAX_SIZE));
+        m_pool.reset(new memoryPool(DICOMHERO_MEMORY_POOL_MIN_SIZE, DICOMHERO_MEMORY_POOL_MAX_SIZE));
     }
     return *(m_pool.get());
 #endif
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 #ifdef __APPLE__
@@ -580,4 +580,4 @@ void memoryPoolGetter::newHandler()
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

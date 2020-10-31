@@ -17,14 +17,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 
-#include "../include/imebra/modalityVOILUT.h"
+#include "../include/dicomhero/modalityVOILUT.h"
 #include "../implementation/modalityVOILUTImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 ModalityVOILUT::ModalityVOILUT(const DataSet& dataset):
-    Transform(std::make_shared<imebra::implementation::transforms::modalityVOILUT>(getDataSetImplementation(dataset)))
+    Transform(std::make_shared<dicomhero::implementation::transforms::modalityVOILUT>(getDataSetImplementation(dataset)))
 {
 }
 

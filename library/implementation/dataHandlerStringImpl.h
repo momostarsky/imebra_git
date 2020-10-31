@@ -24,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -40,17 +40,17 @@ template<class S, typename U> U convertFromString(const typename std::enable_if<
         signed long long value(std::stoll(string));
         if(value < std::numeric_limits<U>::lowest() || value > std::numeric_limits<U>::max())
         {
-            IMEBRA_THROW(DataHandlerConversionError, "The number in the string is out of bound");
+            DICOMHERO_THROW(DataHandlerConversionError, "The number in the string is out of bound");
         }
         return static_cast<U>(value);
     }
     catch (const std::invalid_argument&)
     {
-        IMEBRA_THROW(DataHandlerConversionError, "The string is not a number");
+        DICOMHERO_THROW(DataHandlerConversionError, "The string is not a number");
     }
     catch (const std::out_of_range&)
     {
-        IMEBRA_THROW(DataHandlerConversionError, "The number in the string is out of bound");
+        DICOMHERO_THROW(DataHandlerConversionError, "The number in the string is out of bound");
     }
 }
 
@@ -61,17 +61,17 @@ template<class S, typename U> U convertFromString(const typename std::enable_if<
         unsigned long long value(std::stoull(string));
         if(value < std::numeric_limits<U>::lowest() || value > std::numeric_limits<U>::max())
         {
-            IMEBRA_THROW(DataHandlerConversionError, "The number in the string is out of bound");
+            DICOMHERO_THROW(DataHandlerConversionError, "The number in the string is out of bound");
         }
         return static_cast<U>(value);
     }
     catch (const std::invalid_argument&)
     {
-        IMEBRA_THROW(DataHandlerConversionError, "The string is not a number");
+        DICOMHERO_THROW(DataHandlerConversionError, "The string is not a number");
     }
     catch (const std::out_of_range&)
     {
-        IMEBRA_THROW(DataHandlerConversionError, "The number in the string is out of bound");
+        DICOMHERO_THROW(DataHandlerConversionError, "The number in the string is out of bound");
     }
 }
 
@@ -82,17 +82,17 @@ template<class S, typename U> U convertFromString(const typename std::enable_if<
         double value(std::stod(string));
         if(value < std::numeric_limits<U>::lowest() || value > std::numeric_limits<U>::max())
         {
-            IMEBRA_THROW(DataHandlerConversionError, "The number in the string is out of bound");
+            DICOMHERO_THROW(DataHandlerConversionError, "The number in the string is out of bound");
         }
         return static_cast<U>(value);
     }
     catch (const std::invalid_argument&)
     {
-        IMEBRA_THROW(DataHandlerConversionError, "The string is not a number");
+        DICOMHERO_THROW(DataHandlerConversionError, "The string is not a number");
     }
     catch (const std::out_of_range&)
     {
-        IMEBRA_THROW(DataHandlerConversionError, "The number in the string is out of bound");
+        DICOMHERO_THROW(DataHandlerConversionError, "The number in the string is out of bound");
     }
 }
 
@@ -243,6 +243,6 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraDataHandlerString_367AAE47_6FD7_4107_AB5B_25A355C5CB6E__INCLUDED_)

@@ -17,10 +17,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 
-#include "../include/imebra/baseUidGenerator.h"
+#include "../include/dicomhero/baseUidGenerator.h"
 #include "../implementation/baseUidGeneratorImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 BaseUIDGenerator::BaseUIDGenerator(const BaseUIDGenerator& source):
@@ -49,4 +49,4 @@ const std::shared_ptr<implementation::uidGenerators::baseUidGenerator>& getBaseU
     return baseUidGenerator.m_pUidGenerator;
 }
 
-} // namespace imebra
+} // namespace dicomhero

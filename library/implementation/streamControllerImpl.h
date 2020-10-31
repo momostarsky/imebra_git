@@ -24,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 /// \addtogroup group_baseclasses
@@ -38,7 +38,7 @@ namespace imebra
 ///         from/to a stream.
 ///
 /// Do not use this class directly: use
-///  imebra::streamWriter or imebra::streamReader
+///  dicomhero::streamWriter or dicomhero::streamReader
 ///  instead.
 ///
 ///////////////////////////////////////////////////////////
@@ -46,8 +46,8 @@ namespace imebra
 class streamController
 {
 
-#if(!defined IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE)
-    #define IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE 4096
+#if(!defined DICOMHERO_STREAM_CONTROLLER_MEMORY_SIZE)
+    #define DICOMHERO_STREAM_CONTROLLER_MEMORY_SIZE 4096
 #endif
 
 public:
@@ -212,7 +212,7 @@ protected:
 
 ///@}
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraStreamController_00B3C824_CD0D_4D99_8436_A41FCE9E4D6B__INCLUDED_)
 

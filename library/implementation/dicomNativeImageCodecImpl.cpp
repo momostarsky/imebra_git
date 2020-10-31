@@ -30,9 +30,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "colorTransformsFactoryImpl.h"
 #include "codecFactoryImpl.h"
 #include "bufferImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -78,7 +78,7 @@ std::shared_ptr<image> dicomNativeImageCodec::getImage(const std::string& /* tra
                                                        std::uint8_t highBit,
                                                        std::shared_ptr<streamReader> pSourceStream) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Create an image
     ///////////////////////////////////////////////////////////
@@ -119,7 +119,7 @@ std::shared_ptr<image> dicomNativeImageCodec::getImage(const std::string& /* tra
 
     if(tempChannelsNumber != channelsNumber)
     {
-        IMEBRA_THROW(CodecCorruptedFileError, "Wrong number of channels");
+        DICOMHERO_THROW(CodecCorruptedFileError, "Wrong number of channels");
     }
 
     size_t nativeImageSizeBits = getNativeImageSizeBits(allocatedBits, imageWidth, imageHeight, channelsNumber, bSubSampledX, bSubSampledY);
@@ -228,7 +228,7 @@ std::shared_ptr<image> dicomNativeImageCodec::getImage(const std::string& /* tra
             }
             else
             {
-                IMEBRA_THROW(std::logic_error, "Cannot load subsampled 1 bpp images");
+                DICOMHERO_THROW(std::logic_error, "Cannot load subsampled 1 bpp images");
             }
         }
     }
@@ -237,7 +237,7 @@ std::shared_ptr<image> dicomNativeImageCodec::getImage(const std::string& /* tra
     ///////////////////////////////////////////////////////////
     return pImage;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
@@ -277,7 +277,7 @@ void dicomNativeImageCodec::setImage(
         bool bInterleaved,
         bool /*b2Complement*/) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // First calculate the attributes we want to use.
     // Return an exception if they are different from the
@@ -326,7 +326,7 @@ void dicomNativeImageCodec::setImage(
         {
             if(bSubSampledX || bSubSampledY)
             {
-                IMEBRA_THROW(std::logic_error, "Cannot save subsampled 1 bpp images");
+                DICOMHERO_THROW(std::logic_error, "Cannot save subsampled 1 bpp images");
             }
             if(bInterleaved || channelsNumber == 1)
             {
@@ -367,12 +367,12 @@ void dicomNativeImageCodec::setImage(
         }
         else
         {
-            IMEBRA_THROW(std::logic_error, "Subsampled images with 1 bit per channel are not supported")
+            DICOMHERO_THROW(std::logic_error, "Subsampled images with 1 bit per channel are not supported")
         }
     }
 
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -662,15 +662,15 @@ bool dicomNativeImageCodec::canHandleTransferSyntax(const std::string& transferS
 ////////////////////////////////////////////////////////////////
 bool dicomNativeImageCodec::encapsulated(const std::string& transferSyntax) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(!canHandleTransferSyntax(transferSyntax))
     {
-        IMEBRA_THROW(CodecWrongTransferSyntaxError, "Cannot handle the transfer syntax");
+        DICOMHERO_THROW(CodecWrongTransferSyntaxError, "Cannot handle the transfer syntax");
     }
     return false;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -732,5 +732,5 @@ size_t dicomNativeImageCodec::getNativeImageSizeBits(std::uint32_t allocatedBits
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 

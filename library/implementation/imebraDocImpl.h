@@ -24,11 +24,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 ///         are defined in this namespace.
 ///
 /// Some of the classes are grouped in namespaces that are
-///  children of this one (like imebra::implementation::codecs,
-///  imebra::implementation::handlers and 
-///  imebra::implementation::transforms).
+///  children of this one (like dicomhero::implementation::codecs,
+///  dicomhero::implementation::handlers and 
+///  dicomhero::implementation::transforms).
 ///
 /// The functions in this namespace may use some classes
-///  defined in the parent namespace imebra.
+///  defined in the parent namespace dicomhero.
 ///
 ///////////////////////////////////////////////////////////

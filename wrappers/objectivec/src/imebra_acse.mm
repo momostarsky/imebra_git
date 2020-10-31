@@ -122,20 +122,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraDataSet*)getCommand:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraDataSet alloc] initWithImebraDataSet:(new imebra::DataSet(get_imebra_object_holder(AssociationMessage)->getCommand()))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraDataSet*)getPayload:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraDataSet alloc] initWithImebraDataSet:(new imebra::DataSet(get_imebra_object_holder(AssociationMessage)->getPayload()))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(BOOL)hasPayload
@@ -160,11 +160,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)addDataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::MutableAssociationMessage*)get_imebra_object_holder(AssociationMessage))->addDataSet(*get_other_imebra_object_holder(pDataSet, DataSet));
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 @end
@@ -179,55 +179,55 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraAssociationMessage*)getCommand:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraAssociationMessage alloc] initWithImebraAssociationMessage:(new imebra::AssociationMessage(get_imebra_object_holder( AssociationBase)->getCommand()))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraAssociationMessage*)getResponse:(unsigned int) messageId error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
     return [[ImebraAssociationMessage alloc] initWithImebraAssociationMessage:(new imebra::AssociationMessage(get_imebra_object_holder(AssociationBase)->getResponse((std::uint16_t)messageId)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(void)sendMessage:(ImebraAssociationMessage*)pMessage error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     get_imebra_object_holder(AssociationBase)->sendMessage(*(get_other_imebra_object_holder(pMessage, AssociationMessage)));
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(void)release:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     get_imebra_object_holder(AssociationBase)->release();
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(void)abort:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     get_imebra_object_holder(AssociationBase)->abort();
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(NSString*)getTransferSyntax:(NSString*)abstractSyntax error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return imebra::stringToNSString(get_imebra_object_holder(AssociationBase)->getTransferSyntax(imebra::NSStringToString(abstractSyntax)));
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(NSString*)thisAET
@@ -253,7 +253,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     writer:(ImebraStreamWriter*)pOutput
     dimseTimeoutSeconds:(unsigned int)dimseTimeoutSeconds error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     reset_imebra_object_holder(AssociationBase);
 
@@ -273,7 +273,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     }
     return self;
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 @end
@@ -290,7 +290,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     dimseTimeoutSeconds:(unsigned int)dimseTimeoutSeconds
     artimTimeoutSeconds:(unsigned int)artimTimeoutSeconds error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     reset_imebra_object_holder(AssociationBase);
 
@@ -310,7 +310,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     }
     return self;
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 @end

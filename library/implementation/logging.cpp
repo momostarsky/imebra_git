@@ -2,10 +2,10 @@
 #include <array>
 #include <ctime>
 
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
 #include <time.h>
 #endif
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -18,7 +18,7 @@ std::string getCurrentTime()
 
     struct tm timeInfo;
 
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
     ::localtime_s(&timeInfo, &rawTime);
 #else
     ::localtime_r (&rawTime, &timeInfo);

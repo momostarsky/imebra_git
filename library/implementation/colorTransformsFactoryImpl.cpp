@@ -21,7 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "transformsChainImpl.h"
 #include "imageImpl.h"
 #include <locale>
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
 #include "MONOCHROME1ToMONOCHROME2Impl.h"
 #include "MONOCHROME1ToRGBImpl.h"
@@ -37,7 +37,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "YBRPARTIALToRGBImpl.h"
 #include "YBRRCTToRGBImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -77,7 +77,7 @@ static colorTransformsFactory::forceColorTransformsFactoryConstruction forceCons
 
 colorTransformsFactory::colorTransformsFactory()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     registerTransform(std::make_shared<MONOCHROME1ToMONOCHROME2>());
     registerTransform(std::make_shared<MONOCHROME2ToMONOCHROME1>());
@@ -98,7 +98,7 @@ colorTransformsFactory::colorTransformsFactory()
     registerTransform(std::make_shared<YBRRCTToRGB>());
     registerTransform(std::make_shared<YBRPARTIALToRGB>());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -112,11 +112,11 @@ colorTransformsFactory::colorTransformsFactory()
 ///////////////////////////////////////////////////////////
 void colorTransformsFactory::registerTransform(std::shared_ptr<colorTransform> newColorTransform)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_transformsList.push_back(newColorTransform);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -131,13 +131,13 @@ void colorTransformsFactory::registerTransform(std::shared_ptr<colorTransform> n
 ///////////////////////////////////////////////////////////
 std::shared_ptr<colorTransformsFactory> colorTransformsFactory::getColorTransformsFactory()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Violation to requirement REQ_MAKE_SHARED due to protected constructor
     static std::shared_ptr<colorTransformsFactory> m_transformFactory(new colorTransformsFactory());
     return m_transformFactory;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -152,7 +152,7 @@ std::shared_ptr<colorTransformsFactory> colorTransformsFactory::getColorTransfor
 ///////////////////////////////////////////////////////////;
 std::string colorTransformsFactory::normalizeColorSpace(const std::string& colorSpace)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string normalizedColorSpace;
 
@@ -171,7 +171,7 @@ std::string colorTransformsFactory::normalizeColorSpace(const std::string& color
 
     return normalizedColorSpace;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -187,12 +187,12 @@ std::string colorTransformsFactory::normalizeColorSpace(const std::string& color
 ///////////////////////////////////////////////////////////
 bool colorTransformsFactory::isMonochrome(const std::string& colorSpace)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
     return (normalizedColorSpace == "MONOCHROME1" || normalizedColorSpace == "MONOCHROME2");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -240,12 +240,12 @@ bool colorTransformsFactory::isSubsampledY(const std::string& colorSpace)
 ///////////////////////////////////////////////////////////
 bool colorTransformsFactory::canSubsample(const std::string& colorSpace)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
     return normalizedColorSpace.find("YBR_") == 0;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -260,7 +260,7 @@ bool colorTransformsFactory::canSubsample(const std::string& colorSpace)
 ///////////////////////////////////////////////////////////
 std::string colorTransformsFactory::makeSubsampled(const std::string& colorSpace, bool bSubsampleX, bool bSubsampleY)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
     if(!canSubsample(normalizedColorSpace))
@@ -277,7 +277,7 @@ std::string colorTransformsFactory::makeSubsampled(const std::string& colorSpace
     }
     return normalizedColorSpace;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -293,7 +293,7 @@ std::string colorTransformsFactory::makeSubsampled(const std::string& colorSpace
 ///////////////////////////////////////////////////////////
 std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::string& colorSpace)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string normalizedColorSpace = normalizeColorSpace(colorSpace);
 
@@ -329,7 +329,7 @@ std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::string& col
 
     return 0;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -345,7 +345,7 @@ std::uint32_t colorTransformsFactory::getNumberOfChannels(const std::string& col
 ///////////////////////////////////////////////////////////
 std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::string& startColorSpace, const std::string& endColorSpace)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string normalizedStartColorSpace = normalizeColorSpace(startColorSpace);
     std::string normalizedEndColorSpace = normalizeColorSpace(endColorSpace);
@@ -391,9 +391,9 @@ std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::strin
         }
     }
 
-    IMEBRA_THROW(ColorTransformsFactoryNoTransformError, "There isn't any transform that can convert between the color space " << startColorSpace << " and " << endColorSpace);
+    DICOMHERO_THROW(ColorTransformsFactoryNoTransformError, "There isn't any transform that can convert between the color space " << startColorSpace << " and " << endColorSpace);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 } // namespace colorTransforms
@@ -402,4 +402,4 @@ std::shared_ptr<transform> colorTransformsFactory::getTransform(const std::strin
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

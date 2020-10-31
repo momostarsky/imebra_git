@@ -23,7 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "transformImpl.h"
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -38,7 +38,7 @@ namespace transforms
 ///         color spaces.
 ///
 /// The color transformation is performed on images (see
-///  imebra::implementation::image).
+///  dicomhero::implementation::image).
 ///
 ///////////////////////////////////////////////////////////
 namespace colorTransforms
@@ -107,7 +107,7 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 #endif // !defined(imebraColorTransform_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_)

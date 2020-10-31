@@ -24,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string>
 #include <mutex>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -118,7 +118,7 @@ public:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 #endif // !defined(imebraUidGeneratorFactory_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_)

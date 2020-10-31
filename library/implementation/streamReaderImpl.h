@@ -20,10 +20,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraStreamReader_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
 
 #include "streamControllerImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <exception>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -187,7 +187,7 @@ private:
 };
 
 
-/// \brief In the constructor adds a forward stream to a 
+/// \brief In the constructor adds a forward stream to a
 ///        streamWriter and removes it in the destructor.
 ///
 ///////////////////////////////////////////////////////////
@@ -209,6 +209,6 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraStreamReader_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_)

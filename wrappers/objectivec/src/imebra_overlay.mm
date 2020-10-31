@@ -84,38 +84,38 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(unsigned int) getROIArea:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(Overlay)->getROIArea();
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0u);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0u);
 }
 
 -(double) getROIMean:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(Overlay)->getROIMean();
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0.0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0.0);
 }
 
 -(double) getROIStandardDeviation:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(Overlay)->getROIStandardDeviation();
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0.0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0.0);
 }
 
 -(ImebraImage*) getImage:(unsigned int)frameNumber error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraImage alloc] initWithImebraImage:new imebra::Image(get_imebra_object_holder(Overlay)->getImage(frameNumber))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 @end
@@ -158,11 +158,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void) setImage:(unsigned int)frameNumber image:(ImebraImage*)image error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::MutableOverlay*)get_imebra_object_holder(Overlay))->setImage(frameNumber, *get_other_imebra_object_holder(image, Image));
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 @end

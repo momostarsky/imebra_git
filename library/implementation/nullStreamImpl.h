@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "baseStreamImpl.h"
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -56,6 +56,6 @@ public:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraNullStream_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

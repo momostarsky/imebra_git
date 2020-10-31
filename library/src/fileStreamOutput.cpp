@@ -16,10 +16,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/fileStreamOutput.h"
+#include "../include/dicomhero/fileStreamOutput.h"
 #include "../implementation/fileStreamImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 FileStreamOutput::FileStreamOutput(const std::wstring& name): BaseStreamOutput(std::make_shared<implementation::fileStreamOutput>(name))

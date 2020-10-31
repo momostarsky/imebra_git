@@ -21,7 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "memoryImpl.h"
 #include "bufferImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -37,20 +37,20 @@ readingDataHandlerNumericBase::readingDataHandlerNumericBase(const std::shared_p
 
 const std::uint8_t* readingDataHandlerNumericBase::getMemoryBuffer() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pMemory->data();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 size_t readingDataHandlerNumericBase::getMemorySize() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pMemory->size();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::shared_ptr<const memory> readingDataHandlerNumericBase::getMemory() const
@@ -60,7 +60,7 @@ std::shared_ptr<const memory> readingDataHandlerNumericBase::getMemory() const
 
 void readingDataHandlerNumericBase::copyTo(std::shared_ptr<writingDataHandlerNumericBase> pDestination)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(pDestination->getDataType() == getDataType())
     {
@@ -78,46 +78,46 @@ void readingDataHandlerNumericBase::copyTo(std::shared_ptr<writingDataHandlerNum
         return;
     }
 
-    imebra::implementation::handlers::writingDataHandlerNumericBase* pHandler(pDestination.get());
-    if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::uint8_t>) ||
-        dynamic_cast<imebra::implementation::handlers::writingDataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
+    dicomhero::implementation::handlers::writingDataHandlerNumericBase* pHandler(pDestination.get());
+    if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::writingDataHandlerNumeric<std::uint8_t>) ||
+        dynamic_cast<dicomhero::implementation::handlers::writingDataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
     {
         copyTo((std::uint8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::int8_t>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::writingDataHandlerNumeric<std::int8_t>))
     {
         copyTo((std::int8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::uint16_t>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::writingDataHandlerNumeric<std::uint16_t>))
     {
         copyTo((std::uint16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::int16_t>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::writingDataHandlerNumeric<std::int16_t>))
     {
         copyTo((std::int16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::uint32_t>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::writingDataHandlerNumeric<std::uint32_t>))
     {
         copyTo((std::uint32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<std::int32_t>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::writingDataHandlerNumeric<std::int32_t>))
     {
         copyTo((std::int32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<float>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::writingDataHandlerNumeric<float>))
     {
         copyTo((float*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::writingDataHandlerNumeric<double>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::writingDataHandlerNumeric<double>))
     {
         copyTo((double*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
     else
     {
-        IMEBRA_THROW(std::runtime_error, "Data type not valid");
+        DICOMHERO_THROW(std::runtime_error, "Data type not valid");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -128,11 +128,11 @@ writingDataHandlerNumericBase::writingDataHandlerNumericBase(const std::shared_p
 
 size_t writingDataHandlerNumericBase::getSize() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pMemory->size() / getUnitSize();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::shared_ptr<memory> writingDataHandlerNumericBase::getMemory() const
@@ -144,11 +144,11 @@ std::shared_ptr<memory> writingDataHandlerNumericBase::getMemory() const
 ///////////////////////////////////////////////////////////
 void writingDataHandlerNumericBase::setSize(const size_t elementsNumber)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pMemory->resize(elementsNumber * getUnitSize());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -162,27 +162,27 @@ writingDataHandlerNumericBase::~writingDataHandlerNumericBase()
 
 std::uint8_t* writingDataHandlerNumericBase::getMemoryBuffer() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pMemory->data();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 size_t writingDataHandlerNumericBase::getMemorySize() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pMemory->size();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 // Copy the data from another handler
 ///////////////////////////////////////////////////////////
 void writingDataHandlerNumericBase::copyFrom(std::shared_ptr<readingDataHandlerNumericBase> pSource)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(pSource->getDataType() == getDataType())
     {
@@ -193,53 +193,53 @@ void writingDataHandlerNumericBase::copyFrom(std::shared_ptr<readingDataHandlerN
         return;
     }
 
-    imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(pSource.get());
-    if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>) ||
-        dynamic_cast<imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
+    dicomhero::implementation::handlers::readingDataHandlerNumericBase* pHandler(pSource.get());
+    if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>) ||
+        dynamic_cast<dicomhero::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>* >(pHandler) != 0)
     {
         copyFrom((std::uint8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int8_t>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<std::int8_t>))
     {
         copyFrom((std::int8_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint16_t>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<std::uint16_t>))
     {
         copyFrom((std::uint16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int16_t>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<std::int16_t>))
     {
         copyFrom((std::int16_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint32_t>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<std::uint32_t>))
     {
         copyFrom((std::uint32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int32_t>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<std::int32_t>))
     {
         copyFrom((std::int32_t*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<float>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<float>))
     {
         copyFrom((float*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<double>))
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<double>))
     {
         copyFrom((double*)pHandler->getMemoryBuffer(), pHandler->getSize());
     }
     else
     {
-        IMEBRA_THROW(std::runtime_error, "Data type not valid");
+        DICOMHERO_THROW(std::runtime_error, "Data type not valid");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
 
 std::uint32_t readingDataHandlerAT::getUint32(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // In low bit endian machine revert the group and tag part
     std::uint32_t value = getValue<std::uint32_t>(index);
@@ -252,83 +252,83 @@ std::uint32_t readingDataHandlerAT::getUint32(const size_t index) const
 
     return value;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::int32_t readingDataHandlerAT::getInt32(const size_t /* index */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::int16_t readingDataHandlerAT::getInt16(const size_t /* index */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::uint16_t readingDataHandlerAT::getUint16(const size_t /* index */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::int8_t readingDataHandlerAT::getInt8(const size_t /* index */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::uint8_t readingDataHandlerAT::getUint8(const size_t /* index */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 double readingDataHandlerAT::getDouble(const size_t /* index */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 float readingDataHandlerAT::getFloat(const size_t /* index */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void writingDataHandlerAT::setUint32(const size_t index, const std::uint32_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // In low bit endian machine revert the group and tag part
     if(streamController::getPlatformEndian() == streamController::tByteOrdering::lowByteEndian)
@@ -342,77 +342,77 @@ void writingDataHandlerAT::setUint32(const size_t index, const std::uint32_t val
         setValue<std::uint32_t>(index, value);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void writingDataHandlerAT::setInt32(const size_t /* index */, const std::int32_t /* value */)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void writingDataHandlerAT::setInt16(const size_t /* index */, const std::int16_t /* value */)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void writingDataHandlerAT::setUint16(const size_t /* index */, const std::uint16_t /* value */)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void writingDataHandlerAT::setInt8(const size_t /* index */, const std::int8_t /* value */)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void writingDataHandlerAT::setUint8(const size_t /* index */, const std::uint8_t /* value */)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void writingDataHandlerAT::setDouble(const size_t /* index */, const double /* value */)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void writingDataHandlerAT::setFloat(const size_t /* index */, const float /* value */)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
+    DICOMHERO_THROW(DataHandlerConversionError, "AT tag can handle only uint32 values");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 

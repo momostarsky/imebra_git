@@ -18,16 +18,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "configurationImpl.h"
 
-#if defined(IMEBRA_USE_ICONV)
+#if defined(DICOMHERO_USE_ICONV)
 
 #include "exceptionImpl.h"
 #include "charsetConversionIconvImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
 #include <memory>
 #include <array>
 
-namespace imebra
+namespace dicomhero
 {
 
 ///////////////////////////////////////////////////////////
@@ -37,7 +37,7 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     const charsetInformation& info(getDictionary().getCharsetInformation(dicomName));
 
@@ -62,10 +62,10 @@ charsetConversionIconv::charsetConversionIconv(const std::string& dicomName)
     m_iconvFromUnicode = iconv_open(toCodeIgnore.c_str(), utfCode);
     if(m_iconvToUnicode == (iconv_t)-1 || m_iconvFromUnicode == (iconv_t)-1)
     {
-        IMEBRA_THROW(CharsetConversionNoSupportedTableError, "Table " << dicomName << " not supported by the system");
+        DICOMHERO_THROW(CharsetConversionNoSupportedTableError, "Table " << dicomName << " not supported by the system");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -87,7 +87,7 @@ charsetConversionIconv::~charsetConversionIconv()
 ///////////////////////////////////////////////////////////
 std::string charsetConversionIconv::fromUnicode(const std::wstring& unicodeString) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(unicodeString.empty())
     {
@@ -96,7 +96,7 @@ std::string charsetConversionIconv::fromUnicode(const std::wstring& unicodeStrin
 
     return myIconv(m_iconvFromUnicode, (char*)unicodeString.c_str(), unicodeString.length() * sizeof(wchar_t));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -107,7 +107,7 @@ std::string charsetConversionIconv::fromUnicode(const std::wstring& unicodeStrin
 ///////////////////////////////////////////////////////////
 std::wstring charsetConversionIconv::toUnicode(const std::string& asciiString) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(asciiString.empty())
     {
@@ -119,7 +119,7 @@ std::wstring charsetConversionIconv::toUnicode(const std::string& asciiString) c
 
     return returnString;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -128,13 +128,13 @@ std::wstring charsetConversionIconv::toUnicode(const std::string& asciiString) c
 // In Posix systems executes an iconv
 //
 ///////////////////////////////////////////////////////////
-#if defined(IMEBRA_WINDOWS)
+#if defined(DICOMHERO_WINDOWS)
 std::string charsetConversionIconv::myIconv(iconv_t context, const char* inputString, size_t inputStringLengthBytes) const
 #else
 std::string charsetConversionIconv::myIconv(iconv_t context, char* inputString, size_t inputStringLengthBytes) const
 #endif
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string finalString;
 
@@ -173,9 +173,9 @@ std::string charsetConversionIconv::myIconv(iconv_t context, char* inputString, 
 
     return finalString;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif

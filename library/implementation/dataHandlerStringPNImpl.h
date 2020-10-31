@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataHandlerStringUnicodeImpl.h"
 #include "patientNameImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -96,7 +96,7 @@ private:
 
         if(groups.size() > 3) // Maximum 3 groups (alphabetic, ideographic, phonetic)
         {
-            IMEBRA_THROW(DataHandlerCorruptedBufferError, "The Patient Name contains more than 3 groups")
+            DICOMHERO_THROW(DataHandlerCorruptedBufferError, "The Patient Name contains more than 3 groups")
         }
 
         groups.resize(3);
@@ -140,6 +140,6 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraDataHandlerStringPN_367AAE47_6FD7_4107_AB5B_25A355C5CB6E__INCLUDED_)

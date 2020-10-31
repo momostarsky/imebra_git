@@ -20,9 +20,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "exceptionImpl.h"
 #include "dicomDictImpl.h"
 #include "dicomDescriptions.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -53,7 +53,7 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 dicomDictionary::dicomDictionary()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     registerVR(tagVR_t::AE, false, 0, 16);
     registerVR(tagVR_t::AS, false, 0, 0);
@@ -101,7 +101,7 @@ dicomDictionary::dicomDictionary()
 
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -121,7 +121,7 @@ void dicomDictionary::registerTag(std::uint32_t tagId,
                                   tagVR_t vr0, tagVR_t vr1,
                                   std::uint32_t multiplicityMin, std::uint32_t multiplicityMax, std::uint32_t multiplicityStep)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t increaseValue = 1u;
     while(tagMask != 0xffffffff && (increaseValue & tagMask) != 0)
@@ -142,7 +142,7 @@ void dicomDictionary::registerTag(std::uint32_t tagId,
         m_dicomDict[registerTagId] = newElement;
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -157,11 +157,11 @@ void dicomDictionary::registerTag(std::uint32_t tagId,
 ///////////////////////////////////////////////////////////
 void dicomDictionary::registerVR(tagVR_t vr, bool bLongLength, std::uint32_t wordSize, std::uint32_t maxLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_vrDict.find(vr) != m_vrDict.end())
     {
-        IMEBRA_THROW(std::logic_error, "VR registered twice");
+        DICOMHERO_THROW(std::logic_error, "VR registered twice");
     }
     validDataTypesStruct newElement;
     newElement.m_longLength = bLongLength;
@@ -170,7 +170,7 @@ void dicomDictionary::registerVR(tagVR_t vr, bool bLongLength, std::uint32_t wor
 
     m_vrDict[vr] = newElement;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -185,73 +185,73 @@ void dicomDictionary::registerVR(tagVR_t vr, bool bLongLength, std::uint32_t wor
 ///////////////////////////////////////////////////////////
 std::wstring dicomDictionary::getTagDescription(std::uint16_t groupId, std::uint16_t tagId) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t tagDWordId=(((std::uint32_t)groupId)<<16) | (std::uint32_t)tagId;
 
     tDicomDictionary::const_iterator findIterator = m_dicomDict.find(tagDWordId);
     if(findIterator == m_dicomDict.end())
     {
-        IMEBRA_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
+        DICOMHERO_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
     }
 
     return findIterator->second.m_tagDescription;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::uint32_t dicomDictionary::getTagMultiplicityMin(std::uint16_t groupId, std::uint16_t tagId) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t tagDWordId=(((std::uint32_t)groupId)<<16) | (std::uint32_t)tagId;
 
     tDicomDictionary::const_iterator findIterator = m_dicomDict.find(tagDWordId);
     if(findIterator == m_dicomDict.end())
     {
-        IMEBRA_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
+        DICOMHERO_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
     }
 
     return findIterator->second.m_multiplicityMin;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::uint32_t dicomDictionary::getTagMultiplicityMax(std::uint16_t groupId, std::uint16_t tagId) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t tagDWordId=(((std::uint32_t)groupId)<<16) | (std::uint32_t)tagId;
 
     tDicomDictionary::const_iterator findIterator = m_dicomDict.find(tagDWordId);
     if(findIterator == m_dicomDict.end())
     {
-        IMEBRA_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
+        DICOMHERO_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
     }
 
     return findIterator->second.m_multiplicityMax;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::uint32_t dicomDictionary::getTagMultiplicityStep(std::uint16_t groupId, std::uint16_t tagId) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t tagDWordId=(((std::uint32_t)groupId)<<16) | (std::uint32_t)tagId;
 
     tDicomDictionary::const_iterator findIterator = m_dicomDict.find(tagDWordId);
     if(findIterator == m_dicomDict.end())
     {
-        IMEBRA_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
+        DICOMHERO_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
     }
 
     return findIterator->second.m_multiplicityStep;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -266,19 +266,19 @@ std::uint32_t dicomDictionary::getTagMultiplicityStep(std::uint16_t groupId, std
 ///////////////////////////////////////////////////////////
 tagVR_t dicomDictionary::getTagType(std::uint16_t groupId, std::uint16_t tagId) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t tagDWordId=(((std::uint32_t)groupId)<<16) | (std::uint32_t)tagId;
 
     tDicomDictionary::const_iterator findIterator = m_dicomDict.find(tagDWordId);
     if(findIterator == m_dicomDict.end())
     {
-        IMEBRA_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
+        DICOMHERO_THROW(DictionaryUnknownTagError, "Unknown tag " << std::hex << groupId << ", " << std::hex << tagId);
     }
 
     return findIterator->second.m_vr0;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -302,7 +302,7 @@ tagVR_t dicomDictionary::stringDataTypeToEnum(const std::string& dataType) const
 
     if(m_vrDict.find((tagVR_t)enumVR) == m_vrDict.end())
     {
-        IMEBRA_THROW(DictionaryUnknownDataTypeError, "Unknown data type " << dataType);
+        DICOMHERO_THROW(DictionaryUnknownDataTypeError, "Unknown data type " << dataType);
     }
 
     return (tagVR_t)enumVR;
@@ -352,18 +352,18 @@ bool dicomDictionary::getLongLength(tagVR_t dataType) const
 ///////////////////////////////////////////////////////////
 std::uint32_t dicomDictionary::getWordSize(tagVR_t dataType) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     tVRDictionary::const_iterator findIterator = m_vrDict.find(dataType);
 
     if(findIterator == m_vrDict.end())
     {
-        IMEBRA_THROW(DictionaryUnknownDataTypeError, "Unregistered data type" << (std::uint16_t)dataType);
+        DICOMHERO_THROW(DictionaryUnknownDataTypeError, "Unregistered data type" << (std::uint16_t)dataType);
     }
 
     return findIterator->second.m_wordLength;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -379,18 +379,18 @@ std::uint32_t dicomDictionary::getWordSize(tagVR_t dataType) const
 ///////////////////////////////////////////////////////////
 std::uint32_t dicomDictionary::getMaxSize(tagVR_t dataType) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     tVRDictionary::const_iterator findIterator = m_vrDict.find(dataType);
 
     if(findIterator == m_vrDict.end())
     {
-        IMEBRA_THROW(DictionaryUnknownDataTypeError, "Unregistered data type " << (std::uint16_t)dataType);
+        DICOMHERO_THROW(DictionaryUnknownDataTypeError, "Unregistered data type " << (std::uint16_t)dataType);
     }
 
     return findIterator->second.m_maxLength;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -406,15 +406,15 @@ std::uint32_t dicomDictionary::getMaxSize(tagVR_t dataType) const
 ///////////////////////////////////////////////////////////
 dicomDictionary* dicomDictionary::getDicomDictionary()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     static dicomDictionary m_imbxDicomDictionary;
     return &m_imbxDicomDictionary;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

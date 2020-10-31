@@ -47,7 +47,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithAddress:(ImebraTCPActiveAddress*)pAddress error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     reset_imebra_object_holder(TCPStream);
     self = [super init];
@@ -57,17 +57,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
     }
     return self;
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 
 -(ImebraTCPAddress*) getPeerAddress: (NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraTCPAddress alloc] initWithImebraTCPAddress:new imebra::TCPAddress(get_imebra_object_holder(TCPStream)->getPeerAddress())];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 

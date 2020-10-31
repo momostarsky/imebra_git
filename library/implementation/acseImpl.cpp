@@ -23,7 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <memory.h>
 #include <cassert>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -44,7 +44,7 @@ acseItem::~acseItem()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<acseItem> acseItem::decodeItem(std::shared_ptr<streamReader> pReader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Get the item's type and create the proper class
     ///////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ std::shared_ptr<acseItem> acseItem::decodeItem(std::shared_ptr<streamReader> pRe
             pItem = std::make_shared<acseItemSCPSCURoleSelection>();
             break;
         default:
-            IMEBRA_THROW(AcseCorruptedMessageError, "Found unknown ACSE item");
+            DICOMHERO_THROW(AcseCorruptedMessageError, "Found unknown ACSE item");
         }
 
         // Read reserved byte
@@ -115,10 +115,10 @@ std::shared_ptr<acseItem> acseItem::decodeItem(std::shared_ptr<streamReader> pRe
     }
     catch(const StreamEOFError&)
     {
-        IMEBRA_THROW(AcseCorruptedMessageError, "Corrupted ACSE item");
+        DICOMHERO_THROW(AcseCorruptedMessageError, "Corrupted ACSE item");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -129,7 +129,7 @@ std::shared_ptr<acseItem> acseItem::decodeItem(std::shared_ptr<streamReader> pRe
 ///////////////////////////////////////////////////////////
 void acseItem::encodeItem(std::shared_ptr<streamWriter> pWriter) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Write the item's type
     ///////////////////////////////////////////////////////////
@@ -154,7 +154,7 @@ void acseItem::encodeItem(std::shared_ptr<streamWriter> pWriter) const
     ///////////////////////////////////////////////////////////
     if(pMemory->size() > std::numeric_limits<std::uint16_t>::max())
     {
-        IMEBRA_THROW(std::logic_error, "A PDU item cannot be longer than 65535 bytes");
+        DICOMHERO_THROW(std::logic_error, "A PDU item cannot be longer than 65535 bytes");
     }
 
     // Write the item's length
@@ -167,7 +167,7 @@ void acseItem::encodeItem(std::shared_ptr<streamWriter> pWriter) const
     ///////////////////////////////////////////////////////////
     pWriter->write(pMemory->data(), pMemory->size());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -210,12 +210,12 @@ const std::string& acseItemName::getName() const
 ///////////////////////////////////////////////////////////
 void acseItemName::encodeItemPayload(std::shared_ptr<streamWriter> writer) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string name(handlers::normalizeUid(m_name));
     writer->write((const std::uint8_t*)name.c_str(), name.size());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -226,7 +226,7 @@ void acseItemName::encodeItemPayload(std::shared_ptr<streamWriter> writer) const
 ///////////////////////////////////////////////////////////
 void acseItemName::decodeItemPayload(std::shared_ptr<streamReader> reader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint8_t buffer[128];
 
@@ -239,7 +239,7 @@ void acseItemName::decodeItemPayload(std::shared_ptr<streamReader> reader)
 
     m_name = handlers::normalizeUid(name);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -314,7 +314,7 @@ acseItemPresentationContextBase::acseItemPresentationContextBase():
 acseItemPresentationContextBase::acseItemPresentationContextBase(std::uint8_t id, const std::string& abstractSyntax, const transferSyntaxes_t& transferSyntaxes):
     m_id(id), m_result(result_t::acceptance), m_bCheckResultCorrectness(true)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pAbstractSyntax = std::make_shared<acseItemAbstractSyntax>(abstractSyntax);
     for(transferSyntaxes_t::const_iterator scanTransferSyntaxes(transferSyntaxes.begin()), endTransferSyntaxes(transferSyntaxes.end());
@@ -324,20 +324,20 @@ acseItemPresentationContextBase::acseItemPresentationContextBase(std::uint8_t id
         m_transferSyntaxes.push_back(std::make_shared<acseItemTransferSyntax>(*scanTransferSyntaxes));
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 acseItemPresentationContextBase::acseItemPresentationContextBase(std::uint8_t id, result_t result, const std::string& transferSyntax):
     m_id(id), m_result(result), m_bCheckResultCorrectness(true)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(!transferSyntax.empty())
     {
         m_transferSyntaxes.push_back(std::make_shared<acseItemTransferSyntax>(transferSyntax));
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -364,7 +364,7 @@ acseItemPresentationContextBase::result_t acseItemPresentationContextBase::getRe
 
 acseItemPresentationContextBase::transferSyntaxes_t acseItemPresentationContextBase::getTransferSyntaxes() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     transferSyntaxes_t transferSyntaxes;
 
@@ -377,17 +377,17 @@ acseItemPresentationContextBase::transferSyntaxes_t acseItemPresentationContextB
 
     return transferSyntaxes;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void acseItemPresentationContextBase::encodeItemPayload(std::shared_ptr<streamWriter> writer) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Write the presentation context
     ///////////////////////////////////////////////////////////
-    IMEBRA_LOG_INFO("  -- Presentation context ID = " << +m_id);
+    DICOMHERO_LOG_INFO("  -- Presentation context ID = " << +m_id);
     writer->write(&m_id, sizeof(m_id));
 
     // Write the reserved byte
@@ -397,13 +397,13 @@ void acseItemPresentationContextBase::encodeItemPayload(std::shared_ptr<streamWr
 
     // Write the result code and the reserved byte
     ///////////////////////////////////////////////////////////
-    IMEBRA_LOG_INFO("     Presentation context acceptance = " << (int)m_result << " (0 = acceptance/proposal, 1 = user rejection, 2 = no reason, 3 = abstract syntax not supported, 4 = transfer syntax not supported)");
+    DICOMHERO_LOG_INFO("     Presentation context acceptance = " << (int)m_result << " (0 = acceptance/proposal, 1 = user rejection, 2 = no reason, 3 = abstract syntax not supported, 4 = transfer syntax not supported)");
     writer->write((std::uint8_t*)&m_result, sizeof(m_result));
     writer->write(&zero, 1);
 
     if(m_pAbstractSyntax != 0)
     {
-        IMEBRA_LOG_INFO("     Abstract syntax = " << m_pAbstractSyntax->getName());
+        DICOMHERO_LOG_INFO("     Abstract syntax = " << m_pAbstractSyntax->getName());
         m_pAbstractSyntax->encodeItem(writer);
     }
 
@@ -411,22 +411,22 @@ void acseItemPresentationContextBase::encodeItemPayload(std::shared_ptr<streamWr
         scanSyntaxes != endSyntaxes;
         ++scanSyntaxes)
     {
-        IMEBRA_LOG_INFO("     Transfer syntax = " << (*scanSyntaxes)->getName());
+        DICOMHERO_LOG_INFO("     Transfer syntax = " << (*scanSyntaxes)->getName());
         (*scanSyntaxes)->encodeItem(writer);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void acseItemPresentationContextBase::decodeItemPayload(std::shared_ptr<streamReader> reader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     reader->read(&m_id, sizeof(m_id));
     if((m_id & 0x01) == 0)
     {
-        IMEBRA_THROW(AcseCorruptedMessageError, "Presentation context ID is not an odd number");
+        DICOMHERO_THROW(AcseCorruptedMessageError, "Presentation context ID is not an odd number");
     }
 
     std::uint8_t zero;
@@ -441,7 +441,7 @@ void acseItemPresentationContextBase::decodeItemPayload(std::shared_ptr<streamRe
     {
         if(m_bCheckResultCorrectness)
         {
-            IMEBRA_THROW(AcseCorruptedMessageError, "Presentation context rejection code not recognized");
+            DICOMHERO_THROW(AcseCorruptedMessageError, "Presentation context rejection code not recognized");
         }
         m_result = result_t::acceptance; // Necessary because DCMTK does not set this to 0 in requests
     }
@@ -474,7 +474,7 @@ void acseItemPresentationContextBase::decodeItemPayload(std::shared_ptr<streamRe
         // Ignore (means no more items)
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -520,7 +520,7 @@ acseItemUserInformation::acseItemUserInformation(
         const scpScuSelectionList_t& scpScuRoles):
     m_scuScpRoleSelections(scpScuRoles)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(maximumLength != 0)
     {
@@ -542,7 +542,7 @@ acseItemUserInformation::acseItemUserInformation(
         m_asyncOperationsWindow = std::make_shared<acseItemAsynchronousOperationsWindow>(maxOperationsInvoked, maxOperationsPerformed);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -590,30 +590,30 @@ const acseItemUserInformation::scpScuSelectionList_t& acseItemUserInformation::g
 
 void acseItemUserInformation::encodeItemPayload(std::shared_ptr<streamWriter> writer) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("  -- User information");
+    DICOMHERO_LOG_INFO("  -- User information");
     if(m_maximumLength.get() != 0)
     {
-        IMEBRA_LOG_INFO("     Max PDU length = " << m_maximumLength->getMaxLength());
+        DICOMHERO_LOG_INFO("     Max PDU length = " << m_maximumLength->getMaxLength());
         m_maximumLength->encodeItem(writer);
     }
 
     if(m_implementationClassUID.get() != 0)
     {
-        IMEBRA_LOG_INFO("     Implementation class UID = " << m_implementationClassUID->getName());
+        DICOMHERO_LOG_INFO("     Implementation class UID = " << m_implementationClassUID->getName());
         m_implementationClassUID->encodeItem(writer);
     }
 
     if(m_asyncOperationsWindow.get() != 0)
     {
-        IMEBRA_LOG_INFO("     Async operations window: invoked = " << m_asyncOperationsWindow->getMaxOperationsInvoked() << " performed = " << m_asyncOperationsWindow->getMaxOperationsPerformed());
+        DICOMHERO_LOG_INFO("     Async operations window: invoked = " << m_asyncOperationsWindow->getMaxOperationsInvoked() << " performed = " << m_asyncOperationsWindow->getMaxOperationsPerformed());
         m_asyncOperationsWindow->encodeItem(writer);
     }
 
     if(m_implementationVersionName.get() != 0)
     {
-        IMEBRA_LOG_INFO("     Implementation version name = " << m_implementationVersionName->getName());
+        DICOMHERO_LOG_INFO("     Implementation version name = " << m_implementationVersionName->getName());
         m_implementationVersionName->encodeItem(writer);
     }
 
@@ -621,17 +621,17 @@ void acseItemUserInformation::encodeItemPayload(std::shared_ptr<streamWriter> wr
         scanItems != end;
         ++scanItems)
     {
-        IMEBRA_LOG_INFO("     SCP/SCU selection: class UID = " << (*scanItems)->getSopClassUID() << " SCP: " << ((*scanItems)->getSCP() ? "Yes" : "No") << " SCU: " << ((*scanItems)->getSCU() ? "Yes" : "No"));
+        DICOMHERO_LOG_INFO("     SCP/SCU selection: class UID = " << (*scanItems)->getSopClassUID() << " SCP: " << ((*scanItems)->getSCP() ? "Yes" : "No") << " SCU: " << ((*scanItems)->getSCU() ? "Yes" : "No"));
         (*scanItems)->encodeItem(writer);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void acseItemUserInformation::decodeItemPayload(std::shared_ptr<streamReader> reader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     try
     {
@@ -667,7 +667,7 @@ void acseItemUserInformation::decodeItemPayload(std::shared_ptr<streamReader> re
         // Ignore (means no more items)
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -703,24 +703,24 @@ acseItem::itemType_t acseItemMaxLength::getItemType() const
 
 void acseItemMaxLength::encodeItemPayload(std::shared_ptr<streamWriter> writer) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t maxLength = writer->adjustEndian(m_maxLength, streamController::tByteOrdering::highByteEndian);
     writer->write((std::uint8_t*)&maxLength, sizeof(maxLength));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void acseItemMaxLength::decodeItemPayload(std::shared_ptr<streamReader> reader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t maxLength;
     reader->read((std::uint8_t*)&maxLength, sizeof(maxLength));
     m_maxLength = reader->adjustEndian(maxLength, streamController::tByteOrdering::highByteEndian);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -772,11 +772,11 @@ const std::string& acseItemImplementationVersionName::getName() const
 ///////////////////////////////////////////////////////////
 void acseItemImplementationVersionName::encodeItemPayload(std::shared_ptr<streamWriter> writer) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     writer->write((const std::uint8_t*)m_name.c_str(), m_name.size());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -787,7 +787,7 @@ void acseItemImplementationVersionName::encodeItemPayload(std::shared_ptr<stream
 ///////////////////////////////////////////////////////////
 void acseItemImplementationVersionName::decodeItemPayload(std::shared_ptr<streamReader> reader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint8_t buffer[128];
 
@@ -800,7 +800,7 @@ void acseItemImplementationVersionName::decodeItemPayload(std::shared_ptr<stream
 
     m_name = name;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -843,7 +843,7 @@ acseItem::itemType_t acseItemAsynchronousOperationsWindow::getItemType() const
 
 void acseItemAsynchronousOperationsWindow::encodeItemPayload(std::shared_ptr<streamWriter> pWriter) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint16_t maxOperationsInvoked(pWriter->adjustEndian(m_maxOperationsInvoked, streamController::tByteOrdering::highByteEndian));
     pWriter->write((std::uint8_t*)&maxOperationsInvoked, sizeof(maxOperationsInvoked));
@@ -851,13 +851,13 @@ void acseItemAsynchronousOperationsWindow::encodeItemPayload(std::shared_ptr<str
     std::uint16_t maxOperationsPerformed(pWriter->adjustEndian(m_maxOperationsPerformed, streamController::tByteOrdering::highByteEndian));
     pWriter->write((std::uint8_t*)&maxOperationsPerformed, sizeof(maxOperationsPerformed));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void acseItemAsynchronousOperationsWindow::decodeItemPayload(std::shared_ptr<streamReader> pReader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint16_t maxOperationsInvoked;
     pReader->read((std::uint8_t*)&maxOperationsInvoked, sizeof(maxOperationsInvoked));
@@ -867,7 +867,7 @@ void acseItemAsynchronousOperationsWindow::decodeItemPayload(std::shared_ptr<str
     pReader->read((std::uint8_t*)&maxOperationsPerformed, sizeof(maxOperationsPerformed));
     m_maxOperationsPerformed = pReader->adjustEndian(maxOperationsPerformed, streamController::tByteOrdering::highByteEndian);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -915,7 +915,7 @@ acseItem::itemType_t acseItemSCPSCURoleSelection::getItemType() const
 
 void acseItemSCPSCURoleSelection::encodeItemPayload(std::shared_ptr<streamWriter> pWriter) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string sopClassUID(handlers::normalizeUid(m_sopClassUID));
 
@@ -929,13 +929,13 @@ void acseItemSCPSCURoleSelection::encodeItemPayload(std::shared_ptr<streamWriter
     pWriter->write(&scu, 1);
     pWriter->write(&scp, 1);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void acseItemSCPSCURoleSelection::decodeItemPayload(std::shared_ptr<streamReader> pReader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint16_t sopClassLength;
     pReader->read((std::uint8_t*)&sopClassLength, sizeof(sopClassLength));
@@ -952,7 +952,7 @@ void acseItemSCPSCURoleSelection::decodeItemPayload(std::shared_ptr<streamReader
     pReader->read(&scp, 1);
     m_bSCP = (scp != 0);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -969,7 +969,7 @@ acsePDU::~acsePDU()
 
 std::shared_ptr<acsePDU> acsePDU::decodePDU(std::shared_ptr<streamReader> pReader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     pduType_t pduType;
     pReader->read((std::uint8_t*)&pduType, 1);
@@ -1001,7 +1001,7 @@ std::shared_ptr<acsePDU> acsePDU::decodePDU(std::shared_ptr<streamReader> pReade
             pPDU = std::make_shared<acsePDUAAbort>();
             break;
         default:
-            IMEBRA_THROW(AcseCorruptedMessageError, "Invalid PDU code");
+            DICOMHERO_THROW(AcseCorruptedMessageError, "Invalid PDU code");
 
         }
 
@@ -1020,16 +1020,16 @@ std::shared_ptr<acsePDU> acsePDU::decodePDU(std::shared_ptr<streamReader> pReade
     }
     catch(const StreamEOFError&)
     {
-        IMEBRA_THROW(AcseCorruptedMessageError, "Corrupted ACSE PDU");
+        DICOMHERO_THROW(AcseCorruptedMessageError, "Corrupted ACSE PDU");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void acsePDU::encodePDU(std::shared_ptr<streamWriter> pWriter) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     pduType_t pduType = getPDUType();
     pWriter->write((std::uint8_t*)&pduType, 1);
@@ -1046,7 +1046,7 @@ void acsePDU::encodePDU(std::shared_ptr<streamWriter> pWriter) const
 
     if(pMemory->size() > std::numeric_limits<std::uint32_t>::max())
     {
-        IMEBRA_THROW(std::logic_error, "The PDU's size is too big");
+        DICOMHERO_THROW(std::logic_error, "The PDU's size is too big");
     }
 
     std::uint32_t pduLength = (std::uint32_t)pMemory->size();
@@ -1057,7 +1057,7 @@ void acsePDU::encodePDU(std::shared_ptr<streamWriter> pWriter) const
 
     pWriter->flushDataBuffer();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -1120,11 +1120,11 @@ const std::shared_ptr<acseItemUserInformation>& acsePDUAssociateBase::getItemUse
 
 void acsePDUAssociateBase::encodePDUPayload(std::shared_ptr<streamWriter> pWriter) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("  -- Sending Association PDU")
+    DICOMHERO_LOG_INFO("  -- Sending Association PDU")
 
-    IMEBRA_LOG_INFO("     Protocol version = 1");
+    DICOMHERO_LOG_INFO("     Protocol version = 1");
     std::uint16_t protocolVersion(pWriter->adjustEndian(std::uint16_t(1), streamController::tByteOrdering::highByteEndian));
     pWriter->write((std::uint8_t*)&protocolVersion, sizeof(protocolVersion));
 
@@ -1132,11 +1132,11 @@ void acsePDUAssociateBase::encodePDUPayload(std::shared_ptr<streamWriter> pWrite
     pWriter->write((std::uint8_t*)&zero, sizeof(zero));
 
     std::string calledAETitle(m_calledAETitle + std::string(size_t(16) - m_calledAETitle.size(), ' '));
-    IMEBRA_LOG_INFO("     Called AET = " << calledAETitle);
+    DICOMHERO_LOG_INFO("     Called AET = " << calledAETitle);
     pWriter->write((std::uint8_t*)calledAETitle.c_str(), calledAETitle.size());
 
     std::string callingAETitle(m_callingAETitle + std::string(size_t(16) - m_callingAETitle.size(), ' '));
-    IMEBRA_LOG_INFO("     Calling AET = " << callingAETitle);
+    DICOMHERO_LOG_INFO("     Calling AET = " << callingAETitle);
     pWriter->write((std::uint8_t*)callingAETitle.c_str(), callingAETitle.size());
     std::string reserved(m_reserved + std::string(size_t(32) - m_reserved.size(), ' '));
     pWriter->write((std::uint8_t*)reserved.c_str(), reserved.size());
@@ -1152,32 +1152,32 @@ void acsePDUAssociateBase::encodePDUPayload(std::shared_ptr<streamWriter> pWrite
 
     m_pUserInformation->encodeItem(pWriter);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void acsePDUAssociateBase::decodePDUPayload(std::shared_ptr<streamReader> pReader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("  -- Received Association PDU")
+    DICOMHERO_LOG_INFO("  -- Received Association PDU")
 
     std::uint16_t protocolVersion;
     pReader->read((std::uint8_t*)&protocolVersion, sizeof(protocolVersion));
     pReader->adjustEndian((std::uint8_t*)&protocolVersion, sizeof(protocolVersion), streamController::tByteOrdering::highByteEndian);
-    IMEBRA_LOG_INFO("     Protocol version = " << +protocolVersion);
+    DICOMHERO_LOG_INFO("     Protocol version = " << +protocolVersion);
     if((protocolVersion & 0x0001) == 0)
     {
-        IMEBRA_THROW(AcseCorruptedMessageError, "Wrong protocol version");
+        DICOMHERO_THROW(AcseCorruptedMessageError, "Wrong protocol version");
     }
 
     std::uint16_t zero;
     pReader->read((std::uint8_t*)&zero, sizeof(zero));
 
     m_calledAETitle = readFixedLengthString<16>(pReader);
-    IMEBRA_LOG_INFO("     Called AET = " << m_calledAETitle);
+    DICOMHERO_LOG_INFO("     Called AET = " << m_calledAETitle);
     m_callingAETitle = readFixedLengthString<16>(pReader);
-    IMEBRA_LOG_INFO("     Calling AET = " << m_callingAETitle);
+    DICOMHERO_LOG_INFO("     Calling AET = " << m_callingAETitle);
     m_reserved = readFixedLengthString<32>(pReader);
 
     try
@@ -1214,7 +1214,7 @@ void acsePDUAssociateBase::decodePDUPayload(std::shared_ptr<streamReader> pReade
         // Ignore (means no more items)
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -1279,9 +1279,9 @@ acsePDUAssociateRJ::reason_t acsePDUAssociateRJ::getReason() const
 
 void acsePDUAssociateRJ::encodePDUPayload(std::shared_ptr<streamWriter> pWriter) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("  -- Sending Association Rejection PDU");
+    DICOMHERO_LOG_INFO("  -- Sending Association Rejection PDU");
 
     const std::uint8_t zero(0);
     pWriter->write(&zero, sizeof(zero));
@@ -1290,22 +1290,22 @@ void acsePDUAssociateRJ::encodePDUPayload(std::shared_ptr<streamWriter> pWriter)
     std::uint16_t reason(pWriter->adjustEndian((std::uint16_t)m_reason, streamController::tByteOrdering::highByteEndian));
     pWriter->write((std::uint8_t*)&reason, sizeof(reason));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void acsePDUAssociateRJ::decodePDUPayload(std::shared_ptr<streamReader> pReader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("  -- Received Association Rejection PDU");
+    DICOMHERO_LOG_INFO("  -- Received Association Rejection PDU");
 
     std::uint8_t zero;
     pReader->read(&zero, sizeof(zero));
     pReader->read((std::uint8_t*)&m_result, sizeof(m_result));
     if(m_result != result_t::rejectedPermanent && m_result != result_t::rejectedTransient)
     {
-        IMEBRA_THROW(AcseCorruptedMessageError, "Unrecognized association rejection code");
+        DICOMHERO_THROW(AcseCorruptedMessageError, "Unrecognized association rejection code");
     }
 
     std::uint16_t reason;
@@ -1322,10 +1322,10 @@ void acsePDUAssociateRJ::decodePDUPayload(std::shared_ptr<streamReader> pReader)
             m_reason != reason_t::serviceUserCallingAETitleNotRecognized &&
             m_reason != reason_t::serviceUserNoReasonGiven)
     {
-        IMEBRA_THROW(AcseCorruptedMessageError, "Unrecognized association rejection reason");
+        DICOMHERO_THROW(AcseCorruptedMessageError, "Unrecognized association rejection reason");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -1343,7 +1343,7 @@ acsePDU::pduType_t acsePDUPData::getPDUType() const
 
 size_t acsePDUPData::addItem(std::uint8_t presentationContextId, std::shared_ptr<memory> pMemory, size_t offset, size_t maxPDUSize, bool bCommand)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Get the current PDU size
     size_t pduSize(0);
@@ -1384,7 +1384,7 @@ size_t acsePDUPData::addItem(std::uint8_t presentationContextId, std::shared_ptr
     m_values.push_back(pData);
     return remainingPDUSize;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -1396,35 +1396,35 @@ const acsePDUPData::pdataValues_t& acsePDUPData::getValues() const
 
 void acsePDUPData::encodePDUPayload(std::shared_ptr<streamWriter> pWriter) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("  -- Sending Data PDU");
+    DICOMHERO_LOG_INFO("  -- Sending Data PDU");
 
     for(pdataValues_t::const_iterator scanPValues(m_values.begin()), endPValues(m_values.end()); scanPValues != endPValues; ++scanPValues)
     {
-        IMEBRA_LOG_INFO("     -- PValue");
-        IMEBRA_LOG_INFO("        size = " << (*scanPValues)->m_memorySize << " bytes");
+        DICOMHERO_LOG_INFO("     -- PValue");
+        DICOMHERO_LOG_INFO("        size = " << (*scanPValues)->m_memorySize << " bytes");
 
         std::uint32_t length(pWriter->adjustEndian((std::uint32_t)((*scanPValues)->m_memorySize + 2), streamController::tByteOrdering::highByteEndian));
         pWriter->write((std::uint8_t*)&length, sizeof(length));
         pWriter->write((std::uint8_t*)&(*scanPValues)->m_presentationContextId, sizeof(acseItemPDataValue::m_presentationContextId));
 
-        IMEBRA_LOG_INFO("        type = " << ((*scanPValues)->m_bCommand ? "command" : "payload"));
-        IMEBRA_LOG_INFO("        last = " << ((*scanPValues)->m_bLast ? "yes" : "no"));
+        DICOMHERO_LOG_INFO("        type = " << ((*scanPValues)->m_bCommand ? "command" : "payload"));
+        DICOMHERO_LOG_INFO("        last = " << ((*scanPValues)->m_bLast ? "yes" : "no"));
         std::uint8_t pdvHeader = (std::uint8_t)(((*scanPValues)->m_bCommand ? 1 : 0) | ((*scanPValues)->m_bLast ? 2 : 0));
         pWriter->write(&pdvHeader, 1);
         pWriter->write((*scanPValues)->m_pMemory->data() + (*scanPValues)->m_memoryOffset, (*scanPValues)->m_memorySize);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void acsePDUPData::decodePDUPayload(std::shared_ptr<streamReader> reader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("  -- Received Data PDU");
+    DICOMHERO_LOG_INFO("  -- Received Data PDU");
 
     while(!reader->endReached())
     {
@@ -1437,7 +1437,7 @@ void acsePDUPData::decodePDUPayload(std::shared_ptr<streamReader> reader)
         }
         catch(const StreamEOFError&)
         {
-            IMEBRA_THROW(AcseCorruptedMessageError, "Could not read the PDATA item length");
+            DICOMHERO_THROW(AcseCorruptedMessageError, "Could not read the PDATA item length");
         }
 
 
@@ -1445,7 +1445,7 @@ void acsePDUPData::decodePDUPayload(std::shared_ptr<streamReader> reader)
         reader->read(&(pDataValue->m_presentationContextId), sizeof(acseItemPDataValue::m_presentationContextId));
         if((pDataValue->m_presentationContextId & 0x01) == 0)
         {
-            IMEBRA_THROW(AcseCorruptedMessageError, "PDU PDATA presentation context ID is not an odd number");
+            DICOMHERO_THROW(AcseCorruptedMessageError, "PDU PDATA presentation context ID is not an odd number");
         }
         std::uint8_t pdvHeader;
         reader->read(&pdvHeader, 1);
@@ -1456,15 +1456,15 @@ void acsePDUPData::decodePDUPayload(std::shared_ptr<streamReader> reader)
         pDataValue->m_memorySize = length - 2;
         reader->read(pDataValue->m_pMemory->data(), length - 2);
 
-        IMEBRA_LOG_INFO("     -- PValue");
-        IMEBRA_LOG_INFO("        size = " << pDataValue->m_memorySize << " bytes");
-        IMEBRA_LOG_INFO("        type = " << (pDataValue->m_bCommand ? "command" : "payload"));
-        IMEBRA_LOG_INFO("        last = " << (pDataValue->m_bLast ? "yes" : "no"));
+        DICOMHERO_LOG_INFO("     -- PValue");
+        DICOMHERO_LOG_INFO("        size = " << pDataValue->m_memorySize << " bytes");
+        DICOMHERO_LOG_INFO("        type = " << (pDataValue->m_bCommand ? "command" : "payload"));
+        DICOMHERO_LOG_INFO("        last = " << (pDataValue->m_bLast ? "yes" : "no"));
 
         m_values.push_back(pDataValue);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -1477,27 +1477,27 @@ void acsePDUPData::decodePDUPayload(std::shared_ptr<streamReader> reader)
 
 void acsePDUARelease::encodePDUPayload(std::shared_ptr<streamWriter> pWriter) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("  -- Sending Association Release PDU");
+    DICOMHERO_LOG_INFO("  -- Sending Association Release PDU");
 
     const std::uint32_t zero(0);
     pWriter->write((std::uint8_t*)&zero, sizeof(zero));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void acsePDUARelease::decodePDUPayload(std::shared_ptr<streamReader> reader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("  -- Receiving Association Release PDU");
+    DICOMHERO_LOG_INFO("  -- Receiving Association Release PDU");
 
     std::uint32_t zero(0);
     reader->read((std::uint8_t*)&zero, sizeof(zero));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -1557,9 +1557,9 @@ acsePDU::pduType_t acsePDUAAbort::getPDUType() const
 
 void acsePDUAAbort::encodePDUPayload(std::shared_ptr<streamWriter> pWriter) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("  -- Sending Association Abort PDU");
+    DICOMHERO_LOG_INFO("  -- Sending Association Abort PDU");
 
     const std::uint16_t zero(0);
     pWriter->write((std::uint8_t*)&zero, sizeof(zero));
@@ -1567,15 +1567,15 @@ void acsePDUAAbort::encodePDUPayload(std::shared_ptr<streamWriter> pWriter) cons
     std::uint16_t reason(pWriter->adjustEndian((std::uint16_t)m_reason, streamController::tByteOrdering::highByteEndian));
     pWriter->write((std::uint8_t*)&reason, sizeof(reason));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void acsePDUAAbort::decodePDUPayload(std::shared_ptr<streamReader> reader)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("  -- Receiving Association Abort PDU");
+    DICOMHERO_LOG_INFO("  -- Receiving Association Abort PDU");
 
     std::uint16_t zero(0);
     reader->read((std::uint8_t*)&zero, sizeof(zero));
@@ -1592,10 +1592,10 @@ void acsePDUAAbort::decodePDUPayload(std::shared_ptr<streamReader> reader)
             m_reason != reason_t::serviceProviderUnexpectedPDUParameter &&
             m_reason != reason_t::serviceProviderInvalidPDUParameterValue)
     {
-        IMEBRA_THROW(AcseCorruptedMessageError, "A-ABORT unrecognized abort reason");
+        DICOMHERO_THROW(AcseCorruptedMessageError, "A-ABORT unrecognized abort reason");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -1663,7 +1663,7 @@ associationMessage::~associationMessage()
 
 void associationMessage::addDataset(const std::shared_ptr<dataSet> pDataset)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_pCommand == nullptr)
     {
@@ -1677,9 +1677,9 @@ void associationMessage::addDataset(const std::shared_ptr<dataSet> pDataset)
         return;
     }
 
-    IMEBRA_THROW(std::logic_error, "Too many datasets being added to the message");
+    DICOMHERO_THROW(std::logic_error, "Too many datasets being added to the message");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 const std::string& associationMessage::getAbstractSyntax() const
@@ -1691,7 +1691,7 @@ std::shared_ptr<dataSet> associationMessage::getCommandDataSet() const
 {
     if(m_pCommand == nullptr)
     {
-        IMEBRA_THROW(AcseCorruptedMessageError, "Missing command dataset");
+        DICOMHERO_THROW(AcseCorruptedMessageError, "Missing command dataset");
     }
     return m_pCommand;
 }
@@ -1703,16 +1703,16 @@ std::shared_ptr<dataSet> associationMessage::getPayloadDataSetNoThrow() const
 
 std::shared_ptr<dataSet> associationMessage::getPayloadDataSet() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_pPayload == nullptr)
     {
-        IMEBRA_THROW(MissingItemError, "Missing payload dataset");
+        DICOMHERO_THROW(MissingItemError, "Missing payload dataset");
     }
 
     return m_pPayload;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -1763,7 +1763,7 @@ associationBase::~associationBase()
 
 void associationBase::sendMessage(std::shared_ptr<const associationMessage> message)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Find the payload's transfer syntax
     std::string transferSyntax;
@@ -1794,11 +1794,11 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
 
     if(presentationContextId == 0)
     {
-        IMEBRA_THROW(AcsePresentationContextNotRequestedError, "The message's presentation context was not requested during the association negotiation");
+        DICOMHERO_THROW(AcsePresentationContextNotRequestedError, "The message's presentation context was not requested during the association negotiation");
     }
     if(transferSyntax.empty())
     {
-        IMEBRA_THROW(AcseNoTransferSyntaxError, "No transfer syntax for the selected presentation context with abstract syntax " << message->getAbstractSyntax());
+        DICOMHERO_THROW(AcseNoTransferSyntaxError, "No transfer syntax for the selected presentation context with abstract syntax " << message->getAbstractSyntax());
     }
 
     // Serialize all the datasets (command and payload)
@@ -1839,14 +1839,14 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
             {
                 if(!bResponse && !pPresentationContext->m_bRequestorIsSCU)
                 {
-                    IMEBRA_THROW(AcseWrongRoleError, "Wrong role for the selected presentation context");
+                    DICOMHERO_THROW(AcseWrongRoleError, "Wrong role for the selected presentation context");
                 }
             }
             else
             {
                 if(!bResponse && !pPresentationContext->m_bRequestorIsSCP)
                 {
-                    IMEBRA_THROW(AcseWrongRoleError, "Wrong role for the selected presentation context");
+                    DICOMHERO_THROW(AcseWrongRoleError, "Wrong role for the selected presentation context");
                 }
             }
 
@@ -1859,12 +1859,12 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
                     // partial response
                     if(m_processingCommands.find(responseId) == m_processingCommands.end())
                     {
-                        IMEBRA_THROW(AcseWrongResponseIdError, "Sending a partial response with an ID that does not correspond to any received command");
+                        DICOMHERO_THROW(AcseWrongResponseIdError, "Sending a partial response with an ID that does not correspond to any received command");
                     }
                 }
                 else if(m_processingCommands.erase(responseId) == 0)
                 {
-                    IMEBRA_THROW(AcseWrongResponseIdError, "Sending a response with an ID that does not correspond to any received command");
+                    DICOMHERO_THROW(AcseWrongResponseIdError, "Sending a response with an ID that does not correspond to any received command");
                 }
             }
             else
@@ -1874,11 +1874,11 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
                     const std::uint32_t commandId(pDataSet->getUint32(0x0, 0, 0x110, 0, 0, 0));
                     if(m_waitingResponses.count(commandId) != 0)
                     {
-                        IMEBRA_THROW(AcseWrongCommandIdError, "Sending a command with the same ID of a command still being processed");
+                        DICOMHERO_THROW(AcseWrongCommandIdError, "Sending a command with the same ID of a command still being processed");
                     }
                     if(m_maxOperationsInvoked != 0 && m_waitingResponses.size() == m_maxOperationsInvoked)
                     {
-                        IMEBRA_THROW(AcseTooManyOperationsInvokedError, "Invoking too many operations (max is " << m_maxOperationsInvoked << ")");
+                        DICOMHERO_THROW(AcseTooManyOperationsInvokedError, "Invoking too many operations (max is " << m_maxOperationsInvoked << ")");
                     }
                     m_waitingResponses.insert(commandId);
                 }
@@ -1907,7 +1907,7 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
 
         if((pEncodedDataSet->size() & 0x1) != 0)
         {
-            IMEBRA_THROW(std::logic_error, "The data size should be aligned on 2 bytes boundary");
+            DICOMHERO_THROW(std::logic_error, "The data size should be aligned on 2 bytes boundary");
         }
 
         for(size_t offset(0); offset != pEncodedDataSet->size(); )
@@ -1923,7 +1923,7 @@ void associationBase::sendMessage(std::shared_ptr<const associationMessage> mess
     }
     pData->encodePDU(m_pWriter);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -1951,7 +1951,7 @@ std::shared_ptr<associationMessage> associationBase::getResponse(std::uint16_t m
 ///////////////////////////////////////////////////////////
 std::shared_ptr<associationMessage> associationBase::getMessage(std::uint16_t messageId, bool bResponse)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::chrono::time_point<std::chrono::steady_clock> endTime(
                 std::chrono::steady_clock::now() + std::chrono::seconds(m_dimseTimeout));
@@ -1988,7 +1988,7 @@ std::shared_ptr<associationMessage> associationBase::getMessage(std::uint16_t me
         {
             abort(acsePDUAAbort::reason_t::serviceUser);
             m_pReader->terminate();
-            IMEBRA_THROW(StreamClosedError, "DIMSE Timeout, closing association");
+            DICOMHERO_THROW(StreamClosedError, "DIMSE Timeout, closing association");
         }
 
         if(m_dimseTimeout == 0)
@@ -2001,9 +2001,9 @@ std::shared_ptr<associationMessage> associationBase::getMessage(std::uint16_t me
         }
     }
 
-    IMEBRA_THROW(StreamClosedError, "The input stream has been closed");
+    DICOMHERO_THROW(StreamClosedError, "The input stream has been closed");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -2021,7 +2021,7 @@ associationBase::receivedDataset::receivedDataset(const std::string& presentatio
 ///////////////////////////////////////////////////////////
 std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU(bool bCommand, std::list<std::shared_ptr<acseItemPDataValue> >& pendingPData, size_t& numberOfLastPData) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Loop until a dataset is complete
     ///////////////////////////////////////////////////////////
@@ -2046,7 +2046,7 @@ std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU(boo
                                 m_presentationContextsIds.find(pData->m_presentationContextId));
                     if(findPresentationContext == m_presentationContextsIds.end())
                     {
-                        IMEBRA_THROW(AcseCorruptedMessageError, "Presentation context ID " << pData->m_presentationContextId << " not valid");
+                        DICOMHERO_THROW(AcseCorruptedMessageError, "Presentation context ID " << pData->m_presentationContextId << " not valid");
                     }
                     abstractSyntax = findPresentationContext->second.first->m_abstractSyntax;
                     transferSyntax = findPresentationContext->second.second;
@@ -2108,15 +2108,15 @@ std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU(boo
                 std::unique_lock<std::mutex> lock(m_lockWrite);
                 std::shared_ptr<acsePDUAReleaseRP> releaseRP(std::make_shared<acsePDUAReleaseRP>());
                 releaseRP->encodePDU(m_pWriter);
-                IMEBRA_THROW(StreamClosedError, "The association has been released");
+                DICOMHERO_THROW(StreamClosedError, "The association has been released");
             }
             break;
         case acsePDU::pduType_t::aReleaseRP:
             // release response received
-            IMEBRA_THROW(StreamClosedError, "The association has been released");
+            DICOMHERO_THROW(StreamClosedError, "The association has been released");
         case acsePDU::pduType_t::aAbort:
             // association aborted
-            IMEBRA_THROW(StreamClosedError, "The association has been aborted");
+            DICOMHERO_THROW(StreamClosedError, "The association has been aborted");
         case acsePDU::pduType_t::pData:
             {
 
@@ -2138,18 +2138,18 @@ std::shared_ptr<associationBase::receivedDataset> associationBase::decodePDU(boo
             }
             break;
         default:
-            IMEBRA_THROW(AcseCorruptedMessageError, "Unexpected association request message (association already negotiated)");
+            DICOMHERO_THROW(AcseCorruptedMessageError, "Unexpected association request message (association already negotiated)");
         }
 
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 void associationBase::abort(acsePDUAAbort::reason_t reason)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_bAssociated.fetch_and(0))
     {
@@ -2161,12 +2161,12 @@ void associationBase::abort(acsePDUAAbort::reason_t reason)
         m_pReader->terminate();
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 void associationBase::release()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_bAssociated.fetch_and(0))
     {
@@ -2184,30 +2184,30 @@ void associationBase::release()
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::string associationBase::getThisAET() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_thisAET;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::string associationBase::getOtherAET() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_otherAET;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::string associationBase::getPresentationContextTransferSyntax(const std::string& abstractSyntax) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     for(const presentationContextsIds_t::value_type& scanContexts: m_presentationContextsIds)
     {
@@ -2215,20 +2215,20 @@ std::string associationBase::getPresentationContextTransferSyntax(const std::str
         {
             if(scanContexts.second.second.empty())
             {
-                IMEBRA_THROW(AcseNoTransferSyntaxError, "None of the proposed transfer syntax was accepted during the negotiation for the abstract syntax " << abstractSyntax);
+                DICOMHERO_THROW(AcseNoTransferSyntaxError, "None of the proposed transfer syntax was accepted during the negotiation for the abstract syntax " << abstractSyntax);
             }
             return scanContexts.second.second;
         }
     }
 
-    IMEBRA_THROW(AcsePresentationContextNotRequestedError, "The abstract syntax " << abstractSyntax << " was not negotiated");
+    DICOMHERO_THROW(AcsePresentationContextNotRequestedError, "The abstract syntax " << abstractSyntax << " was not negotiated");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::vector<std::string> associationBase::getPresentationContextTransferSyntaxes(const std::string& abstractSyntax) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::vector<std::string> transferSyntaxes;
 
@@ -2252,14 +2252,14 @@ std::vector<std::string> associationBase::getPresentationContextTransferSyntaxes
 
     if(bAbstractSyntaxFound)
     {
-        IMEBRA_THROW(AcseNoTransferSyntaxError, "None of the proposed transfer syntax was accepted during the negotiation for the abstract syntax " << abstractSyntax);
+        DICOMHERO_THROW(AcseNoTransferSyntaxError, "None of the proposed transfer syntax was accepted during the negotiation for the abstract syntax " << abstractSyntax);
     }
     else
     {
-        IMEBRA_THROW(AcsePresentationContextNotRequestedError, "The abstract syntax " << abstractSyntax << " was not negotiated");
+        DICOMHERO_THROW(AcsePresentationContextNotRequestedError, "The abstract syntax " << abstractSyntax << " was not negotiated");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -2299,13 +2299,13 @@ void associationBase::getMessagesThread()
                             if(m_waitingResponses.find(pReceivedDataset->m_pDataset->getUint32(0, 0, 0x0120, 0, 0)) == m_waitingResponses.end())
                             {
                                 abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
-                                IMEBRA_THROW(AcseWrongResponseIdError, "Received a partial response with a wrong ID");
+                                DICOMHERO_THROW(AcseWrongResponseIdError, "Received a partial response with a wrong ID");
                             }
                         }
                         else if(m_waitingResponses.erase(pReceivedDataset->m_pDataset->getUint32(0, 0, 0x0120, 0, 0)) == 0)
                         {
                             abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
-                            IMEBRA_THROW(AcseWrongResponseIdError, "Received a response with a wrong ID");
+                            DICOMHERO_THROW(AcseWrongResponseIdError, "Received a response with a wrong ID");
                         }
                     }
                     else
@@ -2317,11 +2317,11 @@ void associationBase::getMessagesThread()
                             if(m_processingCommands.count(pReceivedDataset->m_pDataset->getUint32(0, 0, 0x0110, 0, 0)) != 0)
                             {
                                 abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
-                                IMEBRA_THROW(AcseWrongCommandIdError, "Received a command with an ID from a command still being processed");
+                                DICOMHERO_THROW(AcseWrongCommandIdError, "Received a command with an ID from a command still being processed");
                             }
                             if(m_maxOperationsPerformed != 0 && m_processingCommands.size() == m_maxOperationsPerformed)
                             {
-                                IMEBRA_THROW(AcseTooManyOperationsPerformedError, "Performing too many operations (max is " << m_maxOperationsPerformed << ")");
+                                DICOMHERO_THROW(AcseTooManyOperationsPerformedError, "Performing too many operations (max is " << m_maxOperationsPerformed << ")");
                             }
                             m_processingCommands.insert(pReceivedDataset->m_pDataset->getUint32(0, 0, 0x0110, 0, 0));
                         }
@@ -2334,7 +2334,7 @@ void associationBase::getMessagesThread()
                 if(pMessage != nullptr)
                 {
                     abort(acsePDUAAbort::reason_t::serviceProviderUnexpectedPDU);
-                    IMEBRA_THROW(AcseCorruptedMessageError, "Payload expected");
+                    DICOMHERO_THROW(AcseCorruptedMessageError, "Payload expected");
                 }
 
                 // Create the new message
@@ -2349,12 +2349,12 @@ void associationBase::getMessagesThread()
                 if(pMessage == nullptr)
                 {
                     abort(acsePDUAAbort::reason_t::serviceProviderUnexpectedPDU);
-                    IMEBRA_THROW(AcseCorruptedMessageError, "Payload received before a command");
+                    DICOMHERO_THROW(AcseCorruptedMessageError, "Payload received before a command");
                 }
                 if(pMessage->getAbstractSyntax() != pReceivedDataset->m_presentationContext)
                 {
                     abort(acsePDUAAbort::reason_t::serviceProviderInvalidPDUParameterValue);
-                    IMEBRA_THROW(AcseCorruptedMessageError, "The payload has an abstract syntax different from the command");
+                    DICOMHERO_THROW(AcseCorruptedMessageError, "The payload has an abstract syntax different from the command");
                 }
                 pMessage->addDataset(pReceivedDataset->m_pDataset);
             }
@@ -2394,9 +2394,9 @@ associationSCU::associationSCU(
     associationBase(role_t::scu, thisAET, otherAET, maxOperationsWeInvoke, maxOperationsWeCanPerform, pReader, pWriter, dimseTimeout)
 
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_LOG_INFO("-- Starting SCU association negotiation");
+    DICOMHERO_LOG_INFO("-- Starting SCU association negotiation");
 
     acsePDUAssociateRQ::presentationContexts_t contextsPDUs;
     acseItemUserInformation::scpScuSelectionList_t scpScuRoles;
@@ -2443,8 +2443,8 @@ associationSCU::associationSCU(
         }
     }
 
-    const std::string implementationUid(IMEBRA_IMPLEMENTATION_CLASS_UID);
-    const std::string implementationName(IMEBRA_IMPLEMENTATION_NAME);
+    const std::string implementationUid(DICOMHERO_IMPLEMENTATION_CLASS_UID);
+    const std::string implementationName(DICOMHERO_IMPLEMENTATION_NAME);
     std::shared_ptr<acseItemUserInformation> pUserInformation(
                 std::make_shared<acseItemUserInformation>(
                     m_maxPDULength,
@@ -2513,7 +2513,7 @@ associationSCU::associationSCU(
                 // The returned presentation context wasn't in the
                 // requested ones
                 ///////////////////////////////////////////////////////////
-                IMEBRA_THROW(AcseCorruptedMessageError, "Presentation context " << id << " was not proposed");
+                DICOMHERO_THROW(AcseCorruptedMessageError, "Presentation context " << id << " was not proposed");
             }
 
             // Check supported transfer syntaxes
@@ -2544,14 +2544,14 @@ associationSCU::associationSCU(
                 {
                     //responded with a not supported transfer syntax
                     ///////////////////////////////////////////////////////////
-                    IMEBRA_THROW(AcseCorruptedMessageError, "Unsupported transfer syntax " << syntaxes.front() << " for ID " << id);
+                    DICOMHERO_THROW(AcseCorruptedMessageError, "Unsupported transfer syntax " << syntaxes.front() << " for ID " << id);
                 }
             }
             else if(syntaxes.size() > 1)
             {
                 // Only one transfer syntax can be accepted
                 ///////////////////////////////////////////////////////////
-                IMEBRA_THROW(AcseCorruptedMessageError, "Only one transfer syntax can be accepted");
+                DICOMHERO_THROW(AcseCorruptedMessageError, "Only one transfer syntax can be accepted");
             }
         }
 
@@ -2568,37 +2568,37 @@ associationSCU::associationSCU(
         switch(responseRJ->getReason())
         {
         case acsePDUAssociateRJ::reason_t::serviceUserNoReasonGiven:
-            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUNoReasonGivenError, "Service user no reason given", bPermanent);
+            DICOMHERO_THROW_ADDITIONAL_PARAM(AcseSCUNoReasonGivenError, "Service user no reason given", bPermanent);
         case acsePDUAssociateRJ::reason_t::serviceUserApplicationContextNameNotSupported:
-            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUApplicationContextNameNotSupportedError, "Application context " << m_applicationContext << " name not supported", bPermanent);
+            DICOMHERO_THROW_ADDITIONAL_PARAM(AcseSCUApplicationContextNameNotSupportedError, "Application context " << m_applicationContext << " name not supported", bPermanent);
         case acsePDUAssociateRJ::reason_t::serviceUserCallingAETitleNotRecognized:
-            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUCallingAETNotRecognizedError, "Calling AET " << thisAET << " not recognized", bPermanent);
+            DICOMHERO_THROW_ADDITIONAL_PARAM(AcseSCUCallingAETNotRecognizedError, "Calling AET " << thisAET << " not recognized", bPermanent);
         case acsePDUAssociateRJ::reason_t::serviceUserCalledAETitleNotRecognized:
-            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUCalledAETNotRecognizedError, "Called AET " << otherAET << " not recognized", bPermanent);
+            DICOMHERO_THROW_ADDITIONAL_PARAM(AcseSCUCalledAETNotRecognizedError, "Called AET " << otherAET << " not recognized", bPermanent);
         case acsePDUAssociateRJ::reason_t::serviceProviderAcseNoReasonGiven:
-            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCPNoReasonGivenError, "Service provider no reason given", bPermanent);
+            DICOMHERO_THROW_ADDITIONAL_PARAM(AcseSCPNoReasonGivenError, "Service provider no reason given", bPermanent);
         case acsePDUAssociateRJ::reason_t::serviceProviderAcseProtocolVersionNotSupported:
-            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCPAcseProtocolVersionNotSupportedError, "Protocol version not supported", bPermanent);
+            DICOMHERO_THROW_ADDITIONAL_PARAM(AcseSCPAcseProtocolVersionNotSupportedError, "Protocol version not supported", bPermanent);
         case acsePDUAssociateRJ::reason_t::serviceProviderPresentationReserved:
-            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCPPresentationReservedError, "Presentation reserved", bPermanent);
+            DICOMHERO_THROW_ADDITIONAL_PARAM(AcseSCPPresentationReservedError, "Presentation reserved", bPermanent);
         case acsePDUAssociateRJ::reason_t::serviceProviderPresentationTemporaryCongestion:
-            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCPPresentationTemporaryCongestionError, "Temporary congestion", bPermanent);
+            DICOMHERO_THROW_ADDITIONAL_PARAM(AcseSCPPresentationTemporaryCongestionError, "Temporary congestion", bPermanent);
         case acsePDUAssociateRJ::reason_t::serviceProviderPresentationLocalLimitExceded:
-            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCPPresentationLocalLimitExcededError, "Presentation local limit exceeded", bPermanent);
+            DICOMHERO_THROW_ADDITIONAL_PARAM(AcseSCPPresentationLocalLimitExcededError, "Presentation local limit exceeded", bPermanent);
         }
 
-        IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUNoReasonGivenError, "Service user no reason given", bPermanent);
+        DICOMHERO_THROW_ADDITIONAL_PARAM(AcseSCUNoReasonGivenError, "Service user no reason given", bPermanent);
 
     }
     default:
-        IMEBRA_THROW(AcseCorruptedMessageError, "Unexpected message type");
+        DICOMHERO_THROW(AcseCorruptedMessageError, "Unexpected message type");
     }
 
-    IMEBRA_LOG_INFO("-- Terminated SCU association negotiation");
+    DICOMHERO_LOG_INFO("-- Terminated SCU association negotiation");
 
     m_readDataSetsThread.reset(new std::thread(&associationBase::getMessagesThread, this));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -2613,12 +2613,12 @@ associationSCP::associationSCP(
         std::uint32_t artimTimeoutSeconds):
     associationBase(role_t::scp, thisAET, "", maxOperationsWeInvoke, maxOperationsWeCanPerform, pReader, pWriter, dimseTimeout)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     try
     {
 
-        IMEBRA_LOG_INFO("-- Starting SCP association negotiation");
+        DICOMHERO_LOG_INFO("-- Starting SCP association negotiation");
 
         // Wait for association request PDU
         ///////////////////////////////////////////////////////////
@@ -2629,7 +2629,7 @@ associationSCP::associationSCP(
 
             if(request->getPDUType() != acsePDU::pduType_t::associateRQ)
             {
-                IMEBRA_THROW(AcseCorruptedMessageError, "Unexpected message type (was expecting an association request)");
+                DICOMHERO_THROW(AcseCorruptedMessageError, "Unexpected message type (was expecting an association request)");
             }
         }
 
@@ -2647,7 +2647,7 @@ associationSCP::associationSCP(
                             acsePDUAssociateRJ::result_t::rejectedPermanent,
                             acsePDUAssociateRJ::reason_t::serviceUserApplicationContextNameNotSupported));
             reject->encodePDU(m_pWriter);
-            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUApplicationContextNameNotSupportedError, "Application context " << m_applicationContext << " not supported", true);
+            DICOMHERO_THROW_ADDITIONAL_PARAM(AcseSCUApplicationContextNameNotSupportedError, "Application context " << m_applicationContext << " not supported", true);
         }
 
         // Check the requested AET. Reject if different from
@@ -2661,7 +2661,7 @@ associationSCP::associationSCP(
                             acsePDUAssociateRJ::result_t::rejectedPermanent,
                             acsePDUAssociateRJ::reason_t::serviceUserCalledAETitleNotRecognized));
             reject->encodePDU(m_pWriter);
-            IMEBRA_THROW_ADDITIONAL_PARAM(AcseSCUCalledAETNotRecognizedError, "SCP AET is " << thisAET << " but " << requestedAET << " was requested instead", true);
+            DICOMHERO_THROW_ADDITIONAL_PARAM(AcseSCUCalledAETNotRecognizedError, "SCP AET is " << thisAET << " but " << requestedAET << " was requested instead", true);
         }
 
         // Get the SCU AET
@@ -2800,8 +2800,8 @@ associationSCP::associationSCP(
         }
         std::shared_ptr<acseItemUserInformation> pUserInformationAC(std::make_shared<acseItemUserInformation>(
                                                                         m_maxPDULength,
-                                                                        IMEBRA_IMPLEMENTATION_CLASS_UID,
-                                                                        IMEBRA_IMPLEMENTATION_NAME,
+                                                                        DICOMHERO_IMPLEMENTATION_CLASS_UID,
+                                                                        DICOMHERO_IMPLEMENTATION_NAME,
                                                                         m_maxOperationsPerformed,
                                                                         m_maxOperationsInvoked,
                                                                         scpScuRolesList));
@@ -2813,7 +2813,7 @@ associationSCP::associationSCP(
                                                            pUserInformationAC));
         responseAC->encodePDU(m_pWriter);
 
-        IMEBRA_LOG_INFO("-- Terminated SCP association negotiation");
+        DICOMHERO_LOG_INFO("-- Terminated SCP association negotiation");
 
         m_readDataSetsThread.reset(new std::thread(&associationBase::getMessagesThread, this));
     }
@@ -2822,7 +2822,7 @@ associationSCP::associationSCP(
         // Retrow as stream closed
         throw StreamClosedError(e.what());
     }
-    IMEBRA_FUNCTION_END_MODIFY(CodecCorruptedFileError, AcseCorruptedMessageError);
+    DICOMHERO_FUNCTION_END_MODIFY(CodecCorruptedFileError, AcseCorruptedMessageError);
 }
 
 

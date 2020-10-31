@@ -21,13 +21,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "streamReaderImpl.h"
 #include "streamWriterImpl.h"
 #include "jpegCodecBaseImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
 #include <list>
 #include <string.h>
 #include <stdexcept>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -58,12 +58,12 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 huffmanTable::huffmanTable(std::uint32_t maxValueLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_numValues = (std::uint32_t(1)<<(maxValueLength)) + 1;
     reset();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -78,7 +78,7 @@ huffmanTable::huffmanTable(std::uint32_t maxValueLength)
 ///////////////////////////////////////////////////////////
 void huffmanTable::reset()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_valuesFreq.clear();
     m_valuesFreq.resize(m_numValues);
@@ -98,7 +98,7 @@ void huffmanTable::reset()
     m_firstMaxValue = 0xffffffff;
     m_firstValuesPerLength = 0;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -128,7 +128,7 @@ void huffmanTable::incValueFreq(const std::uint32_t value)
 ///////////////////////////////////////////////////////////
 void huffmanTable::removeLastCode()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Find the number of codes
     ///////////////////////////////////////////////////////////
@@ -149,7 +149,7 @@ void huffmanTable::removeLastCode()
     }
     m_valuesPerLength[lastLength]--;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -164,37 +164,37 @@ void huffmanTable::removeLastCode()
 ///////////////////////////////////////////////////////////
 void huffmanTable::setValuesPerLength(std::uint32_t length, std::uint32_t numValues)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(length >= m_valuesPerLength.size())
     {
-        IMEBRA_THROW(CodecCorruptedFileError, "Huffman code length too big");
+        DICOMHERO_THROW(CodecCorruptedFileError, "Huffman code length too big");
     }
     m_valuesPerLength[length] = numValues;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 void huffmanTable::addOrderedValue(size_t index, std::uint32_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(index >= m_orderedValues.size())
     {
-        IMEBRA_THROW(CodecCorruptedFileError, "Too many values in the huffman table");
+        DICOMHERO_THROW(CodecCorruptedFileError, "Too many values in the huffman table");
     }
     m_orderedValues[index] = value;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::uint32_t huffmanTable::getValuesPerLength(std::uint32_t length)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_valuesPerLength[length];
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::uint32_t huffmanTable::getOrderedValue(size_t index)
@@ -215,7 +215,7 @@ std::uint32_t huffmanTable::getOrderedValue(size_t index)
 ///////////////////////////////////////////////////////////
 void huffmanTable::calcHuffmanCodesLength(const std::uint32_t maxCodeLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Order the values by their frequency
     typedef std::map<huffmanTable::freqValue, bool, huffmanTable::freqValueCompare> tFreqOrderedMap;
@@ -305,7 +305,7 @@ void huffmanTable::calcHuffmanCodesLength(const std::uint32_t maxCodeLength)
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -320,7 +320,7 @@ void huffmanTable::calcHuffmanCodesLength(const std::uint32_t maxCodeLength)
 ///////////////////////////////////////////////////////////
 void huffmanTable::calcHuffmanTables()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t huffmanCode = 0;
 
@@ -359,7 +359,7 @@ void huffmanTable::calcHuffmanTables()
     m_firstMaxValue = m_maxValuePerLength[m_firstValidLength];
     m_firstValuesPerLength = m_valuesPerLength[m_firstValidLength];
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -373,7 +373,7 @@ void huffmanTable::calcHuffmanTables()
 ///////////////////////////////////////////////////////////
 std::uint32_t huffmanTable::readHuffmanCode(codecs::jpegStreamReader& stream)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Read initial number of bits
     std::uint32_t readBuffer(stream.readBits(m_firstValidLength));
@@ -427,9 +427,9 @@ std::uint32_t huffmanTable::readHuffmanCode(codecs::jpegStreamReader& stream)
 
     }
 
-    IMEBRA_THROW(CodecCorruptedFileError, "Invalid huffman code found while reading from a stream");
+    DICOMHERO_THROW(CodecCorruptedFileError, "Invalid huffman code found while reading from a stream");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -444,18 +444,18 @@ std::uint32_t huffmanTable::readHuffmanCode(codecs::jpegStreamReader& stream)
 ///////////////////////////////////////////////////////////
 void huffmanTable::writeHuffmanCode(const std::uint32_t code, streamWriter* pStream)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_valuesToHuffmanLength[code] == 0)
     {
-        IMEBRA_THROW(std::logic_error, "Trying to write an invalid huffman code");
+        DICOMHERO_THROW(std::logic_error, "Trying to write an invalid huffman code");
     }
     pStream->writeBits(m_valuesToHuffman[code], m_valuesToHuffmanLength[code]);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 

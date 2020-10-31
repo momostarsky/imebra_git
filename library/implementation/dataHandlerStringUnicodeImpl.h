@@ -27,7 +27,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -180,6 +180,6 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraDataHandlerStringUnicode_367AAE47_6FD7_4107_AB5B_25A355C5CB6E__INCLUDED_)

@@ -19,7 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "streamControllerImpl.h"
 #include <memory.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 // Used for the endian check
@@ -35,7 +35,7 @@ static const streamController::tByteOrdering m_platformByteOrder((*pBytePointer)
 ///////////////////////////////////////////////////////////
 streamController::streamController(size_t virtualStart /* =0 */, size_t virtualLength /* =0 */):
     m_bJpegTags(false),
-        m_dataBuffer(size_t(IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE), 0),
+        m_dataBuffer(size_t(DICOMHERO_STREAM_CONTROLLER_MEMORY_SIZE), 0),
         m_virtualStart(virtualStart),
         m_virtualLength(virtualLength),
         m_dataBufferStreamPosition(0),
@@ -47,7 +47,7 @@ streamController::streamController(size_t virtualStart /* =0 */, size_t virtualL
 streamController::streamController(size_t virtualStart, size_t virtualLength,
                  std::uint8_t* pBuffer, size_t bufferSize):
     m_bJpegTags(false),
-        m_dataBuffer(size_t(IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE), 0),
+        m_dataBuffer(size_t(DICOMHERO_STREAM_CONTROLLER_MEMORY_SIZE), 0),
         m_virtualStart(virtualStart),
         m_virtualLength(virtualLength),
         m_dataBufferStreamPosition(0),
@@ -195,4 +195,4 @@ streamController::tByteOrdering streamController::getPlatformEndian()
     return m_platformByteOrder;
 }
 
-} // namespace imebra
+} // namespace dicomhero

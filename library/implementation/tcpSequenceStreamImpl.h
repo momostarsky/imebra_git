@@ -24,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "configurationImpl.h"
 
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
 #pragma comment(lib, "Ws2_32.lib")
 #include <Winsock2.h>
 #include <WS2tcpip.h>
@@ -37,17 +37,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <memory>
 #include "baseSequenceStreamImpl.h"
 
-#ifndef IMEBRA_TCP_TIMEOUT_MS
-#define IMEBRA_TCP_TIMEOUT_MS 1000
+#ifndef DICOMHERO_TCP_TIMEOUT_MS
+#define DICOMHERO_TCP_TIMEOUT_MS 1000
 #endif
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
 {
 
-#ifdef IMEBRA_WINDOWS
+#ifdef DICOMHERO_WINDOWS
 
 class initWinsock
 {
@@ -161,7 +161,7 @@ public:
     ///
     /// \brief Execute a poll on the socket for the specified
     ///        flags. The timeout is defined by
-    ///        IMEBRA_TCP_TIMEOUT_MS.
+    ///        DICOMHERO_TCP_TIMEOUT_MS.
     ///
     /// \param flags flags to poll
     ///
@@ -325,7 +325,7 @@ public:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 #endif // !defined(imebraTcpSequenceStream_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

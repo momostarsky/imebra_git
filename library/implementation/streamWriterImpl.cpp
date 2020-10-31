@@ -18,9 +18,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "streamWriterImpl.h"
 #include <string.h>
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -79,7 +79,7 @@ streamWriter::~streamWriter()
 ///////////////////////////////////////////////////////////
 void streamWriter::flushDataBuffer()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_dataBufferCurrent == 0)
     {
@@ -89,7 +89,7 @@ void streamWriter::flushDataBuffer()
     m_dataBufferStreamPosition += m_dataBufferCurrent;
     m_dataBufferCurrent = 0;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -100,7 +100,7 @@ void streamWriter::flushDataBuffer()
 ///////////////////////////////////////////////////////////
 void streamWriter::write(const std::uint8_t* pBuffer, size_t bufferLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     while(bufferLength != 0)
     {
@@ -125,9 +125,9 @@ void streamWriter::write(const std::uint8_t* pBuffer, size_t bufferLength)
         m_dataBufferCurrent += copySize;
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

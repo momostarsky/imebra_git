@@ -29,7 +29,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define JPEG_DECOMPRESSION_BITS_PRECISION 14
 
 
-namespace imebra
+namespace dicomhero
 {
 
 class huffmanTable;
@@ -566,7 +566,7 @@ public:
     ///////////////////////////////////////////////////////////
     inline std::uint32_t readBits(size_t bitsNum)
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         const size_t bufferSize(8);
 
@@ -611,7 +611,7 @@ public:
             returnValue |= ((std::uint32_t)readByte()) << bitsNum;
         }
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     /// \brief Read one bit from the stream.
@@ -627,7 +627,7 @@ public:
     ///////////////////////////////////////////////////////////
     inline std::uint32_t readBit()
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         if(m_inBitsNum == 0)
         {
@@ -638,7 +638,7 @@ public:
         m_inBitsBuffer <<= 1;
         return (m_inBitsBuffer >> 8) & 1;
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
 
@@ -659,7 +659,7 @@ public:
     ///////////////////////////////////////////////////////////
     inline void addBit(std::uint32_t* const pBuffer)
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         (*pBuffer) <<= 1;
 
@@ -672,7 +672,7 @@ public:
         --m_inBitsNum;
         *pBuffer |= (m_inBitsBuffer >> 8) & 1;
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     /// \brief Reset the bit pointer used by readBits(),
@@ -718,7 +718,7 @@ public:
     ///////////////////////////////////////////////////////////
     inline std::uint8_t readByte()
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         // Read one byte. Return immediatly if the tags are not
         //  activated
@@ -739,9 +739,9 @@ public:
             return 0xff;
         }
 
-        IMEBRA_THROW(CodecCorruptedFileError, "Corrupted jpeg stream (tag in data stream)");
+        DICOMHERO_THROW(CodecCorruptedFileError, "Corrupted jpeg stream (tag in data stream)");
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
 private:
@@ -756,6 +756,6 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraJpegCodecBase_7F63E846_8824_42c6_A048_DD59C657AED4__INCLUDED_)

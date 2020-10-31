@@ -15,12 +15,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
     \brief Implementation of the the DIMSE classes.
 */
 
-#include "../include/imebra/dimse.h"
-#include "../include/imebra/dataSet.h"
+#include "../include/dicomhero/dimse.h"
+#include "../include/dicomhero/dataSet.h"
 #include "../implementation/dimseImpl.h"
 #include <typeinfo>
 
-namespace imebra
+namespace dicomhero
 {
 
 //////////////////////////////////////////////////////////////////
@@ -72,11 +72,11 @@ DimseCommandBase::~DimseCommandBase()
 //////////////////////////////////////////////////////////////////
 const DataSet DimseCommandBase::getCommandDataSet() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return DataSet(m_pCommand->getCommandDataSet());
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -87,11 +87,11 @@ const DataSet DimseCommandBase::getCommandDataSet() const
 //////////////////////////////////////////////////////////////////
 const DataSet DimseCommandBase::getPayloadDataSet() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return DataSet(m_pCommand->getPayloadDataSet());
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -102,11 +102,11 @@ const DataSet DimseCommandBase::getPayloadDataSet() const
 //////////////////////////////////////////////////////////////////
 std::string DimseCommandBase::getAbstractSyntax() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pCommand->getAbstractSyntax();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -117,11 +117,11 @@ std::string DimseCommandBase::getAbstractSyntax() const
 //////////////////////////////////////////////////////////////////
 std::string DimseCommandBase::getAffectedSopInstanceUid() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getAffectedSopInstanceUid();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -132,11 +132,11 @@ std::string DimseCommandBase::getAffectedSopInstanceUid() const
 //////////////////////////////////////////////////////////////////
 std::string DimseCommandBase::getAffectedSopClassUid() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getAffectedSopClassUid();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -147,11 +147,11 @@ std::string DimseCommandBase::getAffectedSopClassUid() const
 //////////////////////////////////////////////////////////////////
 std::string DimseCommandBase::getRequestedSopInstanceUid() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getRequestedSopInstanceUid();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -162,11 +162,11 @@ std::string DimseCommandBase::getRequestedSopInstanceUid() const
 //////////////////////////////////////////////////////////////////
 std::string DimseCommandBase::getRequestedSopClassUid() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::dimseCCommand>(m_pCommand))->getRequestedSopClassUid();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -209,11 +209,11 @@ DimseCommand::~DimseCommand()
 //////////////////////////////////////////////////////////////////
 std::uint16_t DimseCommand::getID() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::dimseCCommand>(getDimseCommandBaseImplementation(*this)))->getID();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -224,11 +224,11 @@ std::uint16_t DimseCommand::getID() const
 //////////////////////////////////////////////////////////////////
 dimseCommandType_t DimseCommand::getCommandType() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::dimseNCommand>(getDimseCommandBaseImplementation(*this)))->getCommandType();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -239,7 +239,7 @@ dimseCommandType_t DimseCommand::getCommandType() const
 //////////////////////////////////////////////////////////////////
 const CStoreCommand DimseCommand::getAsCStoreCommand() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::cStoreCommand> pCommand(std::dynamic_pointer_cast<implementation::cStoreCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
@@ -248,7 +248,7 @@ const CStoreCommand DimseCommand::getAsCStoreCommand() const
     }
     return CStoreCommand(pCommand);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -259,7 +259,7 @@ const CStoreCommand DimseCommand::getAsCStoreCommand() const
 //////////////////////////////////////////////////////////////////
 const CMoveCommand DimseCommand::getAsCMoveCommand() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::cMoveCommand> pCommand(std::dynamic_pointer_cast<implementation::cMoveCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
@@ -268,7 +268,7 @@ const CMoveCommand DimseCommand::getAsCMoveCommand() const
     }
     return CMoveCommand(pCommand);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -279,7 +279,7 @@ const CMoveCommand DimseCommand::getAsCMoveCommand() const
 //////////////////////////////////////////////////////////////////
 const CGetCommand DimseCommand::getAsCGetCommand() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::cGetCommand> pCommand(std::dynamic_pointer_cast<implementation::cGetCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
@@ -288,7 +288,7 @@ const CGetCommand DimseCommand::getAsCGetCommand() const
     }
     return CGetCommand(pCommand);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -299,7 +299,7 @@ const CGetCommand DimseCommand::getAsCGetCommand() const
 //////////////////////////////////////////////////////////////////
 const CFindCommand DimseCommand::getAsCFindCommand() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::cFindCommand> pCommand(std::dynamic_pointer_cast<implementation::cFindCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
@@ -308,7 +308,7 @@ const CFindCommand DimseCommand::getAsCFindCommand() const
     }
     return CFindCommand(pCommand);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -319,7 +319,7 @@ const CFindCommand DimseCommand::getAsCFindCommand() const
 //////////////////////////////////////////////////////////////////
 const CEchoCommand DimseCommand::getAsCEchoCommand() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::cEchoCommand> pCommand(std::dynamic_pointer_cast<implementation::cEchoCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
@@ -328,7 +328,7 @@ const CEchoCommand DimseCommand::getAsCEchoCommand() const
     }
     return CEchoCommand(pCommand);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -339,7 +339,7 @@ const CEchoCommand DimseCommand::getAsCEchoCommand() const
 //////////////////////////////////////////////////////////////////
 const CCancelCommand DimseCommand::getAsCCancelCommand() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::cCancelCommand> pCommand(std::dynamic_pointer_cast<implementation::cCancelCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
@@ -348,7 +348,7 @@ const CCancelCommand DimseCommand::getAsCCancelCommand() const
     }
     return CCancelCommand(pCommand);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -359,7 +359,7 @@ const CCancelCommand DimseCommand::getAsCCancelCommand() const
 //////////////////////////////////////////////////////////////////
 const NActionCommand DimseCommand::getAsNActionCommand() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::nActionCommand> pCommand(std::dynamic_pointer_cast<implementation::nActionCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
@@ -368,7 +368,7 @@ const NActionCommand DimseCommand::getAsNActionCommand() const
     }
     return NActionCommand(pCommand);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -379,7 +379,7 @@ const NActionCommand DimseCommand::getAsNActionCommand() const
 //////////////////////////////////////////////////////////////////
 const NEventReportCommand DimseCommand::getAsNEventReportCommand() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::nEventReportCommand> pCommand(std::dynamic_pointer_cast<implementation::nEventReportCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
@@ -388,7 +388,7 @@ const NEventReportCommand DimseCommand::getAsNEventReportCommand() const
     }
     return NEventReportCommand(pCommand);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -399,7 +399,7 @@ const NEventReportCommand DimseCommand::getAsNEventReportCommand() const
 //////////////////////////////////////////////////////////////////
 const NCreateCommand DimseCommand::getAsNCreateCommand() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::nCreateCommand> pCommand(std::dynamic_pointer_cast<implementation::nCreateCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
@@ -408,7 +408,7 @@ const NCreateCommand DimseCommand::getAsNCreateCommand() const
     }
     return NCreateCommand(pCommand);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -419,7 +419,7 @@ const NCreateCommand DimseCommand::getAsNCreateCommand() const
 //////////////////////////////////////////////////////////////////
 const NDeleteCommand DimseCommand::getAsNDeleteCommand() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::nDeleteCommand> pCommand(std::dynamic_pointer_cast<implementation::nDeleteCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
@@ -428,7 +428,7 @@ const NDeleteCommand DimseCommand::getAsNDeleteCommand() const
     }
     return NDeleteCommand(pCommand);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -439,7 +439,7 @@ const NDeleteCommand DimseCommand::getAsNDeleteCommand() const
 //////////////////////////////////////////////////////////////////
 const NSetCommand DimseCommand::getAsNSetCommand() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::nSetCommand> pCommand(std::dynamic_pointer_cast<implementation::nSetCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
@@ -448,7 +448,7 @@ const NSetCommand DimseCommand::getAsNSetCommand() const
     }
     return NSetCommand(pCommand);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -459,7 +459,7 @@ const NSetCommand DimseCommand::getAsNSetCommand() const
 //////////////////////////////////////////////////////////////////
 const NGetCommand DimseCommand::getAsNGetCommand() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::nGetCommand> pCommand(std::dynamic_pointer_cast<implementation::nGetCommand>(getDimseCommandBaseImplementation(*this)));
     if(pCommand.get() == nullptr)
@@ -468,7 +468,7 @@ const NGetCommand DimseCommand::getAsNGetCommand() const
     }
     return NGetCommand(pCommand);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -511,11 +511,11 @@ DimseResponse::~DimseResponse()
 //////////////////////////////////////////////////////////////////
 dimseStatus_t DimseResponse::getStatus() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return std::static_pointer_cast<implementation::dimseResponse>(getDimseCommandBaseImplementation(*this))->getStatus();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -526,11 +526,11 @@ dimseStatus_t DimseResponse::getStatus() const
 //////////////////////////////////////////////////////////////////
 std::uint16_t DimseResponse::getStatusCode() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return std::static_pointer_cast<implementation::dimseResponse>(getDimseCommandBaseImplementation(*this))->getStatusCode();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -601,11 +601,11 @@ CStoreCommand::~CStoreCommand()
 //////////////////////////////////////////////////////////////////
 std::string CStoreCommand::getOriginatorAET() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::cStoreCommand>(getDimseCommandBaseImplementation(*this)))->getOriginatorAET();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -616,11 +616,11 @@ std::string CStoreCommand::getOriginatorAET() const
 //////////////////////////////////////////////////////////////////
 std::uint16_t CStoreCommand::getOriginatorMessageID() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::cStoreCommand>(getDimseCommandBaseImplementation(*this)))->getOriginatorMessageID();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -752,11 +752,11 @@ CPartialResponse::~CPartialResponse()
 //////////////////////////////////////////////////////////////////
 std::uint32_t CPartialResponse::getRemainingSubOperations() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::cPartialResponse>(getDimseCommandBaseImplementation(*this)))->getRemainingSubOperations();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -767,11 +767,11 @@ std::uint32_t CPartialResponse::getRemainingSubOperations() const
 //////////////////////////////////////////////////////////////////
 std::uint32_t CPartialResponse::getCompletedSubOperations() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::cPartialResponse>(getDimseCommandBaseImplementation(*this)))->getCompletedSubOperations();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -782,11 +782,11 @@ std::uint32_t CPartialResponse::getCompletedSubOperations() const
 //////////////////////////////////////////////////////////////////
 std::uint32_t CPartialResponse::getFailedSubOperations() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::cPartialResponse>(getDimseCommandBaseImplementation(*this)))->getFailedSubOperations();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -797,11 +797,11 @@ std::uint32_t CPartialResponse::getFailedSubOperations() const
 //////////////////////////////////////////////////////////////////
 std::uint32_t CPartialResponse::getWarningSubOperations() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::cPartialResponse>(getDimseCommandBaseImplementation(*this)))->getWarningSubOperations();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -1046,11 +1046,11 @@ CMoveCommand::~CMoveCommand()
 //////////////////////////////////////////////////////////////////
 std::string CMoveCommand::getDestinationAET() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::cMoveCommand>(getDimseCommandBaseImplementation(*this)))->getDestinationAET();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -1280,11 +1280,11 @@ CCancelCommand::~CCancelCommand()
 //////////////////////////////////////////////////////////////////
 std::uint16_t CCancelCommand::getCancelMessageID() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::cCancelCommand>(getDimseCommandBaseImplementation(*this)))->getCancelMessageID();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -1394,11 +1394,11 @@ NEventReportCommand::~NEventReportCommand()
 //////////////////////////////////////////////////////////////////
 std::uint16_t NEventReportCommand::getEventID() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::nEventReportCommand>(getDimseCommandBaseImplementation(*this)))->getEventID();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -1466,11 +1466,11 @@ NEventReportResponse::~NEventReportResponse()
 //////////////////////////////////////////////////////////////////
 std::uint16_t NEventReportResponse::getEventID() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::nEventReportResponse>(getDimseCommandBaseImplementation(*this)))->getEventID();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -1536,11 +1536,11 @@ NGetCommand::~NGetCommand()
 //////////////////////////////////////////////////////////////////
 attributeIdentifierList_t NGetCommand::getAttributeList() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::nGetCommand>(getDimseCommandBaseImplementation(*this)))->getAttributeList();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -1720,11 +1720,11 @@ NSetResponse::~NSetResponse()
 //////////////////////////////////////////////////////////////////
 attributeIdentifierList_t NSetResponse::getModifiedAttributes() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::nSetResponse>(getDimseCommandBaseImplementation(*this)))->getModifiedAttributes();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -1815,11 +1815,11 @@ NActionCommand::~NActionCommand()
 //////////////////////////////////////////////////////////////////
 std::uint16_t NActionCommand::getActionID() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (std::static_pointer_cast<implementation::nActionCommand>(getDimseCommandBaseImplementation(*this)))->getActionID();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2170,7 +2170,7 @@ std::uint16_t DimseService::getNextCommandID()
 //////////////////////////////////////////////////////////////////
 const DimseCommand DimseService::getCommand()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::dimseNCommand> pCommand(m_pDimseService->getCommand());
 
@@ -2204,9 +2204,9 @@ const DimseCommand DimseService::getCommand()
         {}
     }
 
-    IMEBRA_THROW(std::logic_error, "Should have received a valid command from the implementation layer");
+    DICOMHERO_THROW(std::logic_error, "Should have received a valid command from the implementation layer");
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2217,11 +2217,11 @@ const DimseCommand DimseService::getCommand()
 //////////////////////////////////////////////////////////////////
 std::string DimseService::getTransferSyntax(const std::string &abstractSyntax) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDimseService->getTransferSyntax(abstractSyntax);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2232,11 +2232,11 @@ std::string DimseService::getTransferSyntax(const std::string &abstractSyntax) c
 //////////////////////////////////////////////////////////////////
 void DimseService::sendCommandOrResponse(const DimseCommandBase &command)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDimseService->sendCommandOrResponse(getDimseCommandBaseImplementation(command));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2247,11 +2247,11 @@ void DimseService::sendCommandOrResponse(const DimseCommandBase &command)
 //////////////////////////////////////////////////////////////////
 const CStoreResponse DimseService::getCStoreResponse(const CStoreCommand& command)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return CStoreResponse(m_pDimseService->getResponse<implementation::cStoreResponse>(command.getID()));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2262,11 +2262,11 @@ const CStoreResponse DimseService::getCStoreResponse(const CStoreCommand& comman
 //////////////////////////////////////////////////////////////////
 const CGetResponse DimseService::getCGetResponse(const CGetCommand& command)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return CGetResponse(m_pDimseService->getResponse<implementation::cGetResponse>(command.getID()));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2277,11 +2277,11 @@ const CGetResponse DimseService::getCGetResponse(const CGetCommand& command)
 //////////////////////////////////////////////////////////////////
 const CFindResponse DimseService::getCFindResponse(const CFindCommand& command)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return CFindResponse(m_pDimseService->getResponse<implementation::cFindResponse>(command.getID()));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2292,11 +2292,11 @@ const CFindResponse DimseService::getCFindResponse(const CFindCommand& command)
 //////////////////////////////////////////////////////////////////
 const CMoveResponse DimseService::getCMoveResponse(const CMoveCommand& command)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return CMoveResponse(m_pDimseService->getResponse<implementation::cMoveResponse>(command.getID()));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2307,11 +2307,11 @@ const CMoveResponse DimseService::getCMoveResponse(const CMoveCommand& command)
 //////////////////////////////////////////////////////////////////
 const CEchoResponse DimseService::getCEchoResponse(const CEchoCommand& command)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return CEchoResponse(m_pDimseService->getResponse<implementation::cEchoResponse>(command.getID()));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2322,11 +2322,11 @@ const CEchoResponse DimseService::getCEchoResponse(const CEchoCommand& command)
 //////////////////////////////////////////////////////////////////
 const NEventReportResponse DimseService::getNEventReportResponse(const NEventReportCommand& command)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return NEventReportResponse(m_pDimseService->getResponse<implementation::nEventReportResponse>(command.getID()));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2337,11 +2337,11 @@ const NEventReportResponse DimseService::getNEventReportResponse(const NEventRep
 //////////////////////////////////////////////////////////////////
 const NGetResponse DimseService::getNGetResponse(const NGetCommand& command)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return NGetResponse(m_pDimseService->getResponse<implementation::nGetResponse>(command.getID()));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2352,11 +2352,11 @@ const NGetResponse DimseService::getNGetResponse(const NGetCommand& command)
 //////////////////////////////////////////////////////////////////
 const NSetResponse DimseService::getNSetResponse(const NSetCommand& command)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return NSetResponse(m_pDimseService->getResponse<implementation::nSetResponse>(command.getID()));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2367,11 +2367,11 @@ const NSetResponse DimseService::getNSetResponse(const NSetCommand& command)
 //////////////////////////////////////////////////////////////////
 const NActionResponse DimseService::getNActionResponse(const NActionCommand& command)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return NActionResponse(m_pDimseService->getResponse<implementation::nActionResponse>(command.getID()));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2382,11 +2382,11 @@ const NActionResponse DimseService::getNActionResponse(const NActionCommand& com
 //////////////////////////////////////////////////////////////////
 const NCreateResponse DimseService::getNCreateResponse(const NCreateCommand& command)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return NCreateResponse(m_pDimseService->getResponse<implementation::nCreateResponse>(command.getID()));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
@@ -2397,12 +2397,12 @@ const NCreateResponse DimseService::getNCreateResponse(const NCreateCommand& com
 //////////////////////////////////////////////////////////////////
 const NDeleteResponse DimseService::getNDeleteResponse(const NDeleteCommand& command)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return NDeleteResponse(m_pDimseService->getResponse<implementation::nDeleteResponse>(command.getID()));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
-} // namespace imebra
+} // namespace dicomhero

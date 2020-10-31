@@ -1,7 +1,7 @@
 #include <imebra/imebra.h>
 #include <gtest/gtest.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -180,4 +180,4 @@ TEST(paletteTest, testPalette16bit)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

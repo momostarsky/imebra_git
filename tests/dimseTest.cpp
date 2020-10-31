@@ -14,7 +14,7 @@
     #include <sys/stat.h>
 #endif
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -80,7 +80,7 @@ TEST(dimseTest, storeSCUSCP)
     std::list<CStoreCommand> receivedCommands;
 
     std::thread thread(
-                imebra::tests::storeScpThread,
+                dicomhero::tests::storeScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -222,7 +222,7 @@ TEST(dimseTest, getSCUSCP)
     const std::string scpName("SCP");
 
     std::thread thread(
-                imebra::tests::getScpThread,
+                dicomhero::tests::getScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -341,7 +341,7 @@ TEST(dimseTest, moveSCUSCP)
 
     size_t receivedRequests(0);
     std::thread thread(
-                imebra::tests::moveScpThread,
+                dicomhero::tests::moveScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -455,7 +455,7 @@ TEST(dimseTest, findSCUSCP)
     const std::string scpName("SCP");
 
     std::thread thread(
-                imebra::tests::findScpThread,
+                dicomhero::tests::findScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -554,7 +554,7 @@ TEST(dimseTest, echoSCUSCP)
     const std::string scpName("SCP");
 
     std::thread thread(
-                imebra::tests::echoScpThread,
+                dicomhero::tests::echoScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -651,7 +651,7 @@ TEST(dimseTest, cancelSCUSCP)
     const std::string scpName("SCP");
 
     std::thread thread(
-                imebra::tests::cancelScpThread,
+                dicomhero::tests::cancelScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -752,7 +752,7 @@ TEST(dimseTest, neventReportSCUSCP)
     const std::string scpName("SCP");
 
     std::thread thread(
-                imebra::tests::neventReportScpThread,
+                dicomhero::tests::neventReportScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -850,7 +850,7 @@ TEST(dimseTest, ngetSCUSCP)
     const std::string scpName("SCP");
 
     std::thread thread(
-                imebra::tests::ngetScpThread,
+                dicomhero::tests::ngetScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -952,7 +952,7 @@ TEST(dimseTest, nsetSCUSCP)
     const std::string scpName("SCP");
 
     std::thread thread(
-                imebra::tests::nsetScpThread,
+                dicomhero::tests::nsetScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -1051,7 +1051,7 @@ TEST(dimseTest, nActionSCUSCP)
     const std::string scpName("SCP");
 
     std::thread thread(
-                imebra::tests::nActionScpThread,
+                dicomhero::tests::nActionScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -1153,7 +1153,7 @@ TEST(dimseTest, nCreateSCUSCP)
     const std::string scpName("SCP");
 
     std::thread thread(
-                imebra::tests::nCreateScpThread,
+                dicomhero::tests::nCreateScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -1242,7 +1242,7 @@ TEST(dimseTest, nDeleteSCUSCP)
     const std::string scpName("SCP");
 
     std::thread thread(
-                imebra::tests::nDeleteScpThread,
+                dicomhero::tests::nDeleteScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -1315,7 +1315,7 @@ TEST(dimseTest, dimseTimeoutTest)
     const std::string scpName("SCP");
 
     std::thread thread(
-                imebra::tests::timeoutScpThread,
+                dicomhero::tests::timeoutScpThread,
                 std::ref(scpName),
                 std::ref(presentationContexts),
                 std::ref(readSCP),
@@ -1333,7 +1333,7 @@ TEST(dimseTest, dimseTimeoutTest)
 
     }
 
-#if defined(IMEBRA_LOGGING_LOG4CXX)
+#if defined(DICOMHERO_LOGGING_LOG4CXX)
     ::tests::settings& settings = ::tests::settings::getSettings();
     if(!settings.get("--testLogFile").empty())
     {
@@ -1532,7 +1532,7 @@ TEST(dimseTest, storeSCPInteroperabilityTest)
     std::string sopClassUid("1.2.840.10008.5.1.4.1.1.1");
     std::string sopInstanceUid("1.1.1.1.1.1");
     std::thread thread(
-                imebra::tests::storeScuThread,
+                dicomhero::tests::storeScuThread,
                 transferSyntax,
                 sopClassUid,
                 sopInstanceUid);
@@ -1584,7 +1584,7 @@ void moveScuThread()
 TEST(dimseTest, moveSCPInteroperabilityTest)
 {
     std::thread thread(
-                imebra::tests::moveScuThread);
+                dicomhero::tests::moveScuThread);
 
     {
         TCPListener tcpListener(TCPPassiveAddress("", "30005"));
@@ -1657,7 +1657,7 @@ void findScuThread(std::string* pResponse)
 TEST(dimseTest, findSCPInteroperabilityTest)
 {
     std::string responseString;
-    std::thread thread(imebra::tests::findScuThread, &responseString);
+    std::thread thread(dicomhero::tests::findScuThread, &responseString);
 
     {
         TCPListener tcpListener(TCPPassiveAddress("", "30005"));
@@ -1707,4 +1707,4 @@ TEST(dimseTest, findSCPInteroperabilityTest)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

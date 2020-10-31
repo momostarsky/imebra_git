@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataSetImpl.h"
 #include "transformHighBitImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -43,14 +43,14 @@ transformsChain::transformsChain()
 ///////////////////////////////////////////////////////////
 void transformsChain::addTransform(std::shared_ptr<transform> pTransform)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
         if(pTransform != 0 && !pTransform->isEmpty())
         {
             m_transformsList.push_back(pTransform);
         }
 
-	IMEBRA_FUNCTION_END();
+	DICOMHERO_FUNCTION_END();
 }
 
 
@@ -75,7 +75,7 @@ void transformsChain::runTransformHandlers(
         std::uint32_t outputHighBit,
         std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(isEmpty())
     {
@@ -179,7 +179,7 @@ void transformsChain::runTransformHandlers(
         outputTopLeftY += rows;
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -190,7 +190,7 @@ std::shared_ptr<image> transformsChain::allocateOutputImage(
         std::shared_ptr<palette> inputPalette,
         std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(isEmpty())
 	{
@@ -239,7 +239,7 @@ std::shared_ptr<image> transformsChain::allocateOutputImage(
                                                  temporaryImage->getPalette(),
                                                  outputWidth, outputHeight);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -247,4 +247,4 @@ std::shared_ptr<image> transformsChain::allocateOutputImage(
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

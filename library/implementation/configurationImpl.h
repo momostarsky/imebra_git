@@ -29,24 +29,24 @@ If you do not want to be bound by the GPL terms (such as the requirement
     #define MAXIMUM_PDU_SIZE 32768
 #endif
 
-#if !defined(IMEBRA_WINDOWS) && !defined(IMEBRA_POSIX)
+#if !defined(DICOMHERO_WINDOWS) && !defined(DICOMHERO_POSIX)
 
 #if defined(_WIN32)
-#define IMEBRA_WINDOWS 1
+#define DICOMHERO_WINDOWS 1
 #endif
 
-#ifndef IMEBRA_WINDOWS
-#define IMEBRA_POSIX 1
+#ifndef DICOMHERO_WINDOWS
+#define DICOMHERO_POSIX 1
 #endif
 
 #endif
 
-#if !defined(IMEBRA_USE_ICONV) && !defined(IMEBRA_USE_ICU) && !defined(IMEBRA_USE_WINDOWS_CHARSET) && !defined(IMEBRA_USE_JAVA)
+#if !defined(DICOMHERO_USE_ICONV) && !defined(DICOMHERO_USE_ICU) && !defined(DICOMHERO_USE_WINDOWS_CHARSET) && !defined(DICOMHERO_USE_JAVA)
 
-#if defined(IMEBRA_WINDOWS)
-    #define IMEBRA_USE_WINDOWS_CHARSET
+#if defined(DICOMHERO_WINDOWS)
+    #define DICOMHERO_USE_WINDOWS_CHARSET
 #else
-    #define IMEBRA_USE_ICONV
+    #define DICOMHERO_USE_ICONV
 #endif
 #endif
 

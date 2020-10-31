@@ -22,10 +22,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <stdexcept>
 #include <memory>
 #include "memoryImpl.h"
-#include "../include/imebra/definitions.h"
+#include "../include/dicomhero/definitions.h"
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -318,7 +318,7 @@ public:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 #endif // !defined(imebraCodec_299706D7_4761_44a1_9F2D_8C38A7BD7AD5__INCLUDED_)

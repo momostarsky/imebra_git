@@ -66,12 +66,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 +(ImebraTransform*)getTransform:(NSString*)startColorSpace finalColorSpace:(NSString*)endColorSpace error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraTransform alloc] initWithImebraTransform:
         new imebra::Transform(imebra::ColorTransformsFactory::getTransform(imebra::NSStringToString(startColorSpace), imebra::NSStringToString(endColorSpace)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 @end

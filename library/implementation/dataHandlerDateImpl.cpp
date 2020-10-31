@@ -23,7 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataHandlerDateImpl.h"
 #include "dateImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -62,14 +62,14 @@ readingDataHandlerDate::readingDataHandlerDate(const memory& parseMemory): readi
 ///////////////////////////////////////////////////////////
 std::shared_ptr<date> readingDataHandlerDate::getDate(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t year(0), month(0), day(0);
     std::string dateString = getString(index);
     parseDate(dateString, &year, &month, &day);
     return std::make_shared<date>(year, month, day, 0, 0, 0, 0, 0, 0);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -89,15 +89,15 @@ writingDataHandlerDate::writingDataHandlerDate(const std::shared_ptr<buffer> &pB
 ///////////////////////////////////////////////////////////
 void writingDataHandlerDate::setDate(const size_t index, const std::shared_ptr<const date>& pDate)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     setString(index, buildDate(pDate->getYear(), pDate->getMonth(), pDate->getDay()));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 } // namespace handlers
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

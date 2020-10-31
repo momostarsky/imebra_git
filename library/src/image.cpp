@@ -16,12 +16,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/image.h"
+#include "../include/dicomhero/image.h"
 #include "../implementation/imageImpl.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 Image::Image(const std::shared_ptr<implementation::image>& pImage): m_pImage(pImage)
@@ -90,7 +90,7 @@ MutableImage::MutableImage(
 {
 }
 
-MutableImage::MutableImage(std::shared_ptr<imebra::implementation::image> pImage):
+MutableImage::MutableImage(std::shared_ptr<dicomhero::implementation::image> pImage):
     Image(pImage)
 {
 }
@@ -105,11 +105,11 @@ MutableImage::~MutableImage()
 
 WritingDataHandlerNumeric MutableImage::getWritingDataHandler()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return WritingDataHandlerNumeric(getImageImplementation(*this)->getWritingDataHandler());
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 }

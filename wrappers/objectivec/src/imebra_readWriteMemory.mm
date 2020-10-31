@@ -51,56 +51,56 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)copyFrom:(ImebraMemory*)source error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::MutableMemory*)get_imebra_object_holder(Memory))->copyFrom(*get_other_imebra_object_holder(source, Memory));
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(void)clear:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::MutableMemory*)get_imebra_object_holder(Memory))->clear();
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(void)resize:(unsigned int)newSize error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::MutableMemory*)get_imebra_object_holder(Memory))->resize((size_t)newSize);
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(void)reserve:(unsigned int)reserveSize error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::MutableMemory*)get_imebra_object_holder(Memory))->reserve((size_t)reserveSize);
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(void)assign:(NSData*)pSource error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::MutableMemory*)get_imebra_object_holder(Memory))->assign((char*)pSource.bytes, (size_t)pSource.length);
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(void)assignRegion:(NSData*)pSource offset:(unsigned int)destinationOffset error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::MutableMemory*)get_imebra_object_holder(Memory))->assignRegion((char*)pSource.bytes, (size_t)pSource.length, (size_t)destinationOffset);
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 @end

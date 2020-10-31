@@ -28,10 +28,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dicomDictImpl.h"
 #include "bufferImpl.h"
 #include "nullStreamImpl.h"
-#include "../include/imebra/exceptions.h"
-#include "../include/imebra/definitions.h"
+#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero/definitions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -65,7 +65,7 @@ namespace codecs
 ///////////////////////////////////////////////////////////
 void dicomStreamCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<dataSet> pDataSet) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Retrieve the transfer syntax
     ///////////////////////////////////////////////////////////
@@ -93,7 +93,7 @@ void dicomStreamCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::s
     ///////////////////////////////////////////////////////////
     buildStream(pStream, pDataSet, bExplicitDataType, endianType, streamType_t::mediaStorage);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -108,7 +108,7 @@ void dicomStreamCodec::writeStream(std::shared_ptr<streamWriter> pStream, std::s
 ///////////////////////////////////////////////////////////
 void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::shared_ptr<const dataSet> pDataSet, bool bExplicitDataType, streamController::tByteOrdering endianType, streamType_t streamType)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     dataSet::tGroupsIds groups = pDataSet->getGroups();
 
@@ -139,7 +139,7 @@ void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::s
                     std::shared_ptr<data> implementationClassUidTag(std::make_shared<data>(tagVR_t::UI, charsets));
                     {
                         std::shared_ptr<handlers::writingDataHandler> handler(implementationClassUidTag->getWritingDataHandler(0));
-                        handler->setString(0, IMEBRA_IMPLEMENTATION_CLASS_UID);
+                        handler->setString(0, DICOMHERO_IMPLEMENTATION_CLASS_UID);
                     }
                     temporaryTags[0x12] = implementationClassUidTag;
 
@@ -147,7 +147,7 @@ void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::s
                     std::shared_ptr<data> implementationNameTag(std::make_shared<data>(tagVR_t::SH, charsets));
                     {
                         std::shared_ptr<handlers::writingDataHandler> handler(implementationNameTag->getWritingDataHandler(0));
-                        handler->setString(0, IMEBRA_IMPLEMENTATION_NAME);
+                        handler->setString(0, DICOMHERO_IMPLEMENTATION_NAME);
                     }
                     temporaryTags[0x13] = implementationNameTag;
 
@@ -161,7 +161,7 @@ void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::s
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -176,7 +176,7 @@ void dicomStreamCodec::buildStream(std::shared_ptr<streamWriter> pStream, std::s
 ///////////////////////////////////////////////////////////
 void dicomStreamCodec::writeGroup(std::shared_ptr<streamWriter> pDestStream, const dataSet::tTags& tags, std::uint16_t groupId, bool bExplicitDataType, streamController::tByteOrdering endianType)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(groupId == 2)
     {
@@ -239,7 +239,7 @@ void dicomStreamCodec::writeGroup(std::shared_ptr<streamWriter> pDestStream, con
         writeTag(pDestStream, scanTags->second, tagId, bExplicitDataType, endianType);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -254,7 +254,7 @@ void dicomStreamCodec::writeGroup(std::shared_ptr<streamWriter> pDestStream, con
 ///////////////////////////////////////////////////////////
 void dicomStreamCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<data> pData, std::uint16_t tagId, bool bExplicitDataType, streamController::tByteOrdering endianType)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Calculate the tag's length
     ///////////////////////////////////////////////////////////
@@ -301,7 +301,7 @@ void dicomStreamCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::
         {
             if(bSequence)
             {
-                IMEBRA_THROW(InvalidSequenceItemError, "Sequences cannot be used with dataType " << dataTypeString);
+                DICOMHERO_THROW(InvalidSequenceItemError, "Sequences cannot be used with dataType " << dataTypeString);
             }
             pDestStream->adjustEndian((std::uint8_t*)&tagLengthWord, 2, endianType);
             pDestStream->write((std::uint8_t*)&tagLengthWord, 2);
@@ -374,7 +374,7 @@ void dicomStreamCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::
                 {
                     if(writtenSize != writeSize - 1)
                     {
-                        IMEBRA_THROW(StreamEOFError, "An external stream containing a tag value cannot be read");
+                        DICOMHERO_THROW(StreamEOFError, "An external stream containing a tag value cannot be read");
                     }
                     if(writeSize != bufferSize)
                     {
@@ -462,7 +462,7 @@ void dicomStreamCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::
         pDestStream->write(reinterpret_cast<const std::uint8_t*>(&zeroLength), 4);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -477,7 +477,7 @@ void dicomStreamCodec::writeTag(std::shared_ptr<streamWriter> pDestStream, std::
 ///////////////////////////////////////////////////////////
 std::uint32_t dicomStreamCodec::getTagLength(const std::shared_ptr<data>& pData, bool bExplicitDataType, std::uint32_t* pHeaderLength, bool *pbSequence)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     tagVR_t dataType = pData->getDataType();
     *pbSequence = (dataType == tagVR_t::SQ);
@@ -524,7 +524,7 @@ std::uint32_t dicomStreamCodec::getTagLength(const std::shared_ptr<data>& pData,
 
     return totalLength;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -539,7 +539,7 @@ std::uint32_t dicomStreamCodec::getTagLength(const std::shared_ptr<data>& pData,
 ///////////////////////////////////////////////////////////
 std::uint32_t dicomStreamCodec::getGroupLength(const dataSet::tTags& tags, bool bExplicitDataType)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t totalLength(0);
 
@@ -558,7 +558,7 @@ std::uint32_t dicomStreamCodec::getGroupLength(const dataSet::tTags& tags, bool 
 
     return totalLength;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -573,7 +573,7 @@ std::uint32_t dicomStreamCodec::getGroupLength(const dataSet::tTags& tags, bool 
 ///////////////////////////////////////////////////////////
 std::uint32_t dicomStreamCodec::getDataSetLength(std::shared_ptr<dataSet> pDataSet, bool bExplicitDataType)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<nullStreamWriter> pNullStream(std::make_shared<nullStreamWriter>());
 
@@ -583,7 +583,7 @@ std::uint32_t dicomStreamCodec::getDataSetLength(std::shared_ptr<dataSet> pDataS
 
     return static_cast<std::uint32_t>(pWriter->position());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -598,7 +598,7 @@ std::uint32_t dicomStreamCodec::getDataSetLength(std::shared_ptr<dataSet> pDataS
 ///////////////////////////////////////////////////////////
 void dicomStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::shared_ptr<dataSet> pDataSet, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // This flag signals a failure
     ///////////////////////////////////////////////////////////
@@ -614,7 +614,7 @@ void dicomStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sh
     }
     catch(StreamEOFError&)
     {
-        IMEBRA_THROW(CodecWrongFormatError, "detected a wrong format");
+        DICOMHERO_THROW(CodecWrongFormatError, "detected a wrong format");
     }
 
     // Skip the first 128 bytes (8 already skipped)
@@ -645,7 +645,7 @@ void dicomStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sh
                 oldDicomSignature[1]!=0x0 ||
                 oldDicomSignature[3]!=0x0)
         {
-            IMEBRA_THROW(CodecWrongFormatError, "Not a DICOM file");
+            DICOMHERO_THROW(CodecWrongFormatError, "Not a DICOM file");
         }
 
         // Set "explicit data type" to true if a valid data type
@@ -661,7 +661,7 @@ void dicomStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sh
     ///////////////////////////////////////////////////////////
     parseStream(pStream, pDataSet, bExplicitDataType, endianType, maxSizeBufferLoad);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -682,11 +682,11 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
                              std::uint32_t* pReadSubItemLength /* = 0 */,
                              std::uint32_t depth)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    if(depth > IMEBRA_DATASET_MAX_DEPTH)
+    if(depth > DICOMHERO_DATASET_MAX_DEPTH)
     {
-        IMEBRA_THROW(DicomCodecDepthLimitReachedError, "Depth for embedded dataset reached");
+        DICOMHERO_THROW(DicomCodecDepthLimitReachedError, "Depth for embedded dataset reached");
     }
 
     std::uint16_t tagId;
@@ -1029,7 +1029,7 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
 
     } // End of the tags-read block
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
@@ -1057,7 +1057,7 @@ std::uint32_t dicomStreamCodec::readTag(
         std::uint32_t maxSizeBufferLoad /* = 0xffffffff */
         )
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // If the tag's size is bigger than the maximum loadable
     //  size then just specify in which file it resides
@@ -1071,7 +1071,7 @@ std::uint32_t dicomStreamCodec::readTag(
 
         if(bufferLength != tagLengthDWord)
         {
-            IMEBRA_THROW(CodecCorruptedFileError, "dicomCodec::readTag detected a corrupted tag");
+            DICOMHERO_THROW(CodecCorruptedFileError, "dicomCodec::readTag detected a corrupted tag");
         }
 
         std::shared_ptr<data> writeData (pDataSet->getTagCreate(tagId, order, tagSubId, tagType));
@@ -1183,12 +1183,12 @@ std::uint32_t dicomStreamCodec::readTag(
     ///////////////////////////////////////////////////////////
     return (std::uint32_t)tagLengthDWord;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 } // namespace codecs
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 

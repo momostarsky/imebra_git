@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataHandlerDateTimeBaseImpl.h"
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -63,6 +63,6 @@ public:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraDataHandlerTime_22271468_E9BC_4c3e_B733_6EA5C9DC858E__INCLUDED_)

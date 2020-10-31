@@ -24,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string.h>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -36,7 +36,7 @@ namespace codecs
 
 std::vector<std::shared_ptr<channel>> imageCodec::allocChannels(std::uint32_t channelsNumber, std::uint32_t width, std::uint32_t height, bool bSubSampledX, bool bSubSampledY)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(bSubSampledX && (width & 0x1) != 0)
     {
@@ -88,7 +88,7 @@ std::vector<std::shared_ptr<channel>> imageCodec::allocChannels(std::uint32_t ch
 
     return channels;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -129,7 +129,7 @@ void imageCodec::adjustB2Complement(
         bitDepth_t samplesDepth,
         size_t numSamples)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     switch(samplesDepth)
     {
@@ -143,11 +143,11 @@ void imageCodec::adjustB2Complement(
         adjustB2Complement(reinterpret_cast<std::int32_t*>(pImageSamples), highBit, numSamples);
         break;
     default:
-        IMEBRA_THROW(CodecCorruptedFileError, "Signed data on image with non-signed samples");
+        DICOMHERO_THROW(CodecCorruptedFileError, "Signed data on image with non-signed samples");
 
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -162,7 +162,7 @@ void imageCodec::adjustB2Complement(
 ///////////////////////////////////////////////////////////
 void channel::allocate(std::uint32_t width, std::uint32_t height)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_width = width;
     m_height = height;
@@ -172,12 +172,12 @@ void channel::allocate(std::uint32_t width, std::uint32_t height)
 
     ::memset(m_pBuffer, 0, m_bufferSize * sizeof(std::int32_t));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 } // namespace codecs
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 

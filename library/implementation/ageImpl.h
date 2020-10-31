@@ -20,9 +20,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraAge_367AAE47_6FD7_4107_AB5B_25A355C5CB6E__INCLUDED_
 
 #include <cstdint>
-#include "../include/imebra/definitions.h"
+#include "../include/dicomhero/definitions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -62,6 +62,6 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraDate_367AAE47_6FD7_4107_AB5B_25A355C5CB6E__INCLUDED_)

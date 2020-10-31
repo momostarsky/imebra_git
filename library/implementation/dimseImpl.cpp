@@ -1,10 +1,10 @@
 #include "dimseImpl.h"
 #include "dataSetImpl.h"
-#include "../include/imebra/definitions.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero/exceptions.h"
 #include "dataHandlerImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace  implementation
@@ -246,7 +246,7 @@ dimseCCommand::dimseCCommand(std::shared_ptr<const associationMessage> pMessage)
 //////////////////////////////////////////////////////////////////
 dimseCommandPriority_t dimseCCommand::getPriority() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t priority(m_pCommand->getUint32(0x0, 0, 0x0700, 0, 0));
     switch(priority)
@@ -258,10 +258,10 @@ dimseCommandPriority_t dimseCCommand::getPriority() const
     case (std::uint32_t)dimseCommandPriority_t::low:
         return dimseCommandPriority_t::low;
     default:
-        IMEBRA_THROW(DimseInvalidCommand, "The message's priority is not valid");
+        DICOMHERO_THROW(DimseInvalidCommand, "The message's priority is not valid");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -512,7 +512,7 @@ std::uint32_t cPartialResponse::getWarningSubOperations() const
 //////////////////////////////////////////////////////////////////
 void cPartialResponse::validate() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     dimseResponse::validate();
 
@@ -528,10 +528,10 @@ void cPartialResponse::validate() const
     }
     catch(const MissingDataElementError& e)
     {
-        IMEBRA_THROW(DimseInvalidCommand, "Cannot validate the response. (" << e.what() << ")");
+        DICOMHERO_THROW(DimseInvalidCommand, "Cannot validate the response. (" << e.what() << ")");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -606,7 +606,7 @@ void cStoreCommand::validate() const
     }
     catch(const MissingDataElementError& e)
     {
-        IMEBRA_THROW(DimseInvalidCommand, "Cannot validate the C-STORE command. (" << e.what() << ")");
+        DICOMHERO_THROW(DimseInvalidCommand, "Cannot validate the C-STORE command. (" << e.what() << ")");
     }
 }
 
@@ -2112,7 +2112,7 @@ std::uint16_t dimseService::getNextCommandID()
 //////////////////////////////////////////////////////////////////
 std::shared_ptr<dimseNCommand> dimseService::getCommand()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<associationMessage> pMessage(m_pAssociation->getCommand());
 
@@ -2122,61 +2122,61 @@ std::shared_ptr<dimseNCommand> dimseService::getCommand()
     {
     case dimseCommandType_t::cStore:
         pCommand = std::make_shared<cStoreCommand>(pMessage);
-        IMEBRA_LOG_INFO("Received C-STORE command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received C-STORE command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
         break;
     case dimseCommandType_t::cGet:
         pCommand = std::make_shared<cGetCommand>(pMessage);
-        IMEBRA_LOG_INFO("Received C-GET command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received C-GET command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
         break;
     case dimseCommandType_t::cMove:
         pCommand = std::make_shared<cMoveCommand>(pMessage);
-        IMEBRA_LOG_INFO("Received C-MOVE command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received C-MOVE command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
         break;
     case dimseCommandType_t::cFind:
         pCommand = std::make_shared<cFindCommand>(pMessage);
-        IMEBRA_LOG_INFO("Received C-FIND command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received C-FIND command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
         break;
     case dimseCommandType_t::cEcho:
         pCommand = std::make_shared<cEchoCommand>(pMessage);
-        IMEBRA_LOG_INFO("Received C-ECHO command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received C-ECHO command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
         break;
     case dimseCommandType_t::cCancel:
         pCommand = std::make_shared<cCancelCommand>(pMessage);
-        IMEBRA_LOG_INFO("Received C-CANCEL command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received C-CANCEL command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
         break;
     case dimseCommandType_t::nAction:
         pCommand = std::make_shared<nActionCommand>(pMessage);
-        IMEBRA_LOG_INFO("Received N-ACTION command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received N-ACTION command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
         break;
     case dimseCommandType_t::nEventReport:
         pCommand = std::make_shared<nEventReportCommand>(pMessage);
-        IMEBRA_LOG_INFO("Received N-EVENTREPORT command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received N-EVENTREPORT command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
         break;
     case dimseCommandType_t::nGet:
         pCommand = std::make_shared<nGetCommand>(pMessage);
-        IMEBRA_LOG_INFO("Received N-GET command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received N-GET command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
         break;
     case dimseCommandType_t::nSet:
         pCommand = std::make_shared<nSetCommand>(pMessage);
-        IMEBRA_LOG_INFO("Received N-SET command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received N-SET command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
         break;
     case dimseCommandType_t::nCreate:
         pCommand = std::make_shared<nCreateCommand>(pMessage);
-        IMEBRA_LOG_INFO("Received N-CREATE command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received N-CREATE command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
         break;
     case dimseCommandType_t::nDelete:
         pCommand = std::make_shared<nDeleteCommand>(pMessage);
-        IMEBRA_LOG_INFO("Received N-DELETE command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received N-DELETE command. ID = " << pCommand->getID() << " Abstract syntax = " << pCommand->getAbstractSyntax());
         break;
     default:
-        IMEBRA_THROW(DimseInvalidCommand, "Invalid command code " << commandType);
+        DICOMHERO_THROW(DimseInvalidCommand, "Invalid command code " << commandType);
     }
 
     pCommand->validate();
 
     return pCommand;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -2187,7 +2187,7 @@ std::shared_ptr<dimseNCommand> dimseService::getCommand()
 //////////////////////////////////////////////////////////////////
 std::shared_ptr<dimseResponse> dimseService::getResponse(std::uint16_t commandID)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<associationMessage> pMessage(m_pAssociation->getResponse(commandID));
 
@@ -2195,7 +2195,7 @@ std::shared_ptr<dimseResponse> dimseService::getResponse(std::uint16_t commandID
 
     if((commandType & 0x8000) == 0)
     {
-        IMEBRA_THROW(DimseInvalidCommand, "Was expecting a response but received a command " << commandType);
+        DICOMHERO_THROW(DimseInvalidCommand, "Was expecting a response but received a command " << commandType);
     }
 
     std::shared_ptr<dimseResponse> pResponse;
@@ -2203,57 +2203,57 @@ std::shared_ptr<dimseResponse> dimseService::getResponse(std::uint16_t commandID
     {
     case dimseCommandType_t::cStore:
         pResponse = std::make_shared<cStoreResponse>(pMessage);
-        IMEBRA_LOG_INFO("Received C-STORE response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received C-STORE response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
         break;
     case dimseCommandType_t::cMove:
         pResponse = std::make_shared<cMoveResponse>(pMessage);
-        IMEBRA_LOG_INFO("Received C-MOVE response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received C-MOVE response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
         break;
     case dimseCommandType_t::cGet:
         pResponse = std::make_shared<cGetResponse>(pMessage);
-        IMEBRA_LOG_INFO("Received C-GET response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received C-GET response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
         break;
     case dimseCommandType_t::cFind:
         pResponse = std::make_shared<cFindResponse>(pMessage);
-        IMEBRA_LOG_INFO("Received C-FIND response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received C-FIND response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
         break;
     case dimseCommandType_t::cEcho:
         pResponse = std::make_shared<cEchoResponse>(pMessage);
-        IMEBRA_LOG_INFO("Received C-ECHO response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received C-ECHO response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
         break;
     case dimseCommandType_t::nAction:
         pResponse = std::make_shared<nActionResponse>(pMessage);
-        IMEBRA_LOG_INFO("Received N-ACTION response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received N-ACTION response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
         break;
     case dimseCommandType_t::nEventReport:
         pResponse = std::make_shared<nEventReportResponse>(pMessage);
-        IMEBRA_LOG_INFO("Received N-EVENTREPORT response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received N-EVENTREPORT response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
         break;
     case dimseCommandType_t::nGet:
         pResponse = std::make_shared<nGetResponse>(pMessage);
-        IMEBRA_LOG_INFO("Received N-GET response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received N-GET response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
         break;
     case dimseCommandType_t::nSet:
         pResponse = std::make_shared<nSetResponse>(pMessage);
-        IMEBRA_LOG_INFO("Received N-SET response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received N-SET response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
         break;
     case dimseCommandType_t::nCreate:
         pResponse = std::make_shared<nCreateResponse>(pMessage);
-        IMEBRA_LOG_INFO("Received N-CREATE response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received N-CREATE response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
         break;
     case dimseCommandType_t::nDelete:
         pResponse = std::make_shared<nDeleteResponse>(pMessage);
-        IMEBRA_LOG_INFO("Received N-DELETE response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
+        DICOMHERO_LOG_INFO("Received N-DELETE response. Command ID = " << pResponse->getMessageBeingRespondedID() << " Abstract syntax = " << pResponse->getAbstractSyntax());
         break;
     default:
-        IMEBRA_THROW(DimseInvalidCommand, "Invalid response command code " << commandType);
+        DICOMHERO_THROW(DimseInvalidCommand, "Invalid response command code " << commandType);
     }
 
     pResponse->validate();
 
     return pResponse;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -2281,4 +2281,4 @@ void dimseService::sendCommandOrResponse(std::shared_ptr<dimseCommandBase> pComm
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

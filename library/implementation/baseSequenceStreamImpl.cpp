@@ -18,7 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "baseSequenceStreamImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -32,7 +32,7 @@ baseSequenceStreamInput::baseSequenceStreamInput():
 
 size_t baseSequenceStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -66,7 +66,7 @@ size_t baseSequenceStreamInput::read(size_t startPosition, std::uint8_t* pBuffer
 
     return returnBytes;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -78,7 +78,7 @@ baseSequenceStreamOutput::baseSequenceStreamOutput():
 
 void baseSequenceStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -107,12 +107,12 @@ void baseSequenceStreamOutput::write(size_t startPosition, const std::uint8_t* p
 
     m_currentPosition += bufferLength;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 } // namespace implementation
 
 
-} // namespace imebra
+} // namespace dicomhero
 

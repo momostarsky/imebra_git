@@ -19,7 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "baseStreamImpl.h"
 #include <list>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -97,5 +97,5 @@ void streamTimeout::waitTimeout(std::shared_ptr<baseStreamInput> pStream, std::c
 
 }
 
-} // namespace imebra
+} // namespace dicomhero
 

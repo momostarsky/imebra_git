@@ -19,13 +19,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraDataHandler_6F85D344_DEF8_468d_BF73_AC5BB17FD22A__INCLUDED_)
 #define imebraDataHandler_6F85D344_DEF8_468d_BF73_AC5BB17FD22A__INCLUDED_
 
-#include "../include/imebra/definitions.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero/exceptions.h"
 #include "exceptionImpl.h"
 #include <memory>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -458,11 +458,11 @@ protected:
 template <typename stringContainer>
 void validateStringContainer(const stringContainer& strings, size_t maxSize, size_t unitSize, bool bSeparator)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(!bSeparator && strings.size() > 1)
     {
-        IMEBRA_THROW(DataHandlerInvalidDataError, "Multiple strings not allowed");
+        DICOMHERO_THROW(DataHandlerInvalidDataError, "Multiple strings not allowed");
     }
 
     if(unitSize != 0)
@@ -471,7 +471,7 @@ void validateStringContainer(const stringContainer& strings, size_t maxSize, siz
         {
             if(strings.at(scanStrings).size() != unitSize)
             {
-                IMEBRA_THROW(DataHandlerInvalidDataError, "Strings must be " << unitSize << " bytes long");
+                DICOMHERO_THROW(DataHandlerInvalidDataError, "Strings must be " << unitSize << " bytes long");
             }
         }
     }
@@ -482,12 +482,12 @@ void validateStringContainer(const stringContainer& strings, size_t maxSize, siz
         {
             if(strings.at(scanStrings).size() > maxSize)
             {
-                IMEBRA_THROW(DataHandlerInvalidDataError, "Element size is " << strings.at(scanStrings).size() << " but should be maximum " << maxSize << " bytes");
+                DICOMHERO_THROW(DataHandlerInvalidDataError, "Element size is " << strings.at(scanStrings).size() << " but should be maximum " << maxSize << " bytes");
             }
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -495,6 +495,6 @@ void validateStringContainer(const stringContainer& strings, size_t maxSize, siz
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraDataHandler_6F85D344_DEF8_468d_BF73_AC5BB17FD22A__INCLUDED_)

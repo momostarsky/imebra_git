@@ -20,13 +20,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraCharsetConversionWindows_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)
 #define imebraCharsetConversionWindows_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
-#if defined(IMEBRA_USE_WINDOWS_CHARSET)
+#if defined(DICOMHERO_USE_WINDOWS_CHARSET)
 
 #include "charsetConversionBaseImpl.h"
 #include <windows.h>
 
 
-namespace imebra
+namespace dicomhero
 {
 class charsetConversionWindows: public charsetConversionBase
 {
@@ -44,8 +44,8 @@ protected:
 
 typedef charsetConversionWindows defaultCharsetConversion;
 
-} // namespace imebra
+} // namespace dicomhero
 
-#endif // defined(IMEBRA_USE_WINDOWS_CHARSET)
+#endif // defined(DICOMHERO_USE_WINDOWS_CHARSET)
 
 #endif // !defined(imebraCharsetConversionWindows_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

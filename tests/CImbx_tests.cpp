@@ -5,7 +5,7 @@
 #include "testsSettings.h"
 #include <imebra/imebra.h>
 
-#if defined(IMEBRA_LOGGING_LOG4CXX)
+#if defined(DICOMHERO_LOGGING_LOG4CXX)
 #include <log4cxx/logger.h>
 #include <log4cxx/fileappender.h>
 #include <log4cxx/patternlayout.h>
@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 
     ::testing::InitGoogleTest(&argc, argv);
 
-#if defined(IMEBRA_LOGGING_LOG4CXX)
+#if defined(DICOMHERO_LOGGING_LOG4CXX)
     if(!settings.get("--testLogFile").empty())
     {
         ::log4cxx::LayoutPtr testLayout = new ::log4cxx::PatternLayout("%r [%t] %-5p %c - %m%n");

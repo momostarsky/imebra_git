@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <imebra/imebra.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -129,4 +129,4 @@ TEST(bitTransformTest, allocateOutputImage)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

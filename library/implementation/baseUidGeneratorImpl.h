@@ -21,7 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include <string>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -53,7 +53,7 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 #endif // !defined(imebraBaseUidGenerator_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_)

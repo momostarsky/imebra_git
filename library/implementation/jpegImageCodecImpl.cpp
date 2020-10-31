@@ -25,12 +25,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "imageImpl.h"
 #include "dataHandlerNumericImpl.h"
 #include "codecFactoryImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <vector>
 #include <stdlib.h>
 #include <string.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -93,7 +93,7 @@ namespace jpeg
 /////////////////////////////////////////////////////////////////
 void tagDQT::writeTag(streamWriter* pStream, jpegInformation& information) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Read the tag's length
     /////////////////////////////////////////////////////////////////
@@ -166,7 +166,7 @@ void tagDQT::writeTag(streamWriter* pStream, jpegInformation& information) const
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -181,7 +181,7 @@ void tagDQT::writeTag(streamWriter* pStream, jpegInformation& information) const
 /////////////////////////////////////////////////////////////////
 void tagDQT::readTag(streamReader& stream, jpegInformation* pInformation, std::uint8_t /* tagEntry */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // tag dedicated stream (throws if we attempt to read past
     //  the tag bytes)
@@ -222,7 +222,7 @@ void tagDQT::readTag(streamReader& stream, jpegInformation* pInformation, std::u
         pInformation->recalculateQuantizationTables(tablePrecision & 0x0f);
     }
 
-    IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
+    DICOMHERO_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
 
 }
 
@@ -275,15 +275,15 @@ bool jpegImageCodec::canHandleTransferSyntax(const std::string& transferSyntax) 
 ////////////////////////////////////////////////////////////////
 bool jpegImageCodec::encapsulated(const std::string& transferSyntax) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(!canHandleTransferSyntax(transferSyntax))
     {
-        IMEBRA_THROW(CodecWrongTransferSyntaxError, "Cannot handle the transfer syntax");
+        DICOMHERO_THROW(CodecWrongTransferSyntaxError, "Cannot handle the transfer syntax");
     }
     return true;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -333,7 +333,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const std::string& transferSynta
                                                 std::uint8_t /* highBit */,
                                                 std::shared_ptr<streamReader> pSourceStream) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     jpegStreamReader jpegStream(pSourceStream);
 
@@ -347,7 +347,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const std::string& transferSynta
     }
     catch(StreamEOFError&)
     {
-        IMEBRA_THROW(CodecWrongFormatError, "Jpeg signature not present");
+        DICOMHERO_THROW(CodecWrongFormatError, "Jpeg signature not present");
     }
 
     // If the jpeg signature is wrong, then return an error
@@ -356,7 +356,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const std::string& transferSynta
     const std::uint8_t checkSignature[2]={(std::uint8_t)0xff, (std::uint8_t)0xd8};
     if(::memcmp(jpegSignature, checkSignature, 2) != 0)
     {
-        IMEBRA_THROW(CodecWrongFormatError, "Jpeg signature not valid");
+        DICOMHERO_THROW(CodecWrongFormatError, "Jpeg signature not valid");
     }
 
     // Read until the end of the image is reached
@@ -412,7 +412,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const std::string& transferSynta
                 }
                 else
                 {
-                    IMEBRA_THROW(CodecCorruptedFileError, "End of the jpeg stream found while reading jpeg data");
+                    DICOMHERO_THROW(CodecCorruptedFileError, "End of the jpeg stream found while reading jpeg data");
                 }
             }
             continue;
@@ -514,7 +514,7 @@ std::shared_ptr<image> jpegImageCodec::getImage(const std::string& transferSynta
 
     return copyJpegChannelsToImage(information, b2Complement, colorSpace);
 
-    IMEBRA_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
+    DICOMHERO_FUNCTION_END_MODIFY(StreamEOFError, CodecCorruptedFileError);
 }
 
 
@@ -547,7 +547,7 @@ std::shared_ptr<image> jpegImageCodec::copyJpegChannelsToImage(
         bool b2complement,
         const std::string& colorSpace) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     bitDepth_t depth;
     if(b2complement)
@@ -677,7 +677,7 @@ std::shared_ptr<image> jpegImageCodec::copyJpegChannelsToImage(
 
     return destImage;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -698,7 +698,7 @@ void jpegImageCodec::copyImageToJpegChannels(
         bool bSubSampledX,
         bool bSubSampledY) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string colorSpace = sourceImage->getColorSpace();
     sourceImage->getSize(&information.m_imageWidth, &information.m_imageHeight);
@@ -867,7 +867,7 @@ void jpegImageCodec::copyImageToJpegChannels(
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -891,7 +891,7 @@ void jpegImageCodec::setImage(
         bool bInterleaved,
         bool b2Complement) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     streamWriter* pDestinationStream = pDestStream.get();
 
@@ -960,7 +960,7 @@ void jpegImageCodec::setImage(
 
     writeTag(pDestinationStream, tTagId::eoi, information);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -975,7 +975,7 @@ void jpegImageCodec::setImage(
 ///////////////////////////////////////////////////////////
 void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInformation& information, bool bCalcHuffman) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     information.findMcuSize();
 
@@ -1093,7 +1093,7 @@ void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInfor
         pDestinationStream->resetOutBitsBuffer();
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -1108,7 +1108,7 @@ void jpegImageCodec::writeScan(streamWriter* pDestinationStream, jpeg::jpegInfor
 /////////////////////////////////////////////////////////////////
 inline void jpegImageCodec::readBlock(jpegStreamReader& stream, jpeg::jpegInformation& information, std::int32_t* pBuffer, const std::shared_ptr<jpeg::jpegChannel>& pChannel) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Scan all the requested spectral values
     /////////////////////////////////////////////////////////////////
@@ -1227,7 +1227,7 @@ inline void jpegImageCodec::readBlock(jpegStreamReader& stream, jpeg::jpegInform
     if(information.m_eobRun != 0)
         information.m_eobRun--;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -1242,7 +1242,7 @@ inline void jpegImageCodec::readBlock(jpegStreamReader& stream, jpeg::jpegInform
 /////////////////////////////////////////////////////////////////
 inline void jpegImageCodec::writeBlock(streamWriter* pStream, jpeg::jpegInformation& information, std::int32_t* pBuffer, const std::shared_ptr<jpeg::jpegChannel>& pChannel, bool bCalcHuffman) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(bCalcHuffman)
     {
@@ -1342,7 +1342,7 @@ inline void jpegImageCodec::writeBlock(streamWriter* pStream, jpeg::jpegInformat
     }
     pChannel->m_pActiveHuffmanTableAC->writeHuffmanCode(zero, pStream);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -1704,7 +1704,7 @@ void jpegImageCodec::IDCT(std::int32_t* pIOMatrix, std::array<long long, 64>& pS
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 

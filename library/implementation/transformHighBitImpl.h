@@ -21,9 +21,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "transformImpl.h"
 #include "colorTransformsFactoryImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -76,12 +76,12 @@ public:
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 
         {
-            IMEBRA_FUNCTION_START();
+            DICOMHERO_FUNCTION_START();
 
             if(colorTransforms::colorTransformsFactory::normalizeColorSpace(inputHandlerColorSpace) !=
                colorTransforms::colorTransformsFactory::normalizeColorSpace(outputHandlerColorSpace))
             {
-                IMEBRA_THROW(TransformDifferentColorSpacesError, "The input and output image must have the same color space");
+                DICOMHERO_THROW(TransformDifferentColorSpacesError, "The input and output image must have the same color space");
             }
 
             std::uint32_t numChannels(colorTransforms::colorTransformsFactory::getNumberOfChannels(inputHandlerColorSpace));
@@ -122,7 +122,7 @@ public:
                 }
             }
 
-            IMEBRA_FUNCTION_END();
+            DICOMHERO_FUNCTION_END();
         }
 
 };
@@ -133,6 +133,6 @@ public:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraTransformHighBit_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_)

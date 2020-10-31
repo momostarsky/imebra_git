@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "streamControllerImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -112,7 +112,7 @@ public:
 	///////////////////////////////////////////////////////////
     inline void writeBits(const std::uint32_t buffer, size_t bitsNum)
 	{
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
 		std::uint32_t tempBuffer(buffer);
 
@@ -148,7 +148,7 @@ public:
 
         }
 
-		IMEBRA_FUNCTION_END();
+		DICOMHERO_FUNCTION_END();
 	}
 
 	/// \brief Reset the bit pointer used by writeBits().
@@ -159,7 +159,7 @@ public:
 	///////////////////////////////////////////////////////////
 	inline void resetOutBitsBuffer()
 	{
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
 		if(m_outBitsNum == 0)
 			return;
@@ -169,7 +169,7 @@ public:
 		m_outBitsBuffer = 0;
 		m_outBitsNum = 0;
 
-		IMEBRA_FUNCTION_END();
+		DICOMHERO_FUNCTION_END();
 	}
 
 	/// \brief Write a single byte to the stream, parsing it
@@ -192,7 +192,7 @@ public:
 	///////////////////////////////////////////////////////////
 	inline void writeByte(const std::uint8_t buffer)
 	{
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         if(m_dataBufferCurrent == m_dataBuffer.size())
 		{
@@ -208,7 +208,7 @@ public:
             m_dataBuffer[m_dataBufferCurrent++] = 0;
 		}
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
 private:
@@ -221,7 +221,7 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 #endif // !defined(imebraStreamWriter_2C008538_F046_401C_8C83_2F76E1077DB0__INCLUDED_)

@@ -1,7 +1,7 @@
 #include <imebra/imebra.h>
 #include <gtest/gtest.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -150,5 +150,5 @@ TEST(dateTimeHandlerTest, incompleteDateTimeTest)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero
 

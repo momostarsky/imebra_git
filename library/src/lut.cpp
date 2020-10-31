@@ -11,11 +11,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#include "../include/imebra/lut.h"
+#include "../include/dicomhero/lut.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/LUTImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 LUT::LUT(const std::shared_ptr<implementation::lut>& pLut): m_pLut(pLut)
@@ -26,7 +26,7 @@ LUT::LUT(const LUT& source): m_pLut(getLUTImplementation(source))
 {
 }
 
-const std::shared_ptr<imebra::implementation::lut>& getLUTImplementation(const LUT& lut)
+const std::shared_ptr<dicomhero::implementation::lut>& getLUTImplementation(const LUT& lut)
 {
     return lut.m_pLut;
 }
@@ -42,47 +42,47 @@ std::wstring LUT::getDescription() const
 
 ReadingDataHandlerNumeric LUT::getReadingDataHandler() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return ReadingDataHandlerNumeric(m_pLut->getReadingDataHandler());
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 size_t LUT::getBits() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pLut->getBits();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 size_t LUT:: getSize() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pLut->getSize();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::int32_t LUT::getFirstMapped() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pLut->getFirstMapped();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::uint32_t LUT::getMappedValue(std::int32_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pLut->getMappedValue(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 }

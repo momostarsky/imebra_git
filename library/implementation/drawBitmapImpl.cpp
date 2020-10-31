@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "transformHighBitImpl.h"
 #include "transformsChainImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -37,7 +37,7 @@ drawBitmap::drawBitmap(std::shared_ptr<transforms::transform> transformsChain):
 
 std::shared_ptr<memory> drawBitmap::getBitmap(const std::shared_ptr<const image>& sourceImage, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     size_t memorySize(getBitmap(sourceImage, drawBitmapType, rowAlignBytes, 0, 0));
 
@@ -51,13 +51,13 @@ std::shared_ptr<memory> drawBitmap::getBitmap(const std::shared_ptr<const image>
 
     return bitmapMemory;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
 size_t drawBitmap::getBitmap(const std::shared_ptr<const image>& sourceImage, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, std::uint8_t* pBuffer, size_t bufferSize)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t width, height;
     sourceImage->getSize(&width, &height);
@@ -205,11 +205,11 @@ size_t drawBitmap::getBitmap(const std::shared_ptr<const image>& sourceImage, dr
 
     return memorySize;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

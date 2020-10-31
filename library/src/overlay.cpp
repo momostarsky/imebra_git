@@ -16,15 +16,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/definitions.h"
-#include "../include/imebra/overlay.h"
-#include "../include/imebra/image.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero/overlay.h"
+#include "../include/dicomhero/image.h"
+#include "../include/dicomhero/exceptions.h"
 #include "../implementation/overlayImpl.h"
 #include "../implementation/exceptionImpl.h"
 #include <string>
 
-namespace imebra
+namespace dicomhero
 {
 
 Overlay::Overlay(const Overlay& source): m_pOverlay(getOverlayImplementation(source))
@@ -97,7 +97,7 @@ std::string Overlay::getDescription() const
 
 std::uint32_t Overlay::getROIArea() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_pOverlay->getROIAreaPresent())
     {
@@ -105,15 +105,15 @@ std::uint32_t Overlay::getROIArea() const
     }
     else
     {
-        IMEBRA_THROW(MissingTagError, "ROI Area not present");
+        DICOMHERO_THROW(MissingTagError, "ROI Area not present");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 double Overlay::getROIMean() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_pOverlay->getROIMeanPresent())
     {
@@ -121,15 +121,15 @@ double Overlay::getROIMean() const
     }
     else
     {
-        IMEBRA_THROW(MissingTagError, "ROI Mean not present");
+        DICOMHERO_THROW(MissingTagError, "ROI Mean not present");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 double Overlay::getROIStandardDeviation()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_pOverlay->getROIStandardDeviationPresent())
     {
@@ -137,23 +137,23 @@ double Overlay::getROIStandardDeviation()
     }
     else
     {
-        IMEBRA_THROW(MissingTagError, "ROI Standard Deviation not present");
+        DICOMHERO_THROW(MissingTagError, "ROI Standard Deviation not present");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 const Image Overlay::getImage(std::uint32_t frame) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return Image(m_pOverlay->getImage(frame));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
-Overlay::Overlay(const std::shared_ptr<imebra::implementation::overlay>& pOverlay): m_pOverlay(pOverlay)
+Overlay::Overlay(const std::shared_ptr<dicomhero::implementation::overlay>& pOverlay): m_pOverlay(pOverlay)
 {
 }
 
@@ -224,14 +224,14 @@ void MutableOverlay::setROIStandardDeviation(double standardDeviation)
 
 void MutableOverlay::setImage(std::uint32_t frame, const Image& image)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     getOverlayImplementation(*this)->setImage(frame, getImageImplementation(image));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
-MutableOverlay::MutableOverlay(std::shared_ptr<imebra::implementation::overlay> pOverlay):
+MutableOverlay::MutableOverlay(std::shared_ptr<dicomhero::implementation::overlay> pOverlay):
     Overlay(pOverlay)
 {
 }

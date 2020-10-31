@@ -23,11 +23,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "nullStreamImpl.h"
 #include "streamWriterImpl.h"
 #include "dataHandlerImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <map>
 #include <string>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -119,7 +119,7 @@ std::shared_ptr<directoryRecord> directoryRecord::getFirstChildRecord() const
 ///////////////////////////////////////////////////////////
 void directoryRecord::setNextRecord(std::shared_ptr<directoryRecord> pNextRecord)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(pNextRecord != 0)
     {
@@ -127,7 +127,7 @@ void directoryRecord::setNextRecord(std::shared_ptr<directoryRecord> pNextRecord
     }
     m_pNextRecord = pNextRecord;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -142,7 +142,7 @@ void directoryRecord::setNextRecord(std::shared_ptr<directoryRecord> pNextRecord
 ///////////////////////////////////////////////////////////
 void directoryRecord::setFirstChildRecord(std::shared_ptr<directoryRecord> pFirstChildRecord)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(pFirstChildRecord != 0)
     {
@@ -150,7 +150,7 @@ void directoryRecord::setFirstChildRecord(std::shared_ptr<directoryRecord> pFirs
     }
     m_pFirstChildRecord = pFirstChildRecord;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -165,7 +165,7 @@ void directoryRecord::setFirstChildRecord(std::shared_ptr<directoryRecord> pFirs
 ///////////////////////////////////////////////////////////
 fileParts_t directoryRecord::getFileParts() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     fileParts_t fileParts;
 
@@ -178,7 +178,7 @@ fileParts_t directoryRecord::getFileParts() const
 
     return fileParts;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -193,7 +193,7 @@ fileParts_t directoryRecord::getFileParts() const
 ///////////////////////////////////////////////////////////
 void directoryRecord::setFileParts(const fileParts_t& fileParts)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<handlers::writingDataHandler> filePartsHandler = getRecordDataSet()->getWritingDataHandler(0x0004, 0, 0x1500, 0);
     filePartsHandler->setSize(fileParts.size());
@@ -204,7 +204,7 @@ void directoryRecord::setFileParts(const fileParts_t& fileParts)
         filePartsHandler->setString(bufferIndex++, *scanParts);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -219,11 +219,11 @@ void directoryRecord::setFileParts(const fileParts_t& fileParts)
 ///////////////////////////////////////////////////////////
 std::string directoryRecord::getTypeString() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return getRecordDataSet()->getString(0x0004, 0, 0x1430, 0, 0);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -238,11 +238,11 @@ std::string directoryRecord::getTypeString() const
 ///////////////////////////////////////////////////////////
 void directoryRecord::setTypeString(const std::string& recordType)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     getRecordDataSet()->setString(0x0004, 0, 0x1430, 0, recordType);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -257,7 +257,7 @@ void directoryRecord::setTypeString(const std::string& recordType)
 ///////////////////////////////////////////////////////////
 void directoryRecord::updateOffsets()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Update offset for the next record
     ///////////////////////////////////////////////////////////
@@ -283,7 +283,7 @@ void directoryRecord::updateOffsets()
         m_pFirstChildRecord->updateOffsets();
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -299,11 +299,11 @@ void directoryRecord::updateOffsets()
 ///////////////////////////////////////////////////////////
 void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(this == pStartRecord)
     {
-        IMEBRA_THROW(DicomDirCircularReferenceError, "Circular reference detected");
+        DICOMHERO_THROW(DicomDirCircularReferenceError, "Circular reference detected");
     }
 
     if(m_pNextRecord != 0)
@@ -316,7 +316,7 @@ void directoryRecord::checkCircularReference(directoryRecord* pStartRecord)
         m_pFirstChildRecord->checkCircularReference(pStartRecord);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -367,7 +367,7 @@ dicomDir::dicomDir(): m_pDataSet(std::make_shared<dataSet>("1.2.840.10008.1.2.1"
 dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
     m_pDataSet(pDataSet)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_pDataSet.get() == 0)
     {
@@ -445,7 +445,7 @@ dicomDir::dicomDir(std::shared_ptr<dataSet> pDataSet):
         // Nothing to do
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -495,7 +495,7 @@ std::shared_ptr<dataSet> dicomDir::getDirectoryDataSet() const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<directoryRecord> dicomDir::getNewRecord(const std::string& recordType)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<data> recordsTag(m_pDataSet->getTagCreate(0x0004, 0, 0x1220));
     std::shared_ptr<dataSet> recordDataSet = recordsTag->appendSequenceItem();
@@ -505,7 +505,7 @@ std::shared_ptr<directoryRecord> dicomDir::getNewRecord(const std::string& recor
 
     return newRecord;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -521,7 +521,7 @@ std::shared_ptr<directoryRecord> dicomDir::getNewRecord(const std::string& recor
 ///////////////////////////////////////////////////////////
 std::shared_ptr<dataSet> dicomDir::buildDataSet()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Allocate offset fields
     ///////////////////////////////////////////////////////////
@@ -549,7 +549,7 @@ std::shared_ptr<dataSet> dicomDir::buildDataSet()
 
     return m_pDataSet;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -586,4 +586,4 @@ void dicomDir::setFirstRootRecord(std::shared_ptr<directoryRecord> pFirstRootRec
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

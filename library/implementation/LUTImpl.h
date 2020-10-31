@@ -23,7 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <memory>
 #include "dataHandlerNumericImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -169,6 +169,6 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraLUT_C2D59748_5D38_4b12_BA16_5EC22DA7C0E7__INCLUDED_)

@@ -16,10 +16,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/fileStreamInput.h"
+#include "../include/dicomhero/fileStreamInput.h"
 #include "../implementation/fileStreamImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 FileStreamInput::~FileStreamInput()

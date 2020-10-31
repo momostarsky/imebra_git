@@ -6,7 +6,7 @@
 
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -919,4 +919,4 @@ TEST(objectivec, images)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

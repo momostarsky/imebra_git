@@ -24,10 +24,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataSetImpl.h"
 #include "LUTImpl.h"
 #include "colorTransformsFactoryImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -86,11 +86,11 @@ public:
                     std::uint32_t /* outputHighBit */,
                     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 	{
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
 		if(!colorTransforms::colorTransformsFactory::isMonochrome(inputHandlerColorSpace) || !colorTransforms::colorTransformsFactory::isMonochrome(outputHandlerColorSpace))
 		{
-            IMEBRA_THROW(ModalityVOILUTError, "modalityVOILUT can process only monochromatic images");
+            DICOMHERO_THROW(ModalityVOILUTError, "modalityVOILUT can process only monochromatic images");
 		}
         const inputType* pInputMemory(inputHandlerData);
 		outputType* pOutputMemory(outputHandlerData);
@@ -132,7 +132,7 @@ public:
 			pInputMemory += (inputHandlerWidth - inputWidth);
 			pOutputMemory += (outputHandlerWidth - inputWidth);
 		}
-		IMEBRA_FUNCTION_END();
+		DICOMHERO_FUNCTION_END();
 	}
 
     virtual bool isEmpty() const override;
@@ -159,6 +159,6 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraModalityVOILUT_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_)

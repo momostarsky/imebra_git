@@ -24,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <type_traits>
 #include <numeric>
 #include <string>
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include "exceptionImpl.h"
 #include "dataHandlerImpl.h"
 #include "memoryImpl.h"
@@ -32,7 +32,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -155,10 +155,10 @@ protected:
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief This data handler accesses to the numeric data
-///         stored in a imebra::implementation::buffer class.
+///         stored in a dicomhero::implementation::buffer class.
 ///
 /// A special definition of this class
-///  (imebra::implementation::handlers::imageHandler) is used
+///  (dicomhero::implementation::handlers::imageHandler) is used
 ///  to access to the images' raw pixels.
 ///
 ///////////////////////////////////////////////////////////
@@ -197,7 +197,7 @@ public:
     {
         if(index >= getSize())
         {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+            DICOMHERO_THROW(MissingItemError, "Missing item " << index);
         }
 
         return reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
@@ -212,7 +212,7 @@ public:
     {
         if(index >= getSize())
         {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+            DICOMHERO_THROW(MissingItemError, "Missing item " << index);
         }
 
         return static_cast<U>(reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index]);
@@ -227,13 +227,13 @@ public:
     {
         if(index >= getSize())
         {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+            DICOMHERO_THROW(MissingItemError, "Missing item " << index);
         }
 
         dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
         if(temp < std::numeric_limits<U>::lowest() || temp > std::numeric_limits<U>::max())
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
         }
 
         return static_cast<U>(temp);
@@ -250,13 +250,13 @@ public:
     {
         if(index >= getSize())
         {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+            DICOMHERO_THROW(MissingItemError, "Missing item " << index);
         }
 
         dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
         if(temp > static_cast<dataHandlerType>(std::numeric_limits<U>::max()))
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to an integer with lower precision (out of range)")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert to an integer with lower precision (out of range)")
         }
 
         return static_cast<U>(temp);
@@ -273,13 +273,13 @@ public:
     {
         if(index >= getSize())
         {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+            DICOMHERO_THROW(MissingItemError, "Missing item " << index);
         }
 
         dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
         if(temp < 0 || temp > static_cast<dataHandlerType>(std::numeric_limits<U>::max()))
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to an integer with lower precision (out of range)")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert to an integer with lower precision (out of range)")
         }
 
         return static_cast<U>(temp);
@@ -296,13 +296,13 @@ public:
     {
         if(index >= getSize())
         {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+            DICOMHERO_THROW(MissingItemError, "Missing item " << index);
         }
 
         dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
         if(temp < 0)
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert a signed integer to an unsigned integer")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert a signed integer to an unsigned integer")
         }
 
         return static_cast<U>(temp);
@@ -319,13 +319,13 @@ public:
     {
         if(index >= getSize())
         {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+            DICOMHERO_THROW(MissingItemError, "Missing item " << index);
         }
 
         dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
         if(temp > static_cast<dataHandlerType>(std::numeric_limits<U>::max()))
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert an unsigned integer to a signed integer")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert an unsigned integer to a signed integer")
         }
 
         return static_cast<U>(temp);
@@ -343,13 +343,13 @@ public:
     {
         if(index >= getSize())
         {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+            DICOMHERO_THROW(MissingItemError, "Missing item " << index);
         }
 
         dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
         if(temp < 0)
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to an unsigned integer (negative value)")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert to an unsigned integer (negative value)")
         }
 
         return static_cast<U>(temp);
@@ -363,7 +363,7 @@ public:
     {
         if(index >= getSize())
         {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+            DICOMHERO_THROW(MissingItemError, "Missing item " << index);
         }
 
         return static_cast<U>(reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index]);
@@ -377,13 +377,13 @@ public:
     {
         if(index >= getSize())
         {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+            DICOMHERO_THROW(MissingItemError, "Missing item " << index);
         }
 
         dataHandlerType temp = reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index];
         if(temp < static_cast<dataHandlerType>(std::numeric_limits<U>::lowest()) || temp > static_cast<dataHandlerType>(std::numeric_limits<U>::max()))
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
         }
 
         return static_cast<U>(temp);
@@ -393,127 +393,127 @@ public:
     ///////////////////////////////////////////////////////////
     virtual std::int32_t getInt32(const size_t index) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         return getValue<std::int32_t>(index);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Retrieve the data element an unsigned long
     ///////////////////////////////////////////////////////////
     virtual std::uint32_t getUint32(const size_t index) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         return getValue<std::uint32_t>(index);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Retrieve the data element as std::int16_t
     ///////////////////////////////////////////////////////////
     virtual std::int16_t getInt16(const size_t index) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         return getValue<std::int16_t>(index);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Retrieve the data element an std::uint16_t
     ///////////////////////////////////////////////////////////
     virtual std::uint16_t getUint16(const size_t index) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         return getValue<std::uint16_t>(index);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Retrieve the data element as std::int16_t
     ///////////////////////////////////////////////////////////
     virtual std::int8_t getInt8(const size_t index) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         return getValue<std::int8_t>(index);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Retrieve the data element an std::uint16_t
     ///////////////////////////////////////////////////////////
     virtual std::uint8_t getUint8(const size_t index) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         return getValue<std::uint8_t>(index);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Retrieve the data element as a double
     ///////////////////////////////////////////////////////////
     virtual double getDouble(const size_t index) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         return getValue<double>(index);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Retrieve the data element as a double
     ///////////////////////////////////////////////////////////
     virtual float getFloat(const size_t index) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         return getValue<float>(index);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Retrieve the data element as a string
     ///////////////////////////////////////////////////////////
     virtual std::string getString(const size_t index) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         if(index >= getSize())
         {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+            DICOMHERO_THROW(MissingItemError, "Missing item " << index);
         }
 
         return std::to_string(+(reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index]));
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Retrieve the data element as a unicode string
     ///////////////////////////////////////////////////////////
     virtual std::wstring getUnicodeString(const size_t index) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         if(index >= getSize())
         {
-            IMEBRA_THROW(MissingItemError, "Missing item " << index);
+            DICOMHERO_THROW(MissingItemError, "Missing item " << index);
         }
 
         return std::to_wstring(+(reinterpret_cast<const dataHandlerType*>(m_pMemory->data())[index]));
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Retrieve the buffer's size in elements
     ///////////////////////////////////////////////////////////
     virtual size_t getSize() const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         if(m_pMemory.get() == 0)
         {
@@ -521,79 +521,79 @@ public:
         }
         return m_pMemory->size() / sizeof(dataHandlerType);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyTo(std::uint8_t* pMemory, size_t memorySize) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyTo(std::int8_t* pMemory, size_t memorySize) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyTo(std::uint16_t* pMemory, size_t memorySize) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyTo(std::int16_t* pMemory, size_t memorySize) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyTo(std::uint32_t* pMemory, size_t memorySize) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyTo(std::int32_t* pMemory, size_t memorySize) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyTo(float* pMemory, size_t memorySize) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyTo(double* pMemory, size_t memorySize) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyToMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
 
@@ -645,7 +645,7 @@ public:
                                         std::uint32_t sourceHeight,
                                         std::uint32_t sourceNumChannels) const override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         if(sourceStartCol >= sourceWidth || sourceStartRow >= sourceHeight)
         {
@@ -702,14 +702,14 @@ public:
             }
         }
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
 protected:
     template<class destHandlerType>
     void copyToMemory(destHandlerType* pDestination, size_t destSize) const
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         if(getSize() < destSize)
         {
@@ -724,7 +724,7 @@ protected:
             }
         }
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 };
 
@@ -801,7 +801,7 @@ public:
     {
         if(value < std::numeric_limits<dataHandlerType>::lowest() || value > std::numeric_limits<dataHandlerType>::max())
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
         }
 
         if(index >= getSize())
@@ -825,7 +825,7 @@ public:
     {
         if(value > static_cast<U>(std::numeric_limits<dataHandlerType>::max()))
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
         }
 
         if(index >= getSize())
@@ -850,7 +850,7 @@ public:
     {
         if(value < 0 || value > static_cast<U>(std::numeric_limits<dataHandlerType>::max()))
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert to lower precision (out of range)")
         }
 
         if(index >= getSize())
@@ -874,7 +874,7 @@ public:
     {
         if(value < 0)
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert a signed integer to an unsigned integer")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert a signed integer to an unsigned integer")
         }
 
         if(index >= getSize())
@@ -898,7 +898,7 @@ public:
     {
         if(value > static_cast<U>(std::numeric_limits<dataHandlerType>::max()))
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert an unsigned integer to a signed integer")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert an unsigned integer to a signed integer")
         }
 
         if(index >= getSize())
@@ -922,7 +922,7 @@ public:
     {
         if(value < 0)
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to an unsigned integer (negative value)")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert to an unsigned integer (negative value)")
         }
 
         if(index >= getSize())
@@ -959,7 +959,7 @@ public:
     {
         if(value < static_cast<U>(std::numeric_limits<dataHandlerType>::lowest()) || value > static_cast<U>(std::numeric_limits<dataHandlerType>::max()))
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert to an unsigned integer (negative value)")
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert to an unsigned integer (negative value)")
         }
 
         if(index >= getSize())
@@ -974,88 +974,88 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setInt32(const size_t index, const std::int32_t value) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         setValue<std::int32_t>(index, value);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Set the data element as a std::uint32_t
     ///////////////////////////////////////////////////////////
     virtual void setUint32(const size_t index, const std::uint32_t value) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         setValue<std::uint32_t>(index, value);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Set the data element as a std::int16_t
     ///////////////////////////////////////////////////////////
     virtual void setInt16(const size_t index, const std::int16_t value) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         setValue<std::int16_t>(index, value);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Set the data element as a std::uint16_t
     ///////////////////////////////////////////////////////////
     virtual void setUint16(const size_t index, const std::uint16_t value) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         setValue<std::uint16_t>(index, value);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Set the data element as a std::int8_t
     ///////////////////////////////////////////////////////////
     virtual void setInt8(const size_t index, const std::int8_t value) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         setValue<std::int8_t>(index, value);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Set the data element as a std::uint8_t
     ///////////////////////////////////////////////////////////
     virtual void setUint8(const size_t index, const std::uint8_t value) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         setValue<std::uint8_t>(index, value);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Set the data element as a double
     ///////////////////////////////////////////////////////////
     virtual void setDouble(const size_t index, const double value) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         setValue<double>(index, value);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Set the data element as a float
     ///////////////////////////////////////////////////////////
     virtual void setFloat(const size_t index, const float value) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         setValue<float>(index, value);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     template<class S, typename U = dataHandlerType>
@@ -1070,11 +1070,11 @@ public:
         }
         catch (const std::out_of_range& )
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the string to a number (out of range)");
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert the string to a number (out of range)");
         }
         catch(const std::invalid_argument& )
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the string to a number");
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert the string to a number");
         }
     }
 
@@ -1090,11 +1090,11 @@ public:
         }
         catch (const std::out_of_range& )
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the string to a number (out of range)");
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert the string to a number (out of range)");
         }
         catch(const std::invalid_argument& )
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the string to a number");
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert the string to a number");
         }
     }
 
@@ -1108,11 +1108,11 @@ public:
         }
         catch (const std::out_of_range& )
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the string to a number (out of range)");
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert the string to a number (out of range)");
         }
         catch(const std::invalid_argument& )
         {
-            IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the string to a number");
+            DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert the string to a number");
         }
     }
 
@@ -1120,94 +1120,94 @@ public:
     ///////////////////////////////////////////////////////////
     virtual void setString(const size_t index, const std::string& value) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         setStringConvert<std::string>(index, value);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     // Set the data element as an unicode string
     ///////////////////////////////////////////////////////////
     virtual void setUnicodeString(const size_t index, const std::wstring& value) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         setStringConvert<std::wstring>(index, value);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyFrom(const std::uint8_t* pMemory, size_t memorySize) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyFromMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyFrom(const std::int8_t* pMemory, size_t memorySize) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyFromMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyFrom(const std::uint16_t* pMemory, size_t memorySize) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyFromMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyFrom(const std::int16_t* pMemory, size_t memorySize) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyFromMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyFrom(const std::uint32_t* pMemory, size_t memorySize) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyFromMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyFrom(const std::int32_t* pMemory, size_t memorySize) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyFromMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyFrom(const float* pMemory, size_t memorySize) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyFromMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual void copyFrom(const double* pMemory, size_t memorySize) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         copyFromMemory(pMemory, memorySize);
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     template<int subsampleX>
@@ -1223,7 +1223,7 @@ public:
         std::uint32_t destHeight,
         std::uint32_t destNumChannels)
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         dataHandlerType *pDestRowScan = &(((dataHandlerType*)m_pMemory->data())[(destStartRow*destWidth+destStartCol)*destNumChannels+destStartChannel]);
         const std::int32_t* pSourceRowScan = pSource;
@@ -1264,7 +1264,7 @@ public:
             }
         }
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
 
@@ -1281,7 +1281,7 @@ public:
         std::uint32_t destHeight,
         std::uint32_t destNumChannels)
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         dataHandlerType* pDestRowScan = &(((dataHandlerType*)m_pMemory->data())[(destStartRow * destWidth + destStartCol) * destNumChannels + destStartChannel]);
         const std::int32_t* pSourceRowScan = pSource;
@@ -1333,7 +1333,7 @@ public:
             }
         }
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
 
@@ -1385,7 +1385,7 @@ public:
                                           std::uint32_t destHeight,
                                           std::uint32_t destNumChannels) override
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         if(destStartCol >= destWidth || destStartRow >= destHeight)
         {
@@ -1434,10 +1434,10 @@ public:
                         destNumChannels);
             break;
         default:
-            IMEBRA_THROW(std::logic_error, "Invalid subsampling factor");
+            DICOMHERO_THROW(std::logic_error, "Invalid subsampling factor");
         }
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
 protected:
@@ -1452,7 +1452,7 @@ protected:
     template<class sourceHandlerType>
     void copyFromMemory(const sourceHandlerType* pSource, size_t sourceSize)
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         setSize(sourceSize);
         dataHandlerType* pDest((dataHandlerType*)m_pMemory->data());
@@ -1461,7 +1461,7 @@ protected:
             *(pDest++) = (dataHandlerType)*(pSource++);
         }
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
 
@@ -1538,41 +1538,41 @@ typedef writingDataHandlerNumeric<double> writingDataHandlerDouble;
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #define HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(functionName, handlerPointer, ...)\
 {\
-    IMEBRA_FUNCTION_START();\
-    imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(handlerPointer.get()); \
-    if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>)) \
+    DICOMHERO_FUNCTION_START();\
+    dicomhero::implementation::handlers::readingDataHandlerNumericBase* pHandler(handlerPointer.get()); \
+    if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<std::uint8_t>)) \
     {\
         functionName<std::uint8_t> ((std::uint8_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int8_t>))\
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<std::int8_t>))\
     {\
         functionName<std::int8_t> ((std::int8_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint16_t>))\
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<std::uint16_t>))\
     {\
         functionName<std::uint16_t> ((std::uint16_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int16_t>))\
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<std::int16_t>))\
     {\
         functionName<std::int16_t> ((std::int16_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::uint32_t>))\
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<std::uint32_t>))\
     {\
         functionName<std::uint32_t> ((std::uint32_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
-    else if(typeid(*pHandler) == typeid(imebra::implementation::handlers::readingDataHandlerNumeric<std::int32_t>))\
+    else if(typeid(*pHandler) == typeid(dicomhero::implementation::handlers::readingDataHandlerNumeric<std::int32_t>))\
     {\
         functionName<std::int32_t> ((std::int32_t*)handlerPointer->getMemoryBuffer(), handlerPointer->getSize(), __VA_ARGS__);\
     }\
     else\
     {\
-        IMEBRA_THROW(std::runtime_error, "Data type not valid");\
+        DICOMHERO_THROW(std::runtime_error, "Data type not valid");\
     }\
-    IMEBRA_FUNCTION_END();\
+    DICOMHERO_FUNCTION_END();\
 }
 
 

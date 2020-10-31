@@ -23,13 +23,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "dataHandlerNumericImpl.h"
 #include "streamControllerImpl.h"
-#include "../include/imebra/definitions.h"
+#include "../include/dicomhero/definitions.h"
 
 #include <map>
 #include <vector>
 #include <mutex>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -364,6 +364,6 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraData_20A41D11_C650_410b_B3AA_CD5B3FF63222__INCLUDED_)

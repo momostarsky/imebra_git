@@ -20,9 +20,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "transformImpl.h"
 #include "imageImpl.h"
 #include "transformHighBitImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -65,7 +65,7 @@ void transform::runTransform(
             const std::shared_ptr<image>& outputImage,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t inputImageWidth, inputImageHeight;
     inputImage->getSize(&inputImageWidth, &inputImageHeight);
@@ -77,7 +77,7 @@ void transform::runTransform(
         outputTopLeftX + inputWidth > outputImageWidth ||
         outputTopLeftY + inputHeight > outputImageHeight)
     {
-        IMEBRA_THROW(TransformInvalidAreaError, "The input and/or output areas are invalid");
+        DICOMHERO_THROW(TransformInvalidAreaError, "The input and/or output areas are invalid");
     }
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> inputHandler(inputImage->getReadingDataHandler());
@@ -107,7 +107,7 @@ void transform::runTransform(
         outputHandler, outputDepth, outputImageWidth, outputColorSpace, outputPalette, outputHighBit,
 		outputTopLeftX, outputTopLeftY);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -117,4 +117,4 @@ void transform::runTransform(
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

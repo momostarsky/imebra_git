@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -682,5 +682,5 @@ TEST(numericHandlerTest, testAT)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero
 

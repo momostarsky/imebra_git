@@ -15,60 +15,60 @@ If you do not want to be bound by the GPL terms (such as the requirement
     \brief Implementation of the class ColorTransformsFactory.
 */
 
-#include "../include/imebra/colorTransformsFactory.h"
+#include "../include/dicomhero/colorTransformsFactory.h"
 #include "../implementation/colorTransformsFactoryImpl.h"
-#include "../include/imebra/exceptions.h"
-namespace imebra
+#include "../include/dicomhero/exceptions.h"
+namespace dicomhero
 {
 
 std::string ColorTransformsFactory::normalizeColorSpace(const std::string& colorSpace)
 {
-    return imebra::implementation::transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(colorSpace);
+    return dicomhero::implementation::transforms::colorTransforms::colorTransformsFactory::normalizeColorSpace(colorSpace);
 }
 
 bool ColorTransformsFactory::isMonochrome(const std::string& colorSpace)
 {
-    return imebra::implementation::transforms::colorTransforms::colorTransformsFactory::isMonochrome(colorSpace);
+    return dicomhero::implementation::transforms::colorTransforms::colorTransformsFactory::isMonochrome(colorSpace);
 }
 
 bool ColorTransformsFactory::isSubsampledX(const std::string& colorSpace)
 {
-    return imebra::implementation::transforms::colorTransforms::colorTransformsFactory::isSubsampledX(colorSpace);
+    return dicomhero::implementation::transforms::colorTransforms::colorTransformsFactory::isSubsampledX(colorSpace);
 }
 
 bool ColorTransformsFactory::isSubsampledY(const std::string& colorSpace)
 {
-    return imebra::implementation::transforms::colorTransforms::colorTransformsFactory::isSubsampledY(colorSpace);
+    return dicomhero::implementation::transforms::colorTransforms::colorTransformsFactory::isSubsampledY(colorSpace);
 }
 
 bool ColorTransformsFactory::canSubsample(const std::string& colorSpace)
 {
-    return imebra::implementation::transforms::colorTransforms::colorTransformsFactory::canSubsample(colorSpace);
+    return dicomhero::implementation::transforms::colorTransforms::colorTransformsFactory::canSubsample(colorSpace);
 }
 
 std::string ColorTransformsFactory::makeSubsampled(const std::string& colorSpace, bool bSubsampleX, bool bSubsampleY)
 {
-    return imebra::implementation::transforms::colorTransforms::colorTransformsFactory::makeSubsampled(colorSpace, bSubsampleX, bSubsampleY);
+    return dicomhero::implementation::transforms::colorTransforms::colorTransformsFactory::makeSubsampled(colorSpace, bSubsampleX, bSubsampleY);
 }
 
 std::uint32_t ColorTransformsFactory::getNumberOfChannels(const std::string& colorSpace)
 {
-    return imebra::implementation::transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(colorSpace);
+    return dicomhero::implementation::transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(colorSpace);
 }
 
 Transform ColorTransformsFactory::getTransform(const std::string& startColorSpace, const std::string& endColorSpace)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    std::shared_ptr<imebra::implementation::transforms::colorTransforms::colorTransformsFactory> factory(imebra::implementation::transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
+    std::shared_ptr<dicomhero::implementation::transforms::colorTransforms::colorTransformsFactory> factory(dicomhero::implementation::transforms::colorTransforms::colorTransformsFactory::getColorTransformsFactory());
     Transform transform(factory->getTransform(startColorSpace, endColorSpace));
     if(transform.m_pTransform == 0)
     {
-        IMEBRA_THROW(ColorTransformsFactoryNoTransformError, "There is no color transform that can convert between the specified color spaces " << startColorSpace << " and " << endColorSpace);
+        DICOMHERO_THROW(ColorTransformsFactoryNoTransformError, "There is no color transform that can convert between the specified color spaces " << startColorSpace << " and " << endColorSpace);
     }
     return transform;
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 }

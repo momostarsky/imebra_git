@@ -23,7 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <math.h>
 #include <limits>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -46,7 +46,7 @@ modalityVOILUT::modalityVOILUT(std::shared_ptr<const dataSet> pDataSet):
         m_pDataSet(pDataSet), m_voiLut(0), m_rescaleIntercept(pDataSet->getDouble(0x0028, 0, 0x1052, 0, 0, 0)), m_rescaleSlope(1.0), m_bEmpty(true)
 
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     try
     {
@@ -67,7 +67,7 @@ modalityVOILUT::modalityVOILUT(std::shared_ptr<const dataSet> pDataSet):
 
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 bool modalityVOILUT::isEmpty() const
@@ -83,11 +83,11 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
         std::shared_ptr<palette> /* inputPalette */,
         std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(!colorTransforms::colorTransformsFactory::isMonochrome(inputColorSpace))
     {
-        IMEBRA_THROW(ModalityVOILUTError, "modalityVOILUT can process only monochromatic images");
+        DICOMHERO_THROW(ModalityVOILUTError, "modalityVOILUT can process only monochromatic images");
     }
 
     if(isEmpty())
@@ -162,7 +162,7 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
 
     return std::make_shared<image>(outputWidth, outputHeight, bitDepth_t::depthS32, inputColorSpace, 31);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -171,4 +171,4 @@ std::shared_ptr<image> modalityVOILUT::allocateOutputImage(
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

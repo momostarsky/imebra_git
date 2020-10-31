@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <imebra/imebra.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -161,5 +161,5 @@ TEST(streamTest, testTimeout1)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero
 

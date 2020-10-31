@@ -27,7 +27,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <list>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -93,7 +93,7 @@ public:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // JPEG2000
 

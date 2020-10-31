@@ -17,14 +17,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #include "configurationImpl.h"
-#if defined(IMEBRA_USE_ICU)
+#if defined(DICOMHERO_USE_ICU)
 
 #include "exceptionImpl.h"
 #include "charsetConversionICUImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <memory>
 
-namespace imebra
+namespace dicomhero
 {
 
 ///////////////////////////////////////////////////////////
@@ -34,7 +34,7 @@ namespace imebra
 ///////////////////////////////////////////////////////////
 charsetConversionICU::charsetConversionICU(const std::string& dicomName)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     UErrorCode errorCode(U_ZERO_ERROR);
     const charsetInformation& info = getDictionary().getCharsetInformation(dicomName);
@@ -42,15 +42,15 @@ charsetConversionICU::charsetConversionICU(const std::string& dicomName)
     m_pIcuConverter = ucnv_open(info.m_isoRegistration.c_str(), &errorCode);
     if(U_FAILURE(errorCode))
     {
-        IMEBRA_THROW(CharsetConversionNoSupportedTableError, "ICU library returned error " << errorCode << " for table " << dicomName);
+        DICOMHERO_THROW(CharsetConversionNoSupportedTableError, "ICU library returned error " << errorCode << " for table " << dicomName);
     }
     ucnv_setSubstChars(m_pIcuConverter, "?", 1, &errorCode);
     if(U_FAILURE(errorCode))
     {
-        IMEBRA_THROW(CharsetConversionNoSupportedTableError, "ICU library returned error " << errorCode << " while setting the substitution char for table " << dicomName);
+        DICOMHERO_THROW(CharsetConversionNoSupportedTableError, "ICU library returned error " << errorCode << " while setting the substitution char for table " << dicomName);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -73,7 +73,7 @@ charsetConversionICU::~charsetConversionICU()
 ///////////////////////////////////////////////////////////
 std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
 	if(unicodeString.empty())
 	{
@@ -97,7 +97,7 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
     unicodeStringConversion.extract(&(returnString[0]), conversionLength, m_pIcuConverter, errorCode);
     if(U_FAILURE(errorCode))
     {
-        IMEBRA_THROW(CharsetConversionError, "ICU library returned error " << errorCode);
+        DICOMHERO_THROW(CharsetConversionError, "ICU library returned error " << errorCode);
     }
     if(returnString == "?" && unicodeString != L"?")
     {
@@ -105,7 +105,7 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
     }
     return returnString;
 
-	IMEBRA_FUNCTION_END();
+	DICOMHERO_FUNCTION_END();
 }
 
 
@@ -116,7 +116,7 @@ std::string charsetConversionICU::fromUnicode(const std::wstring& unicodeString)
 ///////////////////////////////////////////////////////////
 std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
 	if(asciiString.empty())
 	{
@@ -143,12 +143,12 @@ std::wstring charsetConversionICU::toUnicode(const std::string& asciiString) con
     }
     }
 
-	IMEBRA_FUNCTION_END();
+	DICOMHERO_FUNCTION_END();
 }
 
 
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 

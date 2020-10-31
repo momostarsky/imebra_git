@@ -16,17 +16,17 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#if defined(IMEBRA_USE_JAVA)
+#if defined(DICOMHERO_USE_JAVA)
 
 #include "configurationImpl.h"
 #include "streamControllerImpl.h"
 
 #include "exceptionImpl.h"
 #include "charsetConversionJavaImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <memory.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 JavaVM* m_javaVM = 0;
@@ -77,7 +77,7 @@ charsetConversionJava::~charsetConversionJava()
 ///////////////////////////////////////////////////////////
 std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(unicodeString.empty())
     {
@@ -95,7 +95,7 @@ std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString
 
     return bytes;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -106,7 +106,7 @@ std::string charsetConversionJava::fromUnicode(const std::wstring& unicodeString
 ///////////////////////////////////////////////////////////
 std::wstring charsetConversionJava::toUnicode(const std::string& asciiString) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(asciiString.empty())
     {
@@ -127,13 +127,13 @@ std::wstring charsetConversionJava::toUnicode(const std::string& asciiString) co
 
     return returnValue;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 javaJNIWrapper::javaJNIWrapper()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // double check it's all ok
     int getEnvStat = m_javaVM->GetEnv((void **)&m_pEnv, JNI_VERSION_1_6);
@@ -155,7 +155,7 @@ javaJNIWrapper::javaJNIWrapper()
     }
     else
     {
-        IMEBRA_THROW(std::runtime_error, "Cannot retrieve Java Environment");
+        DICOMHERO_THROW(std::runtime_error, "Cannot retrieve Java Environment");
     }
 
         // Get all the needed classes and methods
@@ -192,7 +192,7 @@ javaJNIWrapper::javaJNIWrapper()
     m_class_java_nio_CodingErrorAction.set(m_pEnv, m_pEnv->FindClass("java/nio/charset/CodingErrorAction"));
     m_MID_CodingErrorAction_IGNORE = m_pEnv->GetStaticFieldID(m_class_java_nio_CodingErrorAction.m_pObject, "IGNORE", "Ljava/nio/charset/CodingErrorAction;");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 javaJNIWrapper::~javaJNIWrapper()
@@ -280,7 +280,7 @@ jobject charsetConversionJava::getCharset(javaJNIWrapper& javaEnv, const char* t
     javaObjectWrapper<jstring> jTableName(javaEnv.m_pEnv, javaEnv.m_pEnv->NewStringUTF(tableName));
     if(!javaEnv.m_pEnv->CallStaticBooleanMethod(javaEnv.m_class_java_nio_Charset.m_pObject, javaEnv.m_MID_Charset_isSupported, jTableName.m_pObject))
     {
-        IMEBRA_THROW(CharsetConversionNoSupportedTableError, "Table " << m_dicomName << " not supported by the system");
+        DICOMHERO_THROW(CharsetConversionNoSupportedTableError, "Table " << m_dicomName << " not supported by the system");
     }
 
     return javaEnv.m_pEnv->CallStaticObjectMethod(javaEnv.m_class_java_nio_Charset.m_pObject, javaEnv.m_MID_Charset_init, jTableName.m_pObject);
@@ -315,6 +315,6 @@ jobject charsetConversionJava::getEncoder(javaJNIWrapper& javaEnv, jobject pChar
 
 
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif

@@ -29,7 +29,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <codecvt>
 #include <cstring>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -164,11 +164,11 @@ void overlay::setROIStandardDeviation(double roiStandardDeviation)
 
 void overlay::setImage(std::uint32_t frame, const std::shared_ptr<const image>& pImage)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(frame != m_framesCount)
     {
-        IMEBRA_THROW(std::logic_error, "Overlays must be stored in order (first frame 0, then frame 1, ...)");
+        DICOMHERO_THROW(std::logic_error, "Overlays must be stored in order (first frame 0, then frame 1, ...)");
     }
 
     std::shared_ptr<memory> uncompressedImage(std::make_shared<memory>());
@@ -186,7 +186,7 @@ void overlay::setImage(std::uint32_t frame, const std::shared_ptr<const image>& 
         pImage->getSize(&width, &height);
         if(m_width != width || m_height != height)
         {
-            IMEBRA_THROW(DataSetDifferentFormatError, "An image already exists in the overlay and has different attributes");
+            DICOMHERO_THROW(DataSetDifferentFormatError, "An image already exists in the overlay and has different attributes");
         }
     }
 
@@ -235,7 +235,7 @@ void overlay::setImage(std::uint32_t frame, const std::shared_ptr<const image>& 
 
     m_framesCount = frame + 1;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::uint32_t overlay::getFirstFrame() const
@@ -330,11 +330,11 @@ bool overlay::getROIStandardDeviationPresent() const
 
 std::shared_ptr<image> overlay::getImage(std::uint32_t frameNumber) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(frameNumber >= m_framesCount)
     {
-        IMEBRA_THROW(DataSetImageDoesntExistError, "The requested overlay bitmap does not exist");
+        DICOMHERO_THROW(DataSetImageDoesntExistError, "The requested overlay bitmap does not exist");
     }
 
     size_t imageSizeBits = codecs::dicomNativeImageCodec::getNativeImageSizeBits(1,
@@ -391,7 +391,7 @@ std::shared_ptr<image> overlay::getImage(std::uint32_t frameNumber) const
                         0,
                         pImageStream);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::shared_ptr<buffer> overlay::getBuffer() const
@@ -402,4 +402,4 @@ std::shared_ptr<buffer> overlay::getBuffer() const
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

@@ -15,13 +15,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
     \brief Implementation of the classes ReadingDataHandler & WritingDataHandler.
 */
 
-#include "../include/imebra/writingDataHandlerNumeric.h"
-#include "../include/imebra/readingDataHandlerNumeric.h"
+#include "../include/dicomhero/writingDataHandlerNumeric.h"
+#include "../include/dicomhero/readingDataHandlerNumeric.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include <cstring>
 
-namespace imebra
+namespace dicomhero
 {
 
 WritingDataHandlerNumeric::WritingDataHandlerNumeric(const std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase>& pDataHandler):
@@ -39,41 +39,41 @@ WritingDataHandlerNumeric::~WritingDataHandlerNumeric()
 
 MutableMemory WritingDataHandlerNumeric::getMemory() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
             std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     return MutableMemory(numericDataHandler->getMemory());
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandlerNumeric::assign(const char* source, size_t sourceSize)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
             std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     numericDataHandler->getMemory()->assign((std::uint8_t*) source, sourceSize);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 char* WritingDataHandlerNumeric::data(size_t* pDataSize) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
             std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     *pDataSize = numericDataHandler->getMemorySize();
     return (char*)numericDataHandler->getMemoryBuffer();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 size_t WritingDataHandlerNumeric::data(char* destination, size_t destinationSize) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
             std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
@@ -84,51 +84,51 @@ size_t WritingDataHandlerNumeric::data(char* destination, size_t destinationSize
     }
     return memorySize;
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 size_t WritingDataHandlerNumeric::getUnitSize() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
             std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     return numericDataHandler->getUnitSize();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 bool WritingDataHandlerNumeric::isSigned() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
             std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     return numericDataHandler->isSigned();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 bool WritingDataHandlerNumeric::isFloat() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
             std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     return numericDataHandler->isFloat();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandlerNumeric::copyFrom(const ReadingDataHandlerNumeric& source)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<implementation::handlers::writingDataHandlerNumericBase> numericDataHandler =
             std::dynamic_pointer_cast<implementation::handlers::writingDataHandlerNumericBase>(getWritingDataHandlerImplementation(*this));
     return numericDataHandler->copyFrom(std::dynamic_pointer_cast<implementation::handlers::readingDataHandlerNumericBase>(getReadingDataHandlerImplementation(source)));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 }

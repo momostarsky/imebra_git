@@ -32,18 +32,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #endif
 
 
-#if(!defined IMEBRA_MEMORY_POOL_SLOTS)
-    #define IMEBRA_MEMORY_POOL_SLOTS 256
+#if(!defined DICOMHERO_MEMORY_POOL_SLOTS)
+    #define DICOMHERO_MEMORY_POOL_SLOTS 256
 #endif
-#if(!defined IMEBRA_MEMORY_POOL_MAX_SIZE)
-    #define IMEBRA_MEMORY_POOL_MAX_SIZE 20000000
+#if(!defined DICOMHERO_MEMORY_POOL_MAX_SIZE)
+    #define DICOMHERO_MEMORY_POOL_MAX_SIZE 20000000
 #endif
-#if(!defined IMEBRA_MEMORY_POOL_MIN_SIZE)
-    #define IMEBRA_MEMORY_POOL_MIN_SIZE 1024
+#if(!defined DICOMHERO_MEMORY_POOL_MIN_SIZE)
+    #define DICOMHERO_MEMORY_POOL_MIN_SIZE 1024
 #endif
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -199,7 +199,7 @@ protected:
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 /// \brief Stores unused memory objects (see
-///         \ref imebra::memory) so they can be reused
+///         \ref dicomhero::memory) so they can be reused
 ///         when needed.
 ///
 /// One instance of this class is statically allocated
@@ -248,7 +248,7 @@ public:
 
 protected:
     /// \brief Retrieve a new or reused
-    ///         \ref imebra::memory object.
+    ///         \ref dicomhero::memory object.
     ///
     /// The function look for an unused \ref memory object
     ///  that has a managed string with the same size of the
@@ -282,8 +282,8 @@ protected:
     ///////////////////////////////////////////////////////////
     void reuseMemory(stringUint8* pMemoryToReuse);
 
-    std::array<size_t, IMEBRA_MEMORY_POOL_SLOTS> m_memorySize;
-    std::array<stringUint8*, IMEBRA_MEMORY_POOL_SLOTS>  m_memoryPointer;
+    std::array<size_t, DICOMHERO_MEMORY_POOL_SLOTS> m_memorySize;
+    std::array<stringUint8*, DICOMHERO_MEMORY_POOL_SLOTS>  m_memoryPointer;
 
     size_t m_minMemoryBlockSize;
     size_t m_maxMemoryUsageSize;
@@ -326,6 +326,6 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraMemory_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)

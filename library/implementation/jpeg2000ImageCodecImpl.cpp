@@ -28,7 +28,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "imageImpl.h"
 #include "dataHandlerNumericImpl.h"
 #include "codecFactoryImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <vector>
 #include <stdlib.h>
 #include <string.h>
@@ -40,7 +40,7 @@ extern "C"
 #include <openjpeg.h>
 }
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -207,13 +207,13 @@ opj_stream_t* opj_stream_create_default_memory_stream(opj_memory_stream* p_memor
 /////////////////////////////////////////////////////////////////
 bool jpeg2000ImageCodec::canHandleTransferSyntax(const std::string& transferSyntax) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (
                 transferSyntax == "1.2.840.10008.1.2.4.90" ||
                 transferSyntax == "1.2.840.10008.1.2.4.91");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -229,15 +229,15 @@ bool jpeg2000ImageCodec::canHandleTransferSyntax(const std::string& transferSynt
 ////////////////////////////////////////////////////////////////
 bool jpeg2000ImageCodec::encapsulated(const std::string& transferSyntax) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(!canHandleTransferSyntax(transferSyntax))
     {
-        IMEBRA_THROW(CodecWrongTransferSyntaxError, "Cannot handle the transfer syntax");
+        DICOMHERO_THROW(CodecWrongTransferSyntaxError, "Cannot handle the transfer syntax");
     }
     return true;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -252,11 +252,11 @@ bool jpeg2000ImageCodec::encapsulated(const std::string& transferSyntax) const
 ///////////////////////////////////////////////////////////
 std::uint32_t jpeg2000ImageCodec::suggestAllocatedBits(const std::string& /* transferSyntax */, std::uint32_t /* highBit */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataSetUnknownTransferSyntaxError, "None of the codecs support the specified transfer syntax");
+    DICOMHERO_THROW(DataSetUnknownTransferSyntaxError, "None of the codecs support the specified transfer syntax");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -271,7 +271,7 @@ std::uint32_t jpeg2000ImageCodec::suggestAllocatedBits(const std::string& /* tra
 /////////////////////////////////////////////////////////////////
 std::shared_ptr<image> jpeg2000ImageCodec::getImage(const dataSet& sourceDataSet, std::shared_ptr<streamReader> pStream, tagVR_t /* dataType not used */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
 #ifdef JPEG2000_V1
     CODEC_FORMAT format = (CODEC_FORMAT)(CODEC_J2K);
@@ -333,7 +333,7 @@ std::shared_ptr<image> jpeg2000ImageCodec::getImage(const dataSet& sourceDataSet
 #endif
     if(jp2image == 0)
     {
-        IMEBRA_THROW(CodecCorruptedFileError, "Could not decode the jpeg2000 image");
+        DICOMHERO_THROW(CodecCorruptedFileError, "Could not decode the jpeg2000 image");
     }
 
     std::uint32_t width(sourceDataSet.getUint32(0x0028, 0, 0x0011, 0, 0, 0));
@@ -376,7 +376,7 @@ std::shared_ptr<image> jpeg2000ImageCodec::getImage(const dataSet& sourceDataSet
     return returnImage;
 
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -401,11 +401,11 @@ void jpeg2000ImageCodec::setImage(
         bool /* bInterleaved */,
         bool /* b2Complement */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    IMEBRA_THROW(DataSetUnknownTransferSyntaxError, "None of the codecs support the specified transfer syntax");
+    DICOMHERO_THROW(DataSetUnknownTransferSyntaxError, "None of the codecs support the specified transfer syntax");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -413,6 +413,6 @@ void jpeg2000ImageCodec::setImage(
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif //JPEG2000

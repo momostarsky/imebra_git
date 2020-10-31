@@ -1,7 +1,7 @@
 #include <imebra/imebra.h>
 #include <gtest/gtest.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -341,5 +341,5 @@ TEST(unicodeStringHandlerTest, normalizeCharset)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero
 

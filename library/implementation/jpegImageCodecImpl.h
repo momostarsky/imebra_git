@@ -25,7 +25,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <list>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -124,6 +124,6 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraJpegImageCodec_7F63E846_8824_42c6_A048_DD59C657AED4__INCLUDED_)

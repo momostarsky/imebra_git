@@ -22,11 +22,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "streamCodecImpl.h"
 #include "dataSetImpl.h"
 #include "codecFactoryImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <string.h>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -51,7 +51,7 @@ streamCodec::~streamCodec()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<dataSet> streamCodec::read(std::shared_ptr<streamReader> pSourceStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Create a new dataset
     ///////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@ std::shared_ptr<dataSet> streamCodec::read(std::shared_ptr<streamReader> pSource
 
     return pDestDataSet;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -78,18 +78,18 @@ std::shared_ptr<dataSet> streamCodec::read(std::shared_ptr<streamReader> pSource
 ///////////////////////////////////////////////////////////
 void streamCodec::write(std::shared_ptr<streamWriter> pDestStream, std::shared_ptr<dataSet> pSourceDataSet) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     pDestStream->resetOutBitsBuffer();
     writeStream(pDestStream, pSourceDataSet);
     pDestStream->flushDataBuffer();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 } // namespace codecs
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 

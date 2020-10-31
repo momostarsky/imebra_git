@@ -17,12 +17,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #include "exceptionImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include "uidGeneratorFactoryImpl.h"
 #include <string.h>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -60,35 +60,35 @@ void uidGeneratorFactory::registerUIDGenerator(const std::string &generatorName,
 
 std::shared_ptr<baseUidGenerator> uidGeneratorFactory::getUidGenerator(const std::string &generatorName) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::unique_lock<std::mutex> lockMap(m_lockUidGenerator);
 
     std::map<std::string, std::shared_ptr<baseUidGenerator>>::const_iterator findUidGenerator(m_uidGenerators.find(generatorName));
     if(findUidGenerator == m_uidGenerators.end())
     {
-        IMEBRA_THROW(NonRegisteredUIDGenerator, "UID generator " << generatorName << " was not registered");
+        DICOMHERO_THROW(NonRegisteredUIDGenerator, "UID generator " << generatorName << " was not registered");
     }
     return findUidGenerator->second;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::shared_ptr<baseUidGenerator> uidGeneratorFactory::getDefaultUidGenerator() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::unique_lock<std::mutex> lockMap(m_lockUidGenerator);
 
     if(m_defaultUidGenerator == nullptr)
     {
-        IMEBRA_THROW(NonRegisteredUIDGenerator, "No UID generator was registered");
+        DICOMHERO_THROW(NonRegisteredUIDGenerator, "No UID generator was registered");
     }
 
     return m_defaultUidGenerator;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 } // uidGenerators

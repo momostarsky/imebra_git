@@ -15,15 +15,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     \brief Implementation of the classes ReadingDataHandler & WritingDataHandler.
 */
 
-#include "../include/imebra/readingDataHandler.h"
+#include "../include/dicomhero/readingDataHandler.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/exceptionImpl.h"
-#include "../include/imebra/age.h"
-#include "../include/imebra/patientName.h"
+#include "../include/dicomhero/age.h"
+#include "../include/dicomhero/patientName.h"
 #include <cstring>
 
-namespace imebra
+namespace dicomhero
 {
 
 ReadingDataHandler::ReadingDataHandler(const std::shared_ptr<implementation::handlers::readingDataHandler>& pDataHandler): m_pDataHandler(pDataHandler)
@@ -45,164 +45,164 @@ const std::shared_ptr<implementation::handlers::readingDataHandler>& getReadingD
 
 size_t ReadingDataHandler::getSize() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getSize();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 tagVR_t ReadingDataHandler::getDataType() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getDataType();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::int32_t ReadingDataHandler::getInt32(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getInt32(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::int32_t ReadingDataHandler::getSignedLong(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getInt32(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::uint32_t ReadingDataHandler::getUint32(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getUint32(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::uint32_t ReadingDataHandler::getUnsignedLong(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getUint32(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::int16_t ReadingDataHandler::getInt16(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getInt16(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::uint16_t ReadingDataHandler::getUint16(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getUint16(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::int8_t ReadingDataHandler::getInt8(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getInt8(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::uint8_t ReadingDataHandler::getUint8(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getUint8(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 double ReadingDataHandler::getDouble(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getDouble(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 float ReadingDataHandler::getFloat(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getFloat(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::string ReadingDataHandler::getString(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getString(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 std::wstring ReadingDataHandler::getUnicodeString(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getUnicodeString(index);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 const Date ReadingDataHandler::getDate(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return Date(m_pDataHandler->getDate(index));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 const Age ReadingDataHandler::getAge(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return Age(m_pDataHandler->getAge(index));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 const PatientName ReadingDataHandler::getPatientName(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return PatientName(m_pDataHandler->getPatientName(index));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 const UnicodePatientName ReadingDataHandler::getUnicodePatientName(size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return UnicodePatientName(m_pDataHandler->getUnicodePatientName(index));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 

@@ -60,7 +60,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithNode:(NSString*)node service:(NSString*)service error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     reset_imebra_object_holder(TCPAddress);
     self = [super init];
@@ -70,7 +70,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     }
     return self;
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 @end
@@ -80,7 +80,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithNode:(NSString*)node service:(NSString*)service error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     reset_imebra_object_holder(TCPAddress);
     self = [super init];
@@ -90,7 +90,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     }
     return self;
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 @end

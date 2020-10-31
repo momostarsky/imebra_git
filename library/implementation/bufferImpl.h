@@ -22,11 +22,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "streamControllerImpl.h"
 #include "memoryImpl.h"
 #include "dataHandlerNumericImpl.h"
-#include "../include/imebra/definitions.h"
+#include "../include/dicomhero/definitions.h"
 
 #include <mutex>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -304,6 +304,6 @@ private:
 
 } // End of namespace implementation
 
-} // End of namespace imebra
+} // End of namespace dicomhero
 
 #endif // !defined(imebraBuffer_DE3F98A9_664E_47c0_A29B_B681F9AEB118__INCLUDED_)

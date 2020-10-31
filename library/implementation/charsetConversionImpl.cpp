@@ -13,10 +13,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "charsetConversionImpl.h"
 #include "exceptionImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <sstream>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -24,7 +24,7 @@ namespace implementation
 
 std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeString, const charsetsList_t& charsets)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(unicodeString.empty())
     {
@@ -39,7 +39,7 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
         std::string returnString =  localCharsetConversion->fromUnicode(unicodeString);
         if(returnString.empty())
         {
-            IMEBRA_THROW(CharsetConversionCannotConvert, "Cannot convert from unicode using only the charset 'ISO_IR 6'");
+            DICOMHERO_THROW(CharsetConversionCannotConvert, "Cannot convert from unicode using only the charset 'ISO_IR 6'");
         }
         return returnString;
     }
@@ -120,20 +120,20 @@ std::string dicomConversion::convertFromUnicode(const std::wstring& unicodeStrin
             {
                 charsetsList << " '" << charset << "'";
             }
-            IMEBRA_THROW(CharsetConversionCannotConvert, "Cannot convert from unicode using the following charsets:" << charsetsList.str());
+            DICOMHERO_THROW(CharsetConversionCannotConvert, "Cannot convert from unicode using the following charsets:" << charsetsList.str());
         }
         rawString += convertedSequence;
     }
 
     return rawString;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
 std::wstring dicomConversion::convertToUnicode(const std::string& value, const charsetsList_t& charsets)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(value.empty())
     {
@@ -209,7 +209,7 @@ std::wstring dicomConversion::convertToUnicode(const std::string& value, const c
             std::wstring conversion = localCharsetConversion->toUnicode(value.substr(scanString));
             if(conversion.empty())
             {
-                IMEBRA_THROW(CharsetConversionCannotConvert, "Cannot convert to unicode");
+                DICOMHERO_THROW(CharsetConversionCannotConvert, "Cannot convert to unicode");
             }
             return returnString + conversion;
         }
@@ -222,7 +222,7 @@ std::wstring dicomConversion::convertToUnicode(const std::string& value, const c
             std::wstring conversion = localCharsetConversion->toUnicode(value.substr(scanString, escapePosition - scanString));
             if(conversion.empty())
             {
-                IMEBRA_THROW(CharsetConversionCannotConvert, "Cannot convert to unicode");
+                DICOMHERO_THROW(CharsetConversionCannotConvert, "Cannot convert to unicode");
             }
             returnString += conversion;
             scanString = escapePosition;
@@ -242,7 +242,7 @@ std::wstring dicomConversion::convertToUnicode(const std::string& value, const c
 
     return returnString;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 

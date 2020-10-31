@@ -26,7 +26,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <cmath>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -92,7 +92,7 @@ public:
     ///                       the optimal VOI must be found
     ///
     ///////////////////////////////////////////////////////////
-    static std::shared_ptr<VOIDescription> getOptimalVOI(const std::shared_ptr<imebra::implementation::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight);
+    static std::shared_ptr<VOIDescription> getOptimalVOI(const std::shared_ptr<dicomhero::implementation::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight);
 
     DEFINE_RUN_TEMPLATE_TRANSFORM;
 
@@ -113,7 +113,7 @@ public:
                     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         const inputType* pInputMemory(inputHandlerData);
         outputType* pOutputMemory(outputHandlerData);
@@ -261,7 +261,7 @@ public:
             break;
         }
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
     virtual bool isEmpty() const override;
@@ -284,7 +284,7 @@ protected:
                     std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,
                     std::shared_ptr<VOIDescription>& voiDescription)
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         inputType* pInputMemory(inputHandlerData + inputHandlerWidth * inputTopLeftY + inputTopLeftX);
         inputType minValue(*pInputMemory);
@@ -315,7 +315,7 @@ protected:
                     dicomVOIFunction_t::linear,
                     "");
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
 
     }
 
@@ -331,6 +331,6 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraVOILUT_8347C70F_1FC8_4df8_A887_8DE9E968B2CF__INCLUDED_)

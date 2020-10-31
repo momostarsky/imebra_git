@@ -68,61 +68,61 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(unsigned int) getBufferSize:(unsigned int) bufferId error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return (unsigned int)get_imebra_object_holder(Tag)->getBufferSize((size_t)bufferId);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 
 -(ImebraReadingDataHandler*) getReadingDataHandler:(unsigned int) bufferId error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraReadingDataHandler alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandler(get_imebra_object_holder(Tag)->getReadingDataHandler((size_t)bufferId))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 
 -(ImebraReadingDataHandlerNumeric*) getReadingDataHandlerNumeric:(unsigned int) bufferId error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(Tag)->getReadingDataHandlerNumeric((size_t)bufferId))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 
 -(ImebraReadingDataHandlerNumeric*) getReadingDataHandlerRaw:(unsigned int) bufferId error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraReadingDataHandlerNumeric alloc] initWithImebraReadingDataHandler:new imebra::ReadingDataHandlerNumeric(get_imebra_object_holder(Tag)->getReadingDataHandlerRaw((size_t)bufferId))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 
 -(ImebraStreamReader*) getStreamReader:(unsigned int) bufferId error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraStreamReader alloc] initWithImebraStreamReader:new imebra::StreamReader(get_imebra_object_holder(Tag)->getStreamReader((size_t)bufferId))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 
 -(ImebraDataSet*) getSequenceItem:(unsigned int) dataSetId error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(get_imebra_object_holder(Tag)->getSequenceItem((size_t)dataSetId))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 
@@ -149,57 +149,57 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraWritingDataHandler*) getWritingDataHandler:(unsigned int) bufferId error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraWritingDataHandler alloc] initWithImebraWritingDataHandler:new imebra::WritingDataHandler(((imebra::MutableTag*)get_imebra_object_holder(Tag))->getWritingDataHandler((size_t)bufferId))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerNumeric:(unsigned int) bufferId error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:new imebra::WritingDataHandlerNumeric(((imebra::MutableTag*)get_imebra_object_holder(Tag))->getWritingDataHandlerNumeric((size_t)bufferId))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraWritingDataHandlerNumeric*) getWritingDataHandlerRaw:(unsigned int) bufferId error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraWritingDataHandlerNumeric alloc] initWithImebraWritingDataHandler:new imebra::WritingDataHandlerNumeric(((imebra::MutableTag*)get_imebra_object_holder(Tag))->getWritingDataHandlerRaw((size_t)bufferId))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraStreamWriter*) getStreamWriter:(unsigned int) bufferId error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraStreamWriter alloc] initWithImebraStreamWriter:new imebra::StreamWriter(((imebra::MutableTag*)get_imebra_object_holder(Tag))->getStreamWriter((size_t)bufferId))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraMutableDataSet*) appendSequenceItem:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraMutableDataSet alloc] initWithImebraDataSet:new imebra::MutableDataSet(
             ((imebra::MutableTag*)get_imebra_object_holder(Tag))->appendSequenceItem())];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(void) setStream:(unsigned int) bufferId stream:(ImebraFileStreamInput*)pStream error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::MutableTag*)get_imebra_object_holder(Tag))->setStream((size_t)bufferId, *(imebra::FileStreamInput*)(get_other_imebra_object_holder(pStream, BaseStreamInput)));
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 
 }
 

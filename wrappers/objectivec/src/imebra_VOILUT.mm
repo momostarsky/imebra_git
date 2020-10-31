@@ -52,7 +52,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     inputHeight:(unsigned int)inputHeight
     error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraVOIDescription alloc] initWithImebraVOIDescription:new imebra::VOIDescription(
         imebra::VOILUT::getOptimalVOI(
@@ -62,7 +62,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
                 (std::uint32_t)inputWidth,
                 (std::uint32_t)inputHeight)) ];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 @end

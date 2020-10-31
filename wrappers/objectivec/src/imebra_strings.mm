@@ -14,7 +14,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "imebra_strings.h"
 #import <Foundation/NSString.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 std::string NSStringToString ( NSString* str )
@@ -32,4 +32,4 @@ NSString* stringToNSString ( const std::wstring& str )
     return [[ NSString alloc] initWithBytes: str.c_str() length:str.size() * 4 encoding:NSUTF32LittleEndianStringEncoding];
 }
 
-} // namespace imebra
+} // namespace dicomhero

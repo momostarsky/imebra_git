@@ -15,7 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "buildImageForTest.h"
 #include <gtest/gtest.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -74,7 +74,7 @@ TEST(multipleImagesTest, testLosslessImages)
             testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
             if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
             {
-                testDataSet.setUint32(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1);
+                testDataSet.setUint32(TagId(dicomhero::tagId_t::PlanarConfiguration_0028_0006), 1);
             }
 
             for(size_t imageNumber(0); imageNumber != numImages; ++imageNumber)

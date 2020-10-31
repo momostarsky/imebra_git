@@ -26,10 +26,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "bufferImpl.h"
 #include "dataHandlerImpl.h"
 #include "dataHandlerNumericImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <iostream>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -90,7 +90,7 @@ data::~data()
 ///////////////////////////////////////////////////////////
 void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -102,7 +102,7 @@ void data::setBuffer(size_t bufferId, const std::shared_ptr<buffer>& newBuffer)
     }
     m_buffers[bufferId] = newBuffer;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -133,7 +133,7 @@ tagVR_t data::getDataType() const
 ///////////////////////////////////////////////////////////
 size_t data::getBuffersCount() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -141,7 +141,7 @@ size_t data::getBuffersCount() const
     ///////////////////////////////////////////////////////////
     return m_buffers.size();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -173,17 +173,17 @@ bool data::bufferExists(size_t bufferId) const
 ///////////////////////////////////////////////////////////
 size_t data::getBufferSize(size_t bufferId) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return getBuffer(bufferId)->getBufferSizeBytes();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::shared_ptr<buffer> data::getBuffer(size_t bufferId) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -191,18 +191,18 @@ std::shared_ptr<buffer> data::getBuffer(size_t bufferId) const
     ///////////////////////////////////////////////////////////
     if(bufferId >= m_buffers.size() || m_buffers.at(bufferId) == nullptr)
     {
-        IMEBRA_THROW(MissingBufferError, "The buffer with ID " << bufferId << " is missing");
+        DICOMHERO_THROW(MissingBufferError, "The buffer with ID " << bufferId << " is missing");
     }
     return m_buffers.at(bufferId);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
 
 std::shared_ptr<buffer> data::getBufferCreate(size_t bufferId)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -222,13 +222,13 @@ std::shared_ptr<buffer> data::getBufferCreate(size_t bufferId)
 
     return pNewBuffer;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::shared_ptr<buffer> data::getBufferCreate(size_t bufferId, streamController::tByteOrdering endianType)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -248,7 +248,7 @@ std::shared_ptr<buffer> data::getBufferCreate(size_t bufferId, streamController:
 
     return pNewBuffer;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -259,7 +259,7 @@ std::shared_ptr<buffer> data::getBufferCreate(size_t bufferId,
                                         size_t wordLength,
                                         streamController::tByteOrdering endianType)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -277,7 +277,7 @@ std::shared_ptr<buffer> data::getBufferCreate(size_t bufferId,
 
     return pNewBuffer;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -293,21 +293,21 @@ std::shared_ptr<buffer> data::getBufferCreate(size_t bufferId,
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandler> data::getReadingDataHandler(size_t bufferId) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return getBuffer(bufferId)->getReadingDataHandler(m_tagVR);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t bufferId)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return getBufferCreate(bufferId)->getWritingDataHandler(m_tagVR);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -322,46 +322,46 @@ std::shared_ptr<handlers::writingDataHandler> data::getWritingDataHandler(size_t
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandlerRaw> data::getReadingDataHandlerRaw(size_t bufferId) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return getBuffer(bufferId)->getReadingDataHandlerRaw(m_tagVR);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::shared_ptr<handlers::writingDataHandlerRaw> data::getWritingDataHandlerRaw(size_t bufferId)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return getBufferCreate(bufferId)->getWritingDataHandlerRaw(m_tagVR);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::shared_ptr<handlers::readingDataHandlerNumericBase> data::getReadingDataHandlerNumeric(size_t bufferId) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return getBuffer(bufferId)->getReadingDataHandlerNumeric(m_tagVR);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::shared_ptr<handlers::writingDataHandlerNumericBase> data::getWritingDataHandlerNumeric(size_t bufferId)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return getBufferCreate(bufferId)->getWritingDataHandlerNumeric(m_tagVR);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::uint8_t data::getPaddingByte() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     switch(m_tagVR)
     {
@@ -462,9 +462,9 @@ std::uint8_t data::getPaddingByte() const
         return 0x20u;
     }
 
-    IMEBRA_THROW(std::logic_error, "The tag was created with an invalid buffer type");
+    DICOMHERO_THROW(std::logic_error, "The tag was created with an invalid buffer type");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -494,11 +494,11 @@ bool data::hasExternalStream(size_t bufferId) const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<streamReader> data::getStreamReader(size_t bufferId)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return getBuffer(bufferId)->getStreamReader();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -513,11 +513,11 @@ std::shared_ptr<streamReader> data::getStreamReader(size_t bufferId)
 ///////////////////////////////////////////////////////////
 std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return getBufferCreate(bufferId)->getStreamWriter(m_tagVR);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -532,7 +532,7 @@ std::shared_ptr<streamWriter> data::getStreamWriter(size_t bufferId)
 ///////////////////////////////////////////////////////////
 void data::setExternalStream(size_t bufferId, std::shared_ptr<fileStreamInput> pExternalStream)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     setBuffer(bufferId, std::make_shared<buffer>(pExternalStream,
                                                  0,
@@ -541,7 +541,7 @@ void data::setExternalStream(size_t bufferId, std::shared_ptr<fileStreamInput> p
                                                  streamController::getPlatformEndian(),
                                                  m_pCharsetsList));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -556,29 +556,29 @@ void data::setExternalStream(size_t bufferId, std::shared_ptr<fileStreamInput> p
 ///////////////////////////////////////////////////////////
 std::shared_ptr<dataSet> data::getSequenceItem(size_t dataSetId) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
     if(m_embeddedDataSets.size() <= dataSetId)
     {
-        IMEBRA_THROW(MissingItemError, "The requested sequence item does not exist");
+        DICOMHERO_THROW(MissingItemError, "The requested sequence item does not exist");
     }
 
     return m_embeddedDataSets[dataSetId];
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 bool data::dataSetExists(size_t dataSetId) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
     return m_embeddedDataSets.size() > dataSetId;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -593,7 +593,7 @@ bool data::dataSetExists(size_t dataSetId) const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<dataSet> data::appendSequenceItem()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -602,10 +602,10 @@ std::shared_ptr<dataSet> data::appendSequenceItem()
 
     return pDataSet;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

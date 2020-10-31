@@ -17,7 +17,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import <Foundation/Foundation.h>
 #include <string>
 
-namespace imebra
+namespace dicomhero
 {
 
 /**
@@ -47,6 +47,6 @@ NSString* stringToNSString ( const std::string& str );
 NSString* stringToNSString ( const std::wstring& str );
 
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // imebraObjcStrings__INCLUDED_

@@ -6,13 +6,13 @@
 #include <memory>
 #include <gtest/gtest.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
 {
 
-using namespace imebra;
+using namespace dicomhero;
 
 TEST(dataSetTest, testFragmentation)
 {
@@ -20,7 +20,7 @@ TEST(dataSetTest, testFragmentation)
     Image testImage0 = buildImageForTest(
         400,
         300,
-        imebra::bitDepth_t::depthU8,
+        dicomhero::bitDepth_t::depthU8,
         7,
         "RGB",
         50);
@@ -28,7 +28,7 @@ TEST(dataSetTest, testFragmentation)
     Image testImage1 = buildImageForTest(
         400,
         300,
-        imebra::bitDepth_t::depthU8,
+        dicomhero::bitDepth_t::depthU8,
         7,
         "RGB",
         20);
@@ -56,18 +56,18 @@ TEST(dataSetTest, testFragmentation)
     // We are going to divide the 1st buffer into 2 buffers
     // The second offset increases by 8 (header for additional buffer).
     {
-        ReadingDataHandlerNumeric handler0 = testDataSet.getReadingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 0);
-        ReadingDataHandlerNumeric handler1 = testDataSet.getReadingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 1);
-        ReadingDataHandlerNumeric handler2 = testDataSet.getReadingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 2);
+        ReadingDataHandlerNumeric handler0 = testDataSet.getReadingDataHandlerRaw(TagId(dicomhero::tagId_t::PixelData_7FE0_0010), 0);
+        ReadingDataHandlerNumeric handler1 = testDataSet.getReadingDataHandlerRaw(TagId(dicomhero::tagId_t::PixelData_7FE0_0010), 1);
+        ReadingDataHandlerNumeric handler2 = testDataSet.getReadingDataHandlerRaw(TagId(dicomhero::tagId_t::PixelData_7FE0_0010), 2);
         Memory memory0 = handler0.getMemory();
         Memory memory1 = handler1.getMemory();
         Memory memory2 = handler2.getMemory();
 
         size_t dummy(0);
-        WritingDataHandlerNumeric write0 = testDataSet.getWritingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 0);
-        WritingDataHandlerNumeric write1 = testDataSet.getWritingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 1);
-        WritingDataHandlerNumeric write2 = testDataSet.getWritingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 2);
-        WritingDataHandlerNumeric write3 = testDataSet.getWritingDataHandlerRaw(TagId(imebra::tagId_t::PixelData_7FE0_0010), 3);
+        WritingDataHandlerNumeric write0 = testDataSet.getWritingDataHandlerRaw(TagId(dicomhero::tagId_t::PixelData_7FE0_0010), 0);
+        WritingDataHandlerNumeric write1 = testDataSet.getWritingDataHandlerRaw(TagId(dicomhero::tagId_t::PixelData_7FE0_0010), 1);
+        WritingDataHandlerNumeric write2 = testDataSet.getWritingDataHandlerRaw(TagId(dicomhero::tagId_t::PixelData_7FE0_0010), 2);
+        WritingDataHandlerNumeric write3 = testDataSet.getWritingDataHandlerRaw(TagId(dicomhero::tagId_t::PixelData_7FE0_0010), 3);
 
         write0.setSize(8); // 8 bytes (offset for 2 images)
         write1.setSize(((memory1.size() / 2) + 1) & 0xfffffffc);
@@ -597,4 +597,4 @@ TEST(dataSetTest, streamWriterAndReader)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

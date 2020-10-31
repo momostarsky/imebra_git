@@ -15,11 +15,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
     \brief Implementation of the the base class for the input streams (memory, file, ...).
 */
 
-#include "../include/imebra/baseStreamInput.h"
+#include "../include/dicomhero/baseStreamInput.h"
 #include "../implementation/baseStreamImpl.h"
 #include "../implementation/exceptionImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 //

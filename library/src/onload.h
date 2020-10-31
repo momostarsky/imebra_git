@@ -11,7 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#ifndef IMEBRA_SWIG_ONLOAD
+#ifndef DICOMHERO_SWIG_ONLOAD
 
 #include <jni.h>
 

@@ -20,11 +20,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "LUTImpl.h"
 #include "dataHandlerNumericImpl.h"
 #include "bufferImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
 #include <string.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -45,11 +45,11 @@ lut::lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, s
       m_bits(0)
 
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(pDescriptor->getSize() != 3)
     {
-        IMEBRA_THROW(LutCorruptedError, "The LUT is corrupted");
+        DICOMHERO_THROW(LutCorruptedError, "The LUT is corrupted");
     }
 
     m_size = descriptorSignedToUnsigned(pDescriptor->getInt32(0));
@@ -77,7 +77,7 @@ lut::lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, s
     ////////////////////////////////////////////////
     if(m_bits > 16)
     {
-        IMEBRA_THROW(LutCorruptedError, "The LUT items cannot be more than 16 bit wide");
+        DICOMHERO_THROW(LutCorruptedError, "The LUT items cannot be more than 16 bit wide");
     }
 
     // If 8 bits are stored in 16 bit elements, then extract them
@@ -99,14 +99,14 @@ lut::lut(std::shared_ptr<handlers::readingDataHandlerNumericBase> pDescriptor, s
 
     if(m_size != pData->getSize())
     {
-        IMEBRA_THROW(LutCorruptedError, "The LUT is corrupted");
+        DICOMHERO_THROW(LutCorruptedError, "The LUT is corrupted");
     }
 
     m_pDataHandler = pData;
 
     m_description = description;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -189,7 +189,7 @@ std::int32_t lut::getFirstMapped() const
 
 std::uint32_t lut::getMappedValue(std::int32_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(index < m_firstMapped)
     {
@@ -203,7 +203,7 @@ std::uint32_t lut::getMappedValue(std::int32_t index) const
     }
     return m_pDataHandler->getUint32(correctedIndex);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -259,4 +259,4 @@ std::shared_ptr<lut> palette::getBlue() const
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

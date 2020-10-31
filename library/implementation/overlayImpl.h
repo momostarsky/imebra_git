@@ -20,9 +20,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraOverlay_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_
 
 #include <memory>
-#include <../include/imebra/definitions.h>
+#include <../include/dicomhero/definitions.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -181,6 +181,6 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraOverlay_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

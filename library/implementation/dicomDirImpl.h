@@ -23,9 +23,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <memory>
 #include <string>
 #include <list>
-#include "../include/imebra/definitions.h"
+#include "../include/dicomhero/definitions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -343,6 +343,6 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraDicomDir_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)

@@ -11,13 +11,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#include "../include/imebra/memoryStreamInput.h"
-#include "../include/imebra/memory.h"
-#include "../include/imebra/mutableMemory.h"
+#include "../include/dicomhero/memoryStreamInput.h"
+#include "../include/dicomhero/memory.h"
+#include "../include/dicomhero/mutableMemory.h"
 #include "../implementation/memoryStreamImpl.h"
 #include <memory>
 
-namespace imebra
+namespace dicomhero
 {
 
 MemoryStreamInput::MemoryStreamInput(const Memory& memory): BaseStreamInput(std::make_shared<implementation::memoryStreamInput>(getMemoryImplementation(memory)))

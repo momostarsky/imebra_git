@@ -18,7 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "exceptionImpl.h"
 #include "fileStreamImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
 #include <sstream>
 #include <errno.h>
@@ -26,7 +26,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <codecvt>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -58,9 +58,9 @@ namespace implementation
 ///////////////////////////////////////////////////////////
 fileStream::fileStream(const std::wstring& fileName, openMode mode)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-#if defined(IMEBRA_WINDOWS)
+#if defined(DICOMHERO_WINDOWS)
     std::wstring strMode;
     switch(mode)
     {
@@ -97,10 +97,10 @@ fileStream::fileStream(const std::wstring& fileName, openMode mode)
 #endif
     if(m_openFile == 0)
     {
-        IMEBRA_THROW(StreamOpenError, "stream::openFile failure - error code: " << errorCode);
+        DICOMHERO_THROW(StreamOpenError, "stream::openFile failure - error code: " << errorCode);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -115,7 +115,7 @@ fileStream::fileStream(const std::wstring& fileName, openMode mode)
 ///////////////////////////////////////////////////////////
 fileStream::fileStream(const std::string& fileName, openMode mode)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string strMode;
     switch(mode)
@@ -128,7 +128,7 @@ fileStream::fileStream(const std::string& fileName, openMode mode)
         break;
     }
 
-#if defined(IMEBRA_WINDOWS)
+#if defined(DICOMHERO_WINDOWS)
 
     errno_t errorCode = ::fopen_s(&m_openFile, fileName.c_str(), strMode.c_str());
      if (errorCode != 0)
@@ -142,10 +142,10 @@ fileStream::fileStream(const std::string& fileName, openMode mode)
 #endif
     if(m_openFile == 0)
     {
-        IMEBRA_THROW(StreamOpenError, "stream::openFile failure - error code: " << errorCode);
+        DICOMHERO_THROW(StreamOpenError, "stream::openFile failure - error code: " << errorCode);
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -201,22 +201,22 @@ fileStreamOutput::fileStreamOutput(const std::wstring &fileName): fileStream(fil
 ///////////////////////////////////////////////////////////
 void fileStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
     ::fseek(m_openFile, (long)startPosition, SEEK_SET);
     if(ferror(m_openFile) != 0)
     {
-        IMEBRA_THROW(StreamWriteError, "stream::seek failure");
+        DICOMHERO_THROW(StreamWriteError, "stream::seek failure");
     }
 
     if(::fwrite(pBuffer, 1, bufferLength, m_openFile) != bufferLength)
     {
-        IMEBRA_THROW(StreamWriteError, "stream::write failure");
+        DICOMHERO_THROW(StreamWriteError, "stream::write failure");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -231,24 +231,24 @@ void fileStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, 
 ///////////////////////////////////////////////////////////
 size_t fileStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
     ::fseek(m_openFile, (long)startPosition, SEEK_SET);
     if(ferror(m_openFile) != 0)
     {
-        IMEBRA_THROW(StreamReadError, "stream::fseek failure");
+        DICOMHERO_THROW(StreamReadError, "stream::fseek failure");
     }
 
     size_t readBytes = (size_t)::fread(pBuffer, 1, bufferLength, m_openFile);
     if(ferror(m_openFile) != 0)
     {
-        IMEBRA_THROW(StreamReadError, "stream::read failure");
+        DICOMHERO_THROW(StreamReadError, "stream::read failure");
     }
     return readBytes;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -263,28 +263,28 @@ bool fileStreamInput::seekable() const
 
 size_t fileStreamInput::getSize() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
     ::fseek(m_openFile, 0, SEEK_END);
     if(ferror(m_openFile) != 0)
     {
-        IMEBRA_THROW(StreamReadError, "stream::fseek failure");
+        DICOMHERO_THROW(StreamReadError, "stream::fseek failure");
     }
 
     long int position = ::ftell(m_openFile);
     if(position < 0)
     {
-        IMEBRA_THROW(StreamReadError, "stream::ftell failure");
+        DICOMHERO_THROW(StreamReadError, "stream::ftell failure");
     }
 
     return (size_t)position;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

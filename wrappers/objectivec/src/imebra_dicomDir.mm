@@ -67,7 +67,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(NSArray*)getFileParts:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     NSMutableArray* pFileParts = [[NSMutableArray alloc] init];
 
@@ -79,16 +79,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     return pFileParts;
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(NSString*)getTypeString:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return imebra::stringToNSString(get_imebra_object_holder(DicomDirEntry)->getTypeString());
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 @end
@@ -103,25 +103,25 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void)setNextEntry:(ImebraDicomDirEntry*)pNextEntry error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::MutableDicomDirEntry*)get_imebra_object_holder(DicomDirEntry))->setNextEntry(*get_other_imebra_object_holder(pNextEntry, DicomDirEntry));
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(void)setFirstChildEntry:(ImebraDicomDirEntry*)pFirstChildEntry error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::MutableDicomDirEntry*)get_imebra_object_holder(DicomDirEntry))->setFirstChildEntry(*get_other_imebra_object_holder(pFirstChildEntry, DicomDirEntry));
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(void)setFileParts:(NSArray*)pFileParts error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     imebra::fileParts_t fileParts;
 
@@ -133,7 +133,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
     ((imebra::MutableDicomDirEntry*)get_imebra_object_holder(DicomDirEntry))->setFileParts(fileParts);
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 @end
@@ -155,7 +155,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(id)initWithDataSet:(ImebraDataSet*)pDataSet error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     reset_imebra_object_holder(DicomDir);
     self = [super init];
@@ -165,7 +165,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     }
     return self;
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(void)dealloc
@@ -175,11 +175,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraDicomDirEntry*)getFirstRootEntry:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraDicomDirEntry alloc] initWithImebraDicomDirEntry:new imebra::DicomDirEntry(get_imebra_object_holder(DicomDir)->getFirstRootEntry())];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 
@@ -201,29 +201,29 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraMutableDicomDirEntry*)getNewEntry:(NSString*)recordType error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraMutableDicomDirEntry alloc] initWithImebraDicomDirEntry:new imebra::MutableDicomDirEntry(((imebra::MutableDicomDir*)get_imebra_object_holder(DicomDir))->getNewEntry(imebra::NSStringToString(recordType)))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(void)setFirstRootEntry:(ImebraDicomDirEntry*)firstEntryRecord error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::MutableDicomDir*)get_imebra_object_holder(DicomDir))->setFirstRootEntry(*get_other_imebra_object_holder(firstEntryRecord, DicomDirEntry));
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(ImebraDataSet*)updateDataSet:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraDataSet alloc] initWithImebraDataSet:new imebra::DataSet(((imebra::MutableDicomDir*)get_imebra_object_holder(DicomDir))->updateDataSet())];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 @end

@@ -27,11 +27,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <mutex>
 #include "baseSequenceStreamImpl.h"
 
-#ifndef IMEBRA_PIPE_TIMEOUT_MS
-#define IMEBRA_PIPE_TIMEOUT_MS 500
+#ifndef DICOMHERO_PIPE_TIMEOUT_MS
+#define DICOMHERO_PIPE_TIMEOUT_MS 500
 #endif
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -130,7 +130,7 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 #endif // !defined(imebraPipeStream_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

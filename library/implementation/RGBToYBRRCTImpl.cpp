@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataSetImpl.h"
 #include "imageImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -65,14 +65,14 @@ std::string RGBToYBRRCT::getFinalColorSpace() const
 
 void RGBToYBRRCT::checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(inputHighBit + 1 != outputHighBit)
     {
-        IMEBRA_THROW(TransformDifferentHighBitError, "Different high bit (input = " << inputHighBit << ", output = " << outputHighBit << ")");
+        DICOMHERO_THROW(TransformDifferentHighBitError, "Different high bit (input = " << inputHighBit << ", output = " << outputHighBit << ")");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -83,7 +83,7 @@ std::shared_ptr<image> RGBToYBRRCT::allocateOutputImage(
         std::shared_ptr<palette> /* inputPalette */,
         std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t outputHighBit = inputHighBit + 1;
     bitDepth_t outputDepth(inputDepth);
@@ -120,7 +120,7 @@ std::shared_ptr<image> RGBToYBRRCT::allocateOutputImage(
 
     return std::make_shared<image>(outputWidth, outputHeight, outputDepth, getFinalColorSpace(), outputHighBit);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -131,5 +131,5 @@ std::shared_ptr<image> RGBToYBRRCT::allocateOutputImage(
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 

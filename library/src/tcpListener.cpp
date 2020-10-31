@@ -16,12 +16,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/tcpListener.h"
-#include "../include/imebra/tcpAddress.h"
-#include "../include/imebra/tcpStream.h"
+#include "../include/dicomhero/tcpListener.h"
+#include "../include/dicomhero/tcpAddress.h"
+#include "../include/dicomhero/tcpStream.h"
 #include "../implementation/tcpSequenceStreamImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 TCPListener::TCPListener(const TCPPassiveAddress& address):
@@ -44,20 +44,20 @@ const std::shared_ptr<implementation::tcpListener>& getTCPListenerImplementation
 
 void TCPListener::terminate()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pListener->terminate();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 TCPStream TCPListener::waitForConnection()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return TCPStream(m_pListener->waitForConnection());
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 

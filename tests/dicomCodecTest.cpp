@@ -17,7 +17,7 @@
 
 #endif
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -190,7 +190,7 @@ TEST(dicomCodecTest, testDicom)
                                     testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
                                     if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
                                     {
-                                        testDataSet.setUint32(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
+                                        testDataSet.setUint32(TagId(dicomhero::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
                                     }
                                     testDataSet.setImage(0, images[0], quality);
                                     testDataSet.setImage(1, images[1], quality);
@@ -213,17 +213,17 @@ TEST(dicomCodecTest, testDicom)
                                     StreamReader reader(readStream);
                                     DataSet testDataSet = CodecFactory::load(reader, lazyLoad == 0 ? std::numeric_limits<size_t>::max() : 1);
 
-                                    EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_CLASS_UID), testDataSet.getString(TagId(tagId_t::ImplementationClassUID_0002_0012), 0));
-                                    EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_NAME), testDataSet.getString(TagId(tagId_t::ImplementationVersionName_0002_0013), 0));
+                                    EXPECT_EQ(std::string(DICOMHERO_IMPLEMENTATION_CLASS_UID), testDataSet.getString(TagId(tagId_t::ImplementationClassUID_0002_0012), 0));
+                                    EXPECT_EQ(std::string(DICOMHERO_IMPLEMENTATION_NAME), testDataSet.getString(TagId(tagId_t::ImplementationVersionName_0002_0013), 0));
 
                                     EXPECT_EQ(0u, testDataSet.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
                                     EXPECT_EQ(1u, testDataSet.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
                                     EXPECT_THROW(testDataSet.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 2), MissingItemError);
                                     EXPECT_EQ(tagVR_t::OB, testDataSet.getDataType(TagId(tagId_t::FileMetaInformationVersion_0002_0001)));
 
-                                    EXPECT_EQ(std::string("AAAaa"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0));
-                                    EXPECT_EQ(std::string("BBBbbb"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 1));
-                                    EXPECT_EQ(std::string(""), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 2));
+                                    EXPECT_EQ(std::string("AAAaa"), testDataSet.getString(TagId(dicomhero::tagId_t::PatientName_0010_0010), 0));
+                                    EXPECT_EQ(std::string("BBBbbb"), testDataSet.getString(TagId(dicomhero::tagId_t::PatientName_0010_0010), 1));
+                                    EXPECT_EQ(std::string(""), testDataSet.getString(TagId(dicomhero::tagId_t::PatientName_0010_0010), 2));
                                     EXPECT_DOUBLE_EQ(50.6, testDataSet.getDouble(TagId(tagId_t::TimeRange_0008_1163), 0));
 
                                     DataSet sequenceItem = testDataSet.getSequenceItem(TagId(tagId_t::ReferencedPerformedProcedureStepSequence_0008_1111), 0);
@@ -251,7 +251,7 @@ TEST(dicomCodecTest, testDicom)
                                         }
                                         else
                                         {
-                                            EXPECT_EQ((std::int32_t)(1 - interleaved), testDataSet.getInt32(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 0));
+                                            EXPECT_EQ((std::int32_t)(1 - interleaved), testDataSet.getInt32(TagId(dicomhero::tagId_t::PlanarConfiguration_0028_0006), 0));
                                         }
 
                                     }
@@ -396,7 +396,7 @@ TEST(dicomCodecTest, codecFactoryPipe)
 
     PipeStream source(1024);
 
-    std::thread feedData(imebra::tests::feedDataThread, std::ref(source), std::ref(testDataSet));
+    std::thread feedData(dicomhero::tests::feedDataThread, std::ref(source), std::ref(testDataSet));
 
     StreamReader reader(source.getStreamInput());
     DataSet loadedDataSet(CodecFactory::load(reader));
@@ -659,17 +659,17 @@ TEST(dicomCodecTest, testOverlay)
                     StreamReader reader(readStream);
                     DataSet testDataSet = CodecFactory::load(reader, lazyLoad == 0 ? std::numeric_limits<size_t>::max() : 1);
 
-                    EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_CLASS_UID), testDataSet.getString(TagId(tagId_t::ImplementationClassUID_0002_0012), 0));
-                    EXPECT_EQ(std::string(IMEBRA_IMPLEMENTATION_NAME), testDataSet.getString(TagId(tagId_t::ImplementationVersionName_0002_0013), 0));
+                    EXPECT_EQ(std::string(DICOMHERO_IMPLEMENTATION_CLASS_UID), testDataSet.getString(TagId(tagId_t::ImplementationClassUID_0002_0012), 0));
+                    EXPECT_EQ(std::string(DICOMHERO_IMPLEMENTATION_NAME), testDataSet.getString(TagId(tagId_t::ImplementationVersionName_0002_0013), 0));
 
                     EXPECT_EQ(0u, testDataSet.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 0));
                     EXPECT_EQ(1u, testDataSet.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 1));
                     EXPECT_THROW(testDataSet.getUint32(TagId(tagId_t::FileMetaInformationVersion_0002_0001), 2), MissingItemError);
                     EXPECT_EQ(tagVR_t::OB, testDataSet.getDataType(TagId(tagId_t::FileMetaInformationVersion_0002_0001)));
 
-                    EXPECT_EQ(std::string("AAAaa"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 0));
-                    EXPECT_EQ(std::string("BBBbbb"), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 1));
-                    EXPECT_EQ(std::string(""), testDataSet.getString(TagId(imebra::tagId_t::PatientName_0010_0010), 2));
+                    EXPECT_EQ(std::string("AAAaa"), testDataSet.getString(TagId(dicomhero::tagId_t::PatientName_0010_0010), 0));
+                    EXPECT_EQ(std::string("BBBbbb"), testDataSet.getString(TagId(dicomhero::tagId_t::PatientName_0010_0010), 1));
+                    EXPECT_EQ(std::string(""), testDataSet.getString(TagId(dicomhero::tagId_t::PatientName_0010_0010), 2));
 
                     for(unsigned int repeatLazyLoad(0); repeatLazyLoad != lazyLoad + 1; ++ repeatLazyLoad)
                     {
@@ -862,7 +862,7 @@ TEST(dicomCodecTest, dcmtkInteroperabilityDicomImage)
                         testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
                         if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
                         {
-                            testDataSet.setUint32(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
+                            testDataSet.setUint32(TagId(dicomhero::tagId_t::PlanarConfiguration_0028_0006), 1 - interleaved);
                         }
                         testDataSet.setImage(0, images[0], quality);
                         testDataSet.setImage(1, images[1], quality);
@@ -1002,7 +1002,7 @@ TEST(dicomCodecTest, dcmtkInteroperabilityDicomOverlay)
             testDataSet.setDouble(TagId(tagId_t::TimeRange_0008_1163), 50.6);
             if(ColorTransformsFactory::getNumberOfChannels(colorSpace) > 1)
             {
-                testDataSet.setUint32(TagId(imebra::tagId_t::PlanarConfiguration_0028_0006), 1);
+                testDataSet.setUint32(TagId(dicomhero::tagId_t::PlanarConfiguration_0028_0006), 1);
             }
             testDataSet.setImage(0, image, quality);
 
@@ -1081,5 +1081,5 @@ TEST(dicomCodecTest, dcmtkInteroperabilityDicomOverlay)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero
 

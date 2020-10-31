@@ -26,7 +26,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraMutableMemory*)getMemory:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     if(get_imebra_object_holder(WritingDataHandler) != nullptr)
     {
@@ -37,31 +37,31 @@ If you do not want to be bound by the GPL terms (such as the requirement
         return nil;
     }
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(void)assign:(NSData*)pSource error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     if(get_imebra_object_holder(WritingDataHandler) != nullptr)
     {
         ((imebra::WritingDataHandlerNumeric*)get_imebra_object_holder(WritingDataHandler))->assign((char*)pSource.bytes, (size_t)pSource.length);
     }
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(void)copyFrom:(ImebraReadingDataHandlerNumeric*)pSource error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     if(get_imebra_object_holder(WritingDataHandler) != nullptr)
     {
         ((imebra::WritingDataHandlerNumeric*)get_imebra_object_holder(WritingDataHandler))->copyFrom(*((imebra::ReadingDataHandlerNumeric*)get_other_imebra_object_holder(pSource, ReadingDataHandler)));
     }
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(unsigned int) unitSize

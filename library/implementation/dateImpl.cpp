@@ -18,7 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "dateImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -87,5 +87,5 @@ std::int32_t date::getOffsetMinutes() const
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 

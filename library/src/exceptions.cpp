@@ -11,10 +11,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include "../implementation/exceptionImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 std::string ExceptionsManager::getExceptionTrace()

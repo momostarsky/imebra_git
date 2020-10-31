@@ -2,7 +2,7 @@
 #include "buildImageForTest.h"
 #include <gtest/gtest.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -468,4 +468,4 @@ TEST(drawBitmapTest, testPalette16bit)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

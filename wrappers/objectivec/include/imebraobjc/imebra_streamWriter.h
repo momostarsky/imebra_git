@@ -27,7 +27,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 ///////////////////////////////////////////////////////////////////////////////
 @interface ImebraStreamWriter: NSObject
 
-#ifndef __IMEBRA_OBJECTIVEC_BRIDGING__
+#ifndef __DICOMHERO_OBJECTIVEC_BRIDGING__
 {
     @public
     define_imebra_object_holder(StreamWriter);

@@ -11,13 +11,13 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#include "../include/imebra/memory.h"
+#include "../include/dicomhero/memory.h"
 #include "../implementation/memoryImpl.h"
 #include "../implementation/exceptionImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <memory.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 Memory::Memory(): m_pMemory(std::make_shared<const implementation::memory>())
@@ -48,26 +48,26 @@ Memory::~Memory()
 
 size_t Memory::size() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pMemory->size();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 const char* Memory::data(size_t* pDataSize) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     *pDataSize = m_pMemory->size();
     return (char*)m_pMemory->data();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 size_t Memory::data(char* destination, size_t destinationSize) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     size_t memorySize = m_pMemory->size();
     if(destination != 0 && destinationSize >= memorySize && memorySize != 0)
@@ -76,31 +76,31 @@ size_t Memory::data(char* destination, size_t destinationSize) const
     }
     return memorySize;
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void Memory::regionData(char* destination, size_t destinationSize, size_t sourceOffset) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     size_t memorySize = m_pMemory->size();
     if(m_pMemory->size() < sourceOffset + destinationSize)
     {
-        IMEBRA_THROW(MemorySizeError, "The source memory region exceedes the memory size");
+        DICOMHERO_THROW(MemorySizeError, "The source memory region exceedes the memory size");
     }
     ::memcpy(destination, m_pMemory->data() + sourceOffset, memorySize);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
 bool Memory::empty() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pMemory->empty();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 }

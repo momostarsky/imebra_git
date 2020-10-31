@@ -4,7 +4,7 @@
 #include <thread>
 #include <chrono>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -108,5 +108,5 @@ TEST(exceptionsTest, testAutomaticClear)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero
 

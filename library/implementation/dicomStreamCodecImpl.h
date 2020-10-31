@@ -24,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataSetImpl.h"
 #include "streamControllerImpl.h"
 
-/// \def IMEBRA_DATASET_MAX_DEPTH
+/// \def DICOMHERO_DATASET_MAX_DEPTH
 /// \brief Max number of datasets embedded into each
 ///        others.
 ///
@@ -33,10 +33,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 ///   into each others.
 ///
 ///////////////////////////////////////////////////////////
-#define IMEBRA_DATASET_MAX_DEPTH 16
+#define DICOMHERO_DATASET_MAX_DEPTH 16
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -182,6 +182,6 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraDicomStreamCodec_CC44A2C5_2B8C_42c1_9704_3F9C582643B9__INCLUDED_)

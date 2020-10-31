@@ -20,378 +20,378 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include <stdexcept>
 
-namespace imebra
+namespace dicomhero
 {
     void setNSError(const std::runtime_error& error, NSError** pError, Class errorClass);
 }
 
-#define OBJC_IMEBRA_FUNCTION_START() try {
+#define OBJC_DICOMHERO_FUNCTION_START() try {
 
-#define OBJC_IMEBRA_FUNCTION_END() } \
-    catch(imebra::LutCorruptedError& e)\
+#define OBJC_DICOMHERO_FUNCTION_END() } \
+    catch(dicomhero::LutCorruptedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraLutCorruptedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraLutCorruptedError class]);\
     }\
-    catch(imebra::LutError& e)\
+    catch(dicomhero::LutError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraLutError class]);\
+        dicomhero::setNSError(e, pError, [ImebraLutError class]);\
     }\
-    catch(imebra::MissingGroupError& e)\
+    catch(dicomhero::MissingGroupError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraMissingGroupError class]);\
+        dicomhero::setNSError(e, pError, [ImebraMissingGroupError class]);\
     }\
-    catch(imebra::MissingTagError& e)\
+    catch(dicomhero::MissingTagError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraMissingTagError class]);\
+        dicomhero::setNSError(e, pError, [ImebraMissingTagError class]);\
     }\
-    catch(imebra::MissingBufferError& e)\
+    catch(dicomhero::MissingBufferError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraMissingBufferError class]);\
+        dicomhero::setNSError(e, pError, [ImebraMissingBufferError class]);\
     }\
-    catch(imebra::MissingItemError& e)\
+    catch(dicomhero::MissingItemError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraMissingItemError class]);\
+        dicomhero::setNSError(e, pError, [ImebraMissingItemError class]);\
     }\
-    catch(imebra::MissingDataElementError& e)\
+    catch(dicomhero::MissingDataElementError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraMissingDataElementError class]);\
+        dicomhero::setNSError(e, pError, [ImebraMissingDataElementError class]);\
     }\
-    catch(imebra::StreamReadError& e)\
+    catch(dicomhero::StreamReadError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraStreamReadError class]);\
+        dicomhero::setNSError(e, pError, [ImebraStreamReadError class]);\
     }\
-    catch(imebra::StreamWriteError& e)\
+    catch(dicomhero::StreamWriteError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraStreamWriteError class]);\
+        dicomhero::setNSError(e, pError, [ImebraStreamWriteError class]);\
     }\
-    catch(imebra::TCPConnectionRefused& e)\
+    catch(dicomhero::TCPConnectionRefused& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraTCPConnectionRefused class]);\
+        dicomhero::setNSError(e, pError, [ImebraTCPConnectionRefused class]);\
     }\
-    catch(imebra::TCPAddressAlreadyInUse& e)\
+    catch(dicomhero::TCPAddressAlreadyInUse& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraTCPAddressAlreadyInUse class]);\
+        dicomhero::setNSError(e, pError, [ImebraTCPAddressAlreadyInUse class]);\
     }\
-    catch(imebra::PermissionDeniedError& e)\
+    catch(dicomhero::PermissionDeniedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraPermissionDeniedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraPermissionDeniedError class]);\
     }\
-    catch(imebra::StreamOpenError& e)\
+    catch(dicomhero::StreamOpenError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraStreamOpenError class]);\
+        dicomhero::setNSError(e, pError, [ImebraStreamOpenError class]);\
     }\
-    catch(imebra::AddressTryAgainError& e)\
+    catch(dicomhero::AddressTryAgainError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAddressTryAgainError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAddressTryAgainError class]);\
     }\
-    catch(imebra::AddressNoNameError& e)\
+    catch(dicomhero::AddressNoNameError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAddressNoNameError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAddressNoNameError class]);\
     }\
-    catch(imebra::AddressServiceNotSupportedError& e)\
+    catch(dicomhero::AddressServiceNotSupportedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAddressServiceNotSupportedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAddressServiceNotSupportedError class]);\
     }\
-    catch(imebra::AddressError& e)\
+    catch(dicomhero::AddressError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAddressError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAddressError class]);\
     }\
-    catch(imebra::DictionaryUnknownTagError& e)\
+    catch(dicomhero::DictionaryUnknownTagError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDictionaryUnknownTagError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDictionaryUnknownTagError class]);\
     }\
-    catch(imebra::DictionaryUnknownDataTypeError& e)\
+    catch(dicomhero::DictionaryUnknownDataTypeError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDictionaryUnknownDataTypeError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDictionaryUnknownDataTypeError class]);\
     }\
-    catch(imebra::DictionaryError& e)\
+    catch(dicomhero::DictionaryError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDictionaryError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDictionaryError class]);\
     }\
-    catch(imebra::CharsetConversionNoTableError& e)\
+    catch(dicomhero::CharsetConversionNoTableError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraCharsetConversionNoTableError class]);\
+        dicomhero::setNSError(e, pError, [ImebraCharsetConversionNoTableError class]);\
     }\
-    catch(imebra::CharsetConversionNoSupportedTableError& e)\
+    catch(dicomhero::CharsetConversionNoSupportedTableError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraCharsetConversionNoSupportedTableError class]);\
+        dicomhero::setNSError(e, pError, [ImebraCharsetConversionNoSupportedTableError class]);\
     }\
-    catch(imebra::CharsetConversionCannotConvert& e)\
+    catch(dicomhero::CharsetConversionCannotConvert& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraCharsetConversionCannotConvert class]);\
+        dicomhero::setNSError(e, pError, [ImebraCharsetConversionCannotConvert class]);\
     }\
-    catch(imebra::CharsetConversionError& e)\
+    catch(dicomhero::CharsetConversionError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraCharsetConversionError class]);\
+        dicomhero::setNSError(e, pError, [ImebraCharsetConversionError class]);\
     }\
-    catch(imebra::CodecWrongFormatError& e)\
+    catch(dicomhero::CodecWrongFormatError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraCodecWrongFormatError class]);\
+        dicomhero::setNSError(e, pError, [ImebraCodecWrongFormatError class]);\
     }\
-    catch(imebra::CodecCorruptedFileError& e)\
+    catch(dicomhero::CodecCorruptedFileError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraCodecCorruptedFileError class]);\
+        dicomhero::setNSError(e, pError, [ImebraCodecCorruptedFileError class]);\
     }\
-    catch(imebra::CodecWrongTransferSyntaxError& e)\
+    catch(dicomhero::CodecWrongTransferSyntaxError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraCodecWrongTransferSyntaxError class]);\
+        dicomhero::setNSError(e, pError, [ImebraCodecWrongTransferSyntaxError class]);\
     }\
-    catch(imebra::CodecImageTooBigError& e)\
+    catch(dicomhero::CodecImageTooBigError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraCodecImageTooBigError class]);\
+        dicomhero::setNSError(e, pError, [ImebraCodecImageTooBigError class]);\
     }\
-    catch(imebra::InvalidSequenceItemError& e)\
+    catch(dicomhero::InvalidSequenceItemError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraInvalidSequenceItemError class]);\
+        dicomhero::setNSError(e, pError, [ImebraInvalidSequenceItemError class]);\
     }\
-    catch(imebra::DataHandlerConversionError& e)\
+    catch(dicomhero::DataHandlerConversionError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDataHandlerConversionError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDataHandlerConversionError class]);\
     }\
-    catch(imebra::DataHandlerCorruptedBufferError& e)\
+    catch(dicomhero::DataHandlerCorruptedBufferError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDataHandlerCorruptedBufferError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDataHandlerCorruptedBufferError class]);\
     }\
-    catch(imebra::DataHandlerInvalidDataError& e)\
+    catch(dicomhero::DataHandlerInvalidDataError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDataHandlerInvalidDataError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDataHandlerInvalidDataError class]);\
     }\
-    catch(imebra::DataHandlerError& e)\
+    catch(dicomhero::DataHandlerError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDataHandlerError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDataHandlerError class]);\
     }\
-    catch(imebra::DataSetDifferentFormatError& e)\
+    catch(dicomhero::DataSetDifferentFormatError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDataSetDifferentFormatError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDataSetDifferentFormatError class]);\
     }\
-    catch(imebra::DataSetUnknownTransferSyntaxError& e)\
+    catch(dicomhero::DataSetUnknownTransferSyntaxError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDataSetUnknownTransferSyntaxError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDataSetUnknownTransferSyntaxError class]);\
     }\
-    catch(imebra::DataSetWrongFrameError& e)\
+    catch(dicomhero::DataSetWrongFrameError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDataSetWrongFrameError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDataSetWrongFrameError class]);\
     }\
-    catch(imebra::DataSetImageDoesntExistError& e)\
+    catch(dicomhero::DataSetImageDoesntExistError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDataSetImageDoesntExistError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDataSetImageDoesntExistError class]);\
     }\
-    catch(imebra::DataSetImagePaletteColorIsReadOnly& e)\
+    catch(dicomhero::DataSetImagePaletteColorIsReadOnly& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDataSetImagePaletteColorIsReadOnly class]);\
+        dicomhero::setNSError(e, pError, [ImebraDataSetImagePaletteColorIsReadOnly class]);\
     }\
-    catch(imebra::DataSetCorruptedOffsetTableError& e)\
+    catch(dicomhero::DataSetCorruptedOffsetTableError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDataSetCorruptedOffsetTableError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDataSetCorruptedOffsetTableError class]);\
     }\
-    catch(imebra::DataSetError& e)\
+    catch(dicomhero::DataSetError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDataSetError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDataSetError class]);\
     }\
-    catch(imebra::DicomDirCircularReferenceError& e)\
+    catch(dicomhero::DicomDirCircularReferenceError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDicomDirCircularReferenceError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDicomDirCircularReferenceError class]);\
     }\
-    catch(imebra::DicomDirError& e)\
+    catch(dicomhero::DicomDirError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDicomDirError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDicomDirError class]);\
     }\
-    catch(imebra::ImageUnknownDepthError& e)\
+    catch(dicomhero::ImageUnknownDepthError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraImageUnknownDepthError class]);\
+        dicomhero::setNSError(e, pError, [ImebraImageUnknownDepthError class]);\
     }\
-    catch(imebra::ImageUnknownColorSpaceError& e)\
+    catch(dicomhero::ImageUnknownColorSpaceError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraImageUnknownColorSpaceError class]);\
+        dicomhero::setNSError(e, pError, [ImebraImageUnknownColorSpaceError class]);\
     }\
-    catch(imebra::ImageInvalidSizeError& e)\
+    catch(dicomhero::ImageInvalidSizeError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraImageInvalidSizeError class]);\
+        dicomhero::setNSError(e, pError, [ImebraImageInvalidSizeError class]);\
     }\
-    catch(imebra::ImageError& e)\
+    catch(dicomhero::ImageError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraImageError class]);\
+        dicomhero::setNSError(e, pError, [ImebraImageError class]);\
     }\
-    catch(imebra::TransformInvalidAreaError& e)\
+    catch(dicomhero::TransformInvalidAreaError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraTransformInvalidAreaError class]);\
+        dicomhero::setNSError(e, pError, [ImebraTransformInvalidAreaError class]);\
     }\
-    catch(imebra::TransformDifferentHighBitError& e)\
+    catch(dicomhero::TransformDifferentHighBitError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraTransformDifferentHighBitError class]);\
+        dicomhero::setNSError(e, pError, [ImebraTransformDifferentHighBitError class]);\
     }\
-    catch(imebra::ColorTransformWrongColorSpaceError& e)\
+    catch(dicomhero::ColorTransformWrongColorSpaceError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraColorTransformWrongColorSpaceError class]);\
+        dicomhero::setNSError(e, pError, [ImebraColorTransformWrongColorSpaceError class]);\
     }\
-    catch(imebra::ColorTransformsFactoryNoTransformError& e)\
+    catch(dicomhero::ColorTransformsFactoryNoTransformError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraColorTransformsFactoryNoTransformError class]);\
+        dicomhero::setNSError(e, pError, [ImebraColorTransformsFactoryNoTransformError class]);\
     }\
-    catch(imebra::ColorTransformsFactoryError& e)\
+    catch(dicomhero::ColorTransformsFactoryError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraColorTransformsFactoryError class]);\
+        dicomhero::setNSError(e, pError, [ImebraColorTransformsFactoryError class]);\
     }\
-    catch(imebra::TransformDifferentColorSpacesError& e)\
+    catch(dicomhero::TransformDifferentColorSpacesError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraTransformDifferentColorSpacesError class]);\
+        dicomhero::setNSError(e, pError, [ImebraTransformDifferentColorSpacesError class]);\
     }\
-    catch(imebra::ColorTransformError& e)\
+    catch(dicomhero::ColorTransformError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraColorTransformError class]);\
+        dicomhero::setNSError(e, pError, [ImebraColorTransformError class]);\
     }\
-    catch(imebra::ModalityVOILUTError& e)\
+    catch(dicomhero::ModalityVOILUTError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraModalityVOILUTError class]);\
+        dicomhero::setNSError(e, pError, [ImebraModalityVOILUTError class]);\
     }\
-    catch(imebra::TransformError& e)\
+    catch(dicomhero::TransformError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraTransformError class]);\
+        dicomhero::setNSError(e, pError, [ImebraTransformError class]);\
     }\
-    catch(imebra::StreamClosedError& e)\
+    catch(dicomhero::StreamClosedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraStreamClosedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraStreamClosedError class]);\
     }\
-    catch(imebra::StreamEOFError& e)\
+    catch(dicomhero::StreamEOFError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraStreamEOFError class]);\
+        dicomhero::setNSError(e, pError, [ImebraStreamEOFError class]);\
     }\
-    catch(imebra::DicomCodecDepthLimitReachedError& e)\
+    catch(dicomhero::DicomCodecDepthLimitReachedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDicomCodecDepthLimitReachedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDicomCodecDepthLimitReachedError class]);\
     }\
-    catch(imebra::DicomCodecError& e)\
+    catch(dicomhero::DicomCodecError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDicomCodecError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDicomCodecError class]);\
     }\
-    catch(imebra::JpegCodecCannotHandleSyntaxError& e)\
+    catch(dicomhero::JpegCodecCannotHandleSyntaxError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraJpegCodecCannotHandleSyntaxError class]);\
+        dicomhero::setNSError(e, pError, [ImebraJpegCodecCannotHandleSyntaxError class]);\
     }\
-    catch(imebra::JpegCodecError& e)\
+    catch(dicomhero::JpegCodecError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraJpegCodecError class]);\
+        dicomhero::setNSError(e, pError, [ImebraJpegCodecError class]);\
     }\
-    catch(imebra::CodecError& e)\
+    catch(dicomhero::CodecError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraCodecError class]);\
+        dicomhero::setNSError(e, pError, [ImebraCodecError class]);\
     }\
-    catch(imebra::MemorySizeError& e)\
+    catch(dicomhero::MemorySizeError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraMemorySizeError class]);\
+        dicomhero::setNSError(e, pError, [ImebraMemorySizeError class]);\
     }\
-    catch(imebra::MemoryError& e)\
+    catch(dicomhero::MemoryError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraMemoryError class]);\
+        dicomhero::setNSError(e, pError, [ImebraMemoryError class]);\
     }\
-    catch(imebra::AcseCorruptedMessageError& e)\
+    catch(dicomhero::AcseCorruptedMessageError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseCorruptedMessageError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseCorruptedMessageError class]);\
     }\
-    catch(imebra::AcseNoTransferSyntaxError& e)\
+    catch(dicomhero::AcseNoTransferSyntaxError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseNoTransferSyntaxError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseNoTransferSyntaxError class]);\
     }\
-    catch(imebra::AcsePresentationContextNotRequestedError& e)\
+    catch(dicomhero::AcsePresentationContextNotRequestedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcsePresentationContextNotRequestedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcsePresentationContextNotRequestedError class]);\
     }\
-    catch(imebra::AcseWrongRoleError& e)\
+    catch(dicomhero::AcseWrongRoleError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseWrongRoleError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseWrongRoleError class]);\
     }\
-    catch(imebra::AcseWrongResponseIdError& e)\
+    catch(dicomhero::AcseWrongResponseIdError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseWrongResponseIdError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseWrongResponseIdError class]);\
     }\
-    catch(imebra::AcseWrongCommandIdError& e)\
+    catch(dicomhero::AcseWrongCommandIdError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseWrongCommandIdError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseWrongCommandIdError class]);\
     }\
-    catch(imebra::AcseWrongIdError& e)\
+    catch(dicomhero::AcseWrongIdError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseWrongIdError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseWrongIdError class]);\
     }\
-    catch(imebra::AcseSCUNoReasonGivenError& e)\
+    catch(dicomhero::AcseSCUNoReasonGivenError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseSCUNoReasonGivenError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseSCUNoReasonGivenError class]);\
     }\
-    catch(imebra::AcseSCUApplicationContextNameNotSupportedError& e)\
+    catch(dicomhero::AcseSCUApplicationContextNameNotSupportedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseSCUApplicationContextNameNotSupportedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseSCUApplicationContextNameNotSupportedError class]);\
     }\
-    catch(imebra::AcseSCUCallingAETNotRecognizedError& e)\
+    catch(dicomhero::AcseSCUCallingAETNotRecognizedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseSCUCallingAETNotRecognizedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseSCUCallingAETNotRecognizedError class]);\
     }\
-    catch(imebra::AcseSCUCalledAETNotRecognizedError& e)\
+    catch(dicomhero::AcseSCUCalledAETNotRecognizedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseSCUCalledAETNotRecognizedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseSCUCalledAETNotRecognizedError class]);\
     }\
-    catch(imebra::AcseSCPNoReasonGivenError& e)\
+    catch(dicomhero::AcseSCPNoReasonGivenError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseSCPNoReasonGivenError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseSCPNoReasonGivenError class]);\
     }\
-    catch(imebra::AcseSCPAcseProtocolVersionNotSupportedError& e)\
+    catch(dicomhero::AcseSCPAcseProtocolVersionNotSupportedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseSCPAcseProtocolVersionNotSupportedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseSCPAcseProtocolVersionNotSupportedError class]);\
     }\
-    catch(imebra::AcseSCPPresentationReservedError& e)\
+    catch(dicomhero::AcseSCPPresentationReservedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseSCPPresentationReservedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseSCPPresentationReservedError class]);\
     }\
-    catch(imebra::AcseSCPPresentationTemporaryCongestionError& e)\
+    catch(dicomhero::AcseSCPPresentationTemporaryCongestionError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseSCPPresentationTemporaryCongestionError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseSCPPresentationTemporaryCongestionError class]);\
     }\
-    catch(imebra::AcseSCPPresentationLocalLimitExcededError& e)\
+    catch(dicomhero::AcseSCPPresentationLocalLimitExcededError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseSCPPresentationLocalLimitExcededError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseSCPPresentationLocalLimitExcededError class]);\
     }\
-    catch(imebra::AcseTooManyOperationsPerformedError& e)\
+    catch(dicomhero::AcseTooManyOperationsPerformedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseTooManyOperationsPerformedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseTooManyOperationsPerformedError class]);\
     }\
-    catch(imebra::AcseTooManyOperationsInvokedError& e)\
+    catch(dicomhero::AcseTooManyOperationsInvokedError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseTooManyOperationsInvokedError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseTooManyOperationsInvokedError class]);\
     }\
-    catch(imebra::AcseNoPayloadError& e)\
+    catch(dicomhero::AcseNoPayloadError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseNoPayloadError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseNoPayloadError class]);\
     }\
-    catch(imebra::AcseRejectedAssociationError& e)\
+    catch(dicomhero::AcseRejectedAssociationError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseRejectedAssociationError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseRejectedAssociationError class]);\
     }\
-    catch(imebra::AcseError& e)\
+    catch(dicomhero::AcseError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraAcseError class]);\
+        dicomhero::setNSError(e, pError, [ImebraAcseError class]);\
     }\
-    catch(imebra::DimseInvalidCommand& e)\
+    catch(dicomhero::DimseInvalidCommand& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDimseInvalidCommand class]);\
+        dicomhero::setNSError(e, pError, [ImebraDimseInvalidCommand class]);\
     }\
-    catch(imebra::DimseError& e)\
+    catch(dicomhero::DimseError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraDimseError class]);\
+        dicomhero::setNSError(e, pError, [ImebraDimseError class]);\
     }\
-    catch(imebra::NonRegisteredUIDGenerator& e)\
+    catch(dicomhero::NonRegisteredUIDGenerator& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraNonRegisteredUIDGenerator class]);\
+        dicomhero::setNSError(e, pError, [ImebraNonRegisteredUIDGenerator class]);\
     }\
-    catch(imebra::UIDGeneratorError& e)\
+    catch(dicomhero::UIDGeneratorError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraUIDGeneratorError class]);\
+        dicomhero::setNSError(e, pError, [ImebraUIDGeneratorError class]);\
     }\
-    catch(const imebra::StreamError& e)\
+    catch(const dicomhero::StreamError& e)\
     {\
-        imebra::setNSError(e, pError, [ImebraStreamError class]);\
+        dicomhero::setNSError(e, pError, [ImebraStreamError class]);\
     }
 
 
-#define OBJC_IMEBRA_FUNCTION_END_RETURN(returnValue) \
-    OBJC_IMEBRA_FUNCTION_END(); \
+#define OBJC_DICOMHERO_FUNCTION_END_RETURN(returnValue) \
+    OBJC_DICOMHERO_FUNCTION_END(); \
     return returnValue;
 
 #endif // imebraObjcNSError__INCLUDED_

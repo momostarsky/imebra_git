@@ -16,7 +16,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include <imebra/exceptions.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 void setNSError(const std::runtime_error& error, NSError** pError, Class errorClass)
@@ -39,4 +39,4 @@ void setNSError(const std::runtime_error& error, NSError** pError, Class errorCl
     }
 }
 
-} // namespace imebra
+} // namespace dicomhero

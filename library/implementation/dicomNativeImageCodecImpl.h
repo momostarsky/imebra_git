@@ -24,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataSetImpl.h"
 #include "streamControllerImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -457,6 +457,6 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraDicomNativeImageCodec_CC44A2C5_2B8C_42c1_9704_3F9C582643B9__INCLUDED_)

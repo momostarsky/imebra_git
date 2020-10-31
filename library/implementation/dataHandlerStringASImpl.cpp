@@ -19,14 +19,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <sstream>
 #include <string>
 #include <iomanip>
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include "ageImpl.h"
 #include "exceptionImpl.h"
 #include "dataHandlerStringASImpl.h"
 #include "memoryImpl.h"
 #include <memory.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -74,18 +74,18 @@ readingDataHandlerStringAS::readingDataHandlerStringAS(const memory& parseMemory
 ///////////////////////////////////////////////////////////
 std::shared_ptr<age> readingDataHandlerStringAS::getAge(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string ageString = getString(index);
     if(ageString.size() != 4)
     {
-        IMEBRA_THROW(DataHandlerCorruptedBufferError, "The AGE string should be 4 bytes long but it is "<< ageString.size() << " bytes long");
+        DICOMHERO_THROW(DataHandlerCorruptedBufferError, "The AGE string should be 4 bytes long but it is "<< ageString.size() << " bytes long");
     }
     std::istringstream ageStream(ageString);
     std::uint32_t ageValue;
     if(!(ageStream >> ageValue))
     {
-        IMEBRA_THROW(DataHandlerCorruptedBufferError, "The AGE is not a number");
+        DICOMHERO_THROW(DataHandlerCorruptedBufferError, "The AGE is not a number");
     }
     char unit = ageString[3];
     if(
@@ -94,11 +94,11 @@ std::shared_ptr<age> readingDataHandlerStringAS::getAge(const size_t index) cons
             unit != static_cast<char>(ageUnit_t::months) &&
             unit != static_cast<char>(ageUnit_t::years))
     {
-        IMEBRA_THROW(DataHandlerCorruptedBufferError, "The AGE unit should be D, W, M or Y but is ascii code " << +unit);
+        DICOMHERO_THROW(DataHandlerCorruptedBufferError, "The AGE unit should be D, W, M or Y but is ascii code " << +unit);
     }
     return std::make_shared<age>(ageValue, static_cast<ageUnit_t>(unit));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -119,7 +119,7 @@ writingDataHandlerStringAS::writingDataHandlerStringAS(const std::shared_ptr<buf
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringAS::setAge(const size_t index, const std::shared_ptr<const age>& pAge)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(index >= getSize())
     {
@@ -133,12 +133,12 @@ void writingDataHandlerStringAS::setAge(const size_t index, const std::shared_pt
 
     setString(index, ageStream.str());
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 void writingDataHandlerStringAS::validate() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     memory parseMemory(m_strings[0].size());
     ::memcpy(parseMemory.data(), m_strings[0].data(), parseMemory.size());
@@ -148,11 +148,11 @@ void writingDataHandlerStringAS::validate() const
     }
     catch(const DataHandlerCorruptedBufferError& e)
     {
-        IMEBRA_THROW(DataHandlerConversionError, e.what());
+        DICOMHERO_THROW(DataHandlerConversionError, e.what());
     }
     writingDataHandlerString::validate();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -160,4 +160,4 @@ void writingDataHandlerStringAS::validate() const
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

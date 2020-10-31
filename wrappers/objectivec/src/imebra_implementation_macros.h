@@ -14,9 +14,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraImplementationMacros__INCLUDED_)
 #define imebraImplementationMacros__INCLUDED_
 
-#define get_imebra_object_holder(Type) ((imebra::Type*)m_##Type)
+#define get_imebra_object_holder(Type) ((dicomhero::Type*)m_##Type)
 
-#define get_other_imebra_object_holder(Object, Type) ((imebra::Type*)Object->m_##Type)
+#define get_other_imebra_object_holder(Object, Type) ((dicomhero::Type*)Object->m_##Type)
 
 #define set_imebra_object_holder(Type, Value) m_##Type = Value
 
@@ -24,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #define delete_imebra_object_holder(Type) delete get_imebra_object_holder(Type)
 
-#define get_imebra_parameter(Type) ((imebra::Type*)parameter_##Type)
+#define get_imebra_parameter(Type) ((dicomhero::Type*)parameter_##Type)
 
 
 

@@ -11,12 +11,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#include "../include/imebra/memoryStreamOutput.h"
-#include "../include/imebra/mutableMemory.h"
+#include "../include/dicomhero/memoryStreamOutput.h"
+#include "../include/dicomhero/mutableMemory.h"
 #include "../implementation/memoryStreamImpl.h"
 #include <memory>
 
-namespace imebra
+namespace dicomhero
 {
 
 MemoryStreamOutput::MemoryStreamOutput(const MutableMemory& memory):

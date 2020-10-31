@@ -15,15 +15,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     \brief Implementation of the classes ReadingDataHandler & WritingDataHandler.
 */
 
-#include "../include/imebra/writingDataHandler.h"
-#include "../include/imebra/date.h"
-#include "../include/imebra/age.h"
-#include "../include/imebra/patientName.h"
+#include "../include/dicomhero/writingDataHandler.h"
+#include "../include/dicomhero/date.h"
+#include "../include/dicomhero/age.h"
+#include "../include/dicomhero/patientName.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include <cstring>
 
-namespace imebra
+namespace dicomhero
 {
 
 WritingDataHandler::~WritingDataHandler()
@@ -44,174 +44,174 @@ const std::shared_ptr<implementation::handlers::writingDataHandler>& getWritingD
 
 void WritingDataHandler::setSize(size_t elementsNumber)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setSize(elementsNumber);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 size_t WritingDataHandler::getSize() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getSize();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 tagVR_t WritingDataHandler::getDataType() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDataHandler->getDataType();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 
 void WritingDataHandler::setDate(size_t index, const Date& date)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setDate((std::uint32_t)index, getDateImplementation(date));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setAge(size_t index, const Age& age)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setAge(index, getAgeImplementation(age));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setInt32(size_t index, std::int32_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setInt32(index, value);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setSignedLong(size_t index, std::int32_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setInt32(index, value);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setUint32(size_t index, std::uint32_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setUint32(index, value);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setUnsignedLong(size_t index, std::uint32_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setUint32(index, value);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setInt16(size_t index, std::int16_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setInt16(index, value);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setUint16(size_t index, std::uint16_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setUint16(index, value);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setInt8(size_t index, std::int8_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setInt8(index, value);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setUint8(size_t index, std::uint8_t value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setUint8(index, value);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setDouble(size_t index, double value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setDouble(index, value);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setFloat(size_t index, float value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setFloat(index, value);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setString(size_t index, const std::string& value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setString(index, value);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setUnicodeString(size_t index, const std::wstring& value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setUnicodeString(index, value);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setPatientName(size_t index, const PatientName& patientName)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setPatientName(index, getPatientNameImplementation(patientName));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void WritingDataHandler::setUnicodePatientName(size_t index, const UnicodePatientName& patientName)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pDataHandler->setUnicodePatientName(index, getUnicodePatientNameImplementation(patientName));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 }

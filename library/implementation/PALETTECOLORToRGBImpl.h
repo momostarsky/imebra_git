@@ -23,7 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "LUTImpl.h"
 #include "dataSetImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -75,7 +75,7 @@ public:
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
         std::uint32_t inputHighBit = inputPalette->getRed()->getBits() - 1;
@@ -107,7 +107,7 @@ public:
             pOutputMemory += (outputHandlerWidth - inputWidth) * 3;
         }
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
 };
@@ -120,6 +120,6 @@ public:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraPALETTECOLORToRGB_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_)

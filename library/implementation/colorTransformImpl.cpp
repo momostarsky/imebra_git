@@ -21,9 +21,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "colorTransformsFactoryImpl.h"
 #include "imageImpl.h"
 #include "LUTImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -60,31 +60,31 @@ namespace colorTransforms
 ///////////////////////////////////////////////////////////
 void colorTransform::checkColorSpaces(const std::string& inputHandlerColorSpace, const std::string& outputHandlerColorSpace) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
 	if(inputHandlerColorSpace != getInitialColorSpace())
 	{
-        IMEBRA_THROW(ColorTransformWrongColorSpaceError, "The image's color space cannot be handled by the transform");
+        DICOMHERO_THROW(ColorTransformWrongColorSpaceError, "The image's color space cannot be handled by the transform");
 	}
 
 	if(outputHandlerColorSpace != getFinalColorSpace())
 	{
-        IMEBRA_THROW(ColorTransformWrongColorSpaceError, "The image's color space cannot be handled by the transform");
+        DICOMHERO_THROW(ColorTransformWrongColorSpaceError, "The image's color space cannot be handled by the transform");
 	}
 
-	IMEBRA_FUNCTION_END();
+	DICOMHERO_FUNCTION_END();
 }
 
 void colorTransform::checkHighBit(std::uint32_t inputHighBit, std::uint32_t outputHighBit) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(inputHighBit != outputHighBit)
     {
-        IMEBRA_THROW(TransformDifferentHighBitError, "Different high bit (input = " << inputHighBit << ", output = " << outputHighBit << ")");
+        DICOMHERO_THROW(TransformDifferentHighBitError, "Different high bit (input = " << inputHighBit << ", output = " << outputHighBit << ")");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -95,7 +95,7 @@ std::shared_ptr<image> colorTransform::allocateOutputImage(
         std::shared_ptr<palette> inputPalette,
         std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(inputPalette != 0)
     {
@@ -113,7 +113,7 @@ std::shared_ptr<image> colorTransform::allocateOutputImage(
 
     return std::make_shared<image>(outputWidth, outputHeight, inputDepth, getFinalColorSpace(), inputHighBit);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 } // namespace colorTransforms
@@ -122,4 +122,4 @@ std::shared_ptr<image> colorTransform::allocateOutputImage(
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

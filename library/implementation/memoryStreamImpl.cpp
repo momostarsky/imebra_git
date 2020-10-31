@@ -20,7 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "memoryStreamImpl.h"
 #include <string.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -70,7 +70,7 @@ memoryStreamOutput::memoryStreamOutput(std::shared_ptr<memory> memoryStream): m_
 ///////////////////////////////////////////////////////////
 void memoryStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer, size_t bufferLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
 	// Nothing happens if we have nothing to write
 	///////////////////////////////////////////////////////////
@@ -93,7 +93,7 @@ void memoryStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer
 
 	::memcpy(m_memory->data() + startPosition, pBuffer, bufferLength);
 
-	IMEBRA_FUNCTION_END();
+	DICOMHERO_FUNCTION_END();
 }
 
 
@@ -108,7 +108,7 @@ void memoryStreamOutput::write(size_t startPosition, const std::uint8_t* pBuffer
 ///////////////////////////////////////////////////////////
 size_t memoryStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
 	if(bufferLength == 0)
 	{
@@ -142,7 +142,7 @@ size_t memoryStreamInput::read(size_t startPosition, std::uint8_t* pBuffer, size
 
 	return copySize;
 
-	IMEBRA_FUNCTION_END();
+	DICOMHERO_FUNCTION_END();
 }
 
 
@@ -160,4 +160,4 @@ bool memoryStreamInput::seekable() const
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

@@ -37,11 +37,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(void) close: (unsigned int) timeoutMilliseconds error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::PipeStream*)get_imebra_object_holder(PipeStream))->close(timeoutMilliseconds);
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(ImebraBaseStreamInput*) getStreamInput

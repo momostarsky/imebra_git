@@ -16,41 +16,41 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/transform.h"
-#include "../include/imebra/image.h"
+#include "../include/dicomhero/transform.h"
+#include "../include/dicomhero/image.h"
 #include "../implementation/transformImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 Transform::~Transform()
 {
 }
 
-Transform::Transform(const std::shared_ptr<imebra::implementation::transforms::transform>& pTransform): m_pTransform(pTransform)
+Transform::Transform(const std::shared_ptr<dicomhero::implementation::transforms::transform>& pTransform): m_pTransform(pTransform)
 {}
 
 Transform::Transform(const Transform &source): m_pTransform(getTransformImplementation(source))
 {
 }
 
-const std::shared_ptr<imebra::implementation::transforms::transform>& getTransformImplementation(const Transform& transform)
+const std::shared_ptr<dicomhero::implementation::transforms::transform>& getTransformImplementation(const Transform& transform)
 {
     return transform.m_pTransform;
 }
 
 bool Transform::isEmpty() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pTransform == 0 || m_pTransform->isEmpty();
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 MutableImage Transform::allocateOutputImage(const Image& inputImage, std::uint32_t width, std::uint32_t height) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     const std::shared_ptr<implementation::image> pImage(getImageImplementation(inputImage));
     return MutableImage(m_pTransform->allocateOutputImage(pImage->getDepth(),
@@ -59,7 +59,7 @@ MutableImage Transform::allocateOutputImage(const Image& inputImage, std::uint32
                                                    pImage->getPalette(),
                                                    width, height));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 void Transform::runTransform(
@@ -68,7 +68,7 @@ void Transform::runTransform(
             MutableImage& outputImage,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pTransform->runTransform(getImageImplementation(inputImage),
         inputTopLeftX,
@@ -79,7 +79,7 @@ void Transform::runTransform(
         outputTopLeftX,
         outputTopLeftY);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 }

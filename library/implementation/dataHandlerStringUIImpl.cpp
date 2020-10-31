@@ -19,7 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <cctype>
 #include "dataHandlerStringUIImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -35,7 +35,7 @@ namespace handlers
 ///////////////////////////////////////////////////////////
 std::string normalizeUid(const std::string& uid)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string value;
 
@@ -78,7 +78,7 @@ std::string normalizeUid(const std::string& uid)
         }
         else
         {
-            IMEBRA_THROW(DataHandlerInvalidDataError, "Invalid char in UID " << uid);
+            DICOMHERO_THROW(DataHandlerInvalidDataError, "Invalid char in UID " << uid);
         }
     }
 
@@ -89,7 +89,7 @@ std::string normalizeUid(const std::string& uid)
 
     return value;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -114,11 +114,11 @@ readingDataHandlerStringUI::readingDataHandlerStringUI(const memory& parseMemory
 
 std::string readingDataHandlerStringUI::getString(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return normalizeUid(readingDataHandlerString::getString(index));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 writingDataHandlerStringUI::writingDataHandlerStringUI(const std::shared_ptr<buffer> &pBuffer):
@@ -128,11 +128,11 @@ writingDataHandlerStringUI::writingDataHandlerStringUI(const std::shared_ptr<buf
 
 void writingDataHandlerStringUI::setString(const size_t index, const std::string& value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     writingDataHandlerString::setString(index, normalizeUid(value));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -141,4 +141,4 @@ void writingDataHandlerStringUI::setString(const size_t index, const std::string
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

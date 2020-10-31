@@ -29,7 +29,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <mutex>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -1248,6 +1248,6 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraDataSet_93F684BF_0024_4bf3_89BA_D98E82A1F44C__INCLUDED_)

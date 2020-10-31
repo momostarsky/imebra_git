@@ -22,9 +22,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include <memory>
 #include "dataHandlerNumericImpl.h"
-#include "../include/imebra/definitions.h"
+#include "../include/dicomhero/definitions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -268,6 +268,6 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraImage_A807A3CA_FA04_44f4_85D2_C7AA2FE103C4__INCLUDED_)

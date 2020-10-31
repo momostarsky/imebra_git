@@ -11,14 +11,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#include "../include/imebra/dataSet.h"
+#include "../include/dicomhero/dataSet.h"
 #include "../implementation/dataSetImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/charsetConversionBaseImpl.h"
 #include <typeinfo>
 #include <memory>
 
-namespace imebra
+namespace dicomhero
 {
 
 TagId::TagId(): m_groupId(0), m_groupOrder(0), m_tagId(0)

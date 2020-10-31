@@ -41,14 +41,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataHandlerDateTimeImpl.h"
 #include "dataHandlerTimeImpl.h"
 #include "dicomDictImpl.h"
-#include "../include/imebra/exceptions.h"
-#include "../include/imebra/definitions.h"
+#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero/definitions.h"
 
 #include <vector>
 #include <string.h>
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -129,7 +129,7 @@ buffer::~buffer()
 
 std::shared_ptr<const memory> buffer::getLocalMemory() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // If the object must be loaded from the original stream,
     //  then load it...
@@ -154,12 +154,12 @@ std::shared_ptr<const memory> buffer::getLocalMemory() const
 
     return joinMemory();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::shared_ptr<const memory> buffer::joinMemory() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_memory.empty())
     {
@@ -190,7 +190,7 @@ std::shared_ptr<const memory> buffer::joinMemory() const
 
     return newMemory;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -206,7 +206,7 @@ std::shared_ptr<const memory> buffer::joinMemory() const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler(tagVR_t tagVR) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -308,18 +308,18 @@ std::shared_ptr<handlers::readingDataHandler> buffer::getReadingDataHandler(tagV
         return std::make_shared<handlers::readingDataHandlerTime>(*localMemory);
 
     case tagVR_t::SQ:
-        IMEBRA_THROW(std::logic_error, "Cannot retrieve a SQ data handler");
+        DICOMHERO_THROW(std::logic_error, "Cannot retrieve a SQ data handler");
 
     default:
-        IMEBRA_THROW(std::logic_error, "The buffer was created with an invalid buffer type");
+        DICOMHERO_THROW(std::logic_error, "The buffer was created with an invalid buffer type");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(tagVR_t tagVR, std::uint32_t size)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -423,13 +423,13 @@ std::shared_ptr<handlers::writingDataHandler> buffer::getWritingDataHandler(tagV
         return std::make_shared<handlers::writingDataHandlerTime>(shared_from_this());
 
     case tagVR_t::SQ:
-        IMEBRA_THROW(std::logic_error, "Cannot retrieve a SQ data handler");
+        DICOMHERO_THROW(std::logic_error, "Cannot retrieve a SQ data handler");
 
     default:
-        IMEBRA_THROW(std::logic_error, "The buffer was created with an invalid buffer type");
+        DICOMHERO_THROW(std::logic_error, "The buffer was created with an invalid buffer type");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -461,7 +461,7 @@ bool buffer::hasExternalStream() const
 ///////////////////////////////////////////////////////////
 std::shared_ptr<streamReader> buffer::getStreamReader()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -482,7 +482,7 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 
     return reader;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -497,12 +497,12 @@ std::shared_ptr<streamReader> buffer::getStreamReader()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<streamWriter> buffer::getStreamWriter(tagVR_t tagVR)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<handlers::writingDataHandlerRaw> tempHandlerRaw = getWritingDataHandlerRaw(tagVR);
     return std::make_shared<streamWriter>(std::make_shared<bufferStreamOutput>(tempHandlerRaw));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -518,59 +518,59 @@ std::shared_ptr<streamWriter> buffer::getStreamWriter(tagVR_t tagVR)
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandlerRaw> buffer::getReadingDataHandlerRaw(tagVR_t tagVR) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
     return std::make_shared<handlers::readingDataHandlerRaw>(getLocalMemory(), tagVR);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::shared_ptr<handlers::writingDataHandlerRaw> buffer::getWritingDataHandlerRaw(tagVR_t tagVR, std::uint32_t size)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
     return std::make_shared<handlers::writingDataHandlerRaw>(shared_from_this(), size, tagVR);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::shared_ptr<handlers::readingDataHandlerNumericBase> buffer::getReadingDataHandlerNumeric(tagVR_t tagVR) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<handlers::readingDataHandler> handler = getReadingDataHandler(tagVR);
     std::shared_ptr<handlers::readingDataHandlerNumericBase> numericHandler = std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(handler);
     if(numericHandler == nullptr)
     {
-        IMEBRA_THROW(DataHandlerConversionError, "The data handler does not handle numeric data");
+        DICOMHERO_THROW(DataHandlerConversionError, "The data handler does not handle numeric data");
     }
 
     return numericHandler;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::shared_ptr<handlers::writingDataHandlerNumericBase> buffer::getWritingDataHandlerNumeric(tagVR_t tagVR, std::uint32_t size)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::shared_ptr<handlers::writingDataHandler> handler = getWritingDataHandler(tagVR, size);
     std::shared_ptr<handlers::writingDataHandlerNumericBase> numericHandler = std::dynamic_pointer_cast<handlers::writingDataHandlerNumericBase>(handler);
     if(numericHandler == nullptr)
     {
-        IMEBRA_THROW(DataHandlerConversionError, "The data handler does not handle numeric data");
+        DICOMHERO_THROW(DataHandlerConversionError, "The data handler does not handle numeric data");
     }
 
     return numericHandler;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -583,13 +583,13 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> buffer::getWritingDataH
 ///////////////////////////////////////////////////////////
 void buffer::appendMemory(std::shared_ptr<const memory> pMemory)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
     m_memory.push_back(pMemory);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -602,7 +602,7 @@ void buffer::appendMemory(std::shared_ptr<const memory> pMemory)
 ///////////////////////////////////////////////////////////
 size_t buffer::getBufferSizeBytes() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -621,7 +621,7 @@ size_t buffer::getBufferSizeBytes() const
 
     return totalSize;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -640,7 +640,7 @@ streamController::tByteOrdering buffer::getEndianType() const
 ///////////////////////////////////////////////////////////
 void buffer::commit(std::shared_ptr<memory> newMemory)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -648,11 +648,11 @@ void buffer::commit(std::shared_ptr<memory> newMemory)
     m_memory.push_back(newMemory);
     m_originalStream.reset();
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 

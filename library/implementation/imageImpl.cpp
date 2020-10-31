@@ -20,9 +20,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "imageImpl.h"
 #include "colorTransformsFactoryImpl.h"
 #include "bufferImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -49,11 +49,11 @@ image::image(uint32_t width, uint32_t height, bitDepth_t depth, const std::strin
     m_width(width),
     m_height(height)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(width == 0 || height == 0)
     {
-        IMEBRA_THROW(ImageInvalidSizeError, "An invalid image's size has been specified");
+        DICOMHERO_THROW(ImageInvalidSizeError, "An invalid image's size has been specified");
     }
 
     // Normalize the color space (remove _420 & _422 and
@@ -66,7 +66,7 @@ image::image(uint32_t width, uint32_t height, bitDepth_t depth, const std::strin
     m_channelsNumber = transforms::colorTransforms::colorTransformsFactory::getNumberOfChannels(colorSpace);
     if(m_channelsNumber == 0)
     {
-        IMEBRA_THROW(ImageUnknownColorSpaceError, "Cannot recognize the specified color space");
+        DICOMHERO_THROW(ImageUnknownColorSpaceError, "Cannot recognize the specified color space");
     }
 
     // Find the datatype to use to allocate the
@@ -102,7 +102,7 @@ image::image(uint32_t width, uint32_t height, bitDepth_t depth, const std::strin
         defaultHighBit=31;
         break;
     default:
-        IMEBRA_THROW(ImageUnknownDepthError, "Unknown depth");
+        DICOMHERO_THROW(ImageUnknownDepthError, "Unknown depth");
     }
 
     // Adjust the high bit value
@@ -112,7 +112,7 @@ image::image(uint32_t width, uint32_t height, bitDepth_t depth, const std::strin
     else
         m_highBit=highBit;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 image::~image()
@@ -140,7 +140,7 @@ void image::setPalette(std::shared_ptr<palette> imagePalette)
 ///////////////////////////////////////////////////////////
 std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHandler() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // If a valid buffer with the same data type is already
     //  allocated then use it.
@@ -157,12 +157,12 @@ std::shared_ptr<handlers::readingDataHandlerNumericBase> image::getReadingDataHa
 
     return std::dynamic_pointer_cast<handlers::readingDataHandlerNumericBase>(m_buffer->getReadingDataHandler(m_bufferDataType));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHandler()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // If a valid buffer with the same data type is already
     //  allocated then use it.
@@ -177,7 +177,7 @@ std::shared_ptr<handlers::writingDataHandlerNumericBase> image::getWritingDataHa
 
     return std::dynamic_pointer_cast<handlers::writingDataHandlerNumericBase>(imageHandler);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -278,4 +278,4 @@ void image::getSize(std::uint32_t* pWidth, std::uint32_t* pHeight) const
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

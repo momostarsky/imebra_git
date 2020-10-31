@@ -25,20 +25,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(ImebraMemory*)getMemory:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraMemory alloc] initWithImebraMemory:new imebra::Memory(((imebra::ReadingDataHandlerNumeric*)get_imebra_object_holder(ReadingDataHandler))->getMemory())];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(void)copyTo:(ImebraWritingDataHandlerNumeric*)destination error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     ((imebra::ReadingDataHandlerNumeric*)get_imebra_object_holder(ReadingDataHandler))->copyTo(*((imebra::WritingDataHandlerNumeric*)get_other_imebra_object_holder(destination,WritingDataHandler)));
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(unsigned int) unitSize

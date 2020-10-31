@@ -16,12 +16,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/drawBitmap.h"
+#include "../include/dicomhero/drawBitmap.h"
 #include "../implementation/drawBitmapImpl.h"
-#include "../include/imebra/image.h"
-#include "../include/imebra/transform.h"
+#include "../include/dicomhero/image.h"
+#include "../include/dicomhero/transform.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 DrawBitmap::DrawBitmap():
@@ -49,20 +49,20 @@ DrawBitmap::~DrawBitmap()
 
 size_t DrawBitmap::getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes, char* buffer, size_t bufferSize)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_pDrawBitmap->getBitmap(getImageImplementation(image), drawBitmapType, rowAlignBytes, (std::uint8_t*)buffer, bufferSize);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 const Memory DrawBitmap::getBitmap(const Image& image, drawBitmapType_t drawBitmapType, std::uint32_t rowAlignBytes)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return Memory(m_pDrawBitmap->getBitmap(getImageImplementation(image), drawBitmapType, rowAlignBytes));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 }

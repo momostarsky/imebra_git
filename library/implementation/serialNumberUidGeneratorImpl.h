@@ -23,7 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <cstdint>
 #include <mutex>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -74,7 +74,7 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 #endif // !defined(imebraSerialNumberUidGenerator_82307D4A_6490_4202_BF86_93399D32721E__INCLUDED_)

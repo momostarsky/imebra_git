@@ -26,24 +26,24 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #define DEFINE_RUN_TEMPLATE_TRANSFORM \
 virtual void runTransformHandlers(\
-    std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> inputHandler, bitDepth_t inputDepth, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,\
-    std::shared_ptr<imebra::implementation::palette> inputPalette,\
+    std::shared_ptr<dicomhero::implementation::handlers::readingDataHandlerNumericBase> inputHandler, bitDepth_t inputDepth, std::uint32_t inputHandlerWidth, const std::string& inputHandlerColorSpace,\
+    std::shared_ptr<dicomhero::implementation::palette> inputPalette,\
     std::uint32_t inputHighBit,\
     std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight,\
-    std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> outputHandler, bitDepth_t outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,\
-    std::shared_ptr<imebra::implementation::palette> outputPalette,\
+    std::shared_ptr<dicomhero::implementation::handlers::writingDataHandlerNumericBase> outputHandler, bitDepth_t outputDepth, std::uint32_t outputHandlerWidth, const std::string& outputHandlerColorSpace,\
+    std::shared_ptr<dicomhero::implementation::palette> outputPalette,\
     std::uint32_t outputHighBit,\
     std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const override\
 {\
-    IMEBRA_FUNCTION_START();\
+    DICOMHERO_FUNCTION_START();\
     runTemplateTransform(*this, inputHandler, outputHandler, inputDepth, inputHandlerWidth, inputHandlerColorSpace, inputPalette, inputHighBit,\
             inputTopLeftX, inputTopLeftY, inputWidth, inputHeight,\
             outputDepth, outputHandlerWidth, outputHandlerColorSpace, outputPalette, outputHighBit,\
             outputTopLeftX, outputTopLeftY);\
-    IMEBRA_FUNCTION_END();\
+    DICOMHERO_FUNCTION_END();\
 }
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -225,11 +225,11 @@ template <typename transformClass, typename inputType, typename... Args>
 void runTemplateTransform1(
         const transformClass& transformObject,
         const inputType* pInputData,
-        std::shared_ptr<imebra::implementation::handlers::writingDataHandlerNumericBase> outputHandler, Args... args)
+        std::shared_ptr<dicomhero::implementation::handlers::writingDataHandlerNumericBase> outputHandler, Args... args)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    imebra::implementation::handlers::writingDataHandlerNumericBase* pHandler(outputHandler.get());
+    dicomhero::implementation::handlers::writingDataHandlerNumericBase* pHandler(outputHandler.get());
 
     if(typeid(*pHandler) == typeid(handlers::writingDataHandlerUint8))
     {
@@ -257,21 +257,21 @@ void runTemplateTransform1(
     }
     else
     {
-        IMEBRA_THROW(std::runtime_error, "Data type not valid");\
+        DICOMHERO_THROW(std::runtime_error, "Data type not valid");\
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 template <typename transformClass, typename... Args>
 void runTemplateTransform(
         const transformClass& transformObject,
-        std::shared_ptr<imebra::implementation::handlers::readingDataHandlerNumericBase> inputHandler, Args... args)
+        std::shared_ptr<dicomhero::implementation::handlers::readingDataHandlerNumericBase> inputHandler, Args... args)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
-    imebra::implementation::handlers::readingDataHandlerNumericBase* pHandler(inputHandler.get());
+    dicomhero::implementation::handlers::readingDataHandlerNumericBase* pHandler(inputHandler.get());
     if(typeid(*pHandler) == typeid(handlers::readingDataHandlerUint8))
     {
         runTemplateTransform1<transformClass, std::uint8_t>(transformObject, (const std::uint8_t*)pHandler->getMemoryBuffer(), args...);
@@ -298,9 +298,9 @@ void runTemplateTransform(
     }
     else
     {
-        IMEBRA_THROW(std::runtime_error, "Data type not valid");\
+        DICOMHERO_THROW(std::runtime_error, "Data type not valid");\
     }
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -313,6 +313,6 @@ void runTemplateTransform(
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraTransform_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_)

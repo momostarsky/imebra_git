@@ -16,14 +16,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/transformHighBit.h"
+#include "../include/dicomhero/transformHighBit.h"
 #include "../implementation/transformHighBitImpl.h"
 
 
-namespace imebra
+namespace dicomhero
 {
 
-TransformHighBit::TransformHighBit(): Transform(std::make_shared<imebra::implementation::transforms::transformHighBit>())
+TransformHighBit::TransformHighBit(): Transform(std::make_shared<dicomhero::implementation::transforms::transformHighBit>())
 {
 }
 

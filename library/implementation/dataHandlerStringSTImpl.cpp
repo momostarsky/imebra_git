@@ -18,7 +18,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "dataHandlerStringSTImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -56,4 +56,4 @@ writingDataHandlerStringST::writingDataHandlerStringST(const std::shared_ptr<buf
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

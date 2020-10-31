@@ -12,7 +12,7 @@
 #endif
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -39,7 +39,7 @@ void sendDataThread(unsigned long maxConnections, std::string port)
     {
         std::cout << "Error in sending thread" << std::endl;
         std::cout << e.what() << std::endl;
-        std::cout << imebra::ExceptionsManager::getExceptionTrace() << std::endl;
+        std::cout << dicomhero::ExceptionsManager::getExceptionTrace() << std::endl;
     }
 }
 
@@ -53,7 +53,7 @@ TEST(tcpTest, sendReceive)
 
     unsigned long maxConnections(10);
 
-    std::thread sendDataThread(imebra::tests::sendDataThread, maxConnections, listeningPort);
+    std::thread sendDataThread(dicomhero::tests::sendDataThread, maxConnections, listeningPort);
 
     try
     {
@@ -71,7 +71,7 @@ TEST(tcpTest, sendReceive)
     {
         std::cout << "Error in sending sendreceive test" << std::endl;
         std::cout << e.what() << std::endl;
-        std::cout << imebra::ExceptionsManager::getExceptionTrace() << std::endl;
+        std::cout << dicomhero::ExceptionsManager::getExceptionTrace() << std::endl;
         EXPECT_TRUE(false);
     }
 
@@ -96,7 +96,7 @@ TEST(tcpTest, prematureClose)
 {
     const std::string listeningPort("20000");
 
-    std::thread acceptConnectionAndCloseThread(imebra::tests::AcceptConnectionAndCloseThread, listeningPort);
+    std::thread acceptConnectionAndCloseThread(dicomhero::tests::AcceptConnectionAndCloseThread, listeningPort);
 
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
@@ -200,7 +200,7 @@ TEST(tcpTest, delayedConnection)
 {
     const std::string listeningPort("20001");
 
-    std::thread delayConnection(imebra::tests::DelayConnectionThread, listeningPort);
+    std::thread delayConnection(dicomhero::tests::DelayConnectionThread, listeningPort);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
@@ -250,4 +250,4 @@ TEST(tcpTest, noService)
 }
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

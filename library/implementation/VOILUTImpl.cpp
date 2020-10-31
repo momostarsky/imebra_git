@@ -20,9 +20,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "VOILUTImpl.h"
 #include "dataSetImpl.h"
 #include "VOIDescriptionImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -73,7 +73,7 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(
         std::shared_ptr<palette> /* inputPalette */,
         std::uint32_t outputWidth, std::uint32_t outputHeight) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(isEmpty())
     {
@@ -112,7 +112,7 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(
 
     return std::make_shared<image>(outputWidth, outputHeight, inputDepth, inputColorSpace, inputHighBit);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -125,16 +125,16 @@ std::shared_ptr<image> VOILUT::allocateOutputImage(
 //
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-std::shared_ptr<VOIDescription> VOILUT::getOptimalVOI(const std::shared_ptr<imebra::implementation::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight)
+std::shared_ptr<VOIDescription> VOILUT::getOptimalVOI(const std::shared_ptr<dicomhero::implementation::image>& inputImage, std::uint32_t inputTopLeftX, std::uint32_t inputTopLeftY, std::uint32_t inputWidth, std::uint32_t inputHeight)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t width, height;
     inputImage->getSize(&width, &height);
 
     if(inputTopLeftX + inputWidth > width || inputTopLeftY + inputHeight > height)
     {
-        IMEBRA_THROW(TransformInvalidAreaError, "The input and/or output areas are invalid");
+        DICOMHERO_THROW(TransformInvalidAreaError, "The input and/or output areas are invalid");
     }
 
     std::shared_ptr<handlers::readingDataHandlerNumericBase> handler(inputImage->getReadingDataHandler());
@@ -142,7 +142,7 @@ std::shared_ptr<VOIDescription> VOILUT::getOptimalVOI(const std::shared_ptr<imeb
     HANDLER_CALL_TEMPLATE_FUNCTION_WITH_PARAMS(templateFindOptimalVOI, handler, width, inputTopLeftX, inputTopLeftY, inputWidth, inputHeight, voiDescription);
     return voiDescription;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -152,4 +152,4 @@ std::shared_ptr<VOIDescription> VOILUT::getOptimalVOI(const std::shared_ptr<imeb
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

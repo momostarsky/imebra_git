@@ -4,7 +4,7 @@
 #include <chrono>
 #include <functional>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -93,4 +93,4 @@ TEST(uidGenerators, serialNumberUIDGenerator)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

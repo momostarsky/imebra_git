@@ -53,131 +53,131 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(signed int) getInt32:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(ReadingDataHandler)->getInt32(index);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 -(signed int) getSignedLong:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(ReadingDataHandler)->getInt32(index);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 -(signed short) getInt16:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(ReadingDataHandler)->getInt16(index);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 -(signed char) getInt8:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(ReadingDataHandler)->getInt8(index);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 -(unsigned int) getUint32:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(ReadingDataHandler)->getUint32(index);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 -(unsigned int) getUnsignedLong:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(ReadingDataHandler)->getUint32(index);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 -(unsigned short) getUint16:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(ReadingDataHandler)->getUint16(index);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 -(unsigned char) getUint8:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(ReadingDataHandler)->getUint8(index);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 -(double) getDouble:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(ReadingDataHandler)->getDouble(index);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0.0f);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0.0f);
 }
 
 -(float) getFloat:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return get_imebra_object_holder(ReadingDataHandler)->getFloat(index);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0.0f);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0.0f);
 }
 
 -(NSString*) getString:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return imebra::stringToNSString(get_imebra_object_holder(ReadingDataHandler)->getString(index));
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraDate*) getDate:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     const imebra::Date date(get_imebra_object_holder(ReadingDataHandler)->getDate(index));
     return [[ImebraDate alloc] initWithImebraDate: new imebra::Date(date)];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraAge*) getAge:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     const imebra::Age age(get_imebra_object_holder(ReadingDataHandler)->getAge(index));
     return [[ImebraAge alloc] initWithImebraAge: new imebra::Age(age)];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 -(ImebraPatientName*) getPatientName:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     const imebra::PatientName patientName(get_imebra_object_holder(ReadingDataHandler)->getPatientName(index));
     return [[ImebraPatientName alloc] initWithImebraPatientName: new imebra::PatientName(patientName)];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 

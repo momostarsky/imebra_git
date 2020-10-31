@@ -17,12 +17,12 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 
-#include "../include/imebra/uidGeneratorFactory.h"
-#include "../include/imebra/baseUidGenerator.h"
+#include "../include/dicomhero/uidGeneratorFactory.h"
+#include "../include/dicomhero/baseUidGenerator.h"
 #include "../implementation/exceptionImpl.h"
 #include "../implementation/uidGeneratorFactoryImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 
@@ -33,20 +33,20 @@ void UIDGeneratorFactory::registerUIDGenerator(const std::string& name, const Ba
 
 BaseUIDGenerator UIDGeneratorFactory::getUIDGenerator(const std::string& name)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return BaseUIDGenerator(implementation::uidGenerators::uidGeneratorFactory::getUidGeneratorFactory().getUidGenerator(name));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 BaseUIDGenerator UIDGeneratorFactory::getDefaultUIDGenerator()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return BaseUIDGenerator(implementation::uidGenerators::uidGeneratorFactory::getUidGeneratorFactory().getDefaultUidGenerator());
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 }

@@ -33,9 +33,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "jpeg2000ImageCodecImpl.h"
 #endif
 
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -68,7 +68,7 @@ static codecFactory::forceCodecFactoryCreation forceCreation;
 ///////////////////////////////////////////////////////////
 codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximumImageHeight(MAXIMUM_IMAGE_HEIGHT)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     registerStreamCodec(codecType_t::dicom, std::make_shared<dicomStreamCodec>());
     registerStreamCodec(codecType_t::jpeg, std::make_shared<jpegStreamCodec>());
@@ -81,7 +81,7 @@ codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximu
     registerImageCodec(std::make_shared<jpeg2000ImageCodec>());
 #endif
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -96,20 +96,20 @@ codecFactory::codecFactory(): m_maximumImageWidth(MAXIMUM_IMAGE_WIDTH), m_maximu
 ///////////////////////////////////////////////////////////
 void codecFactory::registerStreamCodec(codecType_t codecType, std::shared_ptr<streamCodec> pCodec)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_streamCodecs[codecType] = pCodec;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 void codecFactory::registerImageCodec(std::shared_ptr<imageCodec> pCodec)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_imageCodecs.push_back(pCodec);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
@@ -125,7 +125,7 @@ void codecFactory::registerImageCodec(std::shared_ptr<imageCodec> pCodec)
 ///////////////////////////////////////////////////////////
 std::shared_ptr<const imageCodec> codecFactory::getImageCodec(const std::string& transferSyntax)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     for(std::list<std::shared_ptr<const imageCodec> >::iterator scanCodecs(m_imageCodecs.begin()); scanCodecs != m_imageCodecs.end(); ++scanCodecs)
     {
@@ -135,9 +135,9 @@ std::shared_ptr<const imageCodec> codecFactory::getImageCodec(const std::string&
         }
     }
 
-    IMEBRA_THROW(DataSetUnknownTransferSyntaxError, "None of the codecs support the specified transfer syntax");
+    DICOMHERO_THROW(DataSetUnknownTransferSyntaxError, "None of the codecs support the specified transfer syntax");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -153,11 +153,11 @@ std::shared_ptr<const imageCodec> codecFactory::getImageCodec(const std::string&
 ///////////////////////////////////////////////////////////
 std::shared_ptr<const streamCodec> codecFactory::getStreamCodec(codecType_t codecType)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return m_streamCodecs[codecType];
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -171,14 +171,14 @@ std::shared_ptr<const streamCodec> codecFactory::getStreamCodec(codecType_t code
 ///////////////////////////////////////////////////////////
 std::shared_ptr<codecFactory> codecFactory::getCodecFactory()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Violation to requirement REQ_MAKE_SHARED due to protected constructor
     static std::shared_ptr<codecFactory> m_codecFactory(new codecFactory());
 
     return m_codecFactory;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -194,7 +194,7 @@ std::shared_ptr<codecFactory> codecFactory::getCodecFactory()
 ///////////////////////////////////////////////////////////
 std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStream, std::uint32_t maxSizeBufferLoad /* = 0xffffffff */)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // This hack is necessary to keep compatibility across
     // the imebra 4.X series.
@@ -203,10 +203,10 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
     ///////////////////////////////////////////////////////////
     if(maxSizeBufferLoad != 0xffffffff && !pStream->seekable())
     {
-        IMEBRA_THROW(std::logic_error, "The codec factory supports only file and memory streams")
+        DICOMHERO_THROW(std::logic_error, "The codec factory supports only file and memory streams")
     }
 
-    std::uint8_t buffer[IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE];
+    std::uint8_t buffer[DICOMHERO_STREAM_CONTROLLER_MEMORY_SIZE];
 
     size_t startPosition = pStream->position();
     size_t bufferSize(pStream->readSome(buffer, sizeof(buffer)));
@@ -245,9 +245,9 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
         }
     }
 
-    IMEBRA_THROW(CodecWrongFormatError, "none of the codecs recognized the file format");
+    DICOMHERO_THROW(CodecWrongFormatError, "none of the codecs recognized the file format");
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -272,5 +272,5 @@ std::uint32_t codecFactory::getMaximumImageHeight()
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 

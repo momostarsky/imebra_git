@@ -16,14 +16,14 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/pipeStream.h"
-#include "../include/imebra/baseStreamInput.h"
-#include "../include/imebra/baseStreamOutput.h"
+#include "../include/dicomhero/pipeStream.h"
+#include "../include/dicomhero/baseStreamInput.h"
+#include "../include/dicomhero/baseStreamOutput.h"
 #include "../implementation/pipeImpl.h"
 #include "../implementation/baseStreamImpl.h"
 #include "../implementation/exceptionImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 PipeStream::PipeStream(size_t circularBufferSize):
@@ -42,11 +42,11 @@ PipeStream::~PipeStream()
 
 void PipeStream::close(unsigned int timeoutMilliseconds)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_pStream->close(timeoutMilliseconds);
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 const std::shared_ptr<implementation::pipeSequenceStream>& getPipeStreamImplementation(const PipeStream& stream)
@@ -56,20 +56,20 @@ const std::shared_ptr<implementation::pipeSequenceStream>& getPipeStreamImplemen
 
 BaseStreamInput PipeStream::getStreamInput()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return BaseStreamInput(std::make_shared<implementation::pipeSequenceStreamInput>(m_pStream));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 BaseStreamOutput PipeStream::getStreamOutput()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return BaseStreamOutput(std::make_shared<implementation::pipeSequenceStreamOutput>(m_pStream));
 
-    IMEBRA_FUNCTION_END_LOG();
+    DICOMHERO_FUNCTION_END_LOG();
 }
 
 }

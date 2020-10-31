@@ -12,10 +12,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 
-#include "../include/imebra/randomUidGenerator.h"
+#include "../include/dicomhero/randomUidGenerator.h"
 #include "../implementation/randomUidGeneratorImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 RandomUIDGenerator::RandomUIDGenerator(const std::string& root, std::uint32_t departmentId, std::uint32_t modelId):

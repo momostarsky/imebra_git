@@ -1,7 +1,7 @@
 #include <imebra/imebra.h>
 #include <gtest/gtest.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -584,53 +584,53 @@ TEST(stringHandlerTest, ASTest)
 {
     MutableDataSet dataSet;
 
-    dataSet.setAge(TagId(0x0010, 0x1010), Age(3, imebra::ageUnit_t::days));
+    dataSet.setAge(TagId(0x0010, 0x1010), Age(3, dicomhero::ageUnit_t::days));
     {
-        imebra::Age age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
+        dicomhero::Age age = dataSet.getAge(TagId(dicomhero::tagId_t::PatientAge_0010_1010), 0);
         EXPECT_EQ(3u, age.getAgeValue());
-        EXPECT_EQ(imebra::ageUnit_t::days, age.getAgeUnits());
-        EXPECT_EQ("003D", dataSet.getString(TagId(imebra::tagId_t::PatientAge_0010_1010), 0));
+        EXPECT_EQ(dicomhero::ageUnit_t::days, age.getAgeUnits());
+        EXPECT_EQ("003D", dataSet.getString(TagId(dicomhero::tagId_t::PatientAge_0010_1010), 0));
         ASSERT_DOUBLE_EQ(0.00821917808219178, age.getYears());
     }
 
-    ASSERT_THROW(dataSet.setDouble(TagId(imebra::tagId_t::PatientAge_0010_1010), .01), imebra::DataHandlerConversionError);
+    ASSERT_THROW(dataSet.setDouble(TagId(dicomhero::tagId_t::PatientAge_0010_1010), .01), dicomhero::DataHandlerConversionError);
 
-    ASSERT_THROW(dataSet.setUint32(TagId(imebra::tagId_t::PatientAge_0010_1010), 1), imebra::DataHandlerConversionError);
+    ASSERT_THROW(dataSet.setUint32(TagId(dicomhero::tagId_t::PatientAge_0010_1010), 1), dicomhero::DataHandlerConversionError);
 
-    ASSERT_THROW(dataSet.setInt32(TagId(imebra::tagId_t::PatientAge_0010_1010), 1), imebra::DataHandlerConversionError);
+    ASSERT_THROW(dataSet.setInt32(TagId(dicomhero::tagId_t::PatientAge_0010_1010), 1), dicomhero::DataHandlerConversionError);
 
-    ASSERT_THROW(dataSet.setDate(TagId(imebra::tagId_t::PatientAge_0010_1010), imebra::Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), imebra::DataHandlerConversionError);
+    ASSERT_THROW(dataSet.setDate(TagId(dicomhero::tagId_t::PatientAge_0010_1010), dicomhero::Date(2000, 1, 1, 0, 0, 0, 0, 0, 0)), dicomhero::DataHandlerConversionError);
 
-    dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "005M");
+    dataSet.setString(TagId(dicomhero::tagId_t::PatientAge_0010_1010), "005M");
     {
-        imebra::Age age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
+        dicomhero::Age age = dataSet.getAge(TagId(dicomhero::tagId_t::PatientAge_0010_1010), 0);
         EXPECT_EQ(5u, age.getAgeValue());
-        EXPECT_EQ(imebra::ageUnit_t::months, age.getAgeUnits());
+        EXPECT_EQ(dicomhero::ageUnit_t::months, age.getAgeUnits());
         EXPECT_DOUBLE_EQ(0.41666666666666669, age.getYears());
     }
 
-    dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "018W");
+    dataSet.setString(TagId(dicomhero::tagId_t::PatientAge_0010_1010), "018W");
     {
-        imebra::Age age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
+        dicomhero::Age age = dataSet.getAge(TagId(dicomhero::tagId_t::PatientAge_0010_1010), 0);
         EXPECT_EQ(18u, age.getAgeValue());
-        EXPECT_EQ(imebra::ageUnit_t::weeks, age.getAgeUnits());
+        EXPECT_EQ(dicomhero::ageUnit_t::weeks, age.getAgeUnits());
         EXPECT_DOUBLE_EQ(0.34520548039782323, age.getYears());
     }
 
-    dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "090Y");
+    dataSet.setString(TagId(dicomhero::tagId_t::PatientAge_0010_1010), "090Y");
     {
-        imebra::Age age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0);
+        dicomhero::Age age = dataSet.getAge(TagId(dicomhero::tagId_t::PatientAge_0010_1010), 0);
         EXPECT_EQ(90u, age.getAgeValue());
-        EXPECT_EQ(imebra::ageUnit_t::years, age.getAgeUnits());
+        EXPECT_EQ(dicomhero::ageUnit_t::years, age.getAgeUnits());
         EXPECT_DOUBLE_EQ(90.0, age.getYears());
     }
 
-    dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "018K");
+    dataSet.setString(TagId(dicomhero::tagId_t::PatientAge_0010_1010), "018K");
     {
-        ASSERT_THROW(imebra::Age age = dataSet.getAge(TagId(imebra::tagId_t::PatientAge_0010_1010), 0), DataHandlerCorruptedBufferError);
+        ASSERT_THROW(dicomhero::Age age = dataSet.getAge(TagId(dicomhero::tagId_t::PatientAge_0010_1010), 0), DataHandlerCorruptedBufferError);
     }
 
-    ASSERT_THROW(dataSet.setString(TagId(imebra::tagId_t::PatientAge_0010_1010), "18Y"), DataHandlerInvalidDataError);
+    ASSERT_THROW(dataSet.setString(TagId(dicomhero::tagId_t::PatientAge_0010_1010), "18Y"), DataHandlerInvalidDataError);
 
 }
 
@@ -751,4 +751,4 @@ TEST(stringHandlerTest, testLimits)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

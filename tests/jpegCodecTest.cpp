@@ -3,7 +3,7 @@
 #include <thread>
 #include "buildImageForTest.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -232,7 +232,7 @@ TEST(jpegCodecTest, codecFactoryPipe)
 
     PipeStream source(1024);
 
-    std::thread feedData(imebra::tests::feedJpegDataThread, std::ref(source), std::ref(testDataSet));
+    std::thread feedData(dicomhero::tests::feedJpegDataThread, std::ref(source), std::ref(testDataSet));
 
     StreamReader reader(source.getStreamInput());
     DataSet loadedDataSet(CodecFactory::load(reader));
@@ -255,4 +255,4 @@ TEST(jpegCodecTest, codecFactoryPipe)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

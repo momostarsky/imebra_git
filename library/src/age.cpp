@@ -16,10 +16,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/age.h"
+#include "../include/dicomhero/age.h"
 #include "../implementation/ageImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 Age::Age(const Age& source):
@@ -62,6 +62,6 @@ ageUnit_t Age::getAgeUnits() const
 }
 
 
-} // namespace imebra
+} // namespace dicomhero
 
 

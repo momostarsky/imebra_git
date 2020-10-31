@@ -30,9 +30,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "colorTransformsFactoryImpl.h"
 #include "codecFactoryImpl.h"
 #include "bufferImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -79,16 +79,16 @@ std::shared_ptr<image> dicomRLEImageCodec::getImage(const std::string& /* transf
                                                     std::shared_ptr<streamReader> pSourceStream) const
 
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(bInterleaved)
     {
-        IMEBRA_THROW(CodecCorruptedFileError, "RLE encoding does not allow planar configuration = 0");
+        DICOMHERO_THROW(CodecCorruptedFileError, "RLE encoding does not allow planar configuration = 0");
     }
 
     if(bSubSampledX || bSubSampledY)
     {
-        IMEBRA_THROW(CodecCorruptedFileError, "Cannot read subsampled RLE compressed images");
+        DICOMHERO_THROW(CodecCorruptedFileError, "Cannot read subsampled RLE compressed images");
     }
 
     // Create an image
@@ -131,7 +131,7 @@ std::shared_ptr<image> dicomRLEImageCodec::getImage(const std::string& /* transf
 
     if(tempChannelsNumber != channelsNumber)
     {
-        IMEBRA_THROW(CodecCorruptedFileError,  "The color space " << colorSpace << " requires " << tempChannelsNumber << " but the dataset declares " << channelsNumber << " channels");
+        DICOMHERO_THROW(CodecCorruptedFileError,  "The color space " << colorSpace << " requires " << tempChannelsNumber << " but the dataset declares " << channelsNumber << " channels");
     }
 
     // Allocate the dicom channels
@@ -178,7 +178,7 @@ std::shared_ptr<image> dicomRLEImageCodec::getImage(const std::string& /* transf
     ///////////////////////////////////////////////////////////
     return pImage;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 
 }
 
@@ -217,7 +217,7 @@ void dicomRLEImageCodec::writeRLECompressed(
         std::uint32_t mask
         )
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint32_t segmentsOffset[16];
     ::memset(segmentsOffset, 0, sizeof(segmentsOffset));
@@ -327,7 +327,7 @@ void dicomRLEImageCodec::writeRLECompressed(
 
     } // for(int phase = 0; phase < 2; ++phase)
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -342,7 +342,7 @@ void dicomRLEImageCodec::writeRLECompressed(
 ///////////////////////////////////////////////////////////
 size_t dicomRLEImageCodec::writeRLEDifferentBytes(std::vector<std::uint8_t>* pDifferentBytes, streamWriter* pDestStream, bool bWrite)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     size_t writtenLength = 0;
     for(size_t offset(0); offset != pDifferentBytes->size();)
@@ -367,7 +367,7 @@ size_t dicomRLEImageCodec::writeRLEDifferentBytes(std::vector<std::uint8_t>* pDi
     /////////////////////////////////
     return writtenLength;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -389,7 +389,7 @@ void dicomRLEImageCodec::readRLECompressed(
         std::uint8_t allocatedBits,
         std::uint32_t mask)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     // Copy the RLE header into the segmentsOffset array
     //  and adjust the byte endian to the machine architecture
@@ -495,7 +495,7 @@ void dicomRLEImageCodec::readRLECompressed(
 
     } // ...Channels scanning loop
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -519,16 +519,16 @@ void dicomRLEImageCodec::setImage(
         bool bInterleaved,
         bool /*b2Complement*/) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(bSubSampledX || bSubSampledY)
     {
-        IMEBRA_THROW(std::logic_error, "Cannot write subsampled RLE compressed images");
+        DICOMHERO_THROW(std::logic_error, "Cannot write subsampled RLE compressed images");
     }
 
     if(bInterleaved)
     {
-        IMEBRA_THROW(std::logic_error, "Cannot write interleaved RLE compressed images");
+        DICOMHERO_THROW(std::logic_error, "Cannot write interleaved RLE compressed images");
     }
 
     // First calculate the attributes we want to use.
@@ -559,7 +559,7 @@ void dicomRLEImageCodec::setImage(
                 (std::uint8_t)allocatedBits,
                 mask);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -591,15 +591,15 @@ bool dicomRLEImageCodec::canHandleTransferSyntax(const std::string& transferSynt
 ////////////////////////////////////////////////////////////////
 bool dicomRLEImageCodec::encapsulated(const std::string& transferSyntax) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(!canHandleTransferSyntax(transferSyntax))
     {
-        IMEBRA_THROW(CodecWrongTransferSyntaxError, "Cannot handle the transfer syntax");
+        DICOMHERO_THROW(CodecWrongTransferSyntaxError, "Cannot handle the transfer syntax");
     }
     return (true);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -621,5 +621,5 @@ std::uint32_t dicomRLEImageCodec::suggestAllocatedBits(const std::string& /* tra
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 

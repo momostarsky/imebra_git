@@ -4,7 +4,7 @@
 #include <chrono>
 #include <functional>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -38,7 +38,7 @@ TEST(pipeTest, sendReceive)
     PipeStream source(1024);
 
     size_t maxBlockBytes(3000);
-    std::thread feedData(imebra::tests::feedDataThread, std::ref(source), maxBlockBytes, 0, 1000);
+    std::thread feedData(dicomhero::tests::feedDataThread, std::ref(source), maxBlockBytes, 0, 1000);
 
     std::string buffer;
 
@@ -84,7 +84,7 @@ TEST(pipeTest, sendReceiveAligned)
 {
     PipeStream source(20);
 
-    std::thread feedData(imebra::tests::feedDataThreadAligned, std::ref(source), 20, 20);
+    std::thread feedData(dicomhero::tests::feedDataThreadAligned, std::ref(source), 20, 20);
 
     std::string buffer;
 
@@ -127,7 +127,7 @@ TEST(pipeTest, sendReceiveCloseAndWait)
     PipeStream source(1024);
 
     size_t maxBlockBytes(5);
-    std::thread feedData(imebra::tests::feedDataThread, std::ref(source), maxBlockBytes, 0, 10000);
+    std::thread feedData(dicomhero::tests::feedDataThread, std::ref(source), maxBlockBytes, 0, 10000);
 
     std::string buffer;
 
@@ -159,7 +159,7 @@ TEST(pipeTest, sendReceiveCloseNoWait)
     PipeStream source(1024);
 
     size_t maxBlockBytes(5);
-    std::thread feedData(imebra::tests::feedDataThread, std::ref(source), maxBlockBytes, 0, 0);
+    std::thread feedData(dicomhero::tests::feedDataThread, std::ref(source), maxBlockBytes, 0, 0);
 
     std::string buffer;
 
@@ -186,7 +186,7 @@ TEST(pipeTest, sendReceiveCloseNoWait)
         }
         EXPECT_TRUE(false);
     }
-    catch(const imebra::StreamClosedError&)
+    catch(const dicomhero::StreamClosedError&)
     {
         EXPECT_TRUE(true);
     }
@@ -217,7 +217,7 @@ TEST(pipeTest, sendReceiveDataSet)
 
     testDataSet.setString(TagId(tagId_t::PatientName_0010_0010), "TEST PATIENT");
 
-    std::thread feedData(imebra::tests::feedDatasetThread, std::ref(source), std::ref(testDataSet), 5000);
+    std::thread feedData(dicomhero::tests::feedDatasetThread, std::ref(source), std::ref(testDataSet), 5000);
 
 
     StreamReader reader(source.getStreamInput());
@@ -231,4 +231,4 @@ TEST(pipeTest, sendReceiveDataSet)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

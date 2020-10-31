@@ -16,10 +16,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/imebra/VOIDescription.h"
+#include "../include/dicomhero/VOIDescription.h"
 #include "../implementation/VOIDescriptionImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 VOIDescription::VOIDescription():
@@ -87,6 +87,6 @@ std::wstring VOIDescription::getUnicodeDescription() const
     return m_pVOIDescription->getUnicodeDescription();
 }
 
-} // namespace imebra
+} // namespace dicomhero
 
 

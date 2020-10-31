@@ -23,10 +23,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <atomic>
 #include <string>
 #include <memory>
-#include "../include/imebra/definitions.h"
+#include "../include/dicomhero/definitions.h"
 #include "acseImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -1666,7 +1666,7 @@ public:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 #endif // !defined(CImbxDimse_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_)

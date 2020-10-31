@@ -51,11 +51,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
     height:(unsigned int)height
     error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     return [[ImebraMutableImage alloc] initWithImebraImage:new imebra::MutableImage(get_imebra_object_holder(Transform)->allocateOutputImage(*get_other_imebra_object_holder(pInputImage, Image), (std::uint32_t)width, (std::uint32_t)height))];
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
 
@@ -70,7 +70,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     outputTopLeftY:(unsigned int)outputTopLeftY
     error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
     get_imebra_object_holder(Transform)->runTransform(
                 *get_other_imebra_object_holder(pInputImage, Image),
@@ -82,7 +82,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
                 (std::uint32_t)outputTopLeftX,
                 (std::uint32_t)outputTopLeftY);
 
-    OBJC_IMEBRA_FUNCTION_END();
+    OBJC_DICOMHERO_FUNCTION_END();
 }
 
 -(BOOL)isEmpty

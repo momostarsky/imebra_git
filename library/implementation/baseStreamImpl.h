@@ -30,7 +30,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <thread>
 #include <condition_variable>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -55,10 +55,10 @@ namespace implementation
 ///
 /// The library supplies two specialized streams derived
 ///  from this class:
-/// - imebra::stream (used to read or write into physical
+/// - dicomhero::stream (used to read or write into physical
 ///    files)
-/// - imebra::memoryStream (used to read or write into
-///    imebra::memory objects)
+/// - dicomhero::memoryStream (used to read or write into
+///    dicomhero::memory objects)
 ///
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -202,7 +202,7 @@ private:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 
 #endif // !defined(imebraBaseStream_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <vector>
 #include "transformImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -104,6 +104,6 @@ protected:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraTransformsChain_5DB89BFD_F105_45e7_B9D9_3756AC93C821__INCLUDED_)

@@ -18,11 +18,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "pipeImpl.h"
 #include "memoryImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <memory.h>
 #include <chrono>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -60,7 +60,7 @@ pipeSequenceStream::~pipeSequenceStream()
 ///////////////////////////////////////////////////////////
 size_t pipeSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::unique_lock<std::mutex> lock(m_positionMutex);
 
@@ -76,7 +76,7 @@ size_t pipeSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
             }
             else
             {
-                IMEBRA_THROW(StreamClosedError, "The pipe has been closed");
+                DICOMHERO_THROW(StreamClosedError, "The pipe has been closed");
             }
         }
         if(m_availableData != 0)
@@ -107,11 +107,11 @@ size_t pipeSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 
         if(m_availableData == 0)
         {
-            m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(IMEBRA_PIPE_TIMEOUT_MS));
+            m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(DICOMHERO_PIPE_TIMEOUT_MS));
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -121,7 +121,7 @@ size_t pipeSequenceStream::read(std::uint8_t* pBuffer, size_t bufferLength)
 ///////////////////////////////////////////////////////////
 void pipeSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::unique_lock<std::mutex> lock(m_positionMutex);
 
@@ -134,7 +134,7 @@ void pipeSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
     {
         if(m_bTerminate.load())
         {
-            IMEBRA_THROW(StreamClosedError, "The pipe has been closed");
+            DICOMHERO_THROW(StreamClosedError, "The pipe has been closed");
         }
 
         while(remainingData != 0 && m_availableData != m_pMemory->size())
@@ -167,11 +167,11 @@ void pipeSequenceStream::write(const std::uint8_t* pBuffer, size_t bufferLength)
 
         if(remainingData != 0 && m_availableData == m_pMemory->size())
         {
-            m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(IMEBRA_PIPE_TIMEOUT_MS));
+            m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(DICOMHERO_PIPE_TIMEOUT_MS));
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -194,7 +194,7 @@ void pipeSequenceStream::close(unsigned int timeoutMilliseconds)
     std::chrono::milliseconds timeout(timeoutMilliseconds);
     while( (m_availableData != 0) && ((std::chrono::steady_clock::now() - now) < timeout) )
     {
-        m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(IMEBRA_PIPE_TIMEOUT_MS));
+        m_positionConditionVariable.wait_for(lock, std::chrono::milliseconds(DICOMHERO_PIPE_TIMEOUT_MS));
     }
 
     m_bTerminate.store(true);
@@ -242,6 +242,6 @@ void pipeSequenceStreamOutput::write(const std::uint8_t* pBuffer, size_t bufferL
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 

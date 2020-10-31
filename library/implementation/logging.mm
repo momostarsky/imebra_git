@@ -1,9 +1,9 @@
 #include "logging.h"
-#if defined(IMEBRA_LOGGING_APPLE)
+#if defined(DICOMHERO_LOGGING_APPLE)
 
 #import <Foundation/Foundation.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation

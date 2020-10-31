@@ -19,7 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "exceptionImpl.h"
 #include "dataHandlerStringISImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -59,11 +59,11 @@ readingDataHandlerStringIS::readingDataHandlerStringIS(const memory& parseMemory
 ///////////////////////////////////////////////////////////
 double readingDataHandlerStringIS::getDouble(const size_t index) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     return (double)getInt32(index);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 writingDataHandlerStringIS::writingDataHandlerStringIS(const std::shared_ptr<buffer> pBuffer):
@@ -84,28 +84,28 @@ writingDataHandlerStringIS::writingDataHandlerStringIS(const std::shared_ptr<buf
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringIS::setDouble(const size_t index, const double value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(value > static_cast<double>(std::numeric_limits<std::int32_t>::max()) || value < static_cast<double>(std::numeric_limits<std::int32_t>::lowest()))
     {
-        IMEBRA_THROW(DataHandlerConversionError, "Cannot convert the value " << value << " to an integer (out of bounds)");
+        DICOMHERO_THROW(DataHandlerConversionError, "Cannot convert the value " << value << " to an integer (out of bounds)");
     }
     setInt32(index, (std::int32_t)value);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 void writingDataHandlerStringIS::setFloat(const size_t index, const float value)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     setDouble(index, static_cast<double>(value));
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 } // namespace handlers
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

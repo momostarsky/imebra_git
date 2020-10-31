@@ -23,7 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "imageImpl.h"
 
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -71,5 +71,5 @@ std::string YBRPARTIALToRGB::getFinalColorSpace() const
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 

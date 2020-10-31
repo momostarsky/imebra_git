@@ -18,9 +18,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "dataHandlerStringPNImpl.h"
 #include "patientNameImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -81,4 +81,4 @@ void writingDataHandlerStringPN::setUnicodePatientName(const size_t index, const
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

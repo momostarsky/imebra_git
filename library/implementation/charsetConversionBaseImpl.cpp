@@ -18,16 +18,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "exceptionImpl.h"
 #include "charsetConversionImpl.h"
-#include "../include/imebra/exceptions.h"
+#include "../include/dicomhero/exceptions.h"
 #include <memory>
 #include <sstream>
 
-namespace imebra
+namespace dicomhero
 {
 
 charsetDictionary::charsetDictionary()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     registerCharset("ISO_IR 6", "", "ISO-IR-6", "US-ASCII", 20127, false);
     registerCharset("ISO_IR 100", "", "ISO-IR-100", "ISO-8859-1", 28591, false);
@@ -65,22 +65,22 @@ charsetDictionary::charsetDictionary()
     registerCharset("ISO_IR 192", "", "UTF-8", "UTF-8", 65001, true);
     registerCharset("GB18030",    "", "GB18030", "GB18030", 54936, true);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 const charsetInformation& charsetDictionary::getCharsetInformation(const std::string& dicomName) const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string normalizedName(charsetConversionBase::normalizeIsoCharset((dicomName)));
     dictionary_t::const_iterator findInfo(m_dictionary.find(normalizedName));
     if(findInfo == m_dictionary.end())
     {
-        IMEBRA_THROW(CharsetConversionNoTableError, "Charset table " << dicomName << " not found in the charset dictionary");
+        DICOMHERO_THROW(CharsetConversionNoTableError, "Charset table " << dicomName << " not found in the charset dictionary");
     }
     return findInfo->second;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 const charsetDictionary::escapeSequences_t& charsetDictionary::getEscapeSequences() const
@@ -90,7 +90,7 @@ const charsetDictionary::escapeSequences_t& charsetDictionary::getEscapeSequence
 
 void charsetDictionary::registerCharset(const std::string& dicomName, const std::string& escapeSequence, const std::string& isoName, const std::string& javaName, const unsigned long windowsPage, const bool bZeroFlag)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_dictionary.insert(std::pair<std::string, charsetInformation>(
                             charsetConversionBase::normalizeIsoCharset(dicomName),
@@ -101,7 +101,7 @@ void charsetDictionary::registerCharset(const std::string& dicomName, const std:
         m_escapeSequences[escapeSequence] = dicomName;
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 charsetInformation::charsetInformation(const std::string &dicomName, const std::string &escapeSequence, const std::string &isoRegistration, const std::string &javaRegistration, unsigned long codePage, bool bZeroFlag):
@@ -139,18 +139,18 @@ charsetConversionBase::~charsetConversionBase()
 
 const charsetDictionary& charsetConversionBase::getDictionary() const
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     static charsetDictionary dictionary;
     return dictionary;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
 std::string charsetConversionBase::normalizeIsoCharset(const std::string &isoCharset)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::string normalizedIsoCharset;
 
@@ -174,8 +174,8 @@ std::string charsetConversionBase::normalizeIsoCharset(const std::string &isoCha
 
     return normalizedIsoCharset;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
-} // namespace imebra
+} // namespace dicomhero
 

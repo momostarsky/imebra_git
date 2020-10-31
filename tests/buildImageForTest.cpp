@@ -5,17 +5,17 @@
 #include <gtest/gtest.h>
 #include "buildImageForTest.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
 {
 
 
-imebra::Image buildImageForTest(
+dicomhero::Image buildImageForTest(
     std::uint32_t pixelsX,
     std::uint32_t pixelsY,
-    imebra::bitDepth_t depth,
+    dicomhero::bitDepth_t depth,
     std::uint32_t highBit,
     const std::string& colorSpace,
     std::uint32_t continuity)
@@ -68,7 +68,7 @@ TEST(buildImage, testBuildImage)
     Image testImage = buildImageForTest(
         400,
         300,
-        imebra::bitDepth_t::depthU8,
+        dicomhero::bitDepth_t::depthU8,
         7,
         "RGB",
         50);
@@ -123,7 +123,7 @@ TEST(buildImage, testCompareImage)
     Image testImage0 = buildImageForTest(
         400,
         300,
-        imebra::bitDepth_t::depthU8,
+        dicomhero::bitDepth_t::depthU8,
         7,
         "RGB",
         50);
@@ -131,7 +131,7 @@ TEST(buildImage, testCompareImage)
     Image testImage1 = buildImageForTest(
         400,
         300,
-        imebra::bitDepth_t::depthU8,
+        dicomhero::bitDepth_t::depthU8,
         7,
         "RGB",
         10);
@@ -142,10 +142,10 @@ TEST(buildImage, testCompareImage)
 }
 
 
-imebra::Image buildSubsampledImage(
+dicomhero::Image buildSubsampledImage(
     std::uint32_t pixelsX,
     std::uint32_t pixelsY,
-    imebra::bitDepth_t depth,
+    dicomhero::bitDepth_t depth,
     std::uint32_t highBit,
     const std::string& colorSpace)
 {
@@ -162,7 +162,7 @@ imebra::Image buildSubsampledImage(
 
         std::int32_t highValue ((1 << highBit) - 1);
         std::int32_t lowValue (0);
-        if(depth == imebra::bitDepth_t::depthS16 || depth == imebra::bitDepth_t::depthS8 || depth == imebra::bitDepth_t::depthS32)
+        if(depth == dicomhero::bitDepth_t::depthS16 || depth == dicomhero::bitDepth_t::depthS8 || depth == dicomhero::bitDepth_t::depthS32)
         {
             highValue = ((1 << (highBit - 1)) - 1);
             lowValue = -highValue - 1;
@@ -217,7 +217,7 @@ imebra::Image buildSubsampledImage(
 }
 
 
-double compareImages(const imebra::Image& image0, const imebra::Image& image1)
+double compareImages(const dicomhero::Image& image0, const dicomhero::Image& image1)
 {
     size_t width0(image0.getWidth()), height0(image0.getHeight());
     size_t width1(image1.getWidth()), height1(image1.getHeight());
@@ -305,7 +305,7 @@ double compareImages(const imebra::Image& image0, const imebra::Image& image1)
     return (double)difference / (double)divisor;
 }
 
-bool identicalImages(const imebra::Image& image0, const imebra::Image& image1)
+bool identicalImages(const dicomhero::Image& image0, const dicomhero::Image& image1)
 {
     size_t width0(image0.getWidth()), height0(image0.getHeight());
     size_t width1(image1.getWidth()), height1(image1.getHeight());
@@ -363,4 +363,4 @@ bool identicalImages(const imebra::Image& image0, const imebra::Image& image1)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero

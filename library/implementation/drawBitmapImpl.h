@@ -23,14 +23,14 @@ This file is not included automatically by implementation.h
 
 #include "memoryImpl.h"
 #include "transformImpl.h"
-#include "../include/imebra/exceptions.h"
-#include "../include/imebra/definitions.h"
+#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero/definitions.h"
 
 
 #include <memory>
 #include <string.h>
 
-namespace imebra
+namespace dicomhero
 {
 
 	namespace implementation
@@ -111,6 +111,6 @@ namespace imebra
 
 	} // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraDrawBitmap_3146DA5A_5276_4804_B9AB_A3D54C6B123A__INCLUDED_)

@@ -4,7 +4,7 @@
 #include <array>
 #include <chrono>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace tests
@@ -170,5 +170,5 @@ TEST(memoryTest, readWriteMemoryCopy)
 
 } // namespace tests
 
-} // namespace imebra
+} // namespace dicomhero
 

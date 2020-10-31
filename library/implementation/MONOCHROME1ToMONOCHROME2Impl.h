@@ -21,7 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "colorTransformImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -67,7 +67,7 @@ public:
             std::uint32_t outputHighBit,
             std::uint32_t outputTopLeftX, std::uint32_t outputTopLeftY) const
     {
-        IMEBRA_FUNCTION_START();
+        DICOMHERO_FUNCTION_START();
 
         checkColorSpaces(inputHandlerColorSpace, outputHandlerColorSpace);
         checkHighBit(inputHighBit, outputHighBit);
@@ -92,7 +92,7 @@ public:
             pOutputMemory += outputHandlerWidth - inputWidth;
         }
 
-        IMEBRA_FUNCTION_END();
+        DICOMHERO_FUNCTION_END();
     }
 
 };
@@ -122,6 +122,6 @@ public:
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
 
 #endif // !defined(imebraMONOCHROME1ToMONOCHROME2_E27C63E7_A907_4899_9BD3_8026AD7D110C__INCLUDED_)

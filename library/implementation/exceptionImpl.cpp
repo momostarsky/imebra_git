@@ -19,7 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "exceptionImpl.h"
 #include "charsetConversionImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -28,12 +28,12 @@ namespace implementation
 logTrace::logTrace(const std::string& functionName):
     m_functionName(functionName)
 {
-    IMEBRA_LOG_TRACE("Entering " << m_functionName);
+    DICOMHERO_LOG_TRACE("Entering " << m_functionName);
 }
 
 logTrace::~logTrace()
 {
-    IMEBRA_LOG_TRACE("Exiting " << m_functionName);
+    DICOMHERO_LOG_TRACE("Exiting " << m_functionName);
 }
 
 
@@ -156,7 +156,7 @@ thread_local std::unique_ptr<exceptionsManager> exceptionsManagerGetter::m_pMana
 
 exceptionsManager& exceptionsManagerGetter::getExceptionsManager()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
 #ifdef __APPLE__
     exceptionsManager* pManager = (exceptionsManager*)pthread_getspecific(m_key);
@@ -174,7 +174,7 @@ exceptionsManager& exceptionsManagerGetter::getExceptionsManager()
     return *(m_pManager.get());
 #endif
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 #ifdef __APPLE__
@@ -186,4 +186,4 @@ void exceptionsManagerGetter::deleteExceptionsManager(void* pManager)
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

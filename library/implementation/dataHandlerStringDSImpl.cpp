@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "exceptionImpl.h"
 #include "dataHandlerStringDSImpl.h"
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -60,4 +60,4 @@ writingDataHandlerStringDS::writingDataHandlerStringDS(const std::shared_ptr<buf
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero

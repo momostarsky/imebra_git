@@ -21,7 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <string.h>
 #include <vector>
 
-namespace imebra
+namespace dicomhero
 {
 
 namespace implementation
@@ -42,14 +42,14 @@ streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, s
     streamController(virtualStart, virtualLength),
     m_pControlledStream(pControlledStream)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(virtualLength == 0)
     {
-        IMEBRA_THROW(StreamEOFError, "Virtual stream with zero length");
+        DICOMHERO_THROW(StreamEOFError, "Virtual stream with zero length");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -57,14 +57,14 @@ streamReader::streamReader(std::shared_ptr<baseStreamInput> pControlledStream, s
     streamController(virtualStart, virtualLength, pBuffer, bufferLength),
     m_pControlledStream(pControlledStream)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(virtualLength == 0)
     {
-        IMEBRA_THROW(StreamEOFError, "Virtual stream with zero length");
+        DICOMHERO_THROW(StreamEOFError, "Virtual stream with zero length");
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -99,11 +99,11 @@ std::shared_ptr<baseStreamInput> streamReader::getControlledStream()
 
 std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(virtualLength == 0)
     {
-        IMEBRA_THROW(StreamEOFError, "Virtual stream with zero length");
+        DICOMHERO_THROW(StreamEOFError, "Virtual stream with zero length");
     }
 
     size_t currentPosition = position();
@@ -136,7 +136,7 @@ std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
 
     return reader;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 ///////////////////////////////////////////////////////////
@@ -146,7 +146,7 @@ std::shared_ptr<streamReader> streamReader::getReader(size_t virtualLength)
 ///////////////////////////////////////////////////////////
 bool streamReader::endReached()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     try
     {
@@ -161,7 +161,7 @@ bool streamReader::endReached()
         return true;
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -172,7 +172,7 @@ bool streamReader::endReached()
 ///////////////////////////////////////////////////////////
 size_t streamReader::fillDataBuffer()
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     size_t readBytes = fillDataBuffer(&(m_dataBuffer[0]), m_dataBuffer.size());
     if(readBytes == 0)
@@ -184,7 +184,7 @@ size_t streamReader::fillDataBuffer()
     m_dataBufferCurrent = 0;
     return readBytes;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -195,7 +195,7 @@ size_t streamReader::fillDataBuffer()
 ///////////////////////////////////////////////////////////
 size_t streamReader::fillDataBuffer(std::uint8_t* pDestinationBuffer, size_t readLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     m_dataBufferStreamPosition = position();
     if(m_virtualLength != 0)
@@ -212,7 +212,7 @@ size_t streamReader::fillDataBuffer(std::uint8_t* pDestinationBuffer, size_t rea
     }
     return m_pControlledStream->read(m_dataBufferStreamPosition + m_virtualStart, pDestinationBuffer, readLength);
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -237,7 +237,7 @@ void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
         return;
     }
 
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     std::uint8_t* pReadBuffer(pBuffer);
     while(bufferLength != 0)
@@ -247,7 +247,7 @@ void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
         bufferLength -= readBytes;
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -258,7 +258,7 @@ void streamReader::read(std::uint8_t* pBuffer, size_t bufferLength)
 ///////////////////////////////////////////////////////////
 size_t streamReader::readSome(std::uint8_t* pBuffer, size_t bufferLength)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     size_t originalSize(bufferLength);
 
@@ -290,14 +290,14 @@ size_t streamReader::readSome(std::uint8_t* pBuffer, size_t bufferLength)
                 bufferLength -= readBytes;
                 if(readBytes == 0)
                 {
-                    IMEBRA_THROW(StreamEOFError, "Attempt to read past the end of the file");
+                    DICOMHERO_THROW(StreamEOFError, "Attempt to read past the end of the file");
                 }
                 continue;
             }
 
             if(fillDataBuffer() == 0)
             {
-                IMEBRA_THROW(StreamEOFError, "Attempt to read past the end of the file");
+                DICOMHERO_THROW(StreamEOFError, "Attempt to read past the end of the file");
             }
         }
 
@@ -322,7 +322,7 @@ size_t streamReader::readSome(std::uint8_t* pBuffer, size_t bufferLength)
 
     return originalSize;
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 
@@ -362,7 +362,7 @@ void streamReader::seek(size_t newPosition)
 
 void streamReader::seekForward(std::uint32_t newPosition)
 {
-    IMEBRA_FUNCTION_START();
+    DICOMHERO_FUNCTION_START();
 
     if(m_forwardStream.empty())
     {
@@ -371,7 +371,7 @@ void streamReader::seekForward(std::uint32_t newPosition)
     else
     {
         // Use read to forward the data to the write streams
-        std::uint8_t buffer[IMEBRA_STREAM_CONTROLLER_MEMORY_SIZE];
+        std::uint8_t buffer[DICOMHERO_STREAM_CONTROLLER_MEMORY_SIZE];
         size_t readSize(sizeof(buffer));
         while(newPosition != 0)
         {
@@ -385,7 +385,7 @@ void streamReader::seekForward(std::uint32_t newPosition)
         }
     }
 
-    IMEBRA_FUNCTION_END();
+    DICOMHERO_FUNCTION_END();
 }
 
 bool streamReader::seekable() const
@@ -430,4 +430,4 @@ forwardStream::~forwardStream()
 
 } // namespace implementation
 
-} // namespace imebra
+} // namespace dicomhero
