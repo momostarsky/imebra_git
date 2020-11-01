@@ -1,4 +1,4 @@
-from imebra.imebra import *
+from dicomhero.dicomhero import *
 import array
 import unittest
 

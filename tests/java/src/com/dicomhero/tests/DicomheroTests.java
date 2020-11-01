@@ -1,7 +1,7 @@
-package com.imebra.tests;
+package com.dicomhero.tests;
 
 
-import com.imebra.*;
+import com.dicomhero.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -9,12 +9,12 @@ import java.io.UnsupportedEncodingException;
 
 import static junit.framework.TestCase.assertEquals;
 
-public class ImebraTests {
+public class DicomheroTests {
 
     @BeforeClass
     public static void SetupTest() throws Exception
     {
-        System.loadLibrary("imebrajni");
+        System.loadLibrary("dicomherojni");
     }
 
     @Test
@@ -59,11 +59,11 @@ public class ImebraTests {
         }
         String patientName1 = new String("\u0420\u062a\u062b^\u0410\u0628\u062a");
 
-        com.imebra.ReadWriteMemory streamMemory = new com.imebra.ReadWriteMemory();
+        com.dicomhero.ReadWriteMemory streamMemory = new com.dicomhero.ReadWriteMemory();
         {
-            com.imebra.FileParts charsetsList = new FileParts();
+            com.dicomhero.FileParts charsetsList = new FileParts();
             charsetsList.add("ISO_IR 6");
-            MutableDataSet testDataSet = new com.imebra.MutableDataSet("1.2.840.10008.1.2.1", charsetsList);
+            MutableDataSet testDataSet = new com.dicomhero.MutableDataSet("1.2.840.10008.1.2.1", charsetsList);
 
             {
                 WritingDataHandler handler = testDataSet.getWritingDataHandler(new TagId(0x10, 0x10), 0);
