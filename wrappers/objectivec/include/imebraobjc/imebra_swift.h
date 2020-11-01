@@ -1,3 +1,3 @@
 #define __DICOMHERO_OBJECTIVEC_BRIDGING__
 
-#import "imebra.h"
+#import "dicomhero.h"

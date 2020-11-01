@@ -11,7 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#import <imebraobjc/imebra.h>
+#import <imebraobjc/dicomhero.h>
 
 @compatibility_alias DicomheroVOIDescription ImebraVOIDescription;
 @compatibility_alias DicomheroVOILUT ImebraVOILUT;

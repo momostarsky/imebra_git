@@ -21,7 +21,7 @@ namespace dicomhero
 {
 
 /**
- * @brief Convert an NSString to a std::string accepted by imebra.
+ * @brief Convert an NSString to a std::string accepted by dicomhero.
  *
  * @param str an NSString
  * @return a UTF-8 encoded std::string

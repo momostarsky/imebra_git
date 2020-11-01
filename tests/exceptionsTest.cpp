@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <imebra/imebra.h>
+#include <dicomhero/dicomhero.h>
 #include <array>
 #include <thread>
 #include <chrono>

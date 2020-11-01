@@ -6,14 +6,14 @@ DICOMHero/Imebra is available for free under the GNU General Public License.
 The full text of the license is available in the file license.rst
  in the project root folder.
 
-If you do not want to be bound by the GPL terms (such as the requirement 
- that your application must also be GPL), you may purchase a commercial 
+If you do not want to be bound by the GPL terms (such as the requirement
+ that your application must also be GPL), you may purchase a commercial
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
 /*! \file baseStream.h
     \brief Declaration of the the base class for the streams (memory, file, ...)
-            used by the imebra library.
+            used by the dicomhero library.
 
 */
 
@@ -68,23 +68,23 @@ class baseStreamInput
 public:
     virtual ~baseStreamInput();
 
-	/// \brief Read raw data from the stream.
-	///
-	/// The function is multithreading-safe and is called by
-	///  the streamReader class when its buffer has to be
-	///  refilled.
-	///
-	/// @param startPosition  the position in the file from
-	///                        which the data has to be read
-	/// @param pBuffer        a pointer to the memory where the
-	///                        read data has to be placed
-	/// @param bufferLength   the number of bytes to read from
-	///                        the file
-	/// @return the number of bytes read from the file. When
-	///          it is 0 then the end of the file has been
-	///          reached
-	///
-	///////////////////////////////////////////////////////////
+    /// \brief Read raw data from the stream.
+    ///
+    /// The function is multithreading-safe and is called by
+    ///  the streamReader class when its buffer has to be
+    ///  refilled.
+    ///
+    /// @param startPosition  the position in the file from
+    ///                        which the data has to be read
+    /// @param pBuffer        a pointer to the memory where the
+    ///                        read data has to be placed
+    /// @param bufferLength   the number of bytes to read from
+    ///                        the file
+    /// @return the number of bytes read from the file. When
+    ///          it is 0 then the end of the file has been
+    ///          reached
+    ///
+    ///////////////////////////////////////////////////////////
     virtual size_t read(size_t startPosition, std::uint8_t* pBuffer, size_t bufferLength) = 0;
 
     ///
@@ -99,11 +99,6 @@ public:
     ///        moved backward, false otherwise.
     ///
     /// The default behaviour is not-seekable (returns false).
-    ///
-    /// This hack is necessary to keep compatibility across
-    /// the imebra 4.X series.
-    /// Imebra 5.X should have a base non-seekable object with
-    /// a derived seekable one.
     ///
     /// \return true if the reading position can be moved
     ///         backward, false otherwise

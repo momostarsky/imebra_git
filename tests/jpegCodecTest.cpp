@@ -1,4 +1,4 @@
-#include <imebra/imebra.h>
+#include <dicomhero/dicomhero.h>
 #include <gtest/gtest.h>
 #include <thread>
 #include "buildImageForTest.h"

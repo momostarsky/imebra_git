@@ -1,4 +1,4 @@
-#include <imebra/imebra.h>
+#include <dicomhero/dicomhero.h>
 #include "testsSettings.h"
 #include <iostream>
 #ifdef _WIN32

@@ -13,7 +13,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 /*! \file baseSequenceStreamImpl.h
     \brief Declaration of the the base class for the sequence streams (TCP)
-            used by the imebra library.
+            used by the dicomhero library.
 
 */
 

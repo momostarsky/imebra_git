@@ -11,7 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#include <imebra/imebra.h>
+#include <dicomhero/dicomhero.h>
 #include "buildImageForTest.h"
 #include <gtest/gtest.h>
 

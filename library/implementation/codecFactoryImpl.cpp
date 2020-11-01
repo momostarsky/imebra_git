@@ -196,11 +196,6 @@ std::shared_ptr<dataSet> codecFactory::load(std::shared_ptr<streamReader> pStrea
 {
     DICOMHERO_FUNCTION_START();
 
-    // This hack is necessary to keep compatibility across
-    // the imebra 4.X series.
-    // Imebra 5.X should have a base non-seekable object with
-    // a derived seekable one.
-    ///////////////////////////////////////////////////////////
     if(maxSizeBufferLoad != 0xffffffff && !pStream->seekable())
     {
         DICOMHERO_THROW(std::logic_error, "The codec factory supports only file and memory streams")

@@ -12,7 +12,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 /*! \file tcpSequenceStreamImpl.cpp
-    \brief Implementation of the the TCP stream used by the imebra library.
+    \brief Implementation of the the TCP stream used by the dicomhero library.
 
 */
 

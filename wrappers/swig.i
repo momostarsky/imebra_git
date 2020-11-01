@@ -1,4 +1,4 @@
-%module (threads="1") imebra
+%module (threads="1") dicomhero
 
 
 #ifdef SWIGJAVA
@@ -34,7 +34,7 @@
     %apply(void *STRING, size_t LENGTH) { (const char *source, size_t sourceSize) };
 
 %insert(cgo_comment_typedefs) %{
-#cgo LDFLAGS: -limebra
+#cgo LDFLAGS: -ldicomhero
 %}
 
 #endif
@@ -43,7 +43,7 @@
 
 %{
 
-#include <imebra/imebra.h>
+#include <dicomhero/dicomhero.h>
 
 %}
 
@@ -115,54 +115,54 @@
 }
 
 
-%include "../library/include/imebra/dicomDefinitions.h"
-%include "../library/include/imebra/tagId.h"
+%include "../library/include/dicomhero/dicomDefinitions.h"
+%include "../library/include/dicomhero/tagId.h"
 %include "../library/include/dicomhero/definitions.h"
-%include "../library/include/imebra/memory.h"
-%include "../library/include/imebra/mutableMemory.h"
-%include "../library/include/imebra/memoryPool.h"
-%include "../library/include/imebra/baseStreamInput.h"
-%include "../library/include/imebra/baseStreamOutput.h"
-%include "../library/include/imebra/streamReader.h"
-%include "../library/include/imebra/streamWriter.h"
-%include "../library/include/imebra/readingDataHandler.h"
-%include "../library/include/imebra/readingDataHandlerNumeric.h"
-%include "../library/include/imebra/writingDataHandler.h"
-%include "../library/include/imebra/writingDataHandlerNumeric.h"
-%include "../library/include/imebra/lut.h"
-%include "../library/include/imebra/image.h"
-%include "../library/include/imebra/overlay.h"
-%include "../library/include/imebra/tag.h"
-%include "../library/include/imebra/dataSet.h"
-%include "../library/include/imebra/codecFactory.h"
-%include "../library/include/imebra/tcpAddress.h"
-%include "../library/include/imebra/tcpListener.h"
-%include "../library/include/imebra/tcpStream.h"
-%include "../library/include/imebra/pipeStream.h"
-%include "../library/include/imebra/transform.h"
-%include "../library/include/imebra/transformHighBit.h"
-%include "../library/include/imebra/transformsChain.h"
-%include "../library/include/imebra/modalityVOILUT.h"
-%include "../library/include/imebra/VOILUT.h"
-%include "../library/include/imebra/VOIDescription.h"
-%include "../library/include/imebra/colorTransformsFactory.h"
-%include "../library/include/imebra/dicomDirEntry.h"
-%include "../library/include/imebra/dicomDir.h"
-%include "../library/include/imebra/dicomDictionary.h"
-%include "../library/include/imebra/drawBitmap.h"
-%include "../library/include/imebra/fileStreamInput.h"
-%include "../library/include/imebra/fileStreamOutput.h"
-%include "../library/include/imebra/memoryStreamInput.h"
-%include "../library/include/imebra/memoryStreamOutput.h"
-%include "../library/include/imebra/acse.h"
-%include "../library/include/imebra/dimse.h"
-%include "../library/include/imebra/date.h"
-%include "../library/include/imebra/age.h"
-%include "../library/include/imebra/patientName.h"
-%include "../library/include/imebra/uidGeneratorFactory.h"
-%include "../library/include/imebra/baseUidGenerator.h"
-%include "../library/include/imebra/randomUidGenerator.h"
-%include "../library/include/imebra/serialNumberUidGenerator.h"
+%include "../library/include/dicomhero/memory.h"
+%include "../library/include/dicomhero/mutableMemory.h"
+%include "../library/include/dicomhero/memoryPool.h"
+%include "../library/include/dicomhero/baseStreamInput.h"
+%include "../library/include/dicomhero/baseStreamOutput.h"
+%include "../library/include/dicomhero/streamReader.h"
+%include "../library/include/dicomhero/streamWriter.h"
+%include "../library/include/dicomhero/readingDataHandler.h"
+%include "../library/include/dicomhero/readingDataHandlerNumeric.h"
+%include "../library/include/dicomhero/writingDataHandler.h"
+%include "../library/include/dicomhero/writingDataHandlerNumeric.h"
+%include "../library/include/dicomhero/lut.h"
+%include "../library/include/dicomhero/image.h"
+%include "../library/include/dicomhero/overlay.h"
+%include "../library/include/dicomhero/tag.h"
+%include "../library/include/dicomhero/dataSet.h"
+%include "../library/include/dicomhero/codecFactory.h"
+%include "../library/include/dicomhero/tcpAddress.h"
+%include "../library/include/dicomhero/tcpListener.h"
+%include "../library/include/dicomhero/tcpStream.h"
+%include "../library/include/dicomhero/pipeStream.h"
+%include "../library/include/dicomhero/transform.h"
+%include "../library/include/dicomhero/transformHighBit.h"
+%include "../library/include/dicomhero/transformsChain.h"
+%include "../library/include/dicomhero/modalityVOILUT.h"
+%include "../library/include/dicomhero/VOILUT.h"
+%include "../library/include/dicomhero/VOIDescription.h"
+%include "../library/include/dicomhero/colorTransformsFactory.h"
+%include "../library/include/dicomhero/dicomDirEntry.h"
+%include "../library/include/dicomhero/dicomDir.h"
+%include "../library/include/dicomhero/dicomDictionary.h"
+%include "../library/include/dicomhero/drawBitmap.h"
+%include "../library/include/dicomhero/fileStreamInput.h"
+%include "../library/include/dicomhero/fileStreamOutput.h"
+%include "../library/include/dicomhero/memoryStreamInput.h"
+%include "../library/include/dicomhero/memoryStreamOutput.h"
+%include "../library/include/dicomhero/acse.h"
+%include "../library/include/dicomhero/dimse.h"
+%include "../library/include/dicomhero/date.h"
+%include "../library/include/dicomhero/age.h"
+%include "../library/include/dicomhero/patientName.h"
+%include "../library/include/dicomhero/uidGeneratorFactory.h"
+%include "../library/include/dicomhero/baseUidGenerator.h"
+%include "../library/include/dicomhero/randomUidGenerator.h"
+%include "../library/include/dicomhero/serialNumberUidGenerator.h"
 
 
 
