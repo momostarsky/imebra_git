@@ -8,7 +8,7 @@ The full text of the license is available in the file license.rst
 
 If you do not want to be bound by the GPL terms (such as the requirement
  that your application must also be GPL), you may purchase a commercial
- license for Imebra from the Imebra's website (http://imebra.com).
+ license for Imebra from the Imebra's website (https://dicomhero.com).
 
 This file was automatically generated
 */

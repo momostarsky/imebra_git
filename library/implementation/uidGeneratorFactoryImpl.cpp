@@ -95,4 +95,4 @@ std::shared_ptr<baseUidGenerator> uidGeneratorFactory::getDefaultUidGenerator() 
 
 } // implementation
 
-} // imebra
+} // dicomhero

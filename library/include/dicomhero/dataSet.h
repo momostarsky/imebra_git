@@ -64,7 +64,7 @@ class Overlay;
 ///
 /// In Java:
 /// \code
-/// com.imebra.DataSet dataSet = com.imebra.CodecFactory.load("/path/to/file");
+/// com.dicomhero.DataSet dataSet = com.dicomhero.CodecFactory.load("/path/to/file");
 /// \endcode
 ///
 /// To retrieve the DataSet's content, use one of the following methods which

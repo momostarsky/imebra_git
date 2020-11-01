@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "testsSettings.h"
-#include <imebra/imebra.h>
+#include <dicomhero/dicomhero.h>
 
 #if defined(DICOMHERO_LOGGING_LOG4CXX)
 #include <log4cxx/logger.h>

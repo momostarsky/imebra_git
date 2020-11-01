@@ -1,4 +1,4 @@
-#include <imebra/imebra.h>
+#include <dicomhero/dicomhero.h>
 #include <gtest/gtest.h>
 #include <thread>
 #include <chrono>
@@ -1405,7 +1405,7 @@ std::list<std::string> getFilesInDirectory(const std::string &directory)
 ///////////////////////////////////////////////////////////
 TEST(dimseTest, storeSCUInteroperabilityTest)
 {
-    char* tempDirName = ::tempnam(0, "imebra");
+    char* tempDirName = ::tempnam(0, "dicomhero");
     std::string dirName(tempDirName);
     free(tempDirName);
 

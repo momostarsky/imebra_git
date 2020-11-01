@@ -18,7 +18,7 @@ if("*${CMAKE_BUILD_TYPE}*" STREQUAL "**")
     set(CMAKE_BUILD_TYPE "Debug") # Default build mode is debug
 endif()
 
-set(imebra_libraries "")
+set(dicomhero_libraries "")
 
 # Select the proper charset conversion libraries according to the charset conversion method
 #------------------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ if(DICOMHERO_CHARSET_CONVERSION MATCHES ICONV)
     message("Using ICONV")
     add_definitions(-DDICOMHERO_USE_ICONV)
     if(APPLE)
-        set(imebra_libraries ${imebra_libraries} iconv)
+        set(dicomhero_libraries ${dicomhero_libraries} iconv)
     endif(APPLE)
 elseif(DICOMHERO_CHARSET_CONVERSION MATCHES JAVA)
     message("Using JAVA")
@@ -42,7 +42,7 @@ else(DICOMHERO_CHARSET_CONVERSION MATCHES ICONV)
         message("Using ICONV (default)")
         add_definitions(-DDICOMHERO_USE_ICONV)
         if(APPLE)
-            set(imebra_libraries ${imebra_libraries} iconv)
+            set(dicomhero_libraries ${dicomhero_libraries} iconv)
         endif(APPLE)
     endif(WIN32)
 endif(DICOMHERO_CHARSET_CONVERSION MATCHES ICONV)
@@ -51,7 +51,7 @@ endif(DICOMHERO_CHARSET_CONVERSION MATCHES ICONV)
 #-------------------------------------------
 if(DICOMHERO_LOG_FRAMEWORK MATCHES LOG4CXX)
     add_definitions(-DDICOMHERO_LOGGING_LOG4CXX)
-    set(imebra_libraries ${imebra_libraries} log4cxx) # Log4cxx needs additional libraries
+    set(dicomhero_libraries ${dicomhero_libraries} log4cxx) # Log4cxx needs additional libraries
 elseif(DICOMHERO_LOG_FRAMEWORK MATCHES SYSLOG)
     add_definitions(-DDICOMHERO_LOGGING_SYSLOG)
 elseif(DICOMHERO_LOG_FRAMEWORK MATCHES COUT)
@@ -102,26 +102,24 @@ add_definitions(-DNOMINMAX)
 
 file(GLOB dicomhero_interface "${CMAKE_CURRENT_SOURCE_DIR}/library/include/dicomhero/*.h")
 file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/*.h")
-file(GLOB imebra_include "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.h")
-file(GLOB imebra_src "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.cpp")
-file(GLOB imebra_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.cpp")
-file(GLOB imebra_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.h")
-set(imebra_objc_src "")
-set(imebra_implementation_src_objc "")
+file(GLOB dicomhero_include "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.h")
+file(GLOB dicomhero_src "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.cpp")
+file(GLOB dicomhero_implementation_src "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.cpp")
+file(GLOB dicomhero_implementation_include "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.h")
+set(dicomhero_objc_src "")
+set(dicomhero_implementation_src_objc "")
 set(dicomhero_objc_include "")
-set(imebra_objc_include "")
-set(imebra_objc_include_dir "")
-set(imebra_objc_gnustep_dir "")
+set(dicomhero_objc_include_dir "")
+set(dicomhero_objc_gnustep_dir "")
 
 if("${DICOMHERO_OBJC}" STREQUAL "1")
 
-    file(GLOB imebra_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/src/*.*")
-    file(GLOB imebra_implementation_src_objc "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.mm")
+    file(GLOB dicomhero_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/src/*.*")
+    file(GLOB dicomhero_implementation_src_objc "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.mm")
     file(GLOB dicomhero_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include/dicomhero_objc/*.h")
-    file(GLOB imebra_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include/imebraobjc/*.h")
     add_definitions(-DDICOMHERO_OBJC)
 
-    set(imebra_objc_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include)
+    set(dicomhero_objc_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include)
 
     set(objc_compiler_flags "")
     if(APPLE)
@@ -137,15 +135,15 @@ if("${DICOMHERO_OBJC}" STREQUAL "1")
         endif(IOS)
     else(APPLE)
         set(objc_compiler_flags "${objc_compiler_flags} -fconstant-string-class=NSConstantString")
-        set(imebra_objc_gnustep_dir "/usr/include/GNUstep")
-        set(imebra_libraries ${imebra_libraries} gnustep-base objc)
+        set(dicomhero_objc_gnustep_dir "/usr/include/GNUstep")
+        set(dicomhero_libraries ${dicomhero_libraries} gnustep-base objc)
     endif(APPLE)
 
     if(NOT "${objc_compiler_flags}" STREQUAL "")
 
-        foreach(objcfile ${imebra_objc_src})
+        foreach(objcfile ${dicomhero_objc_src})
             set_source_files_properties(${objcfile} PROPERTIES COMPILE_FLAGS ${objc_compiler_flags})
-        endforeach(objcfile ${imebra_objc_src})
+        endforeach(objcfile ${dicomhero_objc_src})
 
     endif(NOT "${objc_compiler_flags}" STREQUAL "")
 
@@ -158,34 +156,33 @@ endif(NOT "${ADDITIONAL_LIB_PATH}" STREQUAL "")
 
 # Add jpeg2000 if specified
 if("${JPEG2000}" STREQUAL "1")
-    set(imebra_libraries ${imebra_libraries} openjpeg)
+    set(dicomhero_libraries ${dicomhero_libraries} openjpeg)
     add_definitions(-DJPEG2000)
     add_definitions(-DJPEG2000_V1)
     message(STATUS "Adding experimental Jpeg2000 codec (based on OpenJpeg v1.X)")
 endif("${JPEG2000}" STREQUAL "1")
 
 if("${JPEG2000}" STREQUAL "2")
-    set(imebra_libraries ${imebra_libraries} openjp2)
+    set(dicomhero_libraries ${dicomhero_libraries} openjp2)
     add_definitions(-DJPEG2000)
     add_definitions(-DJPEG2000_V2)
     message(STATUS "Adding experimental Jpeg2000 codec (based on OpenJpeg v2.X)")
 endif("${JPEG2000}" STREQUAL "2")
 
-add_library(imebra ${DICOMHERO_SHARED_STATIC}
-    ${imebra_implementation_src}
-    ${imebra_implementation_src_objc}
-    ${imebra_implementation_include}
-    ${imebra_objc_src}
-    ${imebra_objc_include}
+add_library(dicomhero ${DICOMHERO_SHARED_STATIC}
+    ${dicomhero_implementation_src}
+    ${dicomhero_implementation_src_objc}
+    ${dicomhero_implementation_include}
+    ${dicomhero_objc_src}
     ${dicomhero_objc_include}
-    ${imebra_include}
-    ${imebra_src}
+    ${dicomhero_include}
+    ${dicomhero_src}
     ${imebra_interface}
     ${dicomhero_interface}
 )
 
 if(NOT "${ADDITIONAL_INCLUDE_PATH}" STREQUAL "")
-    target_include_directories(imebra PRIVATE ${ADDITIONAL_INCLUDE_PATH})
+    target_include_directories(dicomhero PRIVATE ${ADDITIONAL_INCLUDE_PATH})
 endif(NOT "${ADDITIONAL_INCLUDE_PATH}" STREQUAL "")
 
 if("${DICOMHERO_OBJC}" STREQUAL "1")
@@ -201,14 +198,14 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     message(STATUS "MSVC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-    set(imebra_libraries ${imebra_libraries} Kernel32)
+    set(dicomhero_libraries ${dicomhero_libraries} Kernel32)
 
 else()
 
     message(STATUS "GNU or Clang detected, adding compile flags")
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
-    set(imebra_libraries ${imebra_libraries} pthread)
+    set(dicomhero_libraries ${dicomhero_libraries} pthread)
     if("${EMBED_BITCODE}" STREQUAL "1")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fembed-bitcode")
     endif("${EMBED_BITCODE}" STREQUAL "1")
@@ -217,25 +214,25 @@ else()
         if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
             message("Debug mode, enabling coverage")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-            set(imebra_libraries ${imebra_libraries} gcov)
+            set(dicomhero_libraries ${dicomhero_libraries} gcov)
         endif()
     endif()
 
 endif()
 
-target_include_directories(imebra PRIVATE ${imebra_objc_gnustep_dir})
+target_include_directories(dicomhero PRIVATE ${dicomhero_objc_gnustep_dir})
 
 # Define dependency libraries
 #----------------------------
-target_link_libraries(imebra ${imebra_libraries})
+target_link_libraries(dicomhero ${dicomhero_libraries})
 
-message (STATUS "OBJC INCLUDE:${imebra_objc_include_dir}")
-message (STATUS "GNU INCLUDE:${imebra_objc_gnustep_dir}")
+message (STATUS "OBJC INCLUDE:${dicomhero_objc_include_dir}")
+message (STATUS "GNU INCLUDE:${dicomhero_objc_gnustep_dir}")
 
-# Define Imebra public folder
-#----------------------------
-target_include_directories(imebra PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/library/include> $<INSTALL_INTERFACE:include>)
-target_include_directories(imebra PUBLIC $<BUILD_INTERFACE:${imebra_objc_include_dir}> $<INSTALL_INTERFACE:include>)
+# Define dicomhero public folder
+#-------------------------------
+target_include_directories(dicomhero PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/library/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(dicomhero PUBLIC $<BUILD_INTERFACE:${dicomhero_objc_include_dir}> $<INSTALL_INTERFACE:include>)
 
 # Set the library version from DICOMHERO_MAJOR_VERSION, DICOMHERO_MINOR_VERSION,
 #  & DICOMHERO_REVISION
@@ -260,7 +257,7 @@ endif("$ENV{DICOMHERO_REVISION}" STREQUAL "")
 
 set(DICOMHERO_VERSION "${DICOMHERO_MAJOR_VERSION}.${DICOMHERO_MINOR_VERSION}.${DICOMHERO_REVISION}")
 
-set_target_properties(imebra PROPERTIES VERSION ${DICOMHERO_VERSION}
+set_target_properties(dicomhero PROPERTIES VERSION ${DICOMHERO_VERSION}
                                           SOVERSION ${DICOMHERO_MAJOR_VERSION})
 
 
@@ -296,41 +293,41 @@ if(NOT IOS)
         INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/gtest_install
     )
 
-    set(imebra_tests_objc_src "")
-    file(GLOB imebra_tests_include "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h")
-    file(GLOB imebra_tests_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
+    set(dicomhero_tests_objc_src "")
+    file(GLOB dicomhero_tests_include "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h")
+    file(GLOB dicomhero_tests_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
     if("${DICOMHERO_OBJC}" STREQUAL "1")
 
-        file(GLOB imebra_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/objectivec/*.m*")
+        file(GLOB dicomhero_tests_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/tests/objectivec/*.m*")
 
         if(NOT "${objc_compiler_flags}" STREQUAL "")
 
-            foreach(objcfile ${imebra_tests_objc_src})
+            foreach(objcfile ${dicomhero_tests_objc_src})
                 set_source_files_properties(${objcfile} PROPERTIES COMPILE_FLAGS ${objc_compiler_flags})
-            endforeach(objcfile ${imebra_objc_src})
+            endforeach(objcfile ${dicomhero_objc_src})
 
         endif(NOT "${objc_compiler_flags}" STREQUAL "")
 
     endif("${DICOMHERO_OBJC}" STREQUAL "1")
 
     link_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest_install/lib)
-    add_executable(ImebraTests
-            ${imebra_tests_include}
-            ${imebra_tests_src}
-            ${imebra_tests_objc_src}
+    add_executable(dicomheroTests
+            ${dicomhero_tests_include}
+            ${dicomhero_tests_src}
+            ${dicomhero_tests_objc_src}
     )
-    add_dependencies(ImebraTests GTest)
-    target_include_directories(ImebraTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest_install/include)
+    add_dependencies(dicomheroTests GTest)
+    target_include_directories(dicomheroTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest_install/include)
 
     # GTest always adds "d" to debug build, no matter what's the platform
     if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        target_link_libraries(ImebraTests imebra "gtestd")
+        target_link_libraries(dicomheroTests dicomhero "gtestd")
     else()
-        target_link_libraries(ImebraTests imebra "gtest")
+        target_link_libraries(dicomheroTests dicomhero "gtest")
     endif()
 
     if(${DCMTK_FOUND})
-        target_link_libraries(ImebraTests dcmdata dcmimage)
+        target_link_libraries(dicomheroTests dcmdata dcmimage)
     endif()
 
     ##############################################
@@ -341,9 +338,9 @@ if(NOT IOS)
     enable_testing()
 
 if(DICOMHERO_LOG_FRAMEWORK MATCHES LOG4CXX)
-    add_test(RunImebraTests ImebraTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles --testLogFile=${CMAKE_CURRENT_BINARY_DIR}/imebraTestLogFile.txt)
+    add_test(RunDicomheroTests dicomheroTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles --testLogFile=${CMAKE_CURRENT_BINARY_DIR}/dicomheroTestLogFile.txt)
 else()
-    add_test(RunImebraTests ImebraTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles)
+    add_test(RunDicomheroTests dicomheroTests --corruptedFilesFolder=${CMAKE_CURRENT_SOURCE_DIR}/tests/corruptedfiles)
 endif()
 
 
@@ -358,7 +355,7 @@ endif()
     #------------------------------------
     add_executable(dicom2jpeg ${dicom2jpeg_sources})
 
-    target_link_libraries(dicom2jpeg imebra)
+    target_link_libraries(dicom2jpeg dicomhero)
 
 
     ##############################################
@@ -372,7 +369,7 @@ endif()
     #------------------------------------
     add_executable(changeTransferSyntax ${changeTransferSyntax_sources})
 
-    target_link_libraries(changeTransferSyntax imebra)
+    target_link_libraries(changeTransferSyntax dicomhero)
 
 
     ##############################################
@@ -386,7 +383,7 @@ endif()
     #------------------------------------
     add_executable(dicomDirItems ${dicomdirItems_sources})
 
-    target_link_libraries(dicomDirItems imebra)
+    target_link_libraries(dicomDirItems dicomhero)
 
 
     ##############################################
@@ -400,7 +397,7 @@ endif()
     #------------------------------------
     add_executable(scpExample ${scpExample_sources})
 
-    target_link_libraries(scpExample imebra)
+    target_link_libraries(scpExample dicomhero)
 
 endif(NOT IOS)
 
@@ -413,7 +410,7 @@ endif(NOT IOS)
 
 # Set packaging variables
 #------------------------
-set(CPACK_PACKAGE_NAME "libimebra")
+set(CPACK_PACKAGE_NAME "libdicomhero")
 set(CPACK_PACKAGE_CONTACT "paolo@binarno.com")
 set(CPACK_PACKAGE_VERSION ${DICOMHERO_VERSION})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "DICOMHero library for DICOM medical files")
@@ -440,7 +437,7 @@ file(WRITE "${PRERM_SCRIPT}"    "#!/bin/sh\n\nset -e\n")
 file(WRITE "${POSTRM_SCRIPT}"   "#!/bin/sh\n\nset -e\n")
 
 # Generate shlibs
-file(WRITE "${SHLIBS_FILE}" "libimebra ${DICOMHERO_MAJOR_VERSION} ${CPACK_PACKAGE_NAME}\n")
+file(WRITE "${SHLIBS_FILE}" "libdicomhero ${DICOMHERO_MAJOR_VERSION} ${CPACK_PACKAGE_NAME}\n")
 file(APPEND "${POSTINST_SCRIPT}"
      "if [ \"$1\" = \"configure\" ]; then
         ldconfig
@@ -457,7 +454,7 @@ set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${SHLIBS_FILE};${POSTINST_SCRIPT};${PRER
 
 # Write license file
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/copyright"
-     "Copyright (C) 2019 ${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
+     "Copyright (C) 2020 ${CPACK_DEBIAN_PACKAGE_MAINTAINER}")
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/copyright"
         DESTINATION "share/doc/${CPACK_PACKAGE_NAME}/"
@@ -466,20 +463,19 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/copyright"
         GROUP_READ
         WORLD_READ)
 
-install(TARGETS imebra EXPORT imebraConfig      LIBRARY DESTINATION lib
-                                                ARCHIVE DESTINATION lib
-                                                RUNTIME DESTINATION bin
-                                                PUBLIC_HEADER DESTINATION include
-                                                COMPONENT "Imebra Shared library")
+install(TARGETS dicomhero EXPORT dicomheroConfig LIBRARY DESTINATION lib
+                                                 ARCHIVE DESTINATION lib
+                                                 RUNTIME DESTINATION bin
+                                                 PUBLIC_HEADER DESTINATION include
+                                                 COMPONENT "DICOMHERO Shared library")
 
-install(FILES ${imebra_interface} DESTINATION include/imebra COMPONENT "DICOMHero include files")
+install(FILES ${imebra_interface} DESTINATION include/imebra COMPONENT "DICOMHero legacy include files")
 install(FILES ${dicomhero_interface} DESTINATION include/dicomhero COMPONENT "DICOMHero include files")
 
 if("${DICOMHERO_OBJC}" STREQUAL "1")
-    install(FILES ${imebra_objc_include} DESTINATION include/imebraobjc COMPONENT "DICOMHero objc include files")
     install(FILES ${dicomhero_objc_include} DESTINATION include/dicomhero_objc COMPONENT "DICOMHero objc include files")
 endif("${DICOMHERO_OBJC}" STREQUAL "1")
 
-install(EXPORT imebraConfig DESTINATION share/imebra/cmake)
+install(EXPORT dicomheroConfig DESTINATION share/dicomhero/cmake)
 
 include(CPack)
