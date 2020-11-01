@@ -1,27 +1,27 @@
 #
 # This script allows to build and install the Python version
-# of the Imebra library.
+# of the DICOMHERO library.
 #
-# The Python version of Imebra is composed by the Imebra C++
+# The Python version of DICOMHERO is composed by the DICOMHERO C++
 # code and by Python wrappers generated with SWIG.
 #
-# To install Imebra:
+# To install DICOMHERO:
 #
-#    cd imebra_folder
+#    cd dicomhero6_folder
 #    python setup.py install
 #
 # To install on a local folder (don't need administrator 
 # permissions):
 #
-#    cd imebra_folder
+#    cd dicomhero6_folder
 #    python setup.py install --user
 #
-# To uninstall Imebra:
+# To uninstall DICOMHERO:
 #
-#    pip uninstall imebra
+#    pip uninstall dicomhero6
 #
-# Imebra is distributed under GPLv2 license.
-# Commercial licenses are available at http://imebra.com
+# DICOMHERO is distributed under GPLv2 license.
+# Commercial licenses are available at https://dicomhero.com
 #
 #-----------------------------------------------------------------
 
@@ -30,8 +30,8 @@ from distutils.sysconfig import get_python_inc
 import sys
 import os
 
-# Get all the Imebra C++ source files
-#------------------------------------
+# Get all the DICOMHERO C++ source files
+#---------------------------------------
 def get_sources(root_folder):
     modules_files = []
 
@@ -64,31 +64,31 @@ if sys.platform.startswith('darwin'):
 if sys.platform.startswith('win'):
     librariesArray.append('kernel32')
 
-imebra_sources = get_sources("./library")
-imebra_sources.extend(get_sources("./wrappers/pythonWrapper"))
+dicomhero_sources = get_sources("./library")
+dicomhero_sources.extend(get_sources("./wrappers/pythonWrapper"))
 
 # Define the C++ module
 #----------------------
-imebraModule = Extension('_imebra',
+dicomheroModule = Extension('_dicomhero6',
                     define_macros = [('MAJOR_VERSION', '$major_version$'),
                                      ('MINOR_VERSION', '$minor_version$')],
                     libraries = librariesArray,
-                    sources = imebra_sources,
+                    sources = dicomhero_sources,
                     extra_compile_args = compileFlags,
                     include_dirs= include_directories)
 
 # Define the package
 #-------------------
-setup (name = 'imebra',
+setup (name = 'dicomhero6',
        version = '$major_version$.$minor_version$',
-       description = 'Imebra library for Python',
+       description = 'DICOMHERO library for Python',
        author = 'Paolo Brandoli',
        author_email = 'paolo@binarno.com',
-       url = 'https://imebra.com',
+       url = 'https://dicomhero.com',
        long_description = '''
-Imebra Dicom Library.
+DICOMHERO Dicom Library.
 ''',
-       ext_modules = [imebraModule],
-       packages = ['imebra'],
-       package_dir = {'imebra': './wrappers/pythonWrapper'})
+       ext_modules = [dicomheroModule],
+       packages = ['dicomhero6'],
+       package_dir = {'dicomhero6': './wrappers/pythonWrapper'})
 
