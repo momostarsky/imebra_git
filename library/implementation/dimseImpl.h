@@ -23,7 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <atomic>
 #include <string>
 #include <memory>
-#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero6/definitions.h"
 #include "acseImpl.h"
 
 namespace dicomhero

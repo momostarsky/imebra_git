@@ -15,8 +15,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
     \brief Implementation of the classes ReadingDataHandler & WritingDataHandler.
 */
 
-#include "../include/dicomhero/readingDataHandlerNumeric.h"
-#include "../include/dicomhero/writingDataHandlerNumeric.h"
+#include "../include/dicomhero6/readingDataHandlerNumeric.h"
+#include "../include/dicomhero6/writingDataHandlerNumeric.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/exceptionImpl.h"

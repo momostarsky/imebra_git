@@ -16,9 +16,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/dicomhero/dicomDictionary.h"
-#include "../include/dicomhero/definitions.h"
-#include "../include/dicomhero/tagId.h"
+#include "../include/dicomhero6/dicomDictionary.h"
+#include "../include/dicomhero6/definitions.h"
+#include "../include/dicomhero6/tagId.h"
 #include "../implementation/dicomDictImpl.h"
 #include "../implementation/charsetConversionImpl.h"
 #include "../implementation/exceptionImpl.h"

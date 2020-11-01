@@ -16,10 +16,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/dicomhero/definitions.h"
-#include "../include/dicomhero/overlay.h"
-#include "../include/dicomhero/image.h"
-#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero6/definitions.h"
+#include "../include/dicomhero6/overlay.h"
+#include "../include/dicomhero6/image.h"
+#include "../include/dicomhero6/exceptions.h"
 #include "../implementation/overlayImpl.h"
 #include "../implementation/exceptionImpl.h"
 #include <string>

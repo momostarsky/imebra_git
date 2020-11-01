@@ -1,4 +1,4 @@
-#include <dicomhero/dicomhero.h>
+#include <dicomhero6/dicomhero.h>
 #include <stdlib.h>
 #include <memory.h>
 #include <algorithm>

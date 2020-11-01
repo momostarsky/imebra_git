@@ -23,8 +23,8 @@ This file is not included automatically by implementation.h
 
 #include "memoryImpl.h"
 #include "transformImpl.h"
-#include "../include/dicomhero/exceptions.h"
-#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero6/exceptions.h"
+#include "../include/dicomhero6/definitions.h"
 
 
 #include <memory>

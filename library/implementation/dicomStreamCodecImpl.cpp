@@ -28,8 +28,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dicomDictImpl.h"
 #include "bufferImpl.h"
 #include "nullStreamImpl.h"
-#include "../include/dicomhero/exceptions.h"
-#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero6/exceptions.h"
+#include "../include/dicomhero6/definitions.h"
 
 namespace dicomhero
 {

@@ -20,7 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #define imebraStreamReader_F6221390_BC44_4B83_B5BB_3485222FF1DD__INCLUDED_
 
 #include "streamControllerImpl.h"
-#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero6/exceptions.h"
 #include <exception>
 
 namespace dicomhero

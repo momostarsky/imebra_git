@@ -1,7 +1,7 @@
 package com.dicomhero.tests;
 
 
-import com.dicomhero.*;
+import com.dicomhero6.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -59,11 +59,11 @@ public class DicomheroTests {
         }
         String patientName1 = new String("\u0420\u062a\u062b^\u0410\u0628\u062a");
 
-        com.dicomhero.ReadWriteMemory streamMemory = new com.dicomhero.ReadWriteMemory();
+        com.dicomhero6.ReadWriteMemory streamMemory = new com.dicomhero6.ReadWriteMemory();
         {
-            com.dicomhero.FileParts charsetsList = new FileParts();
+            com.dicomhero6.FileParts charsetsList = new FileParts();
             charsetsList.add("ISO_IR 6");
-            MutableDataSet testDataSet = new com.dicomhero.MutableDataSet("1.2.840.10008.1.2.1", charsetsList);
+            MutableDataSet testDataSet = new com.dicomhero6.MutableDataSet("1.2.840.10008.1.2.1", charsetsList);
 
             {
                 WritingDataHandler handler = testDataSet.getWritingDataHandler(new TagId(0x10, 0x10), 0);

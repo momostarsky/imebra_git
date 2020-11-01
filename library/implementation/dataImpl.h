@@ -23,7 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #include "dataHandlerNumericImpl.h"
 #include "streamControllerImpl.h"
-#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero6/definitions.h"
 
 #include <map>
 #include <vector>

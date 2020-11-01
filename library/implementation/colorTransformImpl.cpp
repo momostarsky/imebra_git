@@ -21,7 +21,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "colorTransformsFactoryImpl.h"
 #include "imageImpl.h"
 #include "LUTImpl.h"
-#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero6/exceptions.h"
 
 namespace dicomhero
 {

@@ -1,4 +1,4 @@
-from dicomhero.dicomhero import *
+from dicomhero6.dicomhero6 import *
 import array
 import unittest
 

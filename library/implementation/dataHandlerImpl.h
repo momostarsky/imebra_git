@@ -19,8 +19,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraDataHandler_6F85D344_DEF8_468d_BF73_AC5BB17FD22A__INCLUDED_)
 #define imebraDataHandler_6F85D344_DEF8_468d_BF73_AC5BB17FD22A__INCLUDED_
 
-#include "../include/dicomhero/definitions.h"
-#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero6/definitions.h"
+#include "../include/dicomhero6/exceptions.h"
 #include "exceptionImpl.h"
 #include <memory>
 

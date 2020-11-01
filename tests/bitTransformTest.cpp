@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <dicomhero/dicomhero.h>
+#include <dicomhero6/dicomhero.h>
 
 namespace dicomhero
 {

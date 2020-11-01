@@ -16,7 +16,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/dicomhero/transformsChain.h"
+#include "../include/dicomhero6/transformsChain.h"
 #include "../implementation/transformsChainImpl.h"
 
 namespace dicomhero

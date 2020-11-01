@@ -41,8 +41,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dataHandlerDateTimeImpl.h"
 #include "dataHandlerTimeImpl.h"
 #include "dicomDictImpl.h"
-#include "../include/dicomhero/exceptions.h"
-#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero6/exceptions.h"
+#include "../include/dicomhero6/definitions.h"
 
 #include <vector>
 #include <string.h>

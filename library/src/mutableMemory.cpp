@@ -11,7 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#include "../include/dicomhero/mutableMemory.h"
+#include "../include/dicomhero6/mutableMemory.h"
 #include "../implementation/memoryImpl.h"
 #include "../implementation/exceptionImpl.h"
 

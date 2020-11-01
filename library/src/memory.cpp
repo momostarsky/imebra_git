@@ -11,10 +11,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#include "../include/dicomhero/memory.h"
+#include "../include/dicomhero6/memory.h"
 #include "../implementation/memoryImpl.h"
 #include "../implementation/exceptionImpl.h"
-#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero6/exceptions.h"
 #include <memory.h>
 
 namespace dicomhero

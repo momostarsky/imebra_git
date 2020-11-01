@@ -17,7 +17,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 
-#include "../include/dicomhero/baseUidGenerator.h"
+#include "../include/dicomhero6/baseUidGenerator.h"
 #include "../implementation/baseUidGeneratorImpl.h"
 
 namespace dicomhero

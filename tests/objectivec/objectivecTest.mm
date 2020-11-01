@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <dicomhero_objc/dicomhero.h>
+#include <dicomhero6_objc/dicomhero.h>
 #include "../buildImageForTest.h"
 #include "../../objectivec/src/imebra_strings.h"
 #include <thread>

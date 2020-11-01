@@ -19,7 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "charsetConversionICUImpl.h"
 #include "charsetConversionWindowsImpl.h"
 #include "charsetConversionJavaImpl.h"
-#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero6/definitions.h"
 #include <string>
 
 namespace dicomhero

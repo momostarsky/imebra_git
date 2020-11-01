@@ -21,7 +21,7 @@ In version 6.X.Y (mid 2021), the namespace "imebra" is an alias for the namespag
 In version 7.X.Y (2023?) the namespace "imebra" will be dropped.
 
 */
-#include <dicomhero/dicomhero.h>
+#include <dicomhero6/dicomhero.h>
 
 namespace imebra = dicomhero;
 

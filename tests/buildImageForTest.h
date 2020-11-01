@@ -1,7 +1,7 @@
 #if !defined(imebraBuildImageForTest_13D4DE03_AD80_4e0a_A01A_54D77C9AF0E8__INCLUDED_)
 #define imebraBuildImageForTest_13D4DE03_AD80_4e0a_A01A_54D77C9AF0E8__INCLUDED_
 
-#include <dicomhero/dicomhero.h>
+#include <dicomhero6/dicomhero.h>
 
 namespace dicomhero
 {

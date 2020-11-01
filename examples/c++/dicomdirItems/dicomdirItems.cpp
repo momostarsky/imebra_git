@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include <dicomhero/dicomhero.h>
+#include <dicomhero6/dicomhero.h>
 
 using namespace dicomhero;
 

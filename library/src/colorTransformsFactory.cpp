@@ -15,9 +15,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
     \brief Implementation of the class ColorTransformsFactory.
 */
 
-#include "../include/dicomhero/colorTransformsFactory.h"
+#include "../include/dicomhero6/colorTransformsFactory.h"
 #include "../implementation/colorTransformsFactoryImpl.h"
-#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero6/exceptions.h"
 namespace dicomhero
 {
 

@@ -1,7 +1,7 @@
 #include "dimseImpl.h"
 #include "dataSetImpl.h"
-#include "../include/dicomhero/definitions.h"
-#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero6/definitions.h"
+#include "../include/dicomhero6/exceptions.h"
 #include "dataHandlerImpl.h"
 
 namespace dicomhero

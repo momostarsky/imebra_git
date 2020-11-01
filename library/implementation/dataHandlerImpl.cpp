@@ -16,7 +16,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero6/exceptions.h"
 #include "exceptionImpl.h"
 #include "dataHandlerImpl.h"
 #include "memoryImpl.h"

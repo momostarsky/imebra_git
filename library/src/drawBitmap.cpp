@@ -16,10 +16,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/dicomhero/drawBitmap.h"
+#include "../include/dicomhero6/drawBitmap.h"
 #include "../implementation/drawBitmapImpl.h"
-#include "../include/dicomhero/image.h"
-#include "../include/dicomhero/transform.h"
+#include "../include/dicomhero6/image.h"
+#include "../include/dicomhero6/transform.h"
 
 namespace dicomhero
 {

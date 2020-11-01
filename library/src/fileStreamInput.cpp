@@ -16,7 +16,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/dicomhero/fileStreamInput.h"
+#include "../include/dicomhero6/fileStreamInput.h"
 #include "../implementation/fileStreamImpl.h"
 
 namespace dicomhero

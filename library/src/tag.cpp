@@ -15,15 +15,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "../implementation/dataHandlerNumericImpl.h"
 #include "../implementation/fileStreamImpl.h"
 
-#include "../include/dicomhero/tag.h"
-#include "../include/dicomhero/readingDataHandlerNumeric.h"
-#include "../include/dicomhero/writingDataHandlerNumeric.h"
-#include "../include/dicomhero/definitions.h"
-#include "../include/dicomhero/streamReader.h"
-#include "../include/dicomhero/streamWriter.h"
-#include "../include/dicomhero/dataSet.h"
-#include "../include/dicomhero/baseStreamInput.h"
-#include "../include/dicomhero/fileStreamInput.h"
+#include "../include/dicomhero6/tag.h"
+#include "../include/dicomhero6/readingDataHandlerNumeric.h"
+#include "../include/dicomhero6/writingDataHandlerNumeric.h"
+#include "../include/dicomhero6/definitions.h"
+#include "../include/dicomhero6/streamReader.h"
+#include "../include/dicomhero6/streamWriter.h"
+#include "../include/dicomhero6/dataSet.h"
+#include "../include/dicomhero6/baseStreamInput.h"
+#include "../include/dicomhero6/fileStreamInput.h"
 
 namespace dicomhero
 {

@@ -17,7 +17,7 @@
 #include <list>
 #include <set>
 
-#include <dicomhero/dicomhero.h>
+#include <dicomhero6/dicomhero.h>
 
 // List of accepted abstract syntaxes
 const std::list<std::string> abstractSyntaxes {

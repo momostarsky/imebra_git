@@ -16,8 +16,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/dicomhero/transform.h"
-#include "../include/dicomhero/image.h"
+#include "../include/dicomhero6/transform.h"
+#include "../include/dicomhero6/image.h"
 #include "../implementation/transformImpl.h"
 
 namespace dicomhero

@@ -26,7 +26,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "bufferImpl.h"
 #include "dataHandlerImpl.h"
 #include "dataHandlerNumericImpl.h"
-#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero6/exceptions.h"
 #include <iostream>
 
 namespace dicomhero

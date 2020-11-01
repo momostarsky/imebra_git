@@ -11,7 +11,7 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-project("dicomhero_imebra")
+project("dicomhero6")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 if("*${CMAKE_BUILD_TYPE}*" STREQUAL "**")
@@ -100,7 +100,7 @@ add_definitions(-DDICOMHERO_DLL)
 add_definitions(-DDICOMHERO_DLL_EXPORTS)
 add_definitions(-DNOMINMAX)
 
-file(GLOB dicomhero_interface "${CMAKE_CURRENT_SOURCE_DIR}/library/include/dicomhero/*.h")
+file(GLOB dicomhero_interface "${CMAKE_CURRENT_SOURCE_DIR}/library/include/dicomhero6/*.h")
 file(GLOB imebra_interface "${CMAKE_CURRENT_SOURCE_DIR}/library/include/imebra/*.h")
 file(GLOB dicomhero_include "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.h")
 file(GLOB dicomhero_src "${CMAKE_CURRENT_SOURCE_DIR}/library/src/*.cpp")
@@ -116,7 +116,7 @@ if("${DICOMHERO_OBJC}" STREQUAL "1")
 
     file(GLOB dicomhero_objc_src "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/src/*.*")
     file(GLOB dicomhero_implementation_src_objc "${CMAKE_CURRENT_SOURCE_DIR}/library/implementation/*.mm")
-    file(GLOB dicomhero_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include/dicomhero_objc/*.h")
+    file(GLOB dicomhero_objc_include "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include/dicomhero6_objc/*.h")
     add_definitions(-DDICOMHERO_OBJC)
 
     set(dicomhero_objc_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/wrappers/objectivec/include)
@@ -169,7 +169,7 @@ if("${JPEG2000}" STREQUAL "2")
     message(STATUS "Adding experimental Jpeg2000 codec (based on OpenJpeg v2.X)")
 endif("${JPEG2000}" STREQUAL "2")
 
-add_library(dicomhero ${DICOMHERO_SHARED_STATIC}
+add_library(dicomhero6 ${DICOMHERO_SHARED_STATIC}
     ${dicomhero_implementation_src}
     ${dicomhero_implementation_src_objc}
     ${dicomhero_implementation_include}
@@ -220,19 +220,19 @@ else()
 
 endif()
 
-target_include_directories(dicomhero PRIVATE ${dicomhero_objc_gnustep_dir})
+target_include_directories(dicomhero6 PRIVATE ${dicomhero_objc_gnustep_dir})
 
 # Define dependency libraries
 #----------------------------
-target_link_libraries(dicomhero ${dicomhero_libraries})
+target_link_libraries(dicomhero6 ${dicomhero_libraries})
 
 message (STATUS "OBJC INCLUDE:${dicomhero_objc_include_dir}")
 message (STATUS "GNU INCLUDE:${dicomhero_objc_gnustep_dir}")
 
 # Define dicomhero public folder
 #-------------------------------
-target_include_directories(dicomhero PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/library/include> $<INSTALL_INTERFACE:include>)
-target_include_directories(dicomhero PUBLIC $<BUILD_INTERFACE:${dicomhero_objc_include_dir}> $<INSTALL_INTERFACE:include>)
+target_include_directories(dicomhero6 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/library/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(dicomhero6 PUBLIC $<BUILD_INTERFACE:${dicomhero_objc_include_dir}> $<INSTALL_INTERFACE:include>)
 
 # Set the library version from DICOMHERO_MAJOR_VERSION, DICOMHERO_MINOR_VERSION,
 #  & DICOMHERO_REVISION
@@ -257,7 +257,7 @@ endif("$ENV{DICOMHERO_REVISION}" STREQUAL "")
 
 set(DICOMHERO_VERSION "${DICOMHERO_MAJOR_VERSION}.${DICOMHERO_MINOR_VERSION}.${DICOMHERO_REVISION}")
 
-set_target_properties(dicomhero PROPERTIES VERSION ${DICOMHERO_VERSION}
+set_target_properties(dicomhero6 PROPERTIES VERSION ${DICOMHERO_VERSION}
                                           SOVERSION ${DICOMHERO_MAJOR_VERSION})
 
 
@@ -321,9 +321,9 @@ if(NOT IOS)
 
     # GTest always adds "d" to debug build, no matter what's the platform
     if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        target_link_libraries(dicomheroTests dicomhero "gtestd")
+        target_link_libraries(dicomheroTests dicomhero6 "gtestd")
     else()
-        target_link_libraries(dicomheroTests dicomhero "gtest")
+        target_link_libraries(dicomheroTests dicomhero6 "gtest")
     endif()
 
     if(${DCMTK_FOUND})
@@ -355,7 +355,7 @@ endif()
     #------------------------------------
     add_executable(dicom2jpeg ${dicom2jpeg_sources})
 
-    target_link_libraries(dicom2jpeg dicomhero)
+    target_link_libraries(dicom2jpeg dicomhero6)
 
 
     ##############################################
@@ -369,7 +369,7 @@ endif()
     #------------------------------------
     add_executable(changeTransferSyntax ${changeTransferSyntax_sources})
 
-    target_link_libraries(changeTransferSyntax dicomhero)
+    target_link_libraries(changeTransferSyntax dicomhero6)
 
 
     ##############################################
@@ -383,7 +383,7 @@ endif()
     #------------------------------------
     add_executable(dicomDirItems ${dicomdirItems_sources})
 
-    target_link_libraries(dicomDirItems dicomhero)
+    target_link_libraries(dicomDirItems dicomhero6)
 
 
     ##############################################
@@ -397,7 +397,7 @@ endif()
     #------------------------------------
     add_executable(scpExample ${scpExample_sources})
 
-    target_link_libraries(scpExample dicomhero)
+    target_link_libraries(scpExample dicomhero6)
 
 endif(NOT IOS)
 
@@ -410,7 +410,7 @@ endif(NOT IOS)
 
 # Set packaging variables
 #------------------------
-set(CPACK_PACKAGE_NAME "libdicomhero")
+set(CPACK_PACKAGE_NAME "libdicomhero6")
 set(CPACK_PACKAGE_CONTACT "paolo@binarno.com")
 set(CPACK_PACKAGE_VERSION ${DICOMHERO_VERSION})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "DICOMHero library for DICOM medical files")
@@ -437,7 +437,7 @@ file(WRITE "${PRERM_SCRIPT}"    "#!/bin/sh\n\nset -e\n")
 file(WRITE "${POSTRM_SCRIPT}"   "#!/bin/sh\n\nset -e\n")
 
 # Generate shlibs
-file(WRITE "${SHLIBS_FILE}" "libdicomhero ${DICOMHERO_MAJOR_VERSION} ${CPACK_PACKAGE_NAME}\n")
+file(WRITE "${SHLIBS_FILE}" "libdicomhero6 ${DICOMHERO_MAJOR_VERSION} ${CPACK_PACKAGE_NAME}\n")
 file(APPEND "${POSTINST_SCRIPT}"
      "if [ \"$1\" = \"configure\" ]; then
         ldconfig
@@ -463,19 +463,19 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/copyright"
         GROUP_READ
         WORLD_READ)
 
-install(TARGETS dicomhero EXPORT dicomheroConfig LIBRARY DESTINATION lib
+install(TARGETS dicomhero6 EXPORT dicomhero6Config LIBRARY DESTINATION lib
                                                  ARCHIVE DESTINATION lib
                                                  RUNTIME DESTINATION bin
                                                  PUBLIC_HEADER DESTINATION include
                                                  COMPONENT "DICOMHERO Shared library")
 
 install(FILES ${imebra_interface} DESTINATION include/imebra COMPONENT "DICOMHero legacy include files")
-install(FILES ${dicomhero_interface} DESTINATION include/dicomhero COMPONENT "DICOMHero include files")
+install(FILES ${dicomhero_interface} DESTINATION include/dicomhero6 COMPONENT "DICOMHero include files")
 
 if("${DICOMHERO_OBJC}" STREQUAL "1")
-    install(FILES ${dicomhero_objc_include} DESTINATION include/dicomhero_objc COMPONENT "DICOMHero objc include files")
+    install(FILES ${dicomhero_objc_include} DESTINATION include/dicomhero6_objc COMPONENT "DICOMHero objc include files")
 endif("${DICOMHERO_OBJC}" STREQUAL "1")
 
-install(EXPORT dicomheroConfig DESTINATION share/dicomhero/cmake)
+install(EXPORT dicomhero6Config DESTINATION share/dicomhero6/cmake)
 
 include(CPack)

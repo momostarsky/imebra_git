@@ -17,10 +17,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/dicomhero/fileStreamInput.h"
-#include "../include/dicomhero/fileStreamOutput.h"
-#include "../include/dicomhero/codecFactory.h"
-#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero6/fileStreamInput.h"
+#include "../include/dicomhero6/fileStreamOutput.h"
+#include "../include/dicomhero6/codecFactory.h"
+#include "../include/dicomhero6/definitions.h"
 #include "../implementation/codecFactoryImpl.h"
 #include "../implementation/streamCodecImpl.h"
 #include "../implementation/imageCodecImpl.h"

@@ -22,7 +22,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "streamControllerImpl.h"
 #include "memoryImpl.h"
 #include "dataHandlerNumericImpl.h"
-#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero6/definitions.h"
 
 #include <mutex>
 

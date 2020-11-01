@@ -17,11 +17,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 
-#include "../include/dicomhero/VOILUT.h"
-#include "../include/dicomhero/dataSet.h"
-#include "../include/dicomhero/VOIDescription.h"
+#include "../include/dicomhero6/VOILUT.h"
+#include "../include/dicomhero6/dataSet.h"
+#include "../include/dicomhero6/VOIDescription.h"
 #include "../implementation/VOILUTImpl.h"
-#include "../include/dicomhero/lut.h"
+#include "../include/dicomhero6/lut.h"
 
 namespace dicomhero
 {

@@ -15,10 +15,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
     \brief Implementation of the the ACSE classes.
 */
 
-#include "../include/dicomhero/acse.h"
-#include "../include/dicomhero/streamReader.h"
-#include "../include/dicomhero/streamWriter.h"
-#include "../include/dicomhero/dataSet.h"
+#include "../include/dicomhero6/acse.h"
+#include "../include/dicomhero6/streamReader.h"
+#include "../include/dicomhero6/streamWriter.h"
+#include "../include/dicomhero6/dataSet.h"
 #include "../implementation/acseImpl.h"
 
 namespace dicomhero

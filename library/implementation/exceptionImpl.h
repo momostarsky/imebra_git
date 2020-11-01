@@ -20,7 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(CImbxException_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_)
 #define CImbxException_F1BAF067_21DE_466b_AEA1_6CC4F006FAFA__INCLUDED_
 
-#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero6/definitions.h"
 #include "configurationImpl.h"
 #include "logging.h"
 #include <memory>

@@ -16,7 +16,7 @@ This file was automatically generated
 #if !defined(imebraTagsDescription2018e__INCLUDED_)
 #define imebraTagsDescription2018e__INCLUDED_
 
-#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero6/definitions.h"
 
 namespace dicomhero
 {

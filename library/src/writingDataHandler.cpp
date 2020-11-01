@@ -15,10 +15,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
     \brief Implementation of the classes ReadingDataHandler & WritingDataHandler.
 */
 
-#include "../include/dicomhero/writingDataHandler.h"
-#include "../include/dicomhero/date.h"
-#include "../include/dicomhero/age.h"
-#include "../include/dicomhero/patientName.h"
+#include "../include/dicomhero6/writingDataHandler.h"
+#include "../include/dicomhero6/date.h"
+#include "../include/dicomhero6/age.h"
+#include "../include/dicomhero6/patientName.h"
 #include "../implementation/dataHandlerImpl.h"
 #include "../implementation/dataHandlerNumericImpl.h"
 #include <cstring>

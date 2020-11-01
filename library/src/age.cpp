@@ -16,7 +16,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/dicomhero/age.h"
+#include "../include/dicomhero6/age.h"
 #include "../implementation/ageImpl.h"
 
 namespace dicomhero

@@ -11,9 +11,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#include "../include/dicomhero/memoryStreamInput.h"
-#include "../include/dicomhero/memory.h"
-#include "../include/dicomhero/mutableMemory.h"
+#include "../include/dicomhero6/memoryStreamInput.h"
+#include "../include/dicomhero6/memory.h"
+#include "../include/dicomhero6/mutableMemory.h"
 #include "../implementation/memoryStreamImpl.h"
 #include <memory>
 

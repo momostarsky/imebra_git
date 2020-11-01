@@ -15,8 +15,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
     \brief Implementation of the the DIMSE classes.
 */
 
-#include "../include/dicomhero/dimse.h"
-#include "../include/dicomhero/dataSet.h"
+#include "../include/dicomhero6/dimse.h"
+#include "../include/dicomhero6/dataSet.h"
 #include "../implementation/dimseImpl.h"
 #include <typeinfo>
 

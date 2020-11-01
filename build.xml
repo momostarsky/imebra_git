@@ -103,16 +103,16 @@
     <!-- JAVA SWIG -->
     <target name="java_swig" depends="replace_version">
         <delete dir="${build_release}/wrappers/javaWrapper/src" failonerror="false" />
-        <mkdir dir="${build_release}/wrappers/javaWrapper/src/com/dicomhero" />
+        <mkdir dir="${build_release}/wrappers/javaWrapper/src/com/dicomhero6" />
         <mkdir dir="${build_release}/wrappers/javaWrapper/jni" />
         <exec executable="swig" failonerror="true" dir="${build_release}/wrappers/">
             <arg value="-java" />
             <arg value="-c++" />
             <arg value="-I${build_release}/library/include" />
             <arg value="-package" />
-            <arg value="com.dicomhero" />
+            <arg value="com.dicomhero6" />
             <arg value="-outdir" />
-            <arg path="${build_release}/wrappers/javaWrapper/src/com/dicomhero" />
+            <arg path="${build_release}/wrappers/javaWrapper/src/com/dicomhero6" />
             <arg value="-o" />
             <arg path="${build_release}/wrappers/javaWrapper/java_wrapper.cxx" />
             <arg path="${build_release}/wrappers/swig.i" />
@@ -133,7 +133,7 @@
             <arg value="-c++" />
             <arg value="-I${build_release}/library/include" />
             <arg value="-module" />
-            <arg value="dicomhero" />
+            <arg value="dicomhero6" />
             <arg value="-outdir" />
             <arg path="${build_release}/wrappers/pythonWrapper" />
             <arg value="-o" />

@@ -15,7 +15,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     \brief Implementation of the the base class for the streams (memory, file, ...).
 */
 
-#include "../include/dicomhero/baseStreamOutput.h"
+#include "../include/dicomhero6/baseStreamOutput.h"
 #include "../implementation/baseStreamImpl.h"
 #include "../implementation/exceptionImpl.h"
 

@@ -23,7 +23,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <memory>
 #include <string>
 #include <list>
-#include "../include/dicomhero/definitions.h"
+#include "../include/dicomhero6/definitions.h"
 
 namespace dicomhero
 {

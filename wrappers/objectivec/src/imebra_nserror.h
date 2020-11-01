@@ -14,7 +14,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #if !defined(imebraObjcNSError__INCLUDED_)
 #define imebraObjcNSError__INCLUDED_
 
-#include <dicomhero/exceptions.h>
+#include <dicomhero6/exceptions.h>
 #import <imebraobjc/imebra_exceptions.h>
 #import <Foundation/Foundation.h>
 

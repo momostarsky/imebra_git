@@ -5,7 +5,7 @@ $fileHeader$
 #include <iostream>
 
 
-#include <dicomhero/dicomhero.h>
+#include <dicomhero6/dicomhero.h>
 #include <sstream>
 
 #if defined(WIN32) || defined(WIN64)

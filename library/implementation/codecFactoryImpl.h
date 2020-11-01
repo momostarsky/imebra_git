@@ -24,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include <map>
 #include <list>
 #include <functional>
-#include "../include/dicomhero/codecFactory.h"
+#include "../include/dicomhero6/codecFactory.h"
 #include "dataSetImpl.h"
 
 

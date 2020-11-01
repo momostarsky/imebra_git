@@ -17,11 +17,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/dicomhero/dicomDirEntry.h"
-#include "../include/dicomhero/dataSet.h"
+#include "../include/dicomhero6/dicomDirEntry.h"
+#include "../include/dicomhero6/dataSet.h"
 #include "../implementation/dicomDirImpl.h"
 #include "../implementation/exceptionImpl.h"
-#include "../include/dicomhero/exceptions.h"
+#include "../include/dicomhero6/exceptions.h"
 
 namespace dicomhero
 {

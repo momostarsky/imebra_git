@@ -16,9 +16,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 */
 
-#include "../include/dicomhero/tcpListener.h"
-#include "../include/dicomhero/tcpAddress.h"
-#include "../include/dicomhero/tcpStream.h"
+#include "../include/dicomhero6/tcpListener.h"
+#include "../include/dicomhero6/tcpAddress.h"
+#include "../include/dicomhero6/tcpStream.h"
 #include "../implementation/tcpSequenceStreamImpl.h"
 
 namespace dicomhero
