@@ -82,12 +82,12 @@ void CGDataProviderCallbackFunc(void *info, const void* /* data */, size_t /* si
 
     // Get the amount of memory needed for the conversion
     /////////////////////////////////////////////////////
-    std::uint32_t width(get_dicomhero_object_holder(pImage, Image)->getWidth());
-    std::uint32_t height(get_dicomhero_object_holder(pImage, Image)->getHeight());
+    std::uint32_t width(get_other_dicomhero_object_holder(pImage, Image)->getWidth());
+    std::uint32_t height(get_other_dicomhero_object_holder(pImage, Image)->getHeight());
 
     // Get the result raw data
     //////////////////////////
-    std::unique_ptr<dicomhero::Memory> pMemory(new dicomhero::Memory(get_dicomhero_object_holder(DrawBitmap)->getBitmap(*get_dicomhero_object_holder(pImage, Image), dicomhero::drawBitmapType_t::drawBitmapRGBA, 4)));
+    std::unique_ptr<dicomhero::Memory> pMemory(new dicomhero::Memory(get_dicomhero_object_holder(DrawBitmap)->getBitmap(*get_other_dicomhero_object_holder(pImage, Image), dicomhero::drawBitmapType_t::drawBitmapRGBA, 4)));
     size_t dataSize;
     const char* pData = pMemory->data(&dataSize);
 
