@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <dicomhero6_objc/dicomhero.h>
 #include "../buildImageForTest.h"
-#include "../../objectivec/src/imebra_strings.h"
+#include "../../objectivec/src/dicomhero_strings.h"
 #include <thread>
 
 
