@@ -36,7 +36,7 @@ typedef NS_ENUM(unsigned short, DicomheroCodecType)
 ///        object using one of the codecs supplied by the Imebra library.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-@interface dicomheroCodecFactory: NSObject
+@interface DicomheroCodecFactory: NSObject
 
 
     /// \brief Parses the content of the input file and returns a DicomheroDataSet
