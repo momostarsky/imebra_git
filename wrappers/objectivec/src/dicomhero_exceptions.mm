@@ -1,4 +1,4 @@
-#import <imebraobjc/imebra_exceptions.h>
+#import <dicomhero6_objc/dicomhero_exceptions.h>
 
 
 @implementation DicomheroLutError: NSError
