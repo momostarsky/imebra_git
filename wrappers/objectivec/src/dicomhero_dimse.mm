@@ -1153,7 +1153,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[dicomheroCFindResponse alloc] initWithImebraCommand:
+    return [[DicomheroCFindResponse alloc] initWithImebraCommand:
             new dicomhero::CFindResponse(get_dicomhero_object_holder(DimseService)->getCFindResponse(*(dicomhero::CFindCommand*)get_other_dicomhero_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
