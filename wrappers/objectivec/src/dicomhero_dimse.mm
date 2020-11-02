@@ -858,7 +858,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation DicomheroNActionResponse
 
--(id)initWithCommand:(dicomheroNActionCommand*)pReceivedCommand
+-(id)initWithCommand:(DicomheroNActionCommand*)pReceivedCommand
     actionReply:(DicomheroDataSet*)pActionReply
 {
     reset_dicomhero_object_holder(DimseCommandBase);
@@ -873,7 +873,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initWithcommand:(dicomheroNActionCommand*)pReceivedCommand
+-(id)initWithcommand:(DicomheroNActionCommand*)pReceivedCommand
     responseCode:(DicomheroDimseStatusCode)responseCode
 {
     reset_dicomhero_object_holder(DimseCommandBase);
@@ -941,7 +941,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation DicomheroNCreateResponse
 
--(id)initWithCommand:(dicomheroNCreateCommand*)pReceivedCommand
+-(id)initWithCommand:(DicomheroNCreateCommand*)pReceivedCommand
     attributeList:(DicomheroDataSet*)pAttributeList
 {
     reset_dicomhero_object_holder(DimseCommandBase);
@@ -956,7 +956,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initWithCommand:(dicomheroNCreateCommand*)pReceivedCommand
+-(id)initWithCommand:(DicomheroNCreateCommand*)pReceivedCommand
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
     attributeList:(DicomheroDataSet*)pAttributeList
 {
@@ -973,7 +973,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initWithCommand:(dicomheroNCreateCommand*)pReceivedCommand
+-(id)initWithCommand:(DicomheroNCreateCommand*)pReceivedCommand
     affectedSopInstanceUid:(NSString*)affectedSopInstanceUid
 {
     reset_dicomhero_object_holder(DimseCommandBase);
@@ -988,7 +988,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 }
 
--(id)initWithcommand:(dicomheroNCreateCommand*)pReceivedCommand
+-(id)initWithcommand:(DicomheroNCreateCommand*)pReceivedCommand
     responseCode:(DicomheroDimseStatusCode)responseCode
 {
     reset_dicomhero_object_holder(DimseCommandBase);
@@ -1032,7 +1032,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation DicomheroNDeleteResponse
 
--(id)initWithcommand:(dicomheroNDeleteCommand*)pReceivedCommand
+-(id)initWithcommand:(DicomheroNDeleteCommand*)pReceivedCommand
     responseCode:(DicomheroDimseStatusCode)responseCode
 {
     reset_dicomhero_object_holder(DimseCommandBase);
