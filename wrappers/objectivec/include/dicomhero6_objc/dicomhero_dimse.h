@@ -361,7 +361,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(DicomheroCStoreCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode;
+        responseCode:(DicomheroDimseStatusCode)responseCode;
 
 @end
 
@@ -438,7 +438,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(DicomheroCGetCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode
+        responseCode:(DicomheroDimseStatusCode)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
         completedSubOperations:(unsigned int)completedSubOperations
         failedSubOperations:(unsigned int)failedSubOperations
@@ -463,7 +463,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(DicomheroCGetCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode
+        responseCode:(DicomheroDimseStatusCode)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
         completedSubOperations:(unsigned int)completedSubOperations
         failedSubOperations:(unsigned int)failedSubOperations
@@ -536,7 +536,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(DicomheroCFindCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode;
+        responseCode:(DicomheroDimseStatusCode)responseCode;
 @end
 
 
@@ -619,7 +619,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(DicomheroCMoveCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode
+        responseCode:(DicomheroDimseStatusCode)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
         completedSubOperations:(unsigned int)completedSubOperations
         failedSubOperations:(unsigned int)failedSubOperations
@@ -644,7 +644,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(DicomheroCMoveCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode
+        responseCode:(DicomheroDimseStatusCode)responseCode
         remainingSubOperations:(unsigned int)remainingSubOperations
         completedSubOperations:(unsigned int)completedSubOperations
         failedSubOperations:(unsigned int)failedSubOperations
@@ -698,7 +698,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(DicomheroCEchoCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode;
+        responseCode:(DicomheroDimseStatusCode)responseCode;
 
 @end
 
@@ -831,7 +831,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(DicomheroNEventReportCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode;
+        responseCode:(DicomheroDimseStatusCode)responseCode;
 
     ///
     /// \brief Get the event ID. The response may omit this
@@ -907,7 +907,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithCommand:(DicomheroNGetCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode
+        responseCode:(DicomheroDimseStatusCode)responseCode
         attributeList:(DicomheroDataSet*)pAttributeList;
 
     ///
@@ -919,7 +919,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(DicomheroNGetCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode;
+        responseCode:(DicomheroDimseStatusCode)responseCode;
 
 @end
 
@@ -985,7 +985,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(DicomheroNSetCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode;
+        responseCode:(DicomheroDimseStatusCode)responseCode;
 
     ///
     /// \brief Returns the list of modified attributes.
@@ -1090,7 +1090,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(DicomheroNActionCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode;
+        responseCode:(DicomheroDimseStatusCode)responseCode;
 
     ///
     /// \brief Returns the action's ID.
@@ -1205,7 +1205,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(DicomheroNCreateCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode;
+        responseCode:(DicomheroDimseStatusCode)responseCode;
 
 @end
 
@@ -1255,7 +1255,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
     ///
     //////////////////////////////////////////////////////////////////
     -(id)initWithcommand:(DicomheroNDeleteCommand*)pReceivedCommand
-        responseCode:(dicomheroDimseStatusCode)responseCode;
+        responseCode:(DicomheroDimseStatusCode)responseCode;
 
 @end
 
