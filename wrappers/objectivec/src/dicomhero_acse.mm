@@ -14,7 +14,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "dicomhero_implementation_macros.h"
 
 #import <Foundation/Foundation.h>
-#import "../include/dicomhero6_objc/imebra_acse.h"
+#import "../include/dicomhero6_objc/dicomhero_acse.h"
 #include "dicomhero_nserror.h"
 #include <dicomhero6/acse.h>
 #include <dicomhero6/dataSet.h>

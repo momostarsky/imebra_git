@@ -12,7 +12,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #import <Foundation/NSString.h>
-#import "../include/dicomhero6_objc/imebra_dateAge.h"
+#import "../include/dicomhero6_objc/dicomhero_dateAge.h"
 #include "dicomhero_implementation_macros.h"
 #include <dicomhero6/age.h>
 #include <dicomhero6/date.h>

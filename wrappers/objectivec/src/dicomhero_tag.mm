@@ -11,15 +11,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#import "../include/dicomhero6_objc/imebra_tag.h"
-#import "../include/dicomhero6_objc/imebra_dataset.h"
-#import "../include/dicomhero6_objc/imebra_readingDataHandler.h"
-#import "../include/dicomhero6_objc/imebra_readingDataHandlerNumeric.h"
-#import "../include/dicomhero6_objc/imebra_writingDataHandler.h"
-#import "../include/dicomhero6_objc/imebra_writingDataHandlerNumeric.h"
-#import "../include/dicomhero6_objc/imebra_streamReader.h"
-#import "../include/dicomhero6_objc/imebra_streamWriter.h"
-#import "../include/dicomhero6_objc/imebra_fileStreamInput.h"
+#import "../include/dicomhero6_objc/dicomhero_tag.h"
+#import "../include/dicomhero6_objc/dicomhero_dataset.h"
+#import "../include/dicomhero6_objc/dicomhero_readingDataHandler.h"
+#import "../include/dicomhero6_objc/dicomhero_readingDataHandlerNumeric.h"
+#import "../include/dicomhero6_objc/dicomhero_writingDataHandler.h"
+#import "../include/dicomhero6_objc/dicomhero_writingDataHandlerNumeric.h"
+#import "../include/dicomhero6_objc/dicomhero_streamReader.h"
+#import "../include/dicomhero6_objc/dicomhero_streamWriter.h"
+#import "../include/dicomhero6_objc/dicomhero_fileStreamInput.h"
 
 #include "dicomhero_implementation_macros.h"
 #include "dicomhero_nserror.h"

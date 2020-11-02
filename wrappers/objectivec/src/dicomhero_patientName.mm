@@ -12,7 +12,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #import <Foundation/NSString.h>
-#import "../include/dicomhero6_objc/imebra_patientName.h"
+#import "../include/dicomhero6_objc/dicomhero_patientName.h"
 #include "dicomhero_strings.h"
 #include "dicomhero_implementation_macros.h"
 

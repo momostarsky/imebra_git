@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#import "../include/dicomhero6_objc/imebra_memoryStreamInput.h"
-#import "../include/dicomhero6_objc/imebra_readMemory.h"
+#import "../include/dicomhero6_objc/dicomhero_memoryStreamInput.h"
+#import "../include/dicomhero6_objc/dicomhero_readMemory.h"
 #include "dicomhero_implementation_macros.h"
 #include <dicomhero6/memoryStreamInput.h>
 

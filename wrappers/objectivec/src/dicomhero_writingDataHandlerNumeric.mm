@@ -11,10 +11,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#import "../include/dicomhero6_objc/imebra_writingDataHandlerNumeric.h"
-#import "../include/dicomhero6_objc/imebra_readingDataHandlerNumeric.h"
-#import "../include/dicomhero6_objc/imebra_readWriteMemory.h"
-#import "../include/dicomhero6_objc/imebra_readMemory.h"
+#import "../include/dicomhero6_objc/dicomhero_writingDataHandlerNumeric.h"
+#import "../include/dicomhero6_objc/dicomhero_readingDataHandlerNumeric.h"
+#import "../include/dicomhero6_objc/dicomhero_readWriteMemory.h"
+#import "../include/dicomhero6_objc/dicomhero_readMemory.h"
 
 #include "dicomhero_implementation_macros.h"
 #include "dicomhero_nserror.h"

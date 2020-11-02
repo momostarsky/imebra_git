@@ -11,10 +11,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#import "../include/dicomhero6_objc/imebra_VOILUT.h"
-#import "../include/dicomhero6_objc/imebra_image.h"
-#import "../include/dicomhero6_objc/imebra_lut.h"
-#import "../include/dicomhero6_objc/imebra_VOIDescription.h"
+#import "../include/dicomhero6_objc/dicomhero_VOILUT.h"
+#import "../include/dicomhero6_objc/dicomhero_image.h"
+#import "../include/dicomhero6_objc/dicomhero_lut.h"
+#import "../include/dicomhero6_objc/dicomhero_VOIDescription.h"
 #include "dicomhero_implementation_macros.h"
 #include "dicomhero_nserror.h"
 #include <dicomhero6/VOILUT.h>

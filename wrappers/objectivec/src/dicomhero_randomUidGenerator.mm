@@ -12,7 +12,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 
-#import "../include/dicomhero6_objc/imebra_randomUidGenerator.h"
+#import "../include/dicomhero6_objc/dicomhero_randomUidGenerator.h"
 #include "dicomhero_implementation_macros.h"
 #include "dicomhero_nserror.h"
 #include "dicomhero_strings.h"

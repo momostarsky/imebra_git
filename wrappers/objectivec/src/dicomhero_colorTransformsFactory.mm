@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#import "../include/dicomhero6_objc/imebra_colorTransformsFactory.h"
-#import "../include/dicomhero6_objc/imebra_transform.h"
+#import "../include/dicomhero6_objc/dicomhero_colorTransformsFactory.h"
+#import "../include/dicomhero6_objc/dicomhero_transform.h"
 #include "dicomhero_implementation_macros.h"
 #include "dicomhero_strings.h"
 #include "dicomhero_nserror.h"

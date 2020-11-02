@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/dicomhero6_objc/imebra_dicomDir.h"
-#include "../include/dicomhero6_objc/imebra_dataset.h"
+#include "../include/dicomhero6_objc/dicomhero_dicomDir.h"
+#include "../include/dicomhero6_objc/dicomhero_dataset.h"
 #include "dicomhero_implementation_macros.h"
 #include "dicomhero_strings.h"
 #include "dicomhero_nserror.h"

@@ -11,16 +11,16 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#include "../include/dicomhero6_objc/imebra_dimse.h"
+#include "../include/dicomhero6_objc/dicomhero_dimse.h"
 #include <dicomhero6/dimse.h>
 #include <dicomhero6/dataSet.h>
 #include "dicomhero_implementation_macros.h"
 #include "dicomhero_nserror.h"
 #include "dicomhero_strings.h"
 
-#import "../include/dicomhero6_objc/imebra_dataset.h"
-#import "../include/dicomhero6_objc/imebra_tagId.h"
-#import "../include/dicomhero6_objc/imebra_acse.h"
+#import "../include/dicomhero6_objc/dicomhero_dataset.h"
+#import "../include/dicomhero6_objc/dicomhero_tagId.h"
+#import "../include/dicomhero6_objc/dicomhero_acse.h"
 
 @implementation DicomheroDimseCommandBase
 

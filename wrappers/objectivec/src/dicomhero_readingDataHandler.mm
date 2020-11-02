@@ -11,9 +11,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#import "../include/dicomhero6_objc/imebra_readingDataHandler.h"
-#import "../include/dicomhero6_objc/imebra_dateAge.h"
-#import "../include/dicomhero6_objc/imebra_patientName.h"
+#import "../include/dicomhero6_objc/dicomhero_readingDataHandler.h"
+#import "../include/dicomhero6_objc/dicomhero_dateAge.h"
+#import "../include/dicomhero6_objc/dicomhero_patientName.h"
 
 #include "dicomhero_implementation_macros.h"
 #include "dicomhero_nserror.h"

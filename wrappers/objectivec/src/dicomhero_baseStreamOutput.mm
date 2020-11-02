@@ -11,7 +11,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#import "../include/dicomhero6_objc/imebra_baseStreamOutput.h"
+#import "../include/dicomhero6_objc/dicomhero_baseStreamOutput.h"
 #include <dicomhero6/baseStreamOutput.h>
 #include "dicomhero_implementation_macros.h"
 

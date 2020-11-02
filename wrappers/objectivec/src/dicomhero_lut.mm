@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for Imebra from the Imebra’s website (http://imebra.com).
 */
 
-#import "../include/dicomhero6_objc/imebra_lut.h"
-#import "../include/dicomhero6_objc/imebra_readingDataHandlerNumeric.h"
+#import "../include/dicomhero6_objc/dicomhero_lut.h"
+#import "../include/dicomhero6_objc/dicomhero_readingDataHandlerNumeric.h"
 #include "dicomhero_implementation_macros.h"
 #include "dicomhero_strings.h"
 #include <dicomhero6/lut.h>
