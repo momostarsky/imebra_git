@@ -14,24 +14,24 @@ for:
         - image: macos
 
     build_script:
-      - mkdir build_imebra_debug
-      - mkdir build_imebra_ios_debug
-      - cd build_imebra_debug
+      - mkdir build_dicomhero_debug
+      - mkdir build_dicomhero_ios_debug
+      - cd build_dicomhero_debug
       - cmake -DCMAKE_BUILD_TYPE=Debug ..
       - cmake --build . --config Debug
       - ctest -V .
-      - cd ../build_imebra_ios_debug
+      - cd ../build_dicomhero_ios_debug
       - cmake -DCMAKE_BUILD_TYPE=Debug -DIOS=IPHONE ..
       - cmake --build . --config Debug
       - cd ..
-      - cp -R library/include build_imebra_debug
-      - cp -R library/include build_imebra_ios_debug
+      - cp -R library/include build_dicomhero_debug
+      - cp -R library/include build_dicomhero_ios_debug
 
     artifacts:
-      - path: build_imebra_debug/*.dylib
-        name: imebra_macos_debug
-      - path: build_imebra_ios_debug/*.a
-        name: imebra_ios_debug
+      - path: build_dicomhero_debug/*.dylib
+        name: dicomhero_macos_debug
+      - path: build_dicomhero_ios_debug/*.a
+        name: dicomhero_ios_debug
 
   -
     matrix:
@@ -41,9 +41,9 @@ for:
     build_script:
       - cmd: >-
 
-          mkdir build_imebra_release
+          mkdir build_dicomhero_release
 
-          cd build_imebra_release
+          cd build_dicomhero_release
     
           cmake -DCMAKE_BUILD_TYPE=Release ..
     
@@ -53,26 +53,26 @@ for:
 
           cd ..
 
-          mkdir build_imebra_release\Release\include
+          mkdir build_dicomhero_release\Release\include
     
-          mkdir build_imebra_debug\Debug\include
+          mkdir build_dicomhero_debug\Debug\include
 
-          xcopy library\include build_imebra_release\Release\include /s /e
+          xcopy library\include build_dicomhero_release\Release\include /s /e
 
-          xcopy library\include build_imebra_debug\Debug\include /s /e
+          xcopy library\include build_dicomhero_debug\Debug\include /s /e
 
     artifacts:
-      - path: build_imebra_release/Release
-        name: imebra__vs2015_release
+      - path: build_dicomhero_release/Release
+        name: dicomhero__vs2015_release
 
 build_script:
 - cmd: >-
 
-    mkdir build_imebra_release
+    mkdir build_dicomhero_release
 
-    mkdir build_imebra_debug
+    mkdir build_dicomhero_debug
 
-    cd build_imebra_release
+    cd build_dicomhero_release
     
     cmake -DCMAKE_BUILD_TYPE=Release ..
     
@@ -80,7 +80,7 @@ build_script:
 
     ctest -V .
 
-    cd ../build_imebra_debug
+    cd ../build_dicomhero_debug
     
     cmake -DCMAKE_BUILD_TYPE=Debug ..
     
@@ -88,18 +88,18 @@ build_script:
 
     cd ..
 
-    mkdir build_imebra_release\Release\include
+    mkdir build_dicomhero_release\Release\include
     
-    mkdir build_imebra_debug\Debug\include
+    mkdir build_dicomhero_debug\Debug\include
 
-    xcopy library\include build_imebra_release\Release\include /s /e
+    xcopy library\include build_dicomhero_release\Release\include /s /e
 
-    xcopy library\include build_imebra_debug\Debug\include /s /e
+    xcopy library\include build_dicomhero_debug\Debug\include /s /e
 
 test_script:
 - cmd: 
 artifacts:
-- path: build_imebra_release/Release
-  name: imebra_vs2019_release
-- path: build_imebra_debug/Debug
-  name: imebra_vs2019_debug
+- path: build_dicomhero_release/Release
+  name: dicomhero_vs2019_release
+- path: build_dicomhero_debug/Debug
+  name: dicomhero_vs2019_debug

@@ -1426,16 +1426,16 @@ public:
 };
 
 
-class DICOMHERO_API ImebraBadAlloc: public std::bad_alloc
+class DICOMHERO_API DicomheroBadAlloc: public std::bad_alloc
 {
 public:
-    ImebraBadAlloc();
+    DicomheroBadAlloc();
 
-    ImebraBadAlloc(const ImebraBadAlloc& source);
+    DicomheroBadAlloc(const DicomheroBadAlloc& source);
 
-    ImebraBadAlloc& operator=(const ImebraBadAlloc&) = delete;
+    DicomheroBadAlloc& operator=(const DicomheroBadAlloc&) = delete;
 
-    virtual ~ImebraBadAlloc();
+    virtual ~DicomheroBadAlloc();
 };
 
 

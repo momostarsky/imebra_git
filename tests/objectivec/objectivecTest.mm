@@ -133,8 +133,8 @@ TEST(objectivec, CodecFactory)
     NSString* checkPatientName = [pDataSet getString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&error];
     NSString* checkPatientID = [pDataSet getString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x20] elementNumber:0 error:&error];
 
-    EXPECT_EQ(imebra::NSStringToString(checkPatientName), "Test^Patient");
-    EXPECT_EQ(imebra::NSStringToString(checkPatientID), "TestID");
+    EXPECT_EQ(dicomhero::NSStringToString(checkPatientName), "Test^Patient");
+    EXPECT_EQ(dicomhero::NSStringToString(checkPatientID), "TestID");
 }
 
 
@@ -144,14 +144,14 @@ TEST(objectivec, CodecFactoryFailLoad)
     NSError* error = nil;
     DicomheroDataSet* pDataSet = [DicomheroCodecFactory loadFromFile:@"fail.dcm" error:&error];
     EXPECT_EQ(pDataSet, nullptr);
-    EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
+    EXPECT_EQ(dicomhero::NSStringToString([error domain]), "imebra");
 }
 
 
 // Initialize and check an image content
 TEST(objectivec, image)
 {
-    DicomheroMutableImage* pImage = [[DicomheroMutableImage alloc] initWithWidth:5 height:5 depth:ImebraBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
+    DicomheroMutableImage* pImage = [[DicomheroMutableImage alloc] initWithWidth:5 height:5 depth:DicomheroBitDepthU16 colorSpace:@"MONOCHROME2" highBit:15];
 
     NSError* error = nil;
 
@@ -214,20 +214,20 @@ TEST(objectivec, datasetValues)
 {
     NSError* error = nil;
 
-    ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+    DicomheroMutableDataSet* pDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-    [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&error];
-    [pDataSet setAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraAgeUnitYears] error:&error];
+    [pDataSet setString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&error];
+    [pDataSet setAge:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[DicomheroAge alloc] initWithAge:10 units:DicomheroAgeUnitYears] error:&error];
 
-    [pDataSet setInt32:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1011] newValue:10 tagVR:ImebraTagTypeSL error:&error];
-    [pDataSet setUint32:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] newValue:11 tagVR:ImebraTagTypeUL error:&error];
-    [pDataSet setDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] newValue:12.0f tagVR:ImebraTagTypeUL error:&error];
+    [pDataSet setInt32:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x1011] newValue:10 tagVR:DicomheroTagTypeSL error:&error];
+    [pDataSet setUint32:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x1012] newValue:11 tagVR:DicomheroTagTypeUL error:&error];
+    [pDataSet setDouble:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x1013] newValue:12.0f tagVR:DicomheroTagTypeUL error:&error];
 
-    ImebraMutableTag* pTag = [pDataSet getTagCreate:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] tagVR:ImebraTagTypeFD error:&error];
+    DicomheroMutableTag* pTag = [pDataSet getTagCreate:[[DicomheroTagId alloc] initWithGroup:0x12 tag:0x12] tagVR:DicomheroTagTypeFD error:&error];
 
     @autoreleasepool
     {
-        ImebraWritingDataHandlerNumeric* pWriteDouble = [pTag getWritingDataHandlerNumeric:0 error:&error];
+        DicomheroWritingDataHandlerNumeric* pWriteDouble = [pTag getWritingDataHandlerNumeric:0 error:&error];
         [pWriteDouble setSize:4];
         EXPECT_EQ(4u, pWriteDouble.size);
         [pWriteDouble setDouble:0 newValue:0 error:&error];
@@ -236,32 +236,32 @@ TEST(objectivec, datasetValues)
         [pWriteDouble setDouble:3 newValue:3 error:&error];
     }
 
-    NSString* checkPatient0 = [pDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&error];
-    ImebraAge* checkAge = [pDataSet getAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] elementNumber:0 error:&error];
+    NSString* checkPatient0 = [pDataSet getString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&error];
+    DicomheroAge* checkAge = [pDataSet getAge:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x1010] elementNumber:0 error:&error];
 
     EXPECT_EQ(error, nil);
-    NSString* checkPatient1 = [pDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x11] elementNumber:0 error:&error];
-    EXPECT_EQ(imebra::NSStringToString([error domain]), "imebra");
-    NSString* checkPatient2 = [pDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x11] elementNumber:0 defaultValue:@"defaultValue" error:&error];
+    NSString* checkPatient1 = [pDataSet getString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x11] elementNumber:0 error:&error];
+    EXPECT_EQ(dicomhero::NSStringToString([error domain]), "imebra");
+    NSString* checkPatient2 = [pDataSet getString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x11] elementNumber:0 defaultValue:@"defaultValue" error:&error];
 
-    EXPECT_EQ(imebra::NSStringToString(checkPatient0), "TestPatient");
+    EXPECT_EQ(dicomhero::NSStringToString(checkPatient0), "TestPatient");
     EXPECT_EQ(checkPatient1, nil);
-    EXPECT_EQ(imebra::NSStringToString(checkPatient2), "defaultValue");
+    EXPECT_EQ(dicomhero::NSStringToString(checkPatient2), "defaultValue");
 
     EXPECT_EQ(10u, [checkAge age]);
-    EXPECT_EQ(ImebraAgeUnitYears, [checkAge units]);
+    EXPECT_EQ(DicomheroAgeUnitYears, [checkAge units]);
 
-    EXPECT_EQ(10, [pDataSet getInt32:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1011] elementNumber:0 error:&error]);
-    EXPECT_EQ(11u, [pDataSet getUint32:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1012] elementNumber:0 error:&error]);
-    EXPECT_DOUBLE_EQ(12.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1013] elementNumber:0 error:&error]);
-    EXPECT_EQ(12, [pDataSet getInt32:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1020] elementNumber:0 defaultValue:12u error:&error]);
-    EXPECT_EQ(13u, [pDataSet getUint32:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1021] elementNumber:0 defaultValue:13u error:&error]);
-    EXPECT_DOUBLE_EQ(14.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1022] elementNumber:0 defaultValue:14.0 error:&error]);
+    EXPECT_EQ(10, [pDataSet getInt32:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x1011] elementNumber:0 error:&error]);
+    EXPECT_EQ(11u, [pDataSet getUint32:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x1012] elementNumber:0 error:&error]);
+    EXPECT_DOUBLE_EQ(12.0, [pDataSet getDouble:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x1013] elementNumber:0 error:&error]);
+    EXPECT_EQ(12, [pDataSet getInt32:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x1020] elementNumber:0 defaultValue:12u error:&error]);
+    EXPECT_EQ(13u, [pDataSet getUint32:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x1021] elementNumber:0 defaultValue:13u error:&error]);
+    EXPECT_DOUBLE_EQ(14.0, [pDataSet getDouble:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x1022] elementNumber:0 defaultValue:14.0 error:&error]);
 
-    EXPECT_DOUBLE_EQ(0.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:0 error:&error]);
-    EXPECT_DOUBLE_EQ(1.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:1 error:&error]);
-    EXPECT_DOUBLE_EQ(2.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:2 error:&error]);
-    EXPECT_DOUBLE_EQ(3.0, [pDataSet getDouble:[[ImebraTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:3 error:&error]);
+    EXPECT_DOUBLE_EQ(0.0, [pDataSet getDouble:[[DicomheroTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:0 error:&error]);
+    EXPECT_DOUBLE_EQ(1.0, [pDataSet getDouble:[[DicomheroTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:1 error:&error]);
+    EXPECT_DOUBLE_EQ(2.0, [pDataSet getDouble:[[DicomheroTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:2 error:&error]);
+    EXPECT_DOUBLE_EQ(3.0, [pDataSet getDouble:[[DicomheroTagId alloc] initWithGroup:0x12 tag:0x12] elementNumber:3 error:&error]);
 }
 
 
@@ -270,86 +270,86 @@ void listenerThread()
     try
     {
         NSError* pError(0);
-        ImebraTCPPassiveAddress* pAddress = [[ImebraTCPPassiveAddress alloc] initWithNode:@"localhost" service:@"20000" error:&pError];
-        ImebraTCPListener* pListener = [[ImebraTCPListener alloc] initWithAddress:pAddress error:&pError];
+        DicomheroTCPPassiveAddress* pAddress = [[DicomheroTCPPassiveAddress alloc] initWithNode:@"localhost" service:@"20000" error:&pError];
+        DicomheroTCPListener* pListener = [[DicomheroTCPListener alloc] initWithAddress:pAddress error:&pError];
 
         @autoreleasepool
         {
-            ImebraTCPStream* pStream = [pListener waitForConnection:&pError];
+            DicomheroTCPStream* pStream = [pListener waitForConnection:&pError];
 
-            ImebraBaseStreamInput* pInput = [pStream getStreamInput];
-            ImebraBaseStreamOutput* pOutput = [pStream getStreamOutput];
-            ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pInput];
-            ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream:pOutput];
+            DicomheroBaseStreamInput* pInput = [pStream getStreamInput];
+            DicomheroBaseStreamOutput* pOutput = [pStream getStreamOutput];
+            DicomheroStreamReader* pReader = [[DicomheroStreamReader alloc] initWithInputStream:pInput];
+            DicomheroStreamWriter* pWriter = [[DicomheroStreamWriter alloc] initWithOutputStream:pOutput];
 
-            ImebraPresentationContexts* pContexts = [[ImebraPresentationContexts alloc] init];
+            DicomheroPresentationContexts* pContexts = [[DicomheroPresentationContexts alloc] init];
 
-            ImebraPresentationContext* pContext = [[ImebraPresentationContext alloc] initWithAbstractSyntax:@"1.2.840.10008.1.1"];
+            DicomheroPresentationContext* pContext = [[DicomheroPresentationContext alloc] initWithAbstractSyntax:@"1.2.840.10008.1.1"];
             [pContext addTransferSyntax:@"1.2.840.10008.1.2"];
 
             [pContexts addPresentationContext:pContext];
 
-            ImebraAssociationSCP* pSCP = [[ImebraAssociationSCP alloc]
+            DicomheroAssociationSCP* pSCP = [[DicomheroAssociationSCP alloc]
                     initWithThisAET:@"SCP" maxInvokedOperations:1 maxPerformedOperations:1 presentationContexts:pContexts
                          reader:pReader writer:pWriter dimseTimeoutSeconds:30 artimTimeoutSeconds:30 error:&pError];
 
-            ImebraDimseService* pDimse = [[ImebraDimseService alloc]initWithAssociation:pSCP];
+            DicomheroDimseService* pDimse = [[DicomheroDimseService alloc]initWithAssociation:pSCP];
 
             for(;;)
             {
-                ImebraDimseCommand* pCommand = (ImebraDimseCommand*)[pDimse getCommand:&pError];
+                DicomheroDimseCommand* pCommand = (DicomheroDimseCommand*)[pDimse getCommand:&pError];
 
                 if(pError != 0)
                 {
                     break;
                 }
 
-                ImebraDimseResponse* pResponse = nil;
+                DicomheroDimseResponse* pResponse = nil;
                 switch([pCommand commandType])
                 {
-                case ImebraDimseCommandTypeCStore:
-                    pResponse = [[ImebraCStoreResponse alloc]initWithcommand:(ImebraCStoreCommand*)pCommand responseCode:ImebraDimseStatusCodeSuccess];
+                case DicomheroDimseCommandTypeCStore:
+                    pResponse = [[DicomheroCStoreResponse alloc]initWithcommand:(DicomheroCStoreCommand*)pCommand responseCode:DicomheroDimseStatusCodeSuccess];
                     break;
-                case ImebraDimseCommandTypeCGet:
-                    pResponse = [[ImebraCGetResponse alloc]initWithcommand:(ImebraCGetCommand*)pCommand responseCode:ImebraDimseStatusCodeSuccess
+                case DicomheroDimseCommandTypeCGet:
+                    pResponse = [[DicomheroCGetResponse alloc]initWithcommand:(DicomheroCGetCommand*)pCommand responseCode:DicomheroDimseStatusCodeSuccess
                                                                            remainingSubOperations:0
                                                                            completedSubOperations:1
                                                                            failedSubOperations:0
                                                                            warningSubOperations:0];
                     break;
-                case ImebraDimseCommandTypeCFind:
-                    pResponse = [[ImebraCFindResponse alloc]initWithcommand:(ImebraCFindCommand*)pCommand responseCode:ImebraDimseStatusCodeSuccess];
+                case DicomheroDimseCommandTypeCFind:
+                    pResponse = [[DicomheroCFindResponse alloc]initWithcommand:(DicomheroCFindCommand*)pCommand responseCode:DicomheroDimseStatusCodeSuccess];
                     break;
-                case ImebraDimseCommandTypeCMove:
-                    pResponse = [[ImebraCMoveResponse alloc]initWithcommand:(ImebraCMoveCommand*)pCommand responseCode:ImebraDimseStatusCodeSuccess
+                case DicomheroDimseCommandTypeCMove:
+                    pResponse = [[DicomheroCMoveResponse alloc]initWithcommand:(DicomheroCMoveCommand*)pCommand responseCode:DicomheroDimseStatusCodeSuccess
                                                                            remainingSubOperations:0
                                                                            completedSubOperations:1
                                                                            failedSubOperations:0
                                                                            warningSubOperations:0];
-                    EXPECT_EQ("DEST", imebra::NSStringToString([(ImebraCMoveCommand*)pCommand getDestinationAET:&pError]));
+                    EXPECT_EQ("DEST", dicomhero::NSStringToString([(DicomheroCMoveCommand*)pCommand getDestinationAET:&pError]));
                     break;
-                case ImebraDimseCommandTypeCEcho:
-                    pResponse = [[ImebraCEchoResponse alloc]initWithcommand:(ImebraCEchoCommand*)pCommand responseCode:ImebraDimseStatusCodeSuccess];
+                case DicomheroDimseCommandTypeCEcho:
+                    pResponse = [[DicomheroCEchoResponse alloc]initWithcommand:(DicomheroCEchoCommand*)pCommand responseCode:DicomheroDimseStatusCodeSuccess];
                     break;
-                case ImebraDimseCommandTypeCCancel:
+                case DicomheroDimseCommandTypeCCancel:
                     break;
-                case ImebraDimseCommandTypeNEventReport:
-                    pResponse = [[ImebraNEventReportResponse alloc]initWithcommand:(ImebraNEventReportCommand*)pCommand responseCode:ImebraDimseStatusCodeSuccess];
+                case DicomheroDimseCommandTypeNEventReport:
+                    pResponse = [[DicomheroNEventReportResponse alloc]initWithcommand:(DicomheroNEventReportCommand*)pCommand responseCode:DicomheroDimseStatusCodeSuccess];
                     break;
-                case ImebraDimseCommandTypeNGet:
-                    pResponse = [[ImebraNGetResponse alloc]initWithcommand:(ImebraNGetCommand*)pCommand responseCode:ImebraDimseStatusCodeSuccess];
+                case DicomheroDimseCommandTypeNGet:
+                    pResponse = [[DicomheroNGetResponse alloc]initWithcommand:(DicomheroNGetCommand*)pCommand responseCode:DicomheroDimseStatusCodeSuccess];
                     break;
-                case ImebraDimseCommandTypeNSet:
-                    pResponse = [[ImebraNSetResponse alloc]initWithcommand:(ImebraNSetCommand*)pCommand responseCode:ImebraDimseStatusCodeSuccess];
+                case DicomheroDimseCommandTypeNSet:
+                    pResponse = [[DicomheroNSetResponse alloc]initWithcommand:(DicomheroNSetCommand*)pCommand responseCode:DicomheroDimseStatusCodeSuccess];
                     break;
-                case ImebraDimseCommandTypeNAction:
-                    pResponse = [[ImebraNActionResponse alloc]initWithcommand:(ImebraNActionCommand*)pCommand responseCode:ImebraDimseStatusCodeSuccess];
+                case DicomheroDimseCommandTypeNAction:
+                    pResponse = [[DicomheroNActionResponse alloc]initWithcommand:(DicomheroNActionCommand*)pCommand responseCode:DicomheroDimseStatusCodeSuccess];
                     break;
-                case ImebraDimseCommandTypeNCreate:
-                    pResponse = [[ImebraNCreateResponse alloc]initWithcommand:(ImebraNCreateCommand*)pCommand responseCode:ImebraDimseStatusCodeSuccess];
+                case DicomheroDimseCommandTypeNCreate:
+                    pResponse = [[DicomheroNCreateResponse alloc]initWithcommand:(DicomheroNCreateCommand*)pCommand responseCode:DicomheroDimseStatusCodeSuccess];
                     break;
-                case ImebraDimseCommandTypeNDelete:
-                    pResponse = [[ImebraNDeleteResponse alloc]initWithcommand:(ImebraNDeleteCommand*)pCommand responseCode:ImebraDimseStatusCodeSuccess];
+                case DicomheroDimseCommandTypeNDelete:
+                    pResponse = [[DicomheroNDeleteResponse alloc]initWithcommand:(DicomheroNDeleteCommand*)pCommand responseCode:DicomheroDimseStatusCodeSuccess];
                     break;
                 }
 
@@ -365,7 +365,7 @@ void listenerThread()
     }
     catch(const std::runtime_error&e)
     {
-        std::cout << imebra::ExceptionsManager::getExceptionTrace();
+        std::cout << dicomhero::ExceptionsManager::getExceptionTrace();
 
     }
 
@@ -375,7 +375,7 @@ void listenerThread()
 // Send a CStore command to a SCP via TCP
 TEST(objectivec, dimse)
 {
-    std::thread scp(imebra::tests::listenerThread);
+    std::thread scp(dicomhero::tests::listenerThread);
 
     try
     {
@@ -383,41 +383,41 @@ TEST(objectivec, dimse)
         std::this_thread::sleep_for(std::chrono::seconds(5));
 
         NSError* pError(0);
-        ImebraTCPActiveAddress* pAddress = [[ImebraTCPActiveAddress alloc] initWithNode:@"localhost" service:@"20000" error:&pError];
+        DicomheroTCPActiveAddress* pAddress = [[DicomheroTCPActiveAddress alloc] initWithNode:@"localhost" service:@"20000" error:&pError];
 
         @autoreleasepool
         {
-            ImebraTCPStream* pStream = [[ImebraTCPStream alloc] initWithAddress:pAddress error:&pError];
+            DicomheroTCPStream* pStream = [[DicomheroTCPStream alloc] initWithAddress:pAddress error:&pError];
 
-            ImebraBaseStreamInput* pInput = [pStream getStreamInput];
-            ImebraBaseStreamOutput* pOutput = [pStream getStreamOutput];
-            ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pInput];
-            ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream:pOutput];
+            DicomheroBaseStreamInput* pInput = [pStream getStreamInput];
+            DicomheroBaseStreamOutput* pOutput = [pStream getStreamOutput];
+            DicomheroStreamReader* pReader = [[DicomheroStreamReader alloc] initWithInputStream:pInput];
+            DicomheroStreamWriter* pWriter = [[DicomheroStreamWriter alloc] initWithOutputStream:pOutput];
 
-            ImebraPresentationContexts* pContexts = [[ImebraPresentationContexts alloc] init];
+            DicomheroPresentationContexts* pContexts = [[DicomheroPresentationContexts alloc] init];
 
-            ImebraPresentationContext* pContext = [[ImebraPresentationContext alloc] initWithAbstractSyntax:@"1.2.840.10008.1.1"];
+            DicomheroPresentationContext* pContext = [[DicomheroPresentationContext alloc] initWithAbstractSyntax:@"1.2.840.10008.1.1"];
             [pContext addTransferSyntax:@"1.2.840.10008.1.2"];
 
             [pContexts addPresentationContext:pContext];
 
-            ImebraAssociationSCU* pSCU = [[ImebraAssociationSCU alloc]
+            DicomheroAssociationSCU* pSCU = [[DicomheroAssociationSCU alloc]
                     initWithThisAET:@"SCU" otherAET:@"SCP" maxInvokedOperations:1 maxPerformedOperations:1 presentationContexts:pContexts
                          reader:pReader writer:pWriter dimseTimeoutSeconds:30 error:&pError];
 
-            ImebraDimseService* pDimse = [[ImebraDimseService alloc]initWithAssociation:pSCU];
+            DicomheroDimseService* pDimse = [[DicomheroDimseService alloc]initWithAssociation:pSCU];
 
             // Send C-STORE
             {
-                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                DicomheroMutableDataSet* pDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
-                [pDataSet setAge:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[ImebraAge alloc] initWithAge:10 units:ImebraAgeUnitYears] error:&pError];
+                [pDataSet setString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                [pDataSet setAge:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x1010] newValue:[[DicomheroAge alloc] initWithAge:10 units:DicomheroAgeUnitYears] error:&pError];
 
-                ImebraCStoreCommand* pCommand = [[ImebraCStoreCommand alloc]initWithAbstractSyntax:
+                DicomheroCStoreCommand* pCommand = [[DicomheroCStoreCommand alloc]initWithAbstractSyntax:
                     @"1.2.840.10008.1.1"
                     messageID:[pDimse getNextCommandID]
-                    priority:ImebraDimseCommandPriorityMedium
+                    priority:DicomheroDimseCommandPriorityMedium
                     affectedSopClassUid:@"1.2.840.10008.1.1"
                     affectedSopInstanceUid:@"1.2.3.4.5"
                     originatorAET:@"SCU"
@@ -425,89 +425,89 @@ TEST(objectivec, dimse)
                     payload:pDataSet];
 
                 [pDimse sendCommandOrResponse:pCommand error:&pError];
-                ImebraCStoreResponse* pResponse = [pDimse getCStoreResponse:pCommand error:&pError];
+                DicomheroCStoreResponse* pResponse = [pDimse getCStoreResponse:pCommand error:&pError];
 
-                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+                EXPECT_EQ(DicomheroDimseStatusSuccess, pResponse.status);
             }
 
             // Send C-GET
             {
-                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                DicomheroMutableDataSet* pDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                [pDataSet setString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-                ImebraCGetCommand* pCommand = [[ImebraCGetCommand alloc]initWithAbstractSyntax:
+                DicomheroCGetCommand* pCommand = [[DicomheroCGetCommand alloc]initWithAbstractSyntax:
                     @"1.2.840.10008.1.1"
                     messageID:[pDimse getNextCommandID]
-                    priority:ImebraDimseCommandPriorityMedium
+                    priority:DicomheroDimseCommandPriorityMedium
                     affectedSopClassUid:@"1.2.840.10008.1.1"
                     identifier:pDataSet];
 
                 [pDimse sendCommandOrResponse:pCommand error:&pError];
-                ImebraCGetResponse* pResponse = [pDimse getCGetResponse:pCommand error:&pError];
+                DicomheroCGetResponse* pResponse = [pDimse getCGetResponse:pCommand error:&pError];
 
-                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+                EXPECT_EQ(DicomheroDimseStatusSuccess, pResponse.status);
             }
 
             // Send C-FIND
             {
-                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                DicomheroMutableDataSet* pDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                [pDataSet setString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-                ImebraCFindCommand* pCommand = [[ImebraCFindCommand alloc]initWithAbstractSyntax:
+                DicomheroCFindCommand* pCommand = [[DicomheroCFindCommand alloc]initWithAbstractSyntax:
                     @"1.2.840.10008.1.1"
                     messageID:[pDimse getNextCommandID]
-                    priority:ImebraDimseCommandPriorityMedium
+                    priority:DicomheroDimseCommandPriorityMedium
                     affectedSopClassUid:@"1.2.840.10008.1.1"
                     identifier:pDataSet];
 
                 [pDimse sendCommandOrResponse:pCommand error:&pError];
-                ImebraCFindResponse* pResponse = [pDimse getCFindResponse:pCommand error:&pError];
+                DicomheroCFindResponse* pResponse = [pDimse getCFindResponse:pCommand error:&pError];
 
-                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+                EXPECT_EQ(DicomheroDimseStatusSuccess, pResponse.status);
             }
 
             // Send C-MOVE
             {
-                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                DicomheroMutableDataSet* pDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                [pDataSet setString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-                ImebraCMoveCommand* pCommand = [[ImebraCMoveCommand alloc]initWithAbstractSyntax:
+                DicomheroCMoveCommand* pCommand = [[DicomheroCMoveCommand alloc]initWithAbstractSyntax:
                     @"1.2.840.10008.1.1"
                     messageID:[pDimse getNextCommandID]
-                    priority:ImebraDimseCommandPriorityMedium
+                    priority:DicomheroDimseCommandPriorityMedium
                     affectedSopClassUid:@"1.2.840.10008.1.1"
                     destinationAET:@"DEST"
                     identifier:pDataSet];
 
                 [pDimse sendCommandOrResponse:pCommand error:&pError];
-                ImebraCMoveResponse* pResponse = [pDimse getCMoveResponse:pCommand error:&pError];
+                DicomheroCMoveResponse* pResponse = [pDimse getCMoveResponse:pCommand error:&pError];
 
-                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+                EXPECT_EQ(DicomheroDimseStatusSuccess, pResponse.status);
             }
 
             // Send C-ECHO
             {
-                ImebraCEchoCommand* pCommand = [[ImebraCEchoCommand alloc]initWithAbstractSyntax:
+                DicomheroCEchoCommand* pCommand = [[DicomheroCEchoCommand alloc]initWithAbstractSyntax:
                     @"1.2.840.10008.1.1"
                     messageID:[pDimse getNextCommandID]
-                    priority:ImebraDimseCommandPriorityMedium
+                    priority:DicomheroDimseCommandPriorityMedium
                     affectedSopClassUid:@"1.2.840.10008.1.1"];
 
                 [pDimse sendCommandOrResponse:pCommand error:&pError];
-                ImebraCEchoResponse* pResponse = [pDimse getCEchoResponse:pCommand error:&pError];
+                DicomheroCEchoResponse* pResponse = [pDimse getCEchoResponse:pCommand error:&pError];
 
-                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+                EXPECT_EQ(DicomheroDimseStatusSuccess, pResponse.status);
             }
 
             // Send C-CANCEL
             {
-                ImebraCCancelCommand* pCommand = [[ImebraCCancelCommand alloc]initWithAbstractSyntax:
+                DicomheroCCancelCommand* pCommand = [[DicomheroCCancelCommand alloc]initWithAbstractSyntax:
                     @"1.2.840.10008.1.1"
                     messageID:[pDimse getNextCommandID]
-                    priority:ImebraDimseCommandPriorityMedium
+                    priority:DicomheroDimseCommandPriorityMedium
                     cancelMessageID:1];
 
                 [pDimse sendCommandOrResponse:pCommand error:&pError];
@@ -515,7 +515,7 @@ TEST(objectivec, dimse)
 
             // Send N-EVENTREPORT
             {
-                ImebraNEventReportCommand* pCommand = [[ImebraNEventReportCommand alloc]initWithAbstractSyntax:
+                DicomheroNEventReportCommand* pCommand = [[DicomheroNEventReportCommand alloc]initWithAbstractSyntax:
                     @"1.2.840.10008.1.1"
                     messageID:[pDimse getNextCommandID]
                     affectedSopClassUid:@"1.2.840.10008.1.1"
@@ -524,18 +524,18 @@ TEST(objectivec, dimse)
 
                 [pDimse sendCommandOrResponse:pCommand error:&pError];
 
-                ImebraNEventReportResponse* pResponse = [pDimse getNEventReportResponse:pCommand error:&pError];
+                DicomheroNEventReportResponse* pResponse = [pDimse getNEventReportResponse:pCommand error:&pError];
 
-                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+                EXPECT_EQ(DicomheroDimseStatusSuccess, pResponse.status);
             }
 
             // Send N-GET
             {
                 NSMutableArray* identifierList = [[NSMutableArray alloc] init];
-                [identifierList addObject: [[ImebraTagId alloc] initWithGroup:0x10 tag:0x10]];
-                [identifierList addObject: [[ImebraTagId alloc] initWithGroup:0x20 tag:0x10]];
+                [identifierList addObject: [[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10]];
+                [identifierList addObject: [[DicomheroTagId alloc] initWithGroup:0x20 tag:0x10]];
 
-                ImebraNGetCommand* pCommand = [[ImebraNGetCommand alloc]initWithAbstractSyntax:
+                DicomheroNGetCommand* pCommand = [[DicomheroNGetCommand alloc]initWithAbstractSyntax:
                     @"1.2.840.10008.1.1"
                     messageID:[pDimse getNextCommandID]
                     requestedSopClassUid:@"1.2.840.10008.1.1"
@@ -544,18 +544,18 @@ TEST(objectivec, dimse)
 
                 [pDimse sendCommandOrResponse:pCommand error:&pError];
 
-                ImebraNGetResponse* pResponse = [pDimse getNGetResponse:pCommand error:&pError];
+                DicomheroNGetResponse* pResponse = [pDimse getNGetResponse:pCommand error:&pError];
 
-                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+                EXPECT_EQ(DicomheroDimseStatusSuccess, pResponse.status);
             }
 
             // Send N-SET
             {
-                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                DicomheroMutableDataSet* pDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                [pDataSet setString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-                ImebraNSetCommand* pCommand = [[ImebraNSetCommand alloc]initWithAbstractSyntax:
+                DicomheroNSetCommand* pCommand = [[DicomheroNSetCommand alloc]initWithAbstractSyntax:
                     @"1.2.840.10008.1.1"
                     messageID:[pDimse getNextCommandID]
                     requestedSopClassUid:@"1.2.840.10008.1.1"
@@ -564,18 +564,18 @@ TEST(objectivec, dimse)
 
                 [pDimse sendCommandOrResponse:pCommand error:&pError];
 
-                ImebraNSetResponse* pResponse = [pDimse getNSetResponse:pCommand error:&pError];
+                DicomheroNSetResponse* pResponse = [pDimse getNSetResponse:pCommand error:&pError];
 
-                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+                EXPECT_EQ(DicomheroDimseStatusSuccess, pResponse.status);
             }
 
             // Send N-ACTION
             {
-                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                DicomheroMutableDataSet* pDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                [pDataSet setString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-                ImebraNActionCommand* pCommand = [[ImebraNActionCommand alloc]initWithAbstractSyntax:
+                DicomheroNActionCommand* pCommand = [[DicomheroNActionCommand alloc]initWithAbstractSyntax:
                     @"1.2.840.10008.1.1"
                     messageID:[pDimse getNextCommandID]
                     requestedSopClassUid:@"1.2.840.10008.1.1"
@@ -585,20 +585,20 @@ TEST(objectivec, dimse)
 
                 [pDimse sendCommandOrResponse:pCommand error:&pError];
 
-                ImebraNActionResponse* pResponse = [pDimse getNActionResponse:pCommand error:&pError];
+                DicomheroNActionResponse* pResponse = [pDimse getNActionResponse:pCommand error:&pError];
 
-                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+                EXPECT_EQ(DicomheroDimseStatusSuccess, pResponse.status);
                 EXPECT_EQ(10, pResponse.actionID);
             }
 
             // Send N-CREATE
             {
 
-                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                DicomheroMutableDataSet* pDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                [pDataSet setString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-                ImebraNCreateCommand* pCommand = [[ImebraNCreateCommand alloc]initWithAbstractSyntax:
+                DicomheroNCreateCommand* pCommand = [[DicomheroNCreateCommand alloc]initWithAbstractSyntax:
                     @"1.2.840.10008.1.1"
                     messageID:[pDimse getNextCommandID]
                     affectedSopClassUid:@"1.2.840.10008.1.1"
@@ -607,18 +607,18 @@ TEST(objectivec, dimse)
 
                 [pDimse sendCommandOrResponse:pCommand error:&pError];
 
-                ImebraNCreateResponse* pResponse = [pDimse getNCreateResponse:pCommand error:&pError];
+                DicomheroNCreateResponse* pResponse = [pDimse getNCreateResponse:pCommand error:&pError];
 
-                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+                EXPECT_EQ(DicomheroDimseStatusSuccess, pResponse.status);
             }
 
             // Send N-DELETE
             {
-                ImebraMutableDataSet* pDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
+                DicomheroMutableDataSet* pDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2"];
 
-                [pDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
+                [pDataSet setString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"TestPatient" error:&pError];
 
-                ImebraNDeleteCommand* pCommand = [[ImebraNDeleteCommand alloc]initWithAbstractSyntax:
+                DicomheroNDeleteCommand* pCommand = [[DicomheroNDeleteCommand alloc]initWithAbstractSyntax:
                     @"1.2.840.10008.1.1"
                     messageID:[pDimse getNextCommandID]
                     requestedSopClassUid:@"1.2.840.10008.1.1"
@@ -626,9 +626,9 @@ TEST(objectivec, dimse)
 
                 [pDimse sendCommandOrResponse:pCommand error:&pError];
 
-                ImebraNDeleteResponse* pResponse = [pDimse getNDeleteResponse:pCommand error:&pError];
+                DicomheroNDeleteResponse* pResponse = [pDimse getNDeleteResponse:pCommand error:&pError];
 
-                EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
+                EXPECT_EQ(DicomheroDimseStatusSuccess, pResponse.status);
             }
 
             [pSCU release:&pError];
@@ -637,7 +637,7 @@ TEST(objectivec, dimse)
     }
     catch(...)
     {
-        std::cout << imebra::ExceptionsManager::getExceptionTrace();
+        std::cout << dicomhero::ExceptionsManager::getExceptionTrace();
     }
 
     scp.join();
@@ -648,23 +648,23 @@ TEST(objectivec, dimse)
 // Test interface with dicomdir
 TEST(objectivec, createDicomDir)
 {
-    ImebraMutableDicomDir* newDicomDir = [[ImebraMutableDicomDir alloc] init];
+    DicomheroMutableDicomDir* newDicomDir = [[DicomheroMutableDicomDir alloc] init];
 
     NSError* pError(0);
-    ImebraMutableDicomDirEntry* rootRecord = [newDicomDir getNewEntry:@"PATIENT" error:&pError];
+    DicomheroMutableDicomDirEntry* rootRecord = [newDicomDir getNewEntry:@"PATIENT" error:&pError];
 
-    ImebraMutableDataSet* rootRecordDataSet = [rootRecord getEntryDataSet];
-    [rootRecordDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"Surname" error:&pError];
+    DicomheroMutableDataSet* rootRecordDataSet = [rootRecord getEntryDataSet];
+    [rootRecordDataSet setString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"Surname" error:&pError];
     [newDicomDir setFirstRootEntry:rootRecord error:&pError];
 
-    ImebraMutableDicomDirEntry* nextRecord = [newDicomDir getNewEntry:@"PATIENT" error:&pError];
-    ImebraMutableDataSet* nextRecordDataSet = [nextRecord getEntryDataSet];
-    [nextRecordDataSet setString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"Surname 1" error:&pError];
+    DicomheroMutableDicomDirEntry* nextRecord = [newDicomDir getNewEntry:@"PATIENT" error:&pError];
+    DicomheroMutableDataSet* nextRecordDataSet = [nextRecord getEntryDataSet];
+    [nextRecordDataSet setString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] newValue:@"Surname 1" error:&pError];
     [rootRecord setNextEntry:nextRecord error:&pError];
 
-    ImebraMutableDicomDirEntry* imageRecord = [newDicomDir getNewEntry:@"IMAGE" error:&pError];
-    ImebraMutableDataSet* imageRecordDataSet = [imageRecord getEntryDataSet];
-    [imageRecordDataSet setString:[[ImebraTagId alloc] initWithGroup:0x8 tag:0x18] newValue:@"1.2.840.34.56.78999654.235" error:&pError];
+    DicomheroMutableDicomDirEntry* imageRecord = [newDicomDir getNewEntry:@"IMAGE" error:&pError];
+    DicomheroMutableDataSet* imageRecordDataSet = [imageRecord getEntryDataSet];
+    [imageRecordDataSet setString:[[DicomheroTagId alloc] initWithGroup:0x8 tag:0x18] newValue:@"1.2.840.34.56.78999654.235" error:&pError];
     [nextRecord setFirstChildEntry:imageRecord error:&pError];
 
     NSMutableArray* parts = [[NSMutableArray alloc] init];
@@ -675,24 +675,24 @@ TEST(objectivec, createDicomDir)
 
     [nextRecord setFirstChildEntry:imageRecord error:&pError];
 
-    ImebraDataSet* dicomDirDataSet = [newDicomDir updateDataSet:&pError];
+    DicomheroDataSet* dicomDirDataSet = [newDicomDir updateDataSet:&pError];
 
-    ImebraDicomDir* testDicomDir = [[ImebraDicomDir alloc] initWithDataSet:dicomDirDataSet error:&pError];
-    ImebraDicomDirEntry* testRootRecord = [testDicomDir getFirstRootEntry:&pError];
-    ImebraDataSet* testRootRecordDataSet = [testRootRecord getEntryDataSet];
+    DicomheroDicomDir* testDicomDir = [[DicomheroDicomDir alloc] initWithDataSet:dicomDirDataSet error:&pError];
+    DicomheroDicomDirEntry* testRootRecord = [testDicomDir getFirstRootEntry:&pError];
+    DicomheroDataSet* testRootRecordDataSet = [testRootRecord getEntryDataSet];
     EXPECT_EQ("PATIENT", NSStringToString([testRootRecord getTypeString:&pError]));
-    EXPECT_EQ("Surname", NSStringToString([testRootRecordDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&pError]));
+    EXPECT_EQ("Surname", NSStringToString([testRootRecordDataSet getString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&pError]));
 
-    ImebraDicomDirEntry* testNextRecord = [testRootRecord getNextEntry];
-    ImebraDataSet* testNextRecordDataSet = [testNextRecord getEntryDataSet];
+    DicomheroDicomDirEntry* testNextRecord = [testRootRecord getNextEntry];
+    DicomheroDataSet* testNextRecordDataSet = [testNextRecord getEntryDataSet];
     EXPECT_EQ("PATIENT", NSStringToString([testNextRecord getTypeString:&pError]));
-    EXPECT_EQ("Surname 1", NSStringToString([testNextRecordDataSet getString:[[ImebraTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&pError]));
+    EXPECT_EQ("Surname 1", NSStringToString([testNextRecordDataSet getString:[[DicomheroTagId alloc] initWithGroup:0x10 tag:0x10] elementNumber:0 error:&pError]));
     EXPECT_EQ(0, [testNextRecord getNextEntry]);
 
-    ImebraDicomDirEntry* testImageRecord = [testNextRecord getFirstChildEntry];
-    ImebraDataSet* testImageRecordDataSet = [testImageRecord getEntryDataSet];
+    DicomheroDicomDirEntry* testImageRecord = [testNextRecord getFirstChildEntry];
+    DicomheroDataSet* testImageRecordDataSet = [testImageRecord getEntryDataSet];
     EXPECT_EQ("IMAGE", NSStringToString([testImageRecord getTypeString:&pError]));
-    EXPECT_EQ("1.2.840.34.56.78999654.235", NSStringToString([testImageRecordDataSet getString:[[ImebraTagId alloc] initWithGroup:0x8 tag:0x18] elementNumber:0 error:&pError]));
+    EXPECT_EQ("1.2.840.34.56.78999654.235", NSStringToString([testImageRecordDataSet getString:[[DicomheroTagId alloc] initWithGroup:0x8 tag:0x18] elementNumber:0 error:&pError]));
     EXPECT_EQ("folder", NSStringToString([[testImageRecord getFileParts:&pError] objectAtIndex:0]));
     EXPECT_EQ("file.dcm", NSStringToString([[testImageRecord getFileParts:&pError] objectAtIndex:1]));
     EXPECT_EQ(0, [testImageRecord getFirstChildEntry]);
@@ -703,12 +703,12 @@ TEST(objectivec, createDicomDir)
 // Test the UID generators
 TEST(objectivec, uidGenerators)
 {
-    ImebraBaseUIDGenerator* random = [[ImebraRandomUIDGenerator alloc] initWithRoot:@"1.2.3" departmentId:2 modelId:3];
-    ImebraBaseUIDGenerator* serial = [[ImebraSerialNumberUIDGenerator alloc] initWithRoot:@"1.2.3" departmentId:4 modelId:3 serialNumber:4];
+    DicomheroBaseUIDGenerator* random = [[DicomheroRandomUIDGenerator alloc] initWithRoot:@"1.2.3" departmentId:2 modelId:3];
+    DicomheroBaseUIDGenerator* serial = [[DicomheroSerialNumberUIDGenerator alloc] initWithRoot:@"1.2.3" departmentId:4 modelId:3 serialNumber:4];
 
     NSError* pError(0);
-    [ImebraUIDGeneratorFactory registerUIDGenerator:@"random" generator:random error:&pError];
-    [ImebraUIDGeneratorFactory registerUIDGenerator:@"serial" generator:serial error:&pError];
+    [DicomheroUIDGeneratorFactory registerUIDGenerator:@"random" generator:random error:&pError];
+    [DicomheroUIDGeneratorFactory registerUIDGenerator:@"serial" generator:serial error:&pError];
 
     std::set<std::string> generatedUids;
 
@@ -718,8 +718,8 @@ TEST(objectivec, uidGenerators)
     {
         @autoreleasepool
         {
-            std::string uid0 = imebra::NSStringToString([random getUID]);
-            std::string uid1 = imebra::NSStringToString([serial getUID]);
+            std::string uid0 = dicomhero::NSStringToString([random getUID]);
+            std::string uid1 = dicomhero::NSStringToString([serial getUID]);
 
             ASSERT_TRUE(uid0.find("1.2.3.2.3.") == 0);
             ASSERT_TRUE(uid1.find("1.2.3.4.3.4.") == 0);
@@ -763,27 +763,27 @@ TEST(objectivec, testExternalStream)
     std::string transferSyntax("1.2.840.10008.1.2.1");
 
     NSError* pError(0);
-    ImebraMutableDataSet* testDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:imebra::stringToNSString(transferSyntax)];
-    ImebraMutableTag* streamTag = [testDataSet getTagCreate:[[ImebraTagId alloc] initWithGroup:0x20 tag:0x20] tagVR:ImebraTagTypeOB error:&pError];
-    [streamTag setStream:0 stream:[[ImebraFileStreamInput alloc] initWithName:imebra::stringToNSString(fileName) error:&pError] error:&pError];
+    DicomheroMutableDataSet* testDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:dicomhero::stringToNSString(transferSyntax)];
+    DicomheroMutableTag* streamTag = [testDataSet getTagCreate:[[DicomheroTagId alloc] initWithGroup:0x20 tag:0x20] tagVR:DicomheroTagTypeOB error:&pError];
+    [streamTag setStream:0 stream:[[DicomheroFileStreamInput alloc] initWithName:dicomhero::stringToNSString(fileName) error:&pError] error:&pError];
 
-    ImebraMutableMemory* pStreamMemory = [[ImebraMutableMemory alloc] init];
+    DicomheroMutableMemory* pStreamMemory = [[DicomheroMutableMemory alloc] init];
     @autoreleasepool
     {
-        ImebraMemoryStreamOutput* pWriteStream = [[ImebraMemoryStreamOutput alloc] initWithMutableMemory:pStreamMemory];
-        ImebraStreamWriter* pWriter = [[ImebraStreamWriter alloc] initWithOutputStream: pWriteStream];
+        DicomheroMemoryStreamOutput* pWriteStream = [[DicomheroMemoryStreamOutput alloc] initWithMutableMemory:pStreamMemory];
+        DicomheroStreamWriter* pWriter = [[DicomheroStreamWriter alloc] initWithOutputStream: pWriteStream];
         NSError* pError = 0;
-        [ImebraCodecFactory saveToStream:pWriter dataSet:testDataSet codecType:ImebraCodecTypeDicom error:&pError];
+        [DicomheroCodecFactory saveToStream:pWriter dataSet:testDataSet codecType:DicomheroCodecTypeDicom error:&pError];
 
     }
 
-    ImebraMemoryStreamInput* pReadStream = [[ImebraMemoryStreamInput alloc] initWithReadMemory:pStreamMemory];
+    DicomheroMemoryStreamInput* pReadStream = [[DicomheroMemoryStreamInput alloc] initWithReadMemory:pStreamMemory];
 
-    ImebraStreamReader* pReader = [[ImebraStreamReader alloc] initWithInputStream:pReadStream];
+    DicomheroStreamReader* pReader = [[DicomheroStreamReader alloc] initWithInputStream:pReadStream];
 
-    ImebraDataSet* pTestDataSet = [ImebraCodecFactory loadFromStream:pReader error:&pError];
+    DicomheroDataSet* pTestDataSet = [DicomheroCodecFactory loadFromStream:pReader error:&pError];
 
-    unsigned int bufferSize = [[pTestDataSet getTag:[[ImebraTagId alloc] initWithGroup:0x20 tag:0x20] error:&pError] getBufferSize:0 error:&pError];
+    unsigned int bufferSize = [[pTestDataSet getTag:[[DicomheroTagId alloc] initWithGroup:0x20 tag:0x20] error:&pError] getBufferSize:0 error:&pError];
     EXPECT_EQ(1024u * 1024u, bufferSize);
 
 }
@@ -791,13 +791,13 @@ TEST(objectivec, testExternalStream)
 
 TEST(objectivec, voilutUnsigned8OptimalVOI)
 {
-    ImebraMutableImage* unsigned8 = [[ImebraMutableImage alloc] initWithWidth:6 height:1 depth:ImebraBitDepthU8 colorSpace:@"MONOCHROME2" highBit:7];
+    DicomheroMutableImage* unsigned8 = [[DicomheroMutableImage alloc] initWithWidth:6 height:1 depth:DicomheroBitDepthU8 colorSpace:@"MONOCHROME2" highBit:7];
 
     NSError* pError(0);
 
     @autoreleasepool
     {
-        ImebraWritingDataHandler* unsigned8Handler = [unsigned8 getWritingDataHandler:&pError];
+        DicomheroWritingDataHandler* unsigned8Handler = [unsigned8 getWritingDataHandler:&pError];
         [unsigned8Handler setUint32:0 newValue:10 error:&pError];
         [unsigned8Handler setUint32:1 newValue:0 error:&pError];
         [unsigned8Handler setUint32:2 newValue:20 error:&pError];
@@ -806,13 +806,13 @@ TEST(objectivec, voilutUnsigned8OptimalVOI)
         [unsigned8Handler setUint32:5 newValue:50 error:&pError];
     }
 
-    ImebraVOIDescription* voiDescription = [ImebraVOILUT getOptimalVOI:unsigned8 inputTopLeftX:0 inputTopLeftY:0 inputWidth:6 inputHeight:1 error:&pError];
-    ImebraVOILUT* voilut = [[ImebraVOILUT alloc] initWithVOIDescription:voiDescription];
+    DicomheroVOIDescription* voiDescription = [DicomheroVOILUT getOptimalVOI:unsigned8 inputTopLeftX:0 inputTopLeftY:0 inputWidth:6 inputHeight:1 error:&pError];
+    DicomheroVOILUT* voilut = [[DicomheroVOILUT alloc] initWithVOIDescription:voiDescription];
 
-    ImebraMutableImage* unsigned8Out = [voilut allocateOutputImage:unsigned8 width:6 height:1 error:&pError];
+    DicomheroMutableImage* unsigned8Out = [voilut allocateOutputImage:unsigned8 width:6 height:1 error:&pError];
     [voilut runTransform:unsigned8 inputTopLeftX:0 inputTopLeftY:0 inputWidth:6 inputHeight:1 outputImage:unsigned8Out outputTopLeftX:0 outputTopLeftY:0 error:&pError];
 
-    ImebraReadingDataHandler* unsigned8Handler = [unsigned8Out getReadingDataHandler:&pError];
+    DicomheroReadingDataHandler* unsigned8Handler = [unsigned8Out getReadingDataHandler:&pError];
 
     ASSERT_EQ(51u, [unsigned8Handler getUint32:0 error:&pError]);
     ASSERT_EQ(0u, [unsigned8Handler getUint32:1 error:&pError]);
@@ -825,13 +825,13 @@ TEST(objectivec, voilutUnsigned8OptimalVOI)
 
 TEST(objectivec, testOverlay)
 {
-    ImebraMutableImage* overlayBitmap = [[ImebraMutableImage alloc] initWithWidth:6 height:1 depth:ImebraBitDepthU8 colorSpace:@"MONOCHROME2" highBit:1];
+    DicomheroMutableImage* overlayBitmap = [[DicomheroMutableImage alloc] initWithWidth:6 height:1 depth:DicomheroBitDepthU8 colorSpace:@"MONOCHROME2" highBit:1];
 
     NSError* pError(0);
 
     @autoreleasepool
     {
-        ImebraWritingDataHandler* unsigned8Handler = [overlayBitmap getWritingDataHandler:&pError];
+        DicomheroWritingDataHandler* unsigned8Handler = [overlayBitmap getWritingDataHandler:&pError];
         [unsigned8Handler setUint32:0 newValue:1 error:&pError];
         [unsigned8Handler setUint32:1 newValue:0 error:&pError];
         [unsigned8Handler setUint32:2 newValue:1 error:&pError];
@@ -840,14 +840,14 @@ TEST(objectivec, testOverlay)
         [unsigned8Handler setUint32:5 newValue:0 error:&pError];
     }
 
-    ImebraMutableOverlay* overlay = [[ImebraMutableOverlay alloc] initWithType:ImebraOverlayTypeGraphic subType:@"" firstFrame:0 zeroBasedOriginX:0 zeroBasedOriginY:0 label:@"LABEL" description:@"Description"];
+    DicomheroMutableOverlay* overlay = [[DicomheroMutableOverlay alloc] initWithType:DicomheroOverlayTypeGraphic subType:@"" firstFrame:0 zeroBasedOriginX:0 zeroBasedOriginY:0 label:@"LABEL" description:@"Description"];
     [overlay setImage:0 image:overlayBitmap error:&pError];
 
-    ImebraMutableDataSet* testDataSet = [[ImebraMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2.1"];
+    DicomheroMutableDataSet* testDataSet = [[DicomheroMutableDataSet alloc] initWithTransferSyntax:@"1.2.840.10008.1.2.1"];
 
     [testDataSet setOverlay:0 overlay: overlay error:&pError];
 
-    ImebraOverlay* checkOverlay = [testDataSet getOverlay:0 error:&pError];
+    DicomheroOverlay* checkOverlay = [testDataSet getOverlay:0 error:&pError];
 
     ASSERT_EQ([checkOverlay getImage:0 error:&pError].width, 6);
 
@@ -865,11 +865,11 @@ TEST(objectivec, images)
     unsigned int width = 600;
     unsigned int height = 400;
 
-    ImebraMutableImage* pBaselineImage = [[ImebraMutableImage alloc] initWithWidth:width height:height depth:ImebraBitDepthU8 colorSpace:@"RGB" highBit:7];
+    DicomheroMutableImage* pBaselineImage = [[DicomheroMutableImage alloc] initWithWidth:width height:height depth:DicomheroBitDepthU8 colorSpace:@"RGB" highBit:7];
 
     @autoreleasepool
     {
-        ImebraWritingDataHandler* pWritingDataHandler = [pBaselineImage getWritingDataHandler:&pError];
+        DicomheroWritingDataHandler* pWritingDataHandler = [pBaselineImage getWritingDataHandler:&pError];
 
         unsigned int index(0);
         for(unsigned int y(0); y != height; ++y)
@@ -888,30 +888,30 @@ TEST(objectivec, images)
     }
 
 
-    ImebraTransform* pColorTransform = [ImebraColorTransformsFactory getTransform:@"RGB" finalColorSpace:@"YBR_FULL" error:&pError];
+    DicomheroTransform* pColorTransform = [DicomheroColorTransformsFactory getTransform:@"RGB" finalColorSpace:@"YBR_FULL" error:&pError];
 
-    ImebraMutableImage* pYbrImage = [pColorTransform allocateOutputImage:pBaselineImage width:width height:height error:&pError];
+    DicomheroMutableImage* pYbrImage = [pColorTransform allocateOutputImage:pBaselineImage width:width height:height error:&pError];
 
     [pColorTransform runTransform:pBaselineImage inputTopLeftX:0 inputTopLeftY:0 inputWidth:width inputHeight:height outputImage:pYbrImage outputTopLeftX:0 outputTopLeftY:0 error:&pError];
 
-    ImebraDrawBitmap* pDrawBitmap = [[ImebraDrawBitmap alloc] init];
+    DicomheroDrawBitmap* pDrawBitmap = [[DicomheroDrawBitmap alloc] init];
 
-    NSImage* pNsImage = [pDrawBitmap getImebraImage:pYbrImage error:&pError];
+    NSImage* pNsImage = [pDrawBitmap getDicomheroImage:pYbrImage error:&pError];
 
     NSData* pImageData = [pNsImage TIFFRepresentation];
     NSBitmapImageRep* pImageRep = [NSBitmapImageRep imageRepWithData:pImageData];
     NSDictionary *pImageProps = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:1.0] forKey:NSImageCompressionFactor];
     pImageData = [pImageRep representationUsingType:NSBitmapImageFileTypeJPEG properties:pImageProps];
 
-    ImebraMutableMemory* pDataMemory = [[ImebraMutableMemory alloc] initWithData:pImageData];
-    ImebraMemoryStreamInput* pDataStream = [[ImebraMemoryStreamInput alloc] initWithReadMemory:pDataMemory];
-    ImebraStreamReader* pDataReader = [[ImebraStreamReader alloc] initWithInputStream:pDataStream];
+    DicomheroMutableMemory* pDataMemory = [[DicomheroMutableMemory alloc] initWithData:pImageData];
+    DicomheroMemoryStreamInput* pDataStream = [[DicomheroMemoryStreamInput alloc] initWithReadMemory:pDataMemory];
+    DicomheroStreamReader* pDataReader = [[DicomheroStreamReader alloc] initWithInputStream:pDataStream];
 
-    ImebraDataSet* pLoadedDataSet = [ImebraCodecFactory loadFromStream:pDataReader error:&pError];
-    ImebraImage* pLoadedImage = [pLoadedDataSet getImage:0 error:&pError];
+    DicomheroDataSet* pLoadedDataSet = [DicomheroCodecFactory loadFromStream:pDataReader error:&pError];
+    DicomheroImage* pLoadedImage = [pLoadedDataSet getImage:0 error:&pError];
 
     // Compare the buffers. A little difference is allowed
-    double differenceYBR = compareImages(*(imebra::Image*)(pYbrImage->m_Image), *(imebra::Image*)(pLoadedImage->m_Image));
+    double differenceYBR = compareImages(*(dicomhero::Image*)(pYbrImage->m_Image), *(dicomhero::Image*)(pLoadedImage->m_Image));
     ASSERT_LE(differenceYBR, 1);
 }
 

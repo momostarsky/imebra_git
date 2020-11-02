@@ -960,13 +960,13 @@ NonRegisteredUIDGenerator::~NonRegisteredUIDGenerator()
 {}
 
 
-ImebraBadAlloc::ImebraBadAlloc()
+DicomheroBadAlloc::DicomheroBadAlloc()
 {}
 
-ImebraBadAlloc::ImebraBadAlloc(const ImebraBadAlloc &source): std::bad_alloc(source)
+DicomheroBadAlloc::DicomheroBadAlloc(const DicomheroBadAlloc &source): std::bad_alloc(source)
 {}
 
-ImebraBadAlloc::~ImebraBadAlloc()
+DicomheroBadAlloc::~DicomheroBadAlloc()
 {}
 
 }

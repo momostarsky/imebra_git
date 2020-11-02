@@ -7,5 +7,5 @@ pipelines:
           - alias python=python3
           - ant 
         artifacts:
-          - imebra_*.zip
+          - dicomhero_*.zip
 

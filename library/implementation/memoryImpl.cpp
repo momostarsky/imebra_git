@@ -574,7 +574,7 @@ void memoryPoolGetter::newHandler()
 {
     if(!memoryPoolGetter::getMemoryPoolGetter().getMemoryPoolLocal().flush())
     {
-        throw ImebraBadAlloc();
+        throw DicomheroBadAlloc();
     }
 }
 
