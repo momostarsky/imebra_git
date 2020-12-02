@@ -19,8 +19,8 @@ for:
       - mkdir build_imebra_ios_simulator
 
       - cd build_imebra_macos
-      - cmake -DCMAKE_BUILD_TYPE=Release ..
-      - cmake --build . --config Release
+      - cmake -DCMAKE_BUILD_TYPE=Debug ..
+      - cmake --build . --config Debug
       - ctest -V .
 
       - cd ../build_imebra_ios_phone
