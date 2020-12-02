@@ -104,14 +104,14 @@ static const std::uint32_t JpegStdChrominanceQuantTbl[] =
 ///////////////////////////////////////////////////////////
 static const float JpegDctScaleFactor[]=
 {
-    (float)1.0,
-    (float)1.387039845,
-    (float)1.306562965,
-    (float)1.175875602,
-    (float)1.0,
-    (float)0.785694958,
-    (float)0.541196100,
-    (float)0.275899379
+    1.0f,
+    1.387039845f,
+    1.306562965f,
+    1.175875602f,
+    1.0f,
+    0.785694958f,
+    0.541196100f,
+    0.275899379f
 };
 
 
