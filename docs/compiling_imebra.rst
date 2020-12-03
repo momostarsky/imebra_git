@@ -122,17 +122,38 @@ To generate the 32 bit version of the library, just omit the architecture after 
 OS-X/iOS specific instructions
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-On Mac, CMake will generate a build for OS-X. In order to generate a build for iOS you have to add one of
-the following arguments to cmake::
+On Mac, CMake will generate a build for OS-X.
 
-    -DIOS=IPHONE
+In order to generate a build for iOS you have to add one of the following arguments to cmake::
+
+    -DIOS_TARGET=PHONE
 
 or::
 
-    -DIOS=SIMULATOR
+    -DIOS_TARGET=SIMULATOR
 
 The first flag forces CMake to generate a library for iPhone (real hardware), while the second forces CMake
 to generate a library for the iPhone simulator.
+
+You can generate a fat library containing both the Simulator and the Phone libraries by using the command "lipo"
+like shown here:
+
+::
+
+    mkdir build_imebra_ios_phone
+    cd ../build_imebra_ios_phone 
+    cmake -DCMAKE_BUILD_TYPE=Release -DIOS_TARGET=PHONE <path_to_imebra_distribution>
+    cmake --build . --config Release 
+    cd ..
+    
+    mkdir build_imebra_ios_simulator
+    cd build_imebra_ios_simulator
+    cmake -DCMAKE_BUILD_TYPE=Release -DIOS_TARGET=SIMULATOR <path_to_imebra_distribution>
+    cmake --build . --config Release 
+    cd .. 
+    
+    lipo -create build_imebra_ios_phone/libimebra.a build_imebra_ios_simulator/libimebra.a -o libimebra.a 
+
 
 To generate a library for OS-X, type the following (replace imebra_location with the path to Imebra):
 
