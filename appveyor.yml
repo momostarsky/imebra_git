@@ -14,24 +14,31 @@ for:
         - image: macos
 
     build_script:
-      - mkdir build_imebra_debug
-      - mkdir build_imebra_ios_debug
-      - cd build_imebra_debug
+      - mkdir build_imebra_macos
+      - mkdir build_imebra_ios_phone
+      - mkdir build_imebra_ios_simulator
+
+      - cd build_imebra_macos
       - cmake -DCMAKE_BUILD_TYPE=Debug ..
       - cmake --build . --config Debug
       - ctest -V .
-      - cd ../build_imebra_ios_debug
-      - cmake -DCMAKE_BUILD_TYPE=Debug -DIOS=IPHONE ..
-      - cmake --build . --config Debug
+
+      - cd ../build_imebra_ios_phone
+      - cmake -DCMAKE_BUILD_TYPE=Release -DIOS_TARGET=PHONE ..
+      - cmake --build . --config Release
+
+      - cd ../build_imebra_ios_simulator
+      - cmake -DCMAKE_BUILD_TYPE=Release -DIOS_TARGET=SIMULATOR ..
+      - cmake --build . --config Release
       - cd ..
-      - cp -R library/include build_imebra_debug
-      - cp -R library/include build_imebra_ios_debug
+
+      - lipo -create build_imebra_ios_phone/libimebra.a build_imebra_ios_simulator/libimebra.a -o libimebra.a
 
     artifacts:
-      - path: build_imebra_debug/*.dylib
-        name: imebra_macos_debug
-      - path: build_imebra_ios_debug/*.a
-        name: imebra_ios_debug
+      - path: build_imebra_release/*.dylib
+        name: imebra_macos_release
+      - path: libimebra.a
+        name: imebra_ios_universal
 
   -
     matrix:

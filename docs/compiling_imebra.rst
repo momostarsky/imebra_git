@@ -122,17 +122,39 @@ To generate the 32 bit version of the library, just omit the architecture after 
 OS-X/iOS specific instructions
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-On Mac, CMake will generate a build for OS-X. In order to generate a build for iOS you have to add one of
-the following arguments to cmake::
+On Mac, CMake will generate a build for OS-X.
 
-    -DIOS=IPHONE
+In order to generate a build for iOS you have to add one of the following arguments to cmake::
+
+    -DIOS_TARGET=PHONE
 
 or::
 
-    -DIOS=SIMULATOR
+    -DIOS_TARGET=SIMULATOR
 
 The first flag forces CMake to generate a library for iPhone (real hardware), while the second forces CMake
 to generate a library for the iPhone simulator.
+
+You can generate a fat library containing both the Simulator and the Phone libraries by using the command "lipo"
+like shown here (replace imebra_location with the path to Imebra):
+
+::
+
+    mkdir build_imebra_ios_phone
+    cd ../build_imebra_ios_phone 
+    cmake -DCMAKE_BUILD_TYPE=Release -DIOS_TARGET=PHONE imebra_location
+    cmake --build . --config Release 
+    cd ..
+    
+    mkdir build_imebra_ios_simulator
+    cd build_imebra_ios_simulator
+    cmake -DCMAKE_BUILD_TYPE=Release -DIOS_TARGET=SIMULATOR imebra_location
+    cmake --build . --config Release 
+    cd .. 
+    
+    lipo -create build_imebra_ios_phone/libimebra.a build_imebra_ios_simulator/libimebra.a -o libimebra.a 
+
+.. warning:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
 
 To generate a library for OS-X, type the following (replace imebra_location with the path to Imebra):
 
@@ -143,27 +165,7 @@ To generate a library for OS-X, type the following (replace imebra_location with
     cmake imebra_location
     cmake --build .
 
-To generate a library for iPhone, type the following (replace imebra_location with the path to Imebra):
-
-::
-
-    mkdir imebra_for_ios
-    cd imebra_for_ios
-    cmake imebra_location -DIOS=IPHONE
-    cmake --build .
-
-.. warning:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
-
-To generate a library for the iPhone simulator, type the following (replace imebra_location with the path to Imebra):
-
-::
-
-    mkdir imebra_for_ios
-    cd imebra_for_ios
-    cmake imebra_location -DIOS=SIMULATOR
-    cmake --build .
-
-.. warning:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
+.. warning:: macOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
 
 To generate a project that can be opened with XCode append the argument -G xcode (replace imebra_location with the path to Imebra):
 
@@ -178,12 +180,14 @@ Using Imebra with Swift
 '''''''''''''''''''''''
 Imebra can be imported into a Swift project.
 
-After compiling the library for OS-X or iOS, import the library's Objective-C header into your Swift project (import /wrappers/objectivec/include/imebraobjc/imebra_swift.h)
-and link with imebra and iconv.
+After compiling the library for OS-X or iOS, import the library's Objective-C header into your Swift project.
 
+When using the command line add the flag -import-objc-header.
 For instance, the following command line instruction launches the swift compiler and instructs it to load the imebra header and link with Imebra and iconv::
 
-    swiftc -import-objc-header imebra_location/wrappers/objectivec/include/imebraobjc/imebra_swift.h myCode.swift -Lbuild_imebra_location -liconv -lc++ -limebra -o myCodeApp
+    swiftc -import-objc-header imebra_location/wrappers/objectivec/include/imebraobjc/imebra.h myCode.swift -Lbuild_imebra_location -liconv -lc++ -limebra -o myCodeApp
+
+When using XCode open the target Build Settings and under "Swift Compiler/ObjectiveC Bridging Header" specify the path to imebra_location/wrappers/objectivec/include/imebraobjc/imebra.h.
 
 
 Compiling the Android version of Imebra

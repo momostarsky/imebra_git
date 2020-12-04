@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #337 (The IOS variable used in CMake conflicts with the same variable that CMake sets when the system is set to "iOS") as per SOP :ref:`FIXBUG_2`
+
+Version 5.2.1.1
+--------------------------------
+
 - Fixed bug #334 (The build of ImebraTests fails on some Windows machines) as per SOP :ref:`FIXBUG_2`
 
 Version 5.2.1.0
