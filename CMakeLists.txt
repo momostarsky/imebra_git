@@ -221,8 +221,6 @@ else()
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
             set(imebra_libraries ${imebra_libraries} gcov)
         endif()
-    else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=memory")
     endif()
 
 endif()
