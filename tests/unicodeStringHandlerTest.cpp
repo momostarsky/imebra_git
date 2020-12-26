@@ -1,5 +1,7 @@
 #include <imebra/imebra.h>
 #include <gtest/gtest.h>
+#include <locale>
+#include <codecvt>
 
 namespace imebra
 {
@@ -79,7 +81,7 @@ TEST(unicodeStringHandlerTest, japaneseTest)
         DataSet testDataSet = CodecFactory::load(reader);
 
         std::wstring unicodeString = testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0);
-        std::wcout << unicodeString << std::endl;
+        std::cout << std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.to_bytes(unicodeString) << std::endl;
     }
 }
 
