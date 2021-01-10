@@ -11,7 +11,7 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-// Cmake recommends setting CMAKE_OSX_SYSROOT before adding the project
+# Cmake recommends setting CMAKE_OSX_SYSROOT before adding the project
 if(APPLE)
     set(IMEBRA_OBJC 1)
     if("${CMAKE_SYSTEM_NAME}" MATCHES "iOS" OR IOS_TARGET)
