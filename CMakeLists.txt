@@ -11,6 +11,28 @@
 
 cmake_minimum_required(VERSION 3.0)
 
+// Cmake recommends setting CMAKE_OSX_SYSROOT before adding the project
+if(APPLE)
+    set(IMEBRA_OBJC 1)
+    if("${CMAKE_SYSTEM_NAME}" MATCHES "iOS" OR IOS_TARGET)
+        set(IMEBRA_SHARED_STATIC "STATIC")
+        set(CMAKE_SYSTEM_NAME "iOS")
+        set(IOS 1)
+        if("${IOS_TARGET}" MATCHES "PHONE")
+            exec_program(xcrun ARGS --sdk iphoneos --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+            set (CMAKE_OSX_ARCHITECTURES armv7 armv7s arm64)
+        elseif("${IOS_TARGET}" MATCHES "SIMULATOR")
+            exec_program(xcrun ARGS --sdk iphonesimulator --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
+            set (CMAKE_OSX_ARCHITECTURES i386 x86_64)
+        else()
+            message (FATAL_ERROR "Set IOS_TARGET to PHONE or SIMULATOR")
+        endif()
+        message ("IOS SDK ROOT: ${CMAKE_OSX_SYSROOT}")
+        message ("System name: ${CMAKE_SYSTEM_NAME}")
+        message ("Architectures: ${CMAKE_OSX_ARCHITECTURES}")
+    endif()
+endif(APPLE)
+
 project("imebra")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
@@ -77,26 +99,6 @@ endif(IMEBRA_LOG_LEVEL)
 if(NOT DEFINED IMEBRA_SHARED_STATIC)
     set(IMEBRA_SHARED_STATIC "SHARED")
 endif(NOT DEFINED IMEBRA_SHARED_STATIC)
-
-if(APPLE)
-    set(IMEBRA_OBJC 1)
-    if("${CMAKE_SYSTEM_NAME}" MATCHES "iOS" OR IOS_TARGET)
-        set(IMEBRA_SHARED_STATIC "STATIC")
-        set(CMAKE_SYSTEM_NAME "iOS")
-        set(IOS 1)
-        if("${IOS_TARGET}" MATCHES "PHONE")
-            exec_program(xcrun ARGS --sdk iphoneos --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-            set (CMAKE_OSX_ARCHITECTURES armv7 armv7s arm64)
-        elseif("${IOS_TARGET}" MATCHES "SIMULATOR")
-            exec_program(xcrun ARGS --sdk iphonesimulator --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-            set (CMAKE_OSX_ARCHITECTURES i386 x86_64)
-        else()
-            message (FATAL_ERROR "Set IOS_TARGET to PHONE or SIMULATOR")
-        endif()
-        message ("IOS SDK ROOT: ${CMAKE_OSX_SYSROOT}")
-    endif()
-endif(APPLE)
-
 
 ##############################################
 #
