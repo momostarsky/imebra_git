@@ -13,6 +13,7 @@ cmake_minimum_required(VERSION 3.0)
 
 # Cmake recommends setting CMAKE_OSX_SYSROOT before adding the project
 if(APPLE)
+    set(CMAKE_XCODE_BUILD_SYSTEM 1) # Use old xcode build system
     set(IMEBRA_OBJC 1)
     if("${CMAKE_SYSTEM_NAME}" MATCHES "iOS" OR IOS_TARGET)
         set(IMEBRA_SHARED_STATIC "STATIC")
