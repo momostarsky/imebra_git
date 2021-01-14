@@ -122,18 +122,35 @@ To generate the 32 bit version of the library, just omit the architecture after 
 OS-X/iOS specific instructions
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-On Mac, CMake will generate a build for OS-X.
+On macOS, CMake will generate a build for macOS or iOS.
 
-In order to generate a build for iOS you have to add one of the following arguments to cmake::
+It is recommended to use the CMake Xcode generator when generating the build script.
 
-    -DIOS_TARGET=PHONE
+The build script for macOS is the default one and can be obtained by running the following commands:
 
-or::
+::
 
-    -DIOS_TARGET=SIMULATOR
+    mkdir build_imebra_macos
+    cd build_imebra_macos
+    cmake -GXcode -DCMAKE_BUILD_TYPE=Release PATH_TO_IMEBRA_DISTRIBUTION
 
-The first flag forces CMake to generate a library for iPhone (real hardware), while the second forces CMake
-to generate a library for the iPhone simulator.
+The generated build script can be opened directly with Xcode or can be built by running the following command:
+
+    cmake --build . --config Release
+
+In order to generate a build for iOS you have to set the CMAKE_SYSTEM_NAME variable:
+
+    mkdir build_imebra_macos
+    cd build_imebra_macos
+    cmake -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Release PATH_TO_IMEBRA_DISTRIBUTION
+
+As for the macOS build, the generated script can be opened directly with Xcode or can be built by running one of the following commands:
+
+    cmake --build . --config Release
+
+or
+
+    cmake --build . --config Release -sdk iphonesimulator
 
 You can generate a fat library containing both the Simulator and the Phone libraries by using the command "lipo"
 like shown here (replace imebra_location with the path to Imebra):
@@ -142,38 +159,21 @@ like shown here (replace imebra_location with the path to Imebra):
 
     mkdir build_imebra_ios_phone
     cd ../build_imebra_ios_phone 
-    cmake -DCMAKE_BUILD_TYPE=Release -DIOS_TARGET=PHONE imebra_location
+    cmake -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Release PATH_TO_IMEBRA_DISTRIBUTION
     cmake --build . --config Release 
     cd ..
     
     mkdir build_imebra_ios_simulator
     cd build_imebra_ios_simulator
-    cmake -DCMAKE_BUILD_TYPE=Release -DIOS_TARGET=SIMULATOR imebra_location
-    cmake --build . --config Release 
+    cmake -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Release PATH_TO_IMEBRA_DISTRIBUTION
+    cmake --build . --config Release -sdk iphonesimulator
     cd .. 
     
-    lipo -create build_imebra_ios_phone/libimebra.a build_imebra_ios_simulator/libimebra.a -o libimebra.a 
+    lipo -create build_imebra_ios_phone/Release-iphoneos/libimebra.a build_imebra_ios_simulator/Release-iphoneos/libimebra.a -o libimebra.a 
 
 .. warning:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
 
-To generate a library for OS-X, type the following (replace imebra_location with the path to Imebra):
-
-::
-
-    mkdir imebra_for_osx
-    cd imebra_for_osx
-    cmake imebra_location
-    cmake --build .
-
-.. warning:: macOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
-
-To generate a project that can be opened with XCode append the argument -G xcode (replace imebra_location with the path to Imebra):
-
-::
-
-    mkdir xcode_project
-    cd xcode_project
-    cmake imebra_location -G xcode
+More information about the cross compilation for iOS can be found here: https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#cross-compiling-for-ios-tvos-or-watchos
 
 
 Using Imebra with Swift
