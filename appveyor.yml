@@ -19,17 +19,17 @@ for:
       - mkdir build_imebra_ios_simulator
 
       - cd build_imebra_macos
-      - cmake -DCMAKE_BUILD_TYPE=Debug ..
+      - cmake -GXcode -DCMAKE_BUILD_TYPE=Debug ..
       - cmake --build . --config Debug
       - ctest -V .
 
       - cd ../build_imebra_ios_phone
-      - cmake -DCMAKE_BUILD_TYPE=Release -DIOS_TARGET=PHONE ..
+      - cmake -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Release 
       - cmake --build . --config Release
 
       - cd ../build_imebra_ios_simulator
-      - cmake -DCMAKE_BUILD_TYPE=Release -DIOS_TARGET=SIMULATOR ..
-      - cmake --build . --config Release
+      - cmake -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Release 
+      - cmake --build . --config Release -sdk iphonesimulator
       - cd ..
 
       - lipo -create build_imebra_ios_phone/libimebra.a build_imebra_ios_simulator/libimebra.a -o libimebra.a
