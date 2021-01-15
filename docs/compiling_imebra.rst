@@ -174,7 +174,7 @@ Imebra can be imported into a Swift project.
 After compiling the library for OS-X or iOS, import the library's Objective-C header into your Swift project.
 
 When using the command line add the flag -import-objc-header.
-For instance, the following command line instruction launches the swift compiler and instructs it to load the imebra header and link with Imebra and iconv::
+For instance, the following command line instruction launches the swift compiler and instructs it to load the imebra header and link with Imebra and iconv
 
 ::
 
