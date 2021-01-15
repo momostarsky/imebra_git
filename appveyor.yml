@@ -28,8 +28,6 @@ for:
       - cmake --build . --config Release -- -sdk iphonesimulator
       - cd ..
 
-      - lipo -create build_imebra_ios/Release-iphoneos/libimebra.a build_imebra_ios/Release-iphonesimulator/libimebra.a -o libimebra.a
-
     artifacts:
       - path: build_imebra_release/*.dylib
         name: imebra_macos_release
