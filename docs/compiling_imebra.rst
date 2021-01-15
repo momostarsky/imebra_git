@@ -126,7 +126,8 @@ On macOS, CMake will generate a build for macOS or iOS.
 
 It is recommended to use the CMake Xcode generator when generating the build script.
 
-The build script for macOS is the default one and can be obtained by running the following commands:
+The build script for macOS is the default one and can be obtained by running the following commands
+(replace PATH_TO_IMEBRA_DISTRIBUTION with the path to Imebra):
 
 ::
 
@@ -136,9 +137,12 @@ The build script for macOS is the default one and can be obtained by running the
 
 The generated build script can be opened directly with Xcode or can be built by running the following command:
 
+::
+
     cmake --build . --config Release
 
-In order to generate a build for iOS you have to set the CMAKE_SYSTEM_NAME variable:
+In order to generate a build for iOS you have to set the CMAKE_SYSTEM_NAME variable 
+(replace PATH_TO_IMEBRA_DISTRIBUTION with the path to Imebra):
 
     mkdir build_imebra_macos
     cd build_imebra_macos
@@ -146,30 +150,29 @@ In order to generate a build for iOS you have to set the CMAKE_SYSTEM_NAME varia
 
 As for the macOS build, the generated script can be opened directly with Xcode or can be built by running one of the following commands:
 
+::
+
     cmake --build . --config Release
 
-or
-
-    cmake --build . --config Release -sdk iphonesimulator
-
-You can generate a fat library containing both the Simulator and the Phone libraries by using the command "lipo"
-like shown here (replace imebra_location with the path to Imebra):
+or (for the simulator build):
 
 ::
 
-    mkdir build_imebra_ios_phone
-    cd ../build_imebra_ios_phone 
+    cmake --build . --config Release -- -sdk iphonesimulator
+
+You can generate a fat library containing both the Simulator and the Phone libraries by using the command "lipo"
+like shown here (replace PATH_TO_IMEBRA_DISTRIBUTION with the path to Imebra):
+
+::
+
+    mkdir build_imebra_ios
+    cd ../build_imebra_ios 
     cmake -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Release PATH_TO_IMEBRA_DISTRIBUTION
     cmake --build . --config Release 
-    cd ..
-    
-    mkdir build_imebra_ios_simulator
-    cd build_imebra_ios_simulator
-    cmake -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Release PATH_TO_IMEBRA_DISTRIBUTION
-    cmake --build . --config Release -sdk iphonesimulator
+    cmake --build . --config Release -- -sdk iphonesimulator
     cd .. 
     
-    lipo -create build_imebra_ios_phone/Release-iphoneos/libimebra.a build_imebra_ios_simulator/Release-iphoneos/libimebra.a -o libimebra.a 
+    lipo -create build_imebra_ios/Release-iphoneos/libimebra.a build_imebra_ios/Release-iphonesimulator/libimebra.a -o libimebra.a 
 
 .. warning:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
 
@@ -184,6 +187,8 @@ After compiling the library for OS-X or iOS, import the library's Objective-C he
 
 When using the command line add the flag -import-objc-header.
 For instance, the following command line instruction launches the swift compiler and instructs it to load the imebra header and link with Imebra and iconv::
+
+::
 
     swiftc -import-objc-header imebra_location/wrappers/objectivec/include/imebraobjc/imebra.h myCode.swift -Lbuild_imebra_location -liconv -lc++ -limebra -o myCodeApp
 

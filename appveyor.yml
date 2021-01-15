@@ -15,24 +15,20 @@ for:
 
     build_script:
       - mkdir build_imebra_macos
-      - mkdir build_imebra_ios_phone
-      - mkdir build_imebra_ios_simulator
+      - mkdir build_imebra_ios
 
       - cd build_imebra_macos
       - cmake -GXcode -DCMAKE_BUILD_TYPE=Debug ..
       - cmake --build . --config Debug
       - ctest -V .
 
-      - cd ../build_imebra_ios_phone
+      - cd ../build_imebra_ios
       - cmake -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Release ..
       - cmake --build . --config Release
-
-      - cd ../build_imebra_ios_simulator
-      - cmake -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Release ..
-      - cmake --build . --config Release -sdk iphonesimulator
+      - cmake --build . --config Release -- -sdk iphonesimulator
       - cd ..
 
-      - lipo -create build_imebra_ios_phone/Release-iphoneos/libimebra.a build_imebra_ios_simulator/Release-iphoneos/libimebra.a -o libimebra.a
+      - lipo -create build_imebra_ios/Release-iphoneos/libimebra.a build_imebra_ios/Release-iphonesimulator/libimebra.a -o libimebra.a
 
     artifacts:
       - path: build_imebra_release/*.dylib
