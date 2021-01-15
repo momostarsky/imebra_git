@@ -1,13 +1,11 @@
 # Options:
-# -DIMEBRA_SHARED_STATIC=SHARED|STATIC (default = SHARED)
+# -DIMEBRA_SHARED_STATIC=SHARED|STATIC (default = SHARED on Windows, Linux, macOS, static on iOS)
 # -DJPEG2000=0|1|2 include JPEG2000 codec (1=version 1.X 2=version2.X)
 # -DADDITIONAL_INCLUDE_PATH=path to additional include folders (optional)
 # -DADDITIONAL_LIB_PATH=path to additional libraries (optional)
 # -DIMEBRA_CHARSET_CONVERSION=ICONV|ICU|JAVA|WINDOWS (default = ICONV on posix, WINDOWS on Windows)
-# -DIOS_TARGET=PHONE|SIMULATOR (default = not set)
-# -DIMEBRA_OBJC=1|0 (default = 0)
+# -DIMEBRA_OBJC=1|0 (default = 0 on Windows and Linux, 1 on macOS and iOS)
 # -DEMBED_BITCODE=1|0 (default = 0)
-# -DCMAKE_OSX_SYSROOT
 
 cmake_minimum_required(VERSION 3.0)
 
@@ -80,20 +78,8 @@ endif(NOT DEFINED IMEBRA_SHARED_STATIC)
 
 if(APPLE)
     set(IMEBRA_OBJC 1)
-    if("${CMAKE_SYSTEM_NAME}" MATCHES "iOS" OR IOS_TARGET)
+    if("*${CMAKE_SYSTEM_NAME}*" STREQUAL "*iOS*")
         set(IMEBRA_SHARED_STATIC "STATIC")
-        set(CMAKE_SYSTEM_NAME "iOS")
-        set(IOS 1)
-        if("${IOS_TARGET}" MATCHES "PHONE")
-            exec_program(xcrun ARGS --sdk iphoneos --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-            set (CMAKE_OSX_ARCHITECTURES armv7 armv7s arm64)
-        elseif("${IOS_TARGET}" MATCHES "SIMULATOR")
-            exec_program(xcrun ARGS --sdk iphonesimulator --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-            set (CMAKE_OSX_ARCHITECTURES i386 x86_64)
-        else()
-            message (FATAL_ERROR "Set IOS_TARGET to PHONE or SIMULATOR")
-        endif()
-        message ("IOS SDK ROOT: ${CMAKE_OSX_SYSROOT}")
     endif()
 endif(APPLE)
 

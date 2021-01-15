@@ -7,6 +7,7 @@ Version |release| (this version)
 --------------------------------
 
 - Fixed bug #337 (The IOS variable used in CMake conflicts with the same variable that CMake sets when the system is set to "iOS") as per SOP :ref:`FIXBUG_2`
+- Fixed bug #342 (The iosphone build on Xcode 12) as per SOP :ref:`FIXBUG_2`
 
 Version 5.2.1.1
 --------------------------------

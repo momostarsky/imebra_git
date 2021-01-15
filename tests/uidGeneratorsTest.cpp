@@ -14,8 +14,6 @@ namespace tests
 TEST(uidGenerators, uidGeneratorsFactory)
 {
     {
-        EXPECT_THROW(UIDGeneratorFactory::getDefaultUIDGenerator(), NonRegisteredUIDGenerator);
-
         RandomUIDGenerator firstGenerator("1.2.3", 4, 5);
         SerialNumberUIDGenerator secondGenerator("1.2.4", 1, 2, 3);
 
