@@ -160,20 +160,6 @@ or (for the simulator build):
 
     cmake --build . --config Release -- -sdk iphonesimulator
 
-You can generate a fat library containing both the Simulator and the Phone libraries by using the command "lipo"
-like shown here (replace PATH_TO_IMEBRA_DISTRIBUTION with the path to Imebra):
-
-::
-
-    mkdir build_imebra_ios
-    cd ../build_imebra_ios 
-    cmake -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Release PATH_TO_IMEBRA_DISTRIBUTION
-    cmake --build . --config Release 
-    cmake --build . --config Release -- -sdk iphonesimulator
-    cd .. 
-    
-    lipo -create build_imebra_ios/Release-iphoneos/libimebra.a build_imebra_ios/Release-iphonesimulator/libimebra.a -o libimebra.a 
-
 .. warning:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
 
 More information about the cross compilation for iOS can be found here: https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#cross-compiling-for-ios-tvos-or-watchos

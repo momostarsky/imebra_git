@@ -33,8 +33,10 @@ for:
     artifacts:
       - path: build_imebra_release/*.dylib
         name: imebra_macos_release
-      - path: libimebra.a
-        name: imebra_ios_universal
+      - path: build_imebra_ios/Release-iphoneos/libimebra.a
+        name: imebra_ios
+      - path: build_imebra_ios/Release-iphonesimulator/libimebra.a
+        name: imebra_ios_simulator
 
   -
     matrix:
