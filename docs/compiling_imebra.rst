@@ -144,6 +144,8 @@ The generated build script can be opened directly with Xcode or can be built by 
 In order to generate a build for iOS you have to set the CMAKE_SYSTEM_NAME variable 
 (replace PATH_TO_IMEBRA_DISTRIBUTION with the path to Imebra):
 
+::
+
     mkdir build_imebra_macos
     cd build_imebra_macos
     cmake -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Release PATH_TO_IMEBRA_DISTRIBUTION
