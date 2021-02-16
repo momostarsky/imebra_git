@@ -53,35 +53,41 @@ TEST(unicodeStringHandlerTest, unicodeTest)
 
 TEST(unicodeStringHandlerTest, japaneseTest)
 {
-    std::string patientName = "\xd4\xcf\xc0\xde\x5e\xc0\xdb\xb3\x3d\x1b\x24\x42\x3b\x33\x45\x44\x1b\x28\x4a\x5e\x1b\x24\x42\x42"
-                               "\x40\x4f\x3a\x1b\x28\x4a\x3d\x1b\x24\x42\x24\x64\x24\x5e\x24\x40\x1b\x28\x4a\x5e\x1b\x24\x42\x24"
-                               "\x3f\x24\x6d\x24\x26";
-
-    MutableMemory streamMemory;
+    try
     {
-        charsetsList_t charsets;
-        charsets.push_back("ISO 2022 IR 13");
-        charsets.push_back("ISO 2022 IR 87");
+        std::string patientName = "\xd4\xcf\xc0\xde\x5e\xc0\xdb\xb3\x3d\x1b\x24\x42\x3b\x33\x45\x44\x1b\x28\x4a\x5e\x1b\x24\x42\x42"
+                                  "\x40\x4f\x3a\x1b\x28\x4a\x3d\x1b\x24\x42\x24\x64\x24\x5e\x24\x40\x1b\x28\x4a\x5e";
 
-        MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
-
+        MutableMemory streamMemory;
         {
-            WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerRaw(TagId(0x10, 0x10), 0);
-            handler.assign(patientName.c_str(), patientName.size());
+            charsetsList_t charsets;
+            charsets.push_back("ISO 2022 IR 13");
+            charsets.push_back("ISO 2022 IR 87");
+
+            MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+
+            {
+                WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerRaw(TagId(0x10, 0x10), 0);
+                handler.assign(patientName.c_str(), patientName.size());
+            }
+
+            MemoryStreamOutput writeStream(streamMemory);
+            StreamWriter writer(writeStream);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
         }
 
-        MemoryStreamOutput writeStream(streamMemory);
-        StreamWriter writer(writeStream);
-        CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+        {
+            MemoryStreamInput readStream(streamMemory);
+            StreamReader reader(readStream);
+            DataSet testDataSet = CodecFactory::load(reader);
+
+            std::wstring unicodeString = testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0);
+            std::cout << std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.to_bytes(unicodeString) << std::endl;
+        }
     }
-
+    catch (const CharsetConversionNoSupportedTableError& e)
     {
-        MemoryStreamInput readStream(streamMemory);
-        StreamReader reader(readStream);
-        DataSet testDataSet = CodecFactory::load(reader);
-
-        std::wstring unicodeString = testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0);
-        std::cout << std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.to_bytes(unicodeString) << std::endl;
+        std::cout << e.what() << std::endl;
     }
 }
 
