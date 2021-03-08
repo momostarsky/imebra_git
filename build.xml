@@ -49,7 +49,6 @@
         <copy todir="${build_release}" file="build.xml" />
         <copy todir="${build_release}" file="readme.rst" />
         <copy todir="${build_release}" file="license.rst" />
-        <copy todir="${build_release}" file="setup.py" />
         <copy todir="${build_release}" file="CMakeLists.txt" />
     </target>
 
