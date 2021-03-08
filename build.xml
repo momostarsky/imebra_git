@@ -179,24 +179,7 @@ Slovenia
 
     </target>
 
-    <!-- PYTHON SWIG -->
-    <target name="python_swig" depends="replace_version">
-        <exec executable="swig" failonerror="true" dir="${build_release}/wrappers/">
-            <arg value="-python" />
-            <arg value="-c++" />
-            <arg value="-I${build_release}/library/include" />
-            <arg value="-module" />
-            <arg value="imebra" />
-            <arg value="-outdir" />
-            <arg path="${build_release}/wrappers/pythonWrapper" />
-            <arg value="-o" />
-            <arg value="${build_release}/wrappers/pythonWrapper/python_wrapper.cxx" />
-            <arg path="${build_release}/wrappers/swig.i" />
-        </exec>
-
-    </target>
-
-    <target name="swig" depends="java_swig, python_swig" />
+    <target name="swig" depends="java_swig" />
 
     <target name="imebrajar" depends="java_swig, create_test_dir" >
         <exec executable="cmake" failonerror="true" dir="${build_jni}">
@@ -341,27 +324,8 @@ Slovenia
         </exec>
     </target>
 
-    <target name="test_python" depends="create_source_distribution">
-        <!-- Copy the source distribution to don't pollute it -->
-        <property name="python_test" location="./ant-python_test" />
-        <delete dir="${python_test}" failonerror="false" />
-        <mkdir dir="${python_test}" />
-
-        <copy todir="${python_test}">
-            <fileset dir="${source_distribution}" />
-        </copy>
-        <exec executable="python3" dir="${python_test}" resolveexecutable="true" failonerror="true">
-            <arg value="setup.py" />
-            <arg value="install" />
-            <arg value="--user" />
-        </exec>
-        <exec executable="python3" dir="${python_test}/tests/python" resolveexecutable="true" failonerror="true">
-            <arg value="tests.py" />
-        </exec>
-    </target>
-
     <!-- Build -->
-    <target name="make_distribution" depends="create_source_distribution, run_test_cases, test_python, build_test_cases_release">
+    <target name="make_distribution" depends="create_source_distribution, run_test_cases, build_test_cases_release">
         <zip destfile="imebra_${version_major}_${version_minor}_${version_patch}_${version_build}.zip" basedir="${source_distribution}" />
     </target>
 
