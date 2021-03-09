@@ -345,26 +345,23 @@ Slovenia
         <mkdir dir="${java_test}/makejni/classes" />
         <javac srcdir="${source_distribution}/wrappers/javaWrapper/src" destdir="${java_test}/makejni/classes" />
         <javac srcdir="${source_distribution}/tests/java/src" destdir="${java_test}/makejni/classes" classpath="/usr/share/java/junit4.jar:${java_test}/makejni/classes"/>
-
-
         <junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="yes" dir="${java_test}/makejni">
             <classpath>
+                <pathelement location="${java_test}/makejni/classes"/>
+                <pathelement path="/usr/share/java/junit4.jar"/>
+            </classpath>
+            <jvmarg value="-Djava.library.path=${java_test}/makejni"/>
+            <formatter type="plain" usefile="false" />
+            <batchtest fork="yes">
+                <fileset dir="${source_distribution}/tests/java/src">
+                    <include name="**/*Test*" />
+                </fileset>
+            </batchtest>
+        </junit>
     </target>
 
-        </junit>
-
-            </batchtest>
-                </fileset>
-                    <include name="**/*Test*" />
-                <fileset dir="${source_distribution}/tests/java/src">
-            <batchtest fork="yes">
-            <formatter type="plain" usefile="false" />
-            <jvmarg value="-Djava.library.path=${java_test}/makejni"/>
-            </classpath>
-                <pathelement path="/usr/share/java/junit4.jar"/>
-                <pathelement location="${java_test}/makejni/classes"/>
     <!-- Build -->
-    <target name="make_distribution" depends="create_source_distribution, run_test_cases, build_test_cases_release">
+    <target name="make_distribution" depends="create_source_distribution, run_test_cases, build_test_cases_release, test_java">
         <zip destfile="imebra_${version_major}_${version_minor}_${version_patch}_${version_build}.zip" basedir="${source_distribution}" />
     </target>
 
