@@ -81,10 +81,6 @@ public:
     ///
     /// In Java this method accepts a single parameter (a byte array).
     ///
-    /// <b>Python</b>
-    ///
-    /// In Python this method accepts a single parameter (an array).
-    ///
     /// \param source     a pointer to the source memory buffer
     /// \param sourceSize the number of bytes to copy and the new memory size
     ///
