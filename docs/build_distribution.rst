@@ -30,28 +30,27 @@ Additionally, two Python packages must be present (installable with pip):
 - breathe
 - sphinx_rtd_theme
 
-In order to install the packages, type the following command as root or prepend it with sudo:
+In order to install the packages, type the following commands as root or prepends them with sudo:
 ::
 
-    apt-get update && \
-    apt-get install -y \
-      tzdata \
-      git \
-      doxygen \
-      g++ \
-      lcov \
-      python3 \
-      python3-dev \
-      python3-pip \
-      ant \
-      cmake \
-      swig \
-      liblog4cxx-dev \
-      libdcmtk-dev \
-      default-jdk \
-      junit4 \
-      dcmtk && \
-    pip3 install breathe && \
+    apt-get update
+    apt-get install tzdata
+    apt-get install git
+    apt-get install doxygen
+    apt-get install g++
+    apt-get install lcov
+    apt-get install python3
+    apt-get install python3-dev
+    apt-get install python3-pip
+    apt-get install ant
+    apt-get install cmake
+    apt-get install swig
+    apt-get install liblog4cxx-dev
+    apt-get install libdcmtk-dev
+    apt-get install default-jdk
+    apt-get install junit4
+    apt-get install dcmtk
+    pip3 install breathe
     pip3 install sphinx_rtd_theme
 
 
