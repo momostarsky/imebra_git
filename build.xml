@@ -233,7 +233,6 @@ Slovenia
         </copy>
         <copy todir="${source_distribution}" file="${build_release}/readme.rst" />
         <copy todir="${source_distribution}" file="${build_release}/license.rst" />
-        <copy todir="${source_distribution}" file="${build_release}/setup.py" />
         <copy todir="${source_distribution}" file="${build_release}/CMakeLists.txt" />
     </target>
 
