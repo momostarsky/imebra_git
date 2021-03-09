@@ -26,12 +26,6 @@ information.
 
 The Imebra image is built on Ubuntu 20.04 with the following apt packages:
 
-    default-jdk \
-    junit4 \
-    dcmtk && \
-  pip3 install breathe && \
-  pip3 install sphinx_rtd_theme
-
 - *git* to clone the repository
 - *doxygen* to generate documentation
 - *g++* for the compilation of the library
