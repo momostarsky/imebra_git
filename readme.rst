@@ -24,13 +24,17 @@ This section describes how to create an Imebra Source Distribution containing th
 C++source code, the Java wrappers for Android, the HTML documentation, the test units code coverage
 information.
 
-The Imebra image is built on Ubuntu 18.04 with the following apt packages:
+The Imebra image is built on Ubuntu 20.04 with the following apt packages:
 
-- *mercurial* to clone the repository
+    default-jdk \
+    junit4 \
+    dcmtk && \
+  pip3 install breathe && \
+  pip3 install sphinx_rtd_theme
+
+- *git* to clone the repository
 - *doxygen* to generate documentation
 - *g++* for the compilation of the library
-- *gobjc++* for objective-c compilation
-- *gnustep-devel* for objective-c compilation
 - *lcov* for code coverage
 - *python3* for some tools (get version, generate documentation)
 - *python3-dev* 
@@ -40,13 +44,14 @@ The Imebra image is built on Ubuntu 18.04 with the following apt packages:
 - *swig* to produce java and python bridges
 - *liblog4cxx-dev* to test logging features
 - *libdcmtk-dev* for interoperability testing
+- *default-jdk* for Java testing
+- *junit4* for Java testing
 - *dcmtk* for interoperability testing
 
-Additionally, 3 Python packages must be present (installable with pip):
+Additionally, 2 Python packages must be present (installable with pip):
 
 - *breathe* to generate the documentation
 - *sphinx_rtd_theme* the documentation theme
-- *dropbox* to store the artifacts to dropbox
 
 In order to install the packages, type the following commands as root or prepend them with sudo:
 ::
@@ -54,11 +59,9 @@ In order to install the packages, type the following commands as root or prepend
   apt-get update && \
   apt-get install -y \
     tzdata \
-    mercurial \
+    git \
     doxygen \
     g++ \
-    gobjc++ \
-    gnustep-devel \
     lcov \
     python3 \
     python3-dev \
@@ -68,15 +71,16 @@ In order to install the packages, type the following commands as root or prepend
     swig \
     liblog4cxx-dev \
     libdcmtk-dev \
+    default-jdk \
+    junit4 \
     dcmtk && \
   pip3 install breathe && \
-  pip3 install sphinx_rtd_theme && \
-  pip3 install dropbox
+  pip3 install sphinx_rtd_theme
 
-Then clone the Imebra mercurial repository:
+Then clone the Imebra git repository:
 ::
 
-    hg clone https://bitbucket.org/binarno/imebra
+    git clone git@bitbucket.org:binarno/imebra_git.git
 
 Finally, cd into the imebra folder and execute ant to build the source distribution that includes:
 
