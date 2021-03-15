@@ -322,8 +322,46 @@ Slovenia
         </exec>
     </target>
 
+    <target name="test_java" depends="create_source_distribution">
+        <!-- Copy the source distribution to don't pollute it -->
+        <property name="java_test" location="./ant-java_test" />
+        <delete dir="${java_test}" failonerror="false" />
+        <mkdir dir="${java_test}" />
+
+        <copy todir="${java_test}">
+            <fileset dir="${source_distribution}" />
+        </copy>
+
+        <mkdir dir="${java_test}/makejni" />
+        <exec executable="cmake" failonerror="true" dir="${java_test}/makejni">
+            <arg value="--verbose"/>
+            <arg value="-DCMAKE_BUILD_TYPE=Debug" />
+            <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
+            <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
+            <arg path="${source_distribution}/wrappers/javaWrapper"/>
+        </exec>
+        <exec executable="make" failonerror="true" dir="${java_test}/makejni" />
+
+        <mkdir dir="${java_test}/makejni/classes" />
+        <javac srcdir="${source_distribution}/wrappers/javaWrapper/src" destdir="${java_test}/makejni/classes" />
+        <javac srcdir="${source_distribution}/tests/java/src" destdir="${java_test}/makejni/classes" classpath="/usr/share/java/junit4.jar:${java_test}/makejni/classes"/>
+        <junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="yes" dir="${java_test}/makejni">
+            <classpath>
+                <pathelement location="${java_test}/makejni/classes"/>
+                <pathelement path="/usr/share/java/junit4.jar"/>
+            </classpath>
+            <jvmarg value="-Djava.library.path=${java_test}/makejni"/>
+            <formatter type="plain" usefile="false" />
+            <batchtest fork="yes">
+                <fileset dir="${source_distribution}/tests/java/src">
+                    <include name="**/*Test*" />
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
     <!-- Build -->
-    <target name="make_distribution" depends="create_source_distribution, run_test_cases, build_test_cases_release">
+    <target name="make_distribution" depends="create_source_distribution, run_test_cases, build_test_cases_release, test_java">
         <zip destfile="imebra_${version_major}_${version_minor}_${version_patch}_${version_build}.zip" basedir="${source_distribution}" />
     </target>
 
