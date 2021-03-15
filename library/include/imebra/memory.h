@@ -57,10 +57,6 @@ public:
     ///
     /// In Java this method accepts a single parameter (a byte array).
     ///
-    /// <b>Python</b>
-    ///
-    /// In Python this method accepts a single parameter (an array).
-    ///
     /// \param source      a pointer to the source data
     /// \param sourceSize  the amount of data to copy into the allocated memory
     ///
@@ -97,12 +93,6 @@ public:
     /// The size of the byte array must be equal or greater than the number of
     /// bytes stored by the data handler.
     ///
-    /// <b>Python</b>
-    ///
-    /// In Python this method accepts a single parameter (an array).
-    /// The size of the array (in bytes) must be equal or greater than the number
-    /// of bytes stored by the data handler.
-    ///
     /// \param destination     a pointer to the allocated buffer
     /// \param destinationSize the size of the allocated buffer, in bytes
     /// \return the number of bytes copied into the pre-allocated buffer, or the
@@ -122,12 +112,6 @@ public:
     /// In Java this method accepts two parameters:
     /// - a byte array
     /// - a long integer (sourceOffset)
-    ///
-    /// <b>Python</b>
-    ///
-    /// In Python this method accepts two parameters:
-    /// - an array
-    /// - an integer (sourceOffset)
     ///
     /// \param destination     a pointer to the allocated buffer
     /// \param destinationSize the size of the allocated buffer, in bytes
