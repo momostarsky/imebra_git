@@ -68,7 +68,8 @@ In order to install the packages, type the following commands as root or prepend
     default-jdk \
     junit4 \
     dcmtk && \
-  pip3 install breathe && \
+  pip3 install Sphinx==2.4.4 && \
+  pip3 install breathe==4.14.2 && \
   pip3 install sphinx_rtd_theme
 
 Then clone the Imebra git repository:

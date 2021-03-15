@@ -25,9 +25,10 @@ The Imebra image is built on Ubuntu 16.04 with the following apt packages:
 - junit4
 - dcmtk
 
-Additionally, two Python packages must be present (installable with pip):
+Additionally, three Python packages must be present (installable with pip):
 
-- breathe
+- Sphinx version 2.4.4
+- breathe version 4.14.2
 - sphinx_rtd_theme
 
 In order to install the packages, type the following commands as root or prepends them with sudo:
@@ -50,7 +51,8 @@ In order to install the packages, type the following commands as root or prepend
     apt-get install default-jdk
     apt-get install junit4
     apt-get install dcmtk
-    pip3 install breathe
+    pip3 install Sphinx==2.4.4
+    pip3 install breathe==4.14.2
     pip3 install sphinx_rtd_theme
 
 
