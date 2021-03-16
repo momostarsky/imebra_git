@@ -94,6 +94,83 @@ public class ImebraTests {
         }
     }
 
+    @Test
+    public void testJapanese()
+    {
+        byte patientName0Bytes[]= new byte[44];
+        patientName0Bytes[0] = (byte)0xd4;
+        patientName0Bytes[1] = (byte)0xcf;
+        patientName0Bytes[2] = (byte)0xc0;
+        patientName0Bytes[3] = (byte)0xde;
+        patientName0Bytes[4] = (byte)0x5e;
+        patientName0Bytes[5] = (byte)0xc0;
+        patientName0Bytes[6] = (byte)0xdb;
+        patientName0Bytes[7] = (byte)0xb3;
+        patientName0Bytes[8] = (byte)0x3d;
+        patientName0Bytes[9] = (byte)0x1b;
+        patientName0Bytes[10] = (byte)0x24;
+        patientName0Bytes[11] = (byte)0x42;
+        patientName0Bytes[12] = (byte)0x3b;
+        patientName0Bytes[13] = (byte)0x33;
+        patientName0Bytes[14] = (byte)0x45;
+        patientName0Bytes[15] = (byte)0x44;
+        patientName0Bytes[16] = (byte)0x1b;
+        patientName0Bytes[17] = (byte)0x28;
+        patientName0Bytes[18] = (byte)0x4a;
+        patientName0Bytes[19] = (byte)0x5e;
+        patientName0Bytes[20] = (byte)0x1b;
+        patientName0Bytes[21] = (byte)0x24;
+        patientName0Bytes[22] = (byte)0x42;
+        patientName0Bytes[23] = (byte)0x42;
+        patientName0Bytes[24] = (byte)0x40;
+        patientName0Bytes[25] = (byte)0x4f;
+        patientName0Bytes[26] = (byte)0x3a;
+        patientName0Bytes[27] = (byte)0x1b;
+        patientName0Bytes[28] = (byte)0x28;
+        patientName0Bytes[29] = (byte)0x4a;
+        patientName0Bytes[30] = (byte)0x3d;
+        patientName0Bytes[31] = (byte)0x1b;
+        patientName0Bytes[32] = (byte)0x24;
+        patientName0Bytes[33] = (byte)0x42;
+        patientName0Bytes[34] = (byte)0x24;
+        patientName0Bytes[35] = (byte)0x64;
+        patientName0Bytes[36] = (byte)0x24;
+        patientName0Bytes[37] = (byte)0x5e;
+        patientName0Bytes[38] = (byte)0x24;
+        patientName0Bytes[39] = (byte)0x40;
+        patientName0Bytes[40] = (byte)0x1b;
+        patientName0Bytes[41] = (byte)0x28;
+        patientName0Bytes[42] = (byte)0x4a;
+        patientName0Bytes[43] = (byte)0x5e;
+
+        com.imebra.MutableMemory streamMemory = new com.imebra.MutableMemory();
+        {
+            StringsList charsetsList = new StringsList();
+            charsetsList.add("ISO 2022 IR 13");
+            charsetsList.add("ISO 2022 IR 87");
+
+            MutableDataSet testDataSet = new com.imebra.MutableDataSet("1.2.840.10008.1.2.1", charsetsList);
+
+            {
+                WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerRaw(new TagId(0x10, 0x10), 0);
+                handler.assign(patientName0Bytes);
+                handler.delete();
+            }
+
+            MemoryStreamOutput writeStream = new MemoryStreamOutput(streamMemory);
+            StreamWriter writer = new StreamWriter(writeStream);
+            CodecFactory.save(testDataSet, writer, codecType_t.dicom);
+        }
+
+        {
+            MemoryStreamInput readStream = new MemoryStreamInput(streamMemory);
+            StreamReader reader = new StreamReader(readStream);
+            DataSet testDataSet = CodecFactory.load(reader);
+
+            System.out.println(testDataSet.getString(new TagId(0x10, 0x10), 0));
+        }
+    }
+
     public class SCPThread extends Thread
     {
         public void run() {
