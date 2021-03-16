@@ -41,10 +41,10 @@ charsetDictionary::charsetDictionary()
     registerCharset("ISO_IR 138", "ISO-IR-138", "ISO-8859-8", 1255, false);
     registerCharset("ISO_IR 148", "ISO-IR-148", "ISO-8859-9", 28599, false);
     registerCharset("ISO_IR 149", "ISO-IR-149", "EUC-KR", 949, false);
-    registerCharset("ISO_IR 13",  "SHIFT-JIS", "EUC-JP", 932, false);
+    registerCharset("ISO_IR 13",  "SHIFT-JIS", "Shift_JIS", 932, false);
     registerCharset("ISO_IR 14",  "ISO-IR-14", "EUC-JP", 50222, false );
     registerCharset("ISO_IR 166", "ISO-IR-166", "TIS-620", 874, false);
-    registerCharset("ISO_IR 87",  "ISO-IR-87", "EUC-JP", 20932, false);
+    registerCharset("ISO_IR 87",  "ISO-IR-87", "x-JIS0208", 20932, false);
     registerCharset("ISO_IR 159", "ISO-IR-159", "JIS_X0212-1990", 20932, false);
 
     registerCharset("ISO 2022 IR 6",
@@ -92,7 +92,7 @@ charsetDictionary::charsetDictionary()
                     "\x1b\x24\x29\x43", "ISO-IR-149", "EUC-KR", 949,
                     false);
     registerCharset("ISO 2022 IR 13",
-                    "\x1b\x29\x49", "SHIFT-JIS", "EUC-JP", 932,
+                    "\x1b\x29\x49", "SHIFT-JIS", "Shift_JIS", 932,
                     "\x1b\x28\x4a", "ISO-IR-14", "EUC-JP", 50222,
                     false);
     registerCharset("ISO 2022 IR 166",
@@ -100,8 +100,8 @@ charsetDictionary::charsetDictionary()
                     "\x1b\x28\x42", "ISO-IR-6", "US-ASCII", 20127,
                     false);
     registerCharset("ISO 2022 IR 87",
-                    "\x1b\x24\x42", "ISO-IR-87", "JIS_X0208-1983", 20932,
-                    "\x1b\x24\x42", "ISO-IR-87", "JIS_X0208-1983", 20932,
+                    "\x1b\x24\x42", "ISO-IR-87", "x-JIS0208", 20932,
+                    "\x1b\x24\x42", "ISO-IR-87", "x-JIS0208", 20932,
                     false);
     registerCharset("ISO 2022 IR 159",
                     "\x1b\x24\x28\x44", "ISO-IR-159", "JIS_X0212-1990", 20932,
