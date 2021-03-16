@@ -53,7 +53,7 @@ extern "C"
 //
 ///////////////////////////////////////////////////////////
 charsetConversionJava::charsetConversionJava(const charsetInformation& charsetInformation):
-    m_dicomName(dicomName),
+    m_dicomName(charsetInformation.m_dicomName),
     m_tableName(charsetInformation.m_javaRegistration)
 {
 }
