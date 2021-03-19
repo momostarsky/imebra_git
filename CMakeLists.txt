@@ -1,13 +1,11 @@
 # Options:
-# -DIMEBRA_SHARED_STATIC=SHARED|STATIC (default = SHARED)
+# -DIMEBRA_SHARED_STATIC=SHARED|STATIC (default = SHARED on Windows, Linux, macOS, static on iOS)
 # -DJPEG2000=0|1|2 include JPEG2000 codec (1=version 1.X 2=version2.X)
 # -DADDITIONAL_INCLUDE_PATH=path to additional include folders (optional)
 # -DADDITIONAL_LIB_PATH=path to additional libraries (optional)
 # -DIMEBRA_CHARSET_CONVERSION=ICONV|ICU|JAVA|WINDOWS (default = ICONV on posix, WINDOWS on Windows)
-# -DIMEBRA_OBJC=1|0 (default = 0)
-# -DIOS=PHONE|SIMULATOR (default not defined)
+# -DIMEBRA_OBJC=1|0 (default = 0 on Windows and Linux, 1 on macOS and iOS)
 # -DEMBED_BITCODE=1|0 (default = 0)
-# -DCMAKE_OSX_SYSROOT
 
 cmake_minimum_required(VERSION 3.0)
 
@@ -80,19 +78,9 @@ endif(NOT DEFINED IMEBRA_SHARED_STATIC)
 
 if(APPLE)
     set(IMEBRA_OBJC 1)
-    if(IOS)
+    if("*${CMAKE_SYSTEM_NAME}*" STREQUAL "*iOS*")
         set(IMEBRA_SHARED_STATIC "STATIC")
-        if("${IOS}" MATCHES "PHONE")
-            exec_program(xcrun ARGS --sdk iphoneos --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-            set (CMAKE_OSX_ARCHITECTURES armv7 armv7s arm64)
-        elseif("${IOS}" MATCHES "SIMULATOR")
-            exec_program(xcrun ARGS --sdk iphonesimulator --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-            set (CMAKE_OSX_ARCHITECTURES i386 x86_64)
-        else("${IOS}" MATCHES "PHONE")
-            message (FATAL_ERROR "Set IOS to PHONE or SIMULATOR")
-        endif("${IOS}" MATCHES "PHONE")
-        message ("IOS SDK ROOT: ${CMAKE_OSX_SYSROOT}")
-    endif(IOS)
+    endif()
 endif(APPLE)
 
 
@@ -133,15 +121,15 @@ if("${IMEBRA_OBJC}" STREQUAL "1")
         if(IOS)
             set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} -framework UIKit")
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework UIKit")
-        else(IOS)
+        else()
             set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} -framework AppKit")
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework AppKit")
-        endif(IOS)
-    else(APPLE)
+        endif()
+    else()
         set(objc_compiler_flags "${objc_compiler_flags} -fconstant-string-class=NSConstantString")
         set(imebra_objc_gnustep_dir "/usr/include/GNUstep")
         set(imebra_libraries ${imebra_libraries} gnustep-base objc)
-    endif(APPLE)
+    endif()
 
     if(NOT "${objc_compiler_flags}" STREQUAL "")
 
@@ -402,7 +390,7 @@ endif()
 
     target_link_libraries(scpExample imebra)
 
-endif(NOT IOS)
+endif()
 
 
 ##############################################

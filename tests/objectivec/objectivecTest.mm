@@ -631,9 +631,6 @@ TEST(objectivec, dimse)
 
                 EXPECT_EQ(ImebraDimseStatusSuccess, pResponse.status);
             }
-
-            [pSCU release:&pError];
-
         } // autoreleasepool
     }
     catch(...)
