@@ -166,8 +166,7 @@ public class ImebraTests {
             MemoryStreamInput readStream = new MemoryStreamInput(streamMemory);
             StreamReader reader = new StreamReader(readStream);
             DataSet testDataSet = CodecFactory.load(reader);
-
-            System.out.println(testDataSet.getString(new TagId(0x10, 0x10), 0));
+            assertEquals("ﾔﾏﾀﾞ^ﾀﾛｳ=山田^太郎=やまだ^", testDataSet.getString(new TagId(0x0010, 0x0010), 0));
         }
     }
 
