@@ -88,10 +88,6 @@ public:
     ///
     /// In Java this method accepts a single parameter (a byte array).
     ///
-    /// <b>Python</b>
-    ///
-    /// In Python this method accepts a single parameter (an array).
-    ///
     /// \param source      a pointer to the source data
     /// \param sourceSize  the amount of data to copy into the allocated memory
     ///
@@ -151,10 +147,6 @@ public:
     ///
     /// In Java this method accepts a single parameter (a byte array).
     ///
-    /// <b>Python</b>
-    ///
-    /// In Python this method accepts a single parameter (an array).
-    ///
     /// \param source     a pointer to the source memory buffer
     /// \param sourceSize the number of bytes to copy and the new memory size
     ///
@@ -171,12 +163,6 @@ public:
     /// In Java this method accepts two parameters:
     /// - a byte array
     /// - a long integer (destinationOffset)
-    ///
-    /// <b>Python</b>
-    ///
-    /// In Python this method accepts two parameters:
-    /// - an array
-    /// - an integer (destinationOffset)
     ///
     /// \param source     a pointer to the source memory buffer
     /// \param sourceSize the number of bytes to copy

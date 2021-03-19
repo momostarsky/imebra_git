@@ -59,17 +59,22 @@ public class ImebraTests {
         }
         String patientName1 = new String("\u0420\u062a\u062b^\u0410\u0628\u062a");
 
-        com.imebra.ReadWriteMemory streamMemory = new com.imebra.ReadWriteMemory();
+        com.imebra.MutableMemory streamMemory = new com.imebra.MutableMemory();
         {
-            com.imebra.FileParts charsetsList = new FileParts();
+            StringsList charsetsList = new StringsList();
             charsetsList.add("ISO_IR 6");
+            charsetsList.add("ISO 2022 IR 144");
+            charsetsList.add("ISO 2022 IR 100");
+            charsetsList.add("ISO 2022 IR 126");
+            charsetsList.add("ISO 2022 IR 127");
+
             MutableDataSet testDataSet = new com.imebra.MutableDataSet("1.2.840.10008.1.2.1", charsetsList);
 
             {
                 WritingDataHandler handler = testDataSet.getWritingDataHandler(new TagId(0x10, 0x10), 0);
 
-                handler.setUnicodeString(0, patientName0);
-                handler.setUnicodeString(1, patientName1);
+                handler.setString(0, patientName0);
+                handler.setString(1, patientName1);
 
                 handler.delete();
             }
@@ -84,8 +89,8 @@ public class ImebraTests {
             StreamReader reader = new StreamReader(readStream);
             DataSet testDataSet = CodecFactory.load(reader);
 
-            assertEquals(patientName0, testDataSet.getUnicodeString(new TagId(0x0010, 0x0010), 0));
-            assertEquals(patientName1, testDataSet.getUnicodeString(new TagId(0x0010, 0x0010), 1));
+            assertEquals(patientName0, testDataSet.getString(new TagId(0x0010, 0x0010), 0));
+            assertEquals(patientName1, testDataSet.getString(new TagId(0x0010, 0x0010), 1));
         }
     }
 
@@ -103,11 +108,11 @@ public class ImebraTests {
 
                 TCPStream stream = listener.waitForConnection();
 
-                AssociationSCP scp = new AssociationSCP("SCP", 1, 1, presentationContexts, new StreamReader(stream), new StreamWriter(stream), 0, 10);
+                AssociationSCP scp = new AssociationSCP("SCP", 1, 1, presentationContexts, new StreamReader(stream.getStreamInput()), new StreamWriter(stream.getStreamOutput()), 0, 10);
 
                 DimseService dimseService = new DimseService(scp);
 
-                CStoreCommand command = (CStoreCommand)dimseService.getCommand();
+                CStoreCommand command = dimseService.getCommand().getAsCStoreCommand();
 
                 dimseService.sendCommandOrResponse(new CStoreResponse(command, dimseStatusCode_t.success));
 
@@ -132,8 +137,8 @@ public class ImebraTests {
 
             TCPStream stream = new TCPStream(new TCPActiveAddress("", "20002"));
 
-            StreamReader readSCU = new StreamReader(stream);
-            StreamWriter writeSCU = new StreamWriter(stream);
+            StreamReader readSCU = new StreamReader(stream.getStreamInput());
+            StreamWriter writeSCU = new StreamWriter(stream.getStreamOutput());
 
             PresentationContext context = new PresentationContext("1.2.840.10008.1.1");
             context.addTransferSyntax("1.2.840.10008.1.2");
@@ -144,7 +149,7 @@ public class ImebraTests {
 
             DimseService dimse = new DimseService(scu);
 
-            DataSet payload = new DataSet ("1.2.840.10008.1.2");
+            MutableDataSet payload = new MutableDataSet ("1.2.840.10008.1.2");
             payload.setString(new TagId(0x0008, 0x0016), "1.1.1.1.1");
             payload.setString(new TagId(0x0008, 0x0018), "1.1.1.1.2");
             payload.setString(new TagId(0x0010, 0x0010), "Test^Patient");
