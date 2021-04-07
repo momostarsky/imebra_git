@@ -1,9 +1,10 @@
 package com.imebra.tests;
 
-
 import com.imebra.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Assert;
+import java.text.Normalizer;
 
 import java.io.UnsupportedEncodingException;
 
@@ -89,59 +90,59 @@ public class ImebraTests {
             StreamReader reader = new StreamReader(readStream);
             DataSet testDataSet = CodecFactory.load(reader);
 
-            assertEquals(patientName0, testDataSet.getString(new TagId(0x0010, 0x0010), 0));
-            assertEquals(patientName1, testDataSet.getString(new TagId(0x0010, 0x0010), 1));
+            Assert.assertEquals(patientName0, testDataSet.getString(new TagId(0x0010, 0x0010), 0));
+            Assert.assertEquals(patientName1, testDataSet.getString(new TagId(0x0010, 0x0010), 1));
         }
     }
 
     @Test
     public void testJapanese()
     {
-        byte patientName0Bytes[]= new byte[44];
-        patientName0Bytes[0] = (byte)0xd4;
-        patientName0Bytes[1] = (byte)0xcf;
-        patientName0Bytes[2] = (byte)0xc0;
-        patientName0Bytes[3] = (byte)0xde;
-        patientName0Bytes[4] = (byte)0x5e;
-        patientName0Bytes[5] = (byte)0xc0;
-        patientName0Bytes[6] = (byte)0xdb;
-        patientName0Bytes[7] = (byte)0xb3;
-        patientName0Bytes[8] = (byte)0x3d;
-        patientName0Bytes[9] = (byte)0x1b;
-        patientName0Bytes[10] = (byte)0x24;
-        patientName0Bytes[11] = (byte)0x42;
-        patientName0Bytes[12] = (byte)0x3b;
-        patientName0Bytes[13] = (byte)0x33;
-        patientName0Bytes[14] = (byte)0x45;
-        patientName0Bytes[15] = (byte)0x44;
-        patientName0Bytes[16] = (byte)0x1b;
-        patientName0Bytes[17] = (byte)0x28;
-        patientName0Bytes[18] = (byte)0x4a;
-        patientName0Bytes[19] = (byte)0x5e;
-        patientName0Bytes[20] = (byte)0x1b;
-        patientName0Bytes[21] = (byte)0x24;
-        patientName0Bytes[22] = (byte)0x42;
-        patientName0Bytes[23] = (byte)0x42;
-        patientName0Bytes[24] = (byte)0x40;
-        patientName0Bytes[25] = (byte)0x4f;
-        patientName0Bytes[26] = (byte)0x3a;
-        patientName0Bytes[27] = (byte)0x1b;
-        patientName0Bytes[28] = (byte)0x28;
-        patientName0Bytes[29] = (byte)0x4a;
-        patientName0Bytes[30] = (byte)0x3d;
-        patientName0Bytes[31] = (byte)0x1b;
-        patientName0Bytes[32] = (byte)0x24;
-        patientName0Bytes[33] = (byte)0x42;
-        patientName0Bytes[34] = (byte)0x24;
-        patientName0Bytes[35] = (byte)0x64;
-        patientName0Bytes[36] = (byte)0x24;
-        patientName0Bytes[37] = (byte)0x5e;
-        patientName0Bytes[38] = (byte)0x24;
-        patientName0Bytes[39] = (byte)0x40;
-        patientName0Bytes[40] = (byte)0x1b;
-        patientName0Bytes[41] = (byte)0x28;
-        patientName0Bytes[42] = (byte)0x4a;
-        patientName0Bytes[43] = (byte)0x5e;
+        byte patientNameBytes[]= new byte[44];
+        patientNameBytes[0] = (byte)0xd4;
+        patientNameBytes[1] = (byte)0xcf;
+        patientNameBytes[2] = (byte)0xc0;
+        patientNameBytes[3] = (byte)0xde;
+        patientNameBytes[4] = (byte)0x5e;
+        patientNameBytes[5] = (byte)0xc0;
+        patientNameBytes[6] = (byte)0xdb;
+        patientNameBytes[7] = (byte)0xb3;
+        patientNameBytes[8] = (byte)0x3d;
+        patientNameBytes[9] = (byte)0x1b;
+        patientNameBytes[10] = (byte)0x24;
+        patientNameBytes[11] = (byte)0x42;
+        patientNameBytes[12] = (byte)0x3b;
+        patientNameBytes[13] = (byte)0x33;
+        patientNameBytes[14] = (byte)0x45;
+        patientNameBytes[15] = (byte)0x44;
+        patientNameBytes[16] = (byte)0x1b;
+        patientNameBytes[17] = (byte)0x28;
+        patientNameBytes[18] = (byte)0x4a;
+        patientNameBytes[19] = (byte)0x5e;
+        patientNameBytes[20] = (byte)0x1b;
+        patientNameBytes[21] = (byte)0x24;
+        patientNameBytes[22] = (byte)0x42;
+        patientNameBytes[23] = (byte)0x42;
+        patientNameBytes[24] = (byte)0x40;
+        patientNameBytes[25] = (byte)0x4f;
+        patientNameBytes[26] = (byte)0x3a;
+        patientNameBytes[27] = (byte)0x1b;
+        patientNameBytes[28] = (byte)0x28;
+        patientNameBytes[29] = (byte)0x4a;
+        patientNameBytes[30] = (byte)0x3d;
+        patientNameBytes[31] = (byte)0x1b;
+        patientNameBytes[32] = (byte)0x24;
+        patientNameBytes[33] = (byte)0x42;
+        patientNameBytes[34] = (byte)0x24;
+        patientNameBytes[35] = (byte)0x64;
+        patientNameBytes[36] = (byte)0x24;
+        patientNameBytes[37] = (byte)0x5e;
+        patientNameBytes[38] = (byte)0x24;
+        patientNameBytes[39] = (byte)0x40;
+        patientNameBytes[40] = (byte)0x1b;
+        patientNameBytes[41] = (byte)0x28;
+        patientNameBytes[42] = (byte)0x4a;
+        patientNameBytes[43] = (byte)0x5e;
 
         com.imebra.MutableMemory streamMemory = new com.imebra.MutableMemory();
         {
@@ -153,7 +154,7 @@ public class ImebraTests {
 
             {
                 WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerRaw(new TagId(0x10, 0x10), 0);
-                handler.assign(patientName0Bytes);
+                handler.assign(patientNameBytes);
                 handler.delete();
             }
 
@@ -166,9 +167,60 @@ public class ImebraTests {
             MemoryStreamInput readStream = new MemoryStreamInput(streamMemory);
             StreamReader reader = new StreamReader(readStream);
             DataSet testDataSet = CodecFactory.load(reader);
-            assertEquals("ﾔﾏﾀﾞ^ﾀﾛｳ=山田^太郎=やまだ^", testDataSet.getString(new TagId(0x0010, 0x0010), 0));
+
+            byte patientNameUnicodeBytes[]= new byte[47];
+            patientNameUnicodeBytes[0] = (byte)0xef;
+            patientNameUnicodeBytes[1] = (byte)0xbe;
+            patientNameUnicodeBytes[2] = (byte)0x94;
+            patientNameUnicodeBytes[3] = (byte)0xef;
+            patientNameUnicodeBytes[4] = (byte)0xbe;
+            patientNameUnicodeBytes[5] = (byte)0x8f;
+            patientNameUnicodeBytes[6] = (byte)0xef;
+            patientNameUnicodeBytes[7] = (byte)0xbe;
+            patientNameUnicodeBytes[8] = (byte)0x80;
+            patientNameUnicodeBytes[9] = (byte)0xef;
+            patientNameUnicodeBytes[10] = (byte)0xbe;
+            patientNameUnicodeBytes[11] = (byte)0x9e;
+            patientNameUnicodeBytes[12] = (byte)0x5e;
+            patientNameUnicodeBytes[13] = (byte)0xef;
+            patientNameUnicodeBytes[14] = (byte)0xbe;
+            patientNameUnicodeBytes[15] = (byte)0x80;
+            patientNameUnicodeBytes[16] = (byte)0xef;
+            patientNameUnicodeBytes[17] = (byte)0xbe;
+            patientNameUnicodeBytes[18] = (byte)0x9b;
+            patientNameUnicodeBytes[19] = (byte)0xef;
+            patientNameUnicodeBytes[20] = (byte)0xbd;
+            patientNameUnicodeBytes[21] = (byte)0xb3;
+            patientNameUnicodeBytes[22] = (byte)0x3d;
+            patientNameUnicodeBytes[23] = (byte)0xe5;
+            patientNameUnicodeBytes[24] = (byte)0xb1;
+            patientNameUnicodeBytes[25] = (byte)0xb1;
+            patientNameUnicodeBytes[26] = (byte)0xe7;
+            patientNameUnicodeBytes[27] = (byte)0x94;
+            patientNameUnicodeBytes[28] = (byte)0xb0;
+            patientNameUnicodeBytes[29] = (byte)0x5e;
+            patientNameUnicodeBytes[30] = (byte)0xe5;
+            patientNameUnicodeBytes[31] = (byte)0xa4;
+            patientNameUnicodeBytes[32] = (byte)0xaa;
+            patientNameUnicodeBytes[33] = (byte)0xe9;
+            patientNameUnicodeBytes[34] = (byte)0x83;
+            patientNameUnicodeBytes[35] = (byte)0x8e;
+            patientNameUnicodeBytes[36] = (byte)0x3d;
+            patientNameUnicodeBytes[37] = (byte)0xe3;
+            patientNameUnicodeBytes[38] = (byte)0x82;
+            patientNameUnicodeBytes[39] = (byte)0x84;
+            patientNameUnicodeBytes[40] = (byte)0xe3;
+            patientNameUnicodeBytes[41] = (byte)0x81;
+            patientNameUnicodeBytes[42] = (byte)0xbe;
+            patientNameUnicodeBytes[43] = (byte)0xe3;
+            patientNameUnicodeBytes[44] = (byte)0x81;
+            patientNameUnicodeBytes[45] = (byte)0xa0;
+            patientNameUnicodeBytes[46] = (byte)0x5e;
+
+            Assert.assertArrayEquals(patientNameUnicodeBytes, testDataSet.getString(new TagId(0x0010, 0x0010), 0).getBytes(java.nio.charset.StandardCharsets.UTF_8));
         }
     }
+
 
     public class SCPThread extends Thread
     {
