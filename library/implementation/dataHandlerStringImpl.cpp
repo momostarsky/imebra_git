@@ -76,6 +76,11 @@ readingDataHandlerString::readingDataHandlerString(const memory &parseMemory, ta
         }
         m_strings.push_back(parseString.substr(firstPosition, nextPosition - firstPosition));
         firstPosition = ++nextPosition;
+        if(firstPosition == parseString.size())
+        {
+            m_strings.push_back("");
+            break;
+        }
     }
 
     DICOMHERO_FUNCTION_END();

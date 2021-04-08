@@ -52,9 +52,9 @@ extern "C"
 // Constructor
 //
 ///////////////////////////////////////////////////////////
-charsetConversionJava::charsetConversionJava(const std::string& dicomName):
-    m_dicomName(dicomName),
-    m_tableName(getDictionary().getCharsetInformation(dicomName).m_javaRegistration)
+charsetConversionJava::charsetConversionJava(const charsetInformation& charsetInformation):
+    m_dicomName(charsetInformation.m_dicomName),
+    m_tableName(charsetInformation.m_javaRegistration)
 {
 }
 

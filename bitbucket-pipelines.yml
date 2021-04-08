@@ -1,4 +1,4 @@
-image: binarno/imebra_docker_build
+image: binarno/imebra_docker_build_git
 
 pipelines:
   default:

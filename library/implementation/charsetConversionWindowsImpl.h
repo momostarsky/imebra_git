@@ -31,15 +31,15 @@ namespace dicomhero
 class charsetConversionWindows: public charsetConversionBase
 {
 public:
-    charsetConversionWindows(const std::string& dicomName);
+    charsetConversionWindows(const charsetInformation& charsetInformation);
 
     virtual std::string fromUnicode(const std::wstring& unicodeString) const override;
 
     virtual std::wstring toUnicode(const std::string& asciiString) const override;
 
 protected:
-	unsigned long m_codePage;
-	bool m_bZeroFlag;
+    unsigned long m_codePage;
+    bool m_bZeroFlag;
 };
 
 typedef charsetConversionWindows defaultCharsetConversion;

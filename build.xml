@@ -41,7 +41,6 @@
         <copy todir="${build_release}" file="build.xml" />
         <copy todir="${build_release}" file="readme.rst" />
         <copy todir="${build_release}" file="license.rst" />
-        <copy todir="${build_release}" file="setup.py" />
         <copy todir="${build_release}" file="CMakeLists.txt" />
     </target>
 
@@ -126,24 +125,7 @@
 
     </target>
 
-    <!-- PYTHON SWIG -->
-    <target name="python_swig" depends="replace_version">
-        <exec executable="swig" failonerror="true" dir="${build_release}/wrappers/">
-            <arg value="-python" />
-            <arg value="-c++" />
-            <arg value="-I${build_release}/library/include" />
-            <arg value="-module" />
-            <arg value="dicomhero6" />
-            <arg value="-outdir" />
-            <arg path="${build_release}/wrappers/pythonWrapper" />
-            <arg value="-o" />
-            <arg value="${build_release}/wrappers/pythonWrapper/python_wrapper.cxx" />
-            <arg path="${build_release}/wrappers/swig.i" />
-        </exec>
-
-    </target>
-
-    <target name="swig" depends="java_swig, python_swig" />
+    <target name="swig" depends="java_swig" />
 
     <target name="dicomherojar" depends="java_swig, create_test_dir" >
         <exec executable="cmake" failonerror="true" dir="${build_jni}">
@@ -198,7 +180,6 @@
         </copy>
         <copy todir="${source_distribution}" file="${build_release}/readme.rst" />
         <copy todir="${source_distribution}" file="${build_release}/license.rst" />
-        <copy todir="${source_distribution}" file="${build_release}/setup.py" />
         <copy todir="${source_distribution}" file="${build_release}/CMakeLists.txt" />
     </target>
 
@@ -288,27 +269,46 @@
         </exec>
     </target>
 
-    <target name="test_python" depends="create_source_distribution">
+    <target name="test_java" depends="create_source_distribution">
         <!-- Copy the source distribution to don't pollute it -->
-        <property name="python_test" location="./ant-python_test" />
-        <delete dir="${python_test}" failonerror="false" />
-        <mkdir dir="${python_test}" />
+        <property name="java_test" location="./ant-java_test" />
+        <delete dir="${java_test}" failonerror="false" />
+        <mkdir dir="${java_test}" />
 
-        <copy todir="${python_test}">
+        <copy todir="${java_test}">
             <fileset dir="${source_distribution}" />
         </copy>
-        <exec executable="python3" dir="${python_test}" resolveexecutable="true" failonerror="true">
-            <arg value="setup.py" />
-            <arg value="install" />
-            <arg value="--user" />
+
+        <mkdir dir="${java_test}/makejni" />
+        <exec executable="cmake" failonerror="true" dir="${java_test}/makejni">
+            <arg value="--verbose"/>
+            <arg value="-DCMAKE_BUILD_TYPE=Debug" />
+            <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
+            <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
+            <arg path="${source_distribution}/wrappers/javaWrapper"/>
         </exec>
-        <exec executable="python3" dir="${python_test}/tests/python" resolveexecutable="true" failonerror="true">
-            <arg value="tests.py" />
-        </exec>
+        <exec executable="make" failonerror="true" dir="${java_test}/makejni" />
+
+        <mkdir dir="${java_test}/makejni/classes" />
+        <javac srcdir="${source_distribution}/wrappers/javaWrapper/src" destdir="${java_test}/makejni/classes" />
+        <javac srcdir="${source_distribution}/tests/java/src" destdir="${java_test}/makejni/classes" classpath="/usr/share/java/junit4.jar:${java_test}/makejni/classes"/>
+        <junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="yes" dir="${java_test}/makejni">
+            <classpath>
+                <pathelement location="${java_test}/makejni/classes"/>
+                <pathelement path="/usr/share/java/junit4.jar"/>
+            </classpath>
+            <jvmarg value="-Djava.library.path=${java_test}/makejni"/>
+            <formatter type="plain" usefile="false" />
+            <batchtest fork="yes">
+                <fileset dir="${source_distribution}/tests/java/src">
+                    <include name="**/*Test*" />
+                </fileset>
+            </batchtest>
+        </junit>
     </target>
 
     <!-- Build -->
-    <target name="make_distribution" depends="create_source_distribution, run_test_cases, test_python, build_test_cases_release">
+    <target name="make_distribution" depends="create_source_distribution, run_test_cases, test_java, build_test_cases_release">
         <zip destfile="dicomhero_${version_major}_${version_minor}_${version_patch}_${version_build}.zip" basedir="${source_distribution}" />
     </target>
 

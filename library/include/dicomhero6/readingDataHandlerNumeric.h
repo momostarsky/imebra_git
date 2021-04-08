@@ -86,12 +86,6 @@ public:
     /// The size of the byte array must be equal or greater than the number of
     /// bytes stored by the data handler.
     ///
-    /// <b>Python</b>
-    ///
-    /// In Python this method accepts a single parameter (an array).
-    /// The size of the array (in bytes) must be equal or greater than the number
-    /// of bytes stored by the data handler.
-    ///
     /// \param destination     a pointer to the allocated buffer
     /// \param destinationSize the size of the allocated buffer
     /// \return the number of bytes copied into the pre-allocated buffer, or the

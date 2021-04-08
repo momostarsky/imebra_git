@@ -17,12 +17,13 @@ for:
       - mkdir build_dicomhero_debug
       - mkdir build_dicomhero_ios_debug
       - cd build_dicomhero_debug
-      - cmake -DCMAKE_BUILD_TYPE=Debug ..
+      - cmake -GXcode -DCMAKE_BUILD_TYPE=Debug ..
       - cmake --build . --config Debug
       - ctest -V .
       - cd ../build_dicomhero_ios_debug
-      - cmake -DCMAKE_BUILD_TYPE=Debug -DIOS=IPHONE ..
-      - cmake --build . --config Debug
+      - cmake -GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_BUILD_TYPE=Release ..
+      - cmake --build . --config Release
+      - cmake --build . --config Release -- -sdk iphonesimulator
       - cd ..
       - cp -R library/include build_dicomhero_debug
       - cp -R library/include build_dicomhero_ios_debug

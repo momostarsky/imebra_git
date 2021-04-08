@@ -630,9 +630,6 @@ TEST(objectivec, dimse)
 
                 EXPECT_EQ(DicomheroDimseStatusSuccess, pResponse.status);
             }
-
-            [pSCU release:&pError];
-
         } // autoreleasepool
     }
     catch(...)

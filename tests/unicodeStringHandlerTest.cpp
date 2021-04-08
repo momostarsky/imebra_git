@@ -1,5 +1,7 @@
 #include <dicomhero6/dicomhero.h>
 #include <gtest/gtest.h>
+#include <locale>
+#include <codecvt>
 
 namespace dicomhero
 {
@@ -9,7 +11,6 @@ namespace tests
 
 TEST(unicodeStringHandlerTest, unicodeTest)
 {
-
     // Try a cyrillic/arabic patient name
     std::wstring patientName0 = L"??\x0628\x062a\x062b\x062f^\0x400\0x410\0x420";
     std::wstring patientName1 = L"\0x420\x062a\x062b^\0x400\0x410\x0628\x062a";
@@ -19,6 +20,7 @@ TEST(unicodeStringHandlerTest, unicodeTest)
         charsetsList_t charsets;
         charsets.push_back("ISO_IR 6");
         charsets.push_back("ISO 2022 IR 127");
+
         MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
 
         {
@@ -47,6 +49,48 @@ TEST(unicodeStringHandlerTest, unicodeTest)
         EXPECT_THROW(testDataSet.getDouble(TagId(0x0010, 0x0010), 2), MissingItemError);
     }
 }
+
+
+TEST(unicodeStringHandlerTest, japaneseTest)
+{
+    try
+    {
+        std::string patientName = "\xd4\xcf\xc0\xde\x5e\xc0\xdb\xb3\x3d\x1b\x24\x42\x3b\x33\x45\x44\x1b\x28\x4a\x5e\x1b\x24\x42\x42"
+                                  "\x40\x4f\x3a\x1b\x28\x4a\x3d\x1b\x24\x42\x24\x64\x24\x5e\x24\x40\x1b\x28\x4a\x5e";
+
+        MutableMemory streamMemory;
+        {
+            charsetsList_t charsets;
+            charsets.push_back("ISO 2022 IR 13");
+            charsets.push_back("ISO 2022 IR 87");
+
+            MutableDataSet testDataSet("1.2.840.10008.1.2.1", charsets);
+
+            {
+                WritingDataHandlerNumeric handler = testDataSet.getWritingDataHandlerRaw(TagId(0x10, 0x10), 0);
+                handler.assign(patientName.c_str(), patientName.size());
+            }
+
+            MemoryStreamOutput writeStream(streamMemory);
+            StreamWriter writer(writeStream);
+            CodecFactory::save(testDataSet, writer, codecType_t::dicom);
+        }
+
+        {
+            MemoryStreamInput readStream(streamMemory);
+            StreamReader reader(readStream);
+            DataSet testDataSet = CodecFactory::load(reader);
+
+            std::wstring unicodeString = testDataSet.getUnicodeString(TagId(0x0010, 0x0010), 0);
+            std::cout << std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t>{}.to_bytes(unicodeString) << std::endl;
+        }
+    }
+    catch (const CharsetConversionNoSupportedTableError& e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+}
+
 
 TEST(unicodeStringHandlerTest, iso2022Test)
 {

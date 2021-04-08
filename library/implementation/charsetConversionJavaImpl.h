@@ -119,7 +119,7 @@ protected:
 class charsetConversionJava: public charsetConversionBase
 {
 public:
-    charsetConversionJava(const std::string& dicomName);
+    charsetConversionJava(const charsetInformation& charsetInformation);
     virtual ~charsetConversionJava();
 
     virtual std::string fromUnicode(const std::wstring& unicodeString) const override;

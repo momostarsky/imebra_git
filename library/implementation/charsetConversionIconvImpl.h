@@ -37,8 +37,8 @@ namespace dicomhero
 class charsetConversionIconv: public charsetConversionBase
 {
 public:
-    charsetConversionIconv(const std::string& dicomName);
-    virtual ~charsetConversionIconv();
+    charsetConversionIconv(const charsetInformation& charsetInformation);
+    virtual ~charsetConversionIconv() override;
 
     virtual std::string fromUnicode(const std::wstring& unicodeString) const override;
 
@@ -52,7 +52,7 @@ protected:
     std::string myIconv(iconv_t context, char* inputString, size_t inputStringLengthBytes) const;
 #endif
     iconv_t m_iconvToUnicode;
-	iconv_t m_iconvFromUnicode;
+    iconv_t m_iconvFromUnicode;
 };
 
 typedef charsetConversionIconv defaultCharsetConversion;

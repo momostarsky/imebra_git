@@ -37,7 +37,7 @@ namespace dicomhero
 class charsetConversionICU: public charsetConversionBase
 {
 public:
-    charsetConversionICU(const std::string& dicomName);
+    charsetConversionICU(const charsetInformation& charsetInformation);
     virtual ~charsetConversionICU();
 
     virtual std::string fromUnicode(const std::wstring& unicodeString) const override;

@@ -5,9 +5,7 @@
 # -DADDITIONAL_LIB_PATH=path to additional libraries (optional)
 # -DDICOMHERO_CHARSET_CONVERSION=ICONV|JAVA|WINDOWS (default = ICONV on posix, WINDOWS on Windows)
 # -DDICOMHERO_OBJC=1|0 (default = 0)
-# -DIOS=PHONE|SIMULATOR (default not defined)
 # -DEMBED_BITCODE=1|0 (default = 0)
-# -DCMAKE_OSX_SYSROOT
 
 cmake_minimum_required(VERSION 3.0)
 
@@ -22,19 +20,19 @@ set(dicomhero_libraries "")
 
 # Select the proper charset conversion libraries according to the charset conversion method
 #------------------------------------------------------------------------------------------
-if(DICOMHERO_CHARSET_CONVERSION MATCHES ICONV)
+if("*${DICOMHERO_CHARSET_CONVERSION}*" STREQUAL "*ICONV*")
     message("Using ICONV")
     add_definitions(-DDICOMHERO_USE_ICONV)
     if(APPLE)
         set(dicomhero_libraries ${dicomhero_libraries} iconv)
     endif(APPLE)
-elseif(DICOMHERO_CHARSET_CONVERSION MATCHES JAVA)
+elseif("*${DICOMHERO_CHARSET_CONVERSION}*" STREQUAL "*JAVA*")
     message("Using JAVA")
-    add_definitions(-DDICOMHERO_USE_JAVA)
-elseif(DICOMHERO_CHARSET_CONVERSION MATCHES WINDOWS)
+    add_definitions(-DIMEBRA_USE_JAVA)
+elseif("*${IMEBRA_CHARSET_CONVERSION}*" STREQUAL "*WINDOWS*")
     message("Using WINDOWS CHARSET CONVERSION")
     add_definitions(-DDICOMHERO_USE_WINDOWS_CHARSET)
-else(DICOMHERO_CHARSET_CONVERSION MATCHES ICONV)
+else()
     if(WIN32)
         message("Using WINDOWS CHARSET CONVERSION (default)")
         add_definitions(-DDICOMHERO_USE_WINDOWS_CHARSET)
@@ -45,7 +43,7 @@ else(DICOMHERO_CHARSET_CONVERSION MATCHES ICONV)
             set(dicomhero_libraries ${dicomhero_libraries} iconv)
         endif(APPLE)
     endif(WIN32)
-endif(DICOMHERO_CHARSET_CONVERSION MATCHES ICONV)
+endif()
 
 # Set the proper logging preprocessor macros
 #-------------------------------------------
@@ -75,19 +73,9 @@ endif(NOT DEFINED DICOMHERO_SHARED_STATIC)
 
 if(APPLE)
     set(DICOMHERO_OBJC 1)
-    if(IOS)
-        set(DICOMHERO_SHARED_STATIC "STATIC")
-        if("${IOS}" MATCHES "PHONE")
-            exec_program(xcrun ARGS --sdk iphoneos --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-            set (CMAKE_OSX_ARCHITECTURES armv7 armv7s arm64)
-        elseif("${IOS}" MATCHES "SIMULATOR")
-            exec_program(xcrun ARGS --sdk iphonesimulator --show-sdk-path OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
-            set (CMAKE_OSX_ARCHITECTURES i386 x86_64)
-        else("${IOS}" MATCHES "PHONE")
-            message (FATAL_ERROR "Set IOS to PHONE or SIMULATOR")
-        endif("${IOS}" MATCHES "PHONE")
-        message ("IOS SDK ROOT: ${CMAKE_OSX_SYSROOT}")
-    endif(IOS)
+    if("*${CMAKE_SYSTEM_NAME}*" STREQUAL "*iOS*")
+        set(IMEBRA_SHARED_STATIC "STATIC")
+    endif()
 endif(APPLE)
 
 
@@ -129,15 +117,15 @@ if("${DICOMHERO_OBJC}" STREQUAL "1")
         if(IOS)
             set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} -framework UIKit")
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework UIKit")
-        else(IOS)
+        else()
             set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} -framework AppKit")
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework AppKit")
-        endif(IOS)
-    else(APPLE)
+        endif()
+    else()
         set(objc_compiler_flags "${objc_compiler_flags} -fconstant-string-class=NSConstantString")
         set(dicomhero_objc_gnustep_dir "/usr/include/GNUstep")
         set(dicomhero_libraries ${dicomhero_libraries} gnustep-base objc)
-    endif(APPLE)
+    endif()
 
     if(NOT "${objc_compiler_flags}" STREQUAL "")
 
@@ -399,7 +387,7 @@ endif()
 
     target_link_libraries(scpExample dicomhero6)
 
-endif(NOT IOS)
+endif()
 
 
 ##############################################
