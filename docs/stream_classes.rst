@@ -12,43 +12,43 @@ The following classes are described in this chapter:
 +----------------------------------------+--------------------------------------+-------------------------------+
 |C++ class                               |Objective-C/Swift class               |Description                    |
 +========================================+======================================+===============================+
-|:cpp:class:`imebra::CodecFactory`       |:cpp:class:`ImebraCodecFactory`       |Load/Save a DICOM structure    |
+|:cpp:class:`dicomhero::CodecFactory`       |:cpp:class:`DicomheroCodecFactory`       |Load/Save a DICOM structure    |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::BaseStreamInput`    |:cpp:class:`ImebraBaseStreamInput`    |Base class for input streams   |
+|:cpp:class:`dicomhero::BaseStreamInput`    |:cpp:class:`DicomheroBaseStreamInput`    |Base class for input streams   |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::BaseStreamOutput`   |:cpp:class:`ImebraBaseStreamOutput`   |Base class for output streams  |
+|:cpp:class:`dicomhero::BaseStreamOutput`   |:cpp:class:`DicomheroBaseStreamOutput`   |Base class for output streams  |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::StreamReader`       |:cpp:class:`ImebraStreamReader`       |Read from an input stream      |
+|:cpp:class:`dicomhero::StreamReader`       |:cpp:class:`DicomheroStreamReader`       |Read from an input stream      |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::StreamWriter`       |:cpp:class:`ImebraStreamWriter`       |Write into an output stream    |
+|:cpp:class:`dicomhero::StreamWriter`       |:cpp:class:`DicomheroStreamWriter`       |Write into an output stream    |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::FileStreamInput`    |:cpp:class:`ImebraFileStreamInput`    |File input stream              |
+|:cpp:class:`dicomhero::FileStreamInput`    |:cpp:class:`DicomheroFileStreamInput`    |File input stream              |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::FileStreamOutput`   |:cpp:class:`ImebraFileStreamOutput`   |File output stream             |
+|:cpp:class:`dicomhero::FileStreamOutput`   |:cpp:class:`DicomheroFileStreamOutput`   |File output stream             |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::MemoryStreamInput`  |:cpp:class:`ImebraMemoryStreamInput`  |Memory input stream            |
+|:cpp:class:`dicomhero::MemoryStreamInput`  |:cpp:class:`DicomheroMemoryStreamInput`  |Memory input stream            |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::MemoryStreamOutput` |:cpp:class:`ImebraMemoryStreamOutput` |Memory output stream           |
+|:cpp:class:`dicomhero::MemoryStreamOutput` |:cpp:class:`DicomheroMemoryStreamOutput` |Memory output stream           |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::StreamTimeout`      |:cpp:class:`ImebraStreamTimeout`      |Causes a stream to fail after  |
+|:cpp:class:`dicomhero::StreamTimeout`      |:cpp:class:`DicomheroStreamTimeout`      |Causes a stream to fail after  |
 |                                        |                                      |a timeout has expired          |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::PipeStream`         |:cpp:class:`ImebraPipeStream`         |Allow to implement custom      |
+|:cpp:class:`dicomhero::PipeStream`         |:cpp:class:`DicomheroPipeStream`         |Allow to implement custom      |
 |                                        |                                      |input and output streams       |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::TCPStream`          |:cpp:class:`ImebraTCPStream`          |Implement an input and output  |
+|:cpp:class:`dicomhero::TCPStream`          |:cpp:class:`DicomheroTCPStream`          |Implement an input and output  |
 |                                        |                                      |stream on a TCP connection     |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::TCPListener`        |:cpp:class:`ImebraTCPListener`        |Listen for incoming TCP        |
+|:cpp:class:`dicomhero::TCPListener`        |:cpp:class:`DicomheroTCPListener`        |Listen for incoming TCP        |
 |                                        |                                      |connections                    |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::TCPAddress`         |:cpp:class:`ImebraTCPAddress`         |Represents a TCP address       |
+|:cpp:class:`dicomhero::TCPAddress`         |:cpp:class:`DicomheroTCPAddress`         |Represents a TCP address       |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::TCPPassiveAddress`  |:cpp:class:`ImebraTCPPassiveAddress`  |Represents a passive TCP       |
+|:cpp:class:`dicomhero::TCPPassiveAddress`  |:cpp:class:`DicomheroTCPPassiveAddress`  |Represents a passive TCP       |
 |                                        |                                      |address (used by the connection|
 |                                        |                                      |listener)                      |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::TCPActiveAddress`   |:cpp:class:`ImebraTCPActiveAddress`   |Represents an active TCP       |
+|:cpp:class:`dicomhero::TCPActiveAddress`   |:cpp:class:`DicomheroTCPActiveAddress`   |Represents an active TCP       |
 |                                        |                                      |address (used to connect to    |
 |                                        |                                      |a peer)                        |
 +----------------------------------------+--------------------------------------+-------------------------------+
@@ -62,7 +62,7 @@ The following classes are described in this chapter:
 
 The easiest way to load or store a :ref:`DataSet` object is by using the static methods of the `CodecFactory`_ class.
 
-All the Imebra Stream Classes (file, memory, tcp, pipe) derive from `BaseStreamInput`_ or/and `BaseStreamOutput`_.
+All the Dicomhero Stream Classes (file, memory, tcp, pipe) derive from `BaseStreamInput`_ or/and `BaseStreamOutput`_.
 
 `BaseStreamInput`_ represents an input stream (you can read from it) while `BaseStreamOutput`_ represents an output
 stream (you can write into it). However, both classes don't expose reading and writing methods: in order to read or 
@@ -80,13 +80,13 @@ CodecFactory
 C++
 ,,,
 
-.. doxygenclass:: imebra::CodecFactory
+.. doxygenclass:: dicomhero::CodecFactory
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraCodecFactory
+.. doxygenclass:: DicomheroCodecFactory
    :members:
 
 
@@ -96,13 +96,13 @@ BaseStreamInput
 C++
 ,,,
 
-.. doxygenclass:: imebra::BaseStreamInput
+.. doxygenclass:: dicomhero::BaseStreamInput
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraBaseStreamInput
+.. doxygenclass:: DicomheroBaseStreamInput
    :members:
 
 
@@ -112,13 +112,13 @@ BaseStreamOutput
 C++
 ,,,
 
-.. doxygenclass:: imebra::BaseStreamOutput
+.. doxygenclass:: dicomhero::BaseStreamOutput
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraBaseStreamOutput
+.. doxygenclass:: DicomheroBaseStreamOutput
    :members:
 
 
@@ -128,13 +128,13 @@ StreamReader
 C++
 ,,,
 
-.. doxygenclass:: imebra::StreamReader
+.. doxygenclass:: dicomhero::StreamReader
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraStreamReader
+.. doxygenclass:: DicomheroStreamReader
    :members:
 
 
@@ -144,13 +144,13 @@ StreamWriter
 C++
 ,,,
 
-.. doxygenclass:: imebra::StreamWriter
+.. doxygenclass:: dicomhero::StreamWriter
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraStreamWriter
+.. doxygenclass:: DicomheroStreamWriter
    :members:
 
 
@@ -160,13 +160,13 @@ FileStreamInput
 C++
 ,,,
 
-.. doxygenclass:: imebra::FileStreamInput
+.. doxygenclass:: dicomhero::FileStreamInput
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraFileStreamInput
+.. doxygenclass:: DicomheroFileStreamInput
    :members:
 
 
@@ -176,13 +176,13 @@ FileStreamOutput
 C++
 ,,,
 
-.. doxygenclass:: imebra::FileStreamOutput
+.. doxygenclass:: dicomhero::FileStreamOutput
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraFileStreamOutput
+.. doxygenclass:: DicomheroFileStreamOutput
    :members:
 
 
@@ -192,13 +192,13 @@ MemoryStreamInput
 C++
 ,,,
 
-.. doxygenclass:: imebra::MemoryStreamInput
+.. doxygenclass:: dicomhero::MemoryStreamInput
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraMemoryStreamInput
+.. doxygenclass:: DicomheroMemoryStreamInput
    :members:
 
 
@@ -208,13 +208,13 @@ MemoryStreamOutput
 C++
 ,,,
 
-.. doxygenclass:: imebra::MemoryStreamOutput
+.. doxygenclass:: dicomhero::MemoryStreamOutput
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraMemoryStreamOutput
+.. doxygenclass:: DicomheroMemoryStreamOutput
    :members:
 
 
@@ -224,13 +224,13 @@ StreamTimeout
 C++
 ,,,
 
-.. doxygenclass:: imebra::StreamTimeout
+.. doxygenclass:: dicomhero::StreamTimeout
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraStreamTimeout
+.. doxygenclass:: DicomheroStreamTimeout
    :members:
 
 
@@ -264,13 +264,13 @@ Pipe
 C++
 ,,,
 
-.. doxygenclass:: imebra::PipeStream
+.. doxygenclass:: dicomhero::PipeStream
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraPipeStream
+.. doxygenclass:: DicomheroPipeStream
    :members:
 
 
@@ -278,16 +278,16 @@ Objective-C/Swift
 TCP classes
 -----------
 
-The TCP classes can be used with :cpp:class:`imebra::StreamWriter` and :cpp:class:`imebra::StreamReader` to
+The TCP classes can be used with :cpp:class:`dicomhero::StreamWriter` and :cpp:class:`dicomhero::StreamReader` to
 send and receive data through a TCP stream.
 
 A TCP server socket (a socket that listen for incoming connection) can be realized with the class
-:cpp:class:`imebra::TCPListener`, while a TCP client (a socket that initiates a connection with a
-server) can be realized with the class :cpp:class:`imebra::TCPStream`.
+:cpp:class:`dicomhero::TCPListener`, while a TCP client (a socket that initiates a connection with a
+server) can be realized with the class :cpp:class:`dicomhero::TCPStream`.
 
-:cpp:class:`imebra::TCPListener` creates a new :cpp:class:`imebra::TCPStream` for each accepted incoming connection.
+:cpp:class:`dicomhero::TCPListener` creates a new :cpp:class:`dicomhero::TCPStream` for each accepted incoming connection.
 
-Both :cpp:class:`imebra::TCPListener` and :cpp:class:`imebra::TCPStream` expose blocking methods (except for
+Both :cpp:class:`dicomhero::TCPListener` and :cpp:class:`dicomhero::TCPStream` expose blocking methods (except for
 the constructors which connect to the peer in non-blocking mode).
 You can exit a blocking method by closing the socket or by calling the terminate() method.
 
@@ -299,13 +299,13 @@ TCPStream
 C++
 ,,,
 
-.. doxygenclass:: imebra::TCPStream
+.. doxygenclass:: dicomhero::TCPStream
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraTCPStream
+.. doxygenclass:: DicomheroTCPStream
    :members:
 
 
@@ -315,13 +315,13 @@ TCPListener
 C++
 ,,,
 
-.. doxygenclass:: imebra::TCPListener
+.. doxygenclass:: dicomhero::TCPListener
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraTCPListener
+.. doxygenclass:: DicomheroTCPListener
    :members:
 
 
@@ -331,13 +331,13 @@ TCPAddress
 C++
 ,,,
 
-.. doxygenclass:: imebra::TCPAddress
+.. doxygenclass:: dicomhero::TCPAddress
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraTCPAddress
+.. doxygenclass:: DicomheroTCPAddress
    :members:
 
 
@@ -347,13 +347,13 @@ TCPPassiveAddress
 C++
 ,,,
 
-.. doxygenclass:: imebra::TCPPassiveAddress
+.. doxygenclass:: dicomhero::TCPPassiveAddress
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraTCPPassiveAddress
+.. doxygenclass:: DicomheroTCPPassiveAddress
    :members:
 
 
@@ -363,13 +363,13 @@ TCPActiveAddress
 C++
 ,,,
 
-.. doxygenclass:: imebra::TCPActiveAddress
+.. doxygenclass:: dicomhero::TCPActiveAddress
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraTCPActiveAddress
+.. doxygenclass:: DicomheroTCPActiveAddress
    :members:
 
 

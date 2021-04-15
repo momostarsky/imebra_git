@@ -4,7 +4,7 @@
 Requirements
 ------------
 
-This section lists the Imebra v.4 top level requirements and the requirements needed to mitigate the identified risks.
+This section lists the Dicomhero v.4 top level requirements and the requirements needed to mitigate the identified risks.
 
 
 .. _REQ_FUNC:
@@ -109,7 +109,7 @@ The ACSE management should not be exposed in the API.
 
 There must be a generic streaming protocol able to transport DIMSE messages.
 
-The generic streaming protocol must derive from the Imebra base stream class and offer
+The generic streaming protocol must derive from the Dicomhero base stream class and offer
 timeout capabilities and termination capabilities when waiting for incoming or outgoing data.
 
 
@@ -122,7 +122,7 @@ Parent requirements:
 
 .. _REQ_TCPIP_PROTOCOL:
 
-[REQ_TCPIP_PROTOCOL] Imebra must supply a basic TCP streaming class
+[REQ_TCPIP_PROTOCOL] Dicomhero must supply a basic TCP streaming class
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 A basic TCP streaming class must be provided so that it can be used with DUL.
@@ -142,10 +142,10 @@ Children requirements:
 
 .. _REQ_USER_PROTOCOL:
 
-[REQ_USER_PROTOCOL] Imebra must supply a base class for IO streaming
+[REQ_USER_PROTOCOL] Dicomhero must supply a base class for IO streaming
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-Since Imebra does not provide TLS, it must provide a base IO streaming class
+Since Dicomhero does not provide TLS, it must provide a base IO streaming class
 from which the user can build its own streaming class.
 
 
@@ -226,10 +226,10 @@ Children requirements:
 
 .. _REQ_DECOMPRESS_IMAGES:
 
-[REQ_DECOMPRESS_IMAGES] Imebra must be able to decompress images contained in the DICOM dataset
+[REQ_DECOMPRESS_IMAGES] Dicomhero must be able to decompress images contained in the DICOM dataset
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-Imebra must be able to extract decompressed images from the DICOM dataset.
+Dicomhero must be able to extract decompressed images from the DICOM dataset.
 The recognized transfer syntaxes for the image compression are:
 
 - jpeg baseline (8 bits per color channel lossy), transfer syntax 1.2.840.10008.1.2.4.50
@@ -248,10 +248,10 @@ Introduced risks:
 
 .. _REQ_COMPRESS_IMAGES:
 
-[REQ_COMPRESS_IMAGES] Imebra must be able to compress images and insert them in the DICOM dataset
+[REQ_COMPRESS_IMAGES] Dicomhero must be able to compress images and insert them in the DICOM dataset
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-Imebra must be able to compress images and insert them in the DICOM dataset.
+Dicomhero must be able to compress images and insert them in the DICOM dataset.
 
 The recognized transfer syntaxes for the image compression are:
 
@@ -271,7 +271,7 @@ The recognized transfer syntaxes for the image compression are:
 [REQ_PARSE_DICOMDIR] The library must be able to parse DICOMDIR structures and the records they contain
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-Imebra must be able to parse DICOMDIR structures and the records they contain.
+Dicomhero must be able to parse DICOMDIR structures and the records they contain.
 
 
 
@@ -283,7 +283,7 @@ Imebra must be able to parse DICOMDIR structures and the records they contain.
 [REQ_BUILD_DICOMDIR] The library must be able to build DICOMDIR structures and the records they contain
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-Imebra must be able to build DICOMDIR structures and the records they contain.
+Dicomhero must be able to build DICOMDIR structures and the records they contain.
 
 
 
@@ -322,7 +322,7 @@ The library should throw specific C++ exceptions to report errors.
 To be able to perform fast image processing, the client application needs access to the images or
 LUTs raw memory data.
 
-This implies that Imebra must be able to expose the raw memory used to store numeric tags (VRs: AT, FL, FD,
+This implies that Dicomhero must be able to expose the raw memory used to store numeric tags (VRs: AT, FL, FD,
 OF, OW, OD, SS, SL, UL, US).
 
 
@@ -422,10 +422,10 @@ Introduced risks:
 
 .. _REQ_PREPARE_RGB_IMAGE:
 
-[REQ_PREPARE_RGB_IMAGE] Imebra must be able to create an image ready to be displayed on the computer screen
+[REQ_PREPARE_RGB_IMAGE] Dicomhero must be able to create an image ready to be displayed on the computer screen
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-Imebra must be able to convert the images extracted from DICOM structures into RGBA images ready to
+Dicomhero must be able to convert the images extracted from DICOM structures into RGBA images ready to
 be displayed into computer screens
 
 
@@ -566,11 +566,11 @@ Implementation requirements
 
 .. _REQ_NO_CALLBACK:
 
-[REQ_NO_CALLBACK] User extensions should not be achievable by extending Imebra classes or by supplying callbacks
+[REQ_NO_CALLBACK] User extensions should not be achievable by extending Dicomhero classes or by supplying callbacks
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-Allowing the user to extend Imebra classes or to provide callback functions complicates the separation
-between the Imebra's interface and its implementation.
+Allowing the user to extend Dicomhero classes or to provide callback functions complicates the separation
+between the Dicomhero's interface and its implementation.
 
 
 Parent requirements:

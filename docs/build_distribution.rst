@@ -3,11 +3,11 @@
 Creating the source distribution from the code in the VCS
 =========================================================
 
-This section describes how to create an Imebra Source Distribution containing the full
+This section describes how to create an Dicomhero Source Distribution containing the full
 C++source code, the Java wrappers for Android, the HTML documentation, the test units code coverage
 information.
 
-The Imebra image is built on Ubuntu 16.04 with the following apt packages:
+The Dicomhero image is built on Ubuntu 16.04 with the following apt packages:
 
 - git
 - doxygen
@@ -56,7 +56,7 @@ In order to install the packages, type the following commands as root or prepend
     pip3 install sphinx_rtd_theme
 
 
-Then clone the Imebra git repository:
+Then clone the Dicomhero git repository:
 ::
 
     git clone git@bitbucket.org:binarno/imebra_git.git
@@ -78,9 +78,9 @@ Finally, cd into the imebra folder and execute ant to build the source distribut
 Versioning
 ==========
 
-Public releases of Imebra V5 are versioned according to the rules defined in `Semantic versioning <http://semver.org/>`_.
+Public releases of Dicomhero V5 are versioned according to the rules defined in `Semantic versioning <http://semver.org/>`_.
 
-Additionally, Imebra distributions contain a 4th number that indicates the branch revision number and is used to identify
+Additionally, Dicomhero distributions contain a 4th number that indicates the branch revision number and is used to identify
 builds that don't contain any change in the library's source code and interface but contains changes in the auxiliary files (e.g.
 changes in the documentation, tests units, etc).
 

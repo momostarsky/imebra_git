@@ -14,23 +14,23 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |C++ class                                      |Objective-C/Swift class                      |Description                    |
 +===============================================+=============================================+===============================+
-|:cpp:class:`imebra::Transform`                 |:cpp:class:`ImebraTransform`                 |Base class for all the         |
+|:cpp:class:`dicomhero::Transform`                 |:cpp:class:`DicomheroTransform`                 |Base class for all the         |
 |                                               |                                             |transforms                     |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::TransformsChain`           |:cpp:class:`ImebraTransformsChain`           |Apply a sequence of transforms |
+|:cpp:class:`dicomhero::TransformsChain`           |:cpp:class:`DicomheroTransformsChain`           |Apply a sequence of transforms |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::VOILUT`                    |:cpp:class:`ImebraVOILUT`                    |Apply a presentation VOI or    |
+|:cpp:class:`dicomhero::VOILUT`                    |:cpp:class:`DicomheroVOILUT`                    |Apply a presentation VOI or    |
 |                                               |                                             |LUT                            |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::VOIDescription`            |:cpp:class:`ImebraVOIDescription`            |Describes the VOI's parameters |
+|:cpp:class:`dicomhero::VOIDescription`            |:cpp:class:`DicomheroVOIDescription`            |Describes the VOI's parameters |
 |                                               |                                             |(center, width, function)      |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::ModalityVOILUT`            |:cpp:class:`ImebraModalityVOILUT`            |Apply the modality VOI or      |
+|:cpp:class:`dicomhero::ModalityVOILUT`            |:cpp:class:`DicomheroModalityVOILUT`            |Apply the modality VOI or      |
 |                                               |                                             |LUT                            |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::TransformHighBit`          |:cpp:class:`ImebraTransformHighBit`          |Shift the pixels bits          |
+|:cpp:class:`dicomhero::TransformHighBit`          |:cpp:class:`DicomheroTransformHighBit`          |Shift the pixels bits          |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::ColorTransformsFactory`    |:cpp:class:`ImebraColorTransformsFactory`    |Transform the color space      |
+|:cpp:class:`dicomhero::ColorTransformsFactory`    |:cpp:class:`DicomheroColorTransformsFactory`    |Transform the color space      |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 
 .. figure:: images/transforms.jpg
@@ -50,13 +50,13 @@ Transform
 C++
 ,,,
 
-.. doxygenclass:: imebra::Transform
+.. doxygenclass:: dicomhero::Transform
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraTransform
+.. doxygenclass:: DicomheroTransform
    :members:
 
 
@@ -66,13 +66,13 @@ TransformsChain
 C++
 ,,,
 
-.. doxygenclass:: imebra::TransformsChain
+.. doxygenclass:: dicomhero::TransformsChain
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraTransformsChain
+.. doxygenclass:: DicomheroTransformsChain
    :members:
 
 
@@ -85,13 +85,13 @@ VOILUT
 C++
 ,,,
 
-.. doxygenclass:: imebra::VOILUT
+.. doxygenclass:: dicomhero::VOILUT
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraVOILUT
+.. doxygenclass:: DicomheroVOILUT
    :members:
 
 
@@ -101,13 +101,13 @@ VOIDescription
 C++
 ,,,
 
-.. doxygenclass:: imebra::VOIDescription
+.. doxygenclass:: dicomhero::VOIDescription
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraVOIDescription
+.. doxygenclass:: DicomheroVOIDescription
    :members:
 
 
@@ -117,13 +117,13 @@ LUT
 C++
 ,,,
 
-.. doxygenclass:: imebra::LUT
+.. doxygenclass:: dicomhero::LUT
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraLUT
+.. doxygenclass:: DicomheroLUT
    :members:
 
 
@@ -133,13 +133,13 @@ ModalityVOILUT
 C++
 ,,,
 
-.. doxygenclass:: imebra::ModalityVOILUT
+.. doxygenclass:: dicomhero::ModalityVOILUT
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraModalityVOILUT
+.. doxygenclass:: DicomheroModalityVOILUT
    :members:
 
 
@@ -152,13 +152,13 @@ TransformHighBit
 C++
 ,,,
 
-.. doxygenclass:: imebra::TransformHighBit
+.. doxygenclass:: dicomhero::TransformHighBit
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraTransformHighBit
+.. doxygenclass:: DicomheroTransformHighBit
    :members:
 
 
@@ -168,11 +168,11 @@ ColorTransformsFactory
 C++
 ,,,
 
-.. doxygenclass:: imebra::ColorTransformsFactory
+.. doxygenclass:: dicomhero::ColorTransformsFactory
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraColorTransformsFactory
+.. doxygenclass:: DicomheroColorTransformsFactory
    :members:

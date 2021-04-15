@@ -11,15 +11,15 @@ The following classes are described in this chapter:
 +----------------------------------------+--------------------------------------+-------------------------------+
 |C++ class                               |Objective-C/Swift class               |Description                    |
 +========================================+======================================+===============================+
-|:cpp:class:`imebra::Image`              |:cpp:class:`ImebraImage`              |Stores a decompressed image    |
+|:cpp:class:`dicomhero::Image`              |:cpp:class:`DicomheroImage`              |Stores a decompressed image    |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::MutableImage`       |:cpp:class:`ImebraMutableImage`       |A mutable decompressed image   |
+|:cpp:class:`dicomhero::MutableImage`       |:cpp:class:`DicomheroMutableImage`       |A mutable decompressed image   |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::Overlay`            |:cpp:class:`ImebraOverlay`            |Stores overlay data            |
+|:cpp:class:`dicomhero::Overlay`            |:cpp:class:`DicomheroOverlay`            |Stores overlay data            |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::MutableOverlay`     |:cpp:class:`ImebraMutableOverlay`     |A mutable overlay data         |
+|:cpp:class:`dicomhero::MutableOverlay`     |:cpp:class:`DicomheroMutableOverlay`     |A mutable overlay data         |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`imebra::DrawBitmap`         |:cpp:class:`ImebraDrawBitmap`         |Render an image into a bitmap  |
+|:cpp:class:`dicomhero::DrawBitmap`         |:cpp:class:`DicomheroDrawBitmap`         |Render an image into a bitmap  |
 +----------------------------------------+--------------------------------------+-------------------------------+
 
 Images can be obtained from a :ref:`DataSet` object by calling the getImage or getImageApplyModality methods.
@@ -36,13 +36,13 @@ Image
 C++
 ,,,
 
-.. doxygenclass:: imebra::Image
+.. doxygenclass:: dicomhero::Image
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraImage
+.. doxygenclass:: DicomheroImage
    :members:
 
 
@@ -52,13 +52,13 @@ MutableImage
 C++
 ,,,
 
-.. doxygenclass:: imebra::MutableImage
+.. doxygenclass:: dicomhero::MutableImage
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraMutableImage
+.. doxygenclass:: DicomheroMutableImage
    :members:
 
 
@@ -68,13 +68,13 @@ Overlay
 C++
 ,,,
 
-.. doxygenclass:: imebra::Overlay
+.. doxygenclass:: dicomhero::Overlay
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraOverlay
+.. doxygenclass:: DicomheroOverlay
    :members:
 
 
@@ -84,13 +84,13 @@ MutableOverlay
 C++
 ,,,
 
-.. doxygenclass:: imebra::MutableOverlay
+.. doxygenclass:: dicomhero::MutableOverlay
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraMutableOverlay
+.. doxygenclass:: DicomheroMutableOverlay
    :members:
 
 
@@ -103,11 +103,11 @@ DrawBitmap
 C++
 ,,,
 
-.. doxygenclass:: imebra::DrawBitmap
+.. doxygenclass:: dicomhero::DrawBitmap
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraDrawBitmap
+.. doxygenclass:: DicomheroDrawBitmap
    :members:

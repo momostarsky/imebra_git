@@ -1,46 +1,46 @@
 .. _compiling-imebra-label:
 
-Compiling Imebra
+Compiling Dicomhero
 ================
 
-This section explains how to compile Imebra from the source distribution.
+This section explains how to compile Dicomhero from the source distribution.
 You can download the source distribution from https://imebra.com, or you can create a source distribution
 by following the instructions at :ref:`build-distribution-label`
 
-The result of the Imebra compilation is a shared library for your operating system of choice.
+The result of the Dicomhero compilation is a shared library for your operating system of choice.
 
-The Imebra Source Distribution includes:
+The Dicomhero Source Distribution includes:
 
 - the source code for the library
 - the source code for the tests
 - pre-built documentation
 
 
-Compiling the C++ version of Imebra
+Compiling the C++ version of Dicomhero
 -----------------------------------
 
 Prerequisites
 .............
 
-In order to build the library from the Imebra Source Distribution you need:
+In order to build the library from the Dicomhero Source Distribution you need:
 
-- the source distribution of Imebra, available here: https://imebra.com/get-it/
+- the source distribution of Dicomhero, available here: https://imebra.com/get-it/
 - a modern C++ compiler (GCC, clang, Visual Studio, etc)
 - CMake version 2.8 or newer (https://cmake.org/)
 
 
 
-Building Imebra
+Building Dicomhero
 ...............
 
 The root folder of the source distributions contains a CMakeLists file, which contains the information
 needed by CMake to generate a solution file for your platform (a make file, a VisualStudio solution, etc).
 
-To generate the Imebra shared library, execute the following steps:
+To generate the Dicomhero shared library, execute the following steps:
 
 1. Create a folder that will contain the result of the compilation (artifacts)
 2. cd into the created artifacts folder
-3. execute cmake with the path to the Imebra's distributrion root folder as parameter
+3. execute cmake with the path to the Dicomhero's distributrion root folder as parameter
 4. execute cmake with the --build option, and on Windows optionally specify the build configuration
 5. run the tests with ctest -V .
 
@@ -127,7 +127,7 @@ On macOS, CMake will generate a build for macOS or iOS.
 It is recommended to use the CMake Xcode generator when generating the build script.
 
 The build script for macOS is the default one and can be obtained by running the following commands
-(replace PATH_TO_IMEBRA_DISTRIBUTION with the path to Imebra):
+(replace PATH_TO_IMEBRA_DISTRIBUTION with the path to Dicomhero):
 
 ::
 
@@ -142,7 +142,7 @@ The generated build script can be opened directly with Xcode or can be built by 
     cmake --build . --config Release
 
 In order to generate a build for iOS you have to set the CMAKE_SYSTEM_NAME variable 
-(replace PATH_TO_IMEBRA_DISTRIBUTION with the path to Imebra):
+(replace PATH_TO_IMEBRA_DISTRIBUTION with the path to Dicomhero):
 
 ::
 
@@ -162,19 +162,19 @@ or (for the simulator build):
 
     cmake --build . --config Release -- -sdk iphonesimulator
 
-.. warning:: iOS applications based on Imebra need to be linked also with libiconv.a or libiconv.tbd.
+.. warning:: iOS applications based on Dicomhero need to be linked also with libiconv.a or libiconv.tbd.
 
 More information about the cross compilation for iOS can be found here: https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#cross-compiling-for-ios-tvos-or-watchos
 
 
-Using Imebra with Swift
+Using Dicomhero with Swift
 '''''''''''''''''''''''
-Imebra can be imported into a Swift project.
+Dicomhero can be imported into a Swift project.
 
 After compiling the library for OS-X or iOS, import the library's Objective-C header into your Swift project.
 
 When using the command line add the flag -import-objc-header.
-For instance, the following command line instruction launches the swift compiler and instructs it to load the imebra header and link with Imebra and iconv
+For instance, the following command line instruction launches the swift compiler and instructs it to load the imebra header and link with Dicomhero and iconv
 
 ::
 
@@ -183,25 +183,25 @@ For instance, the following command line instruction launches the swift compiler
 When using XCode open the target Build Settings and under "Swift Compiler/ObjectiveC Bridging Header" specify the path to imebra_location/wrappers/objectivec/include/imebraobjc/imebra.h.
 
 
-Compiling the Android version of Imebra
+Compiling the Android version of Dicomhero
 ---------------------------------------
 
 Prerequisites
 .............
 
-In order to build the Android version of Imebra you need:
+In order to build the Android version of Dicomhero you need:
 
-- the source distribution of Imebra, available here: https://imebra.com/get-it/
+- the source distribution of Dicomhero, available here: https://imebra.com/get-it/
 - Android Studio
 - Android SDK
 - Android NDK
 
-Building Imebra
+Building Dicomhero
 ...............
 
 The Android version of the library needs both the Java source code (located in the wrappers/javaWrapper folder) and the C++ source code (located in the library folder)
 
-To generate the Imebra Jar library:
+To generate the Dicomhero Jar library:
 
 - Launch Android Studio
 - Open the gradle project in the wrappers/javaWrapper folder
@@ -210,21 +210,21 @@ To generate the Imebra Jar library:
 
 .. _compiling-imebra-java-linux:
 
-Compiling the Java version of Imebra for Linux
+Compiling the Java version of Dicomhero for Linux
 ----------------------------------------------
 
 Prerequisites
 .............
 
-In order to build the Java version of Imebra you need:
+In order to build the Java version of Dicomhero you need:
 
-- the source distribution of Imebra, available here: https://imebra.com/get-it/
+- the source distribution of Dicomhero, available here: https://imebra.com/get-it/
 - a modern C++ compiler (GCC or clang)
 - CMake version 2.8 or newer (https://cmake.org/)
 - the Java JDK
 - the Java JNI headers
 
-Building Imebra
+Building Dicomhero
 ...............
 
 The Java version of the library needs both the Java source code (located in the wrappers/javaWrapper folder) and the C++ source code (located in the library folder).
@@ -235,11 +235,11 @@ The C++ code will be compiled into a dynamic library, while the java code can be
 Compiling the C++ code
 ,,,,,,,,,,,,,,,,,,,,,,
 
-To generate the native Imebra dynamic library (libimebrajni):
+To generate the native Dicomhero dynamic library (libimebrajni):
 
 1. Create a folder that will contain the result of the compilation (artifacts)
 2. cd into the created artifacts folder
-3. execute cmake with the path to the Imebra's "wrappers/javaWrapper" folder as parameter
+3. execute cmake with the path to the Dicomhero's "wrappers/javaWrapper" folder as parameter
 4. execute cmake with the --build option
 
 For instance:
@@ -264,7 +264,7 @@ or add it directly to your Java application.
 Loading the native library
 ..........................
 
-Before your application can call any method on any Imebra class it must load the native dynamic library.
+Before your application can call any method on any Dicomhero class it must load the native dynamic library.
 
 In your application startup code add:
 

@@ -11,14 +11,14 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |C++ class                                      |Objective-C/Swift class                      |Description                    |
 +===============================================+=============================================+===============================+
-|:cpp:class:`imebra::UIDGeneratorFactory`       |:cpp:class:`ImebraUIDGeneratorFactory`       |Stored a complete DICOM        |
+|:cpp:class:`dicomhero::UIDGeneratorFactory`       |:cpp:class:`DicomheroUIDGeneratorFactory`       |Stored a complete DICOM        |
 |                                               |                                             |structure                      |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::BaseUIDGenerator`          |:cpp:class:`ImebraBaseUIDGenerator`          |Stores a single DICOM tag      |
+|:cpp:class:`dicomhero::BaseUIDGenerator`          |:cpp:class:`DicomheroBaseUIDGenerator`          |Stores a single DICOM tag      |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::SerialNumberUIDGenerator`  |:cpp:class:`ImebraSerialNumberUIDGenerator`  |Identifies a tag               |
+|:cpp:class:`dicomhero::SerialNumberUIDGenerator`  |:cpp:class:`DicomheroSerialNumberUIDGenerator`  |Identifies a tag               |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::RandomUIDGenerator`        |:cpp:class:`ImebraRandomUIDGenerator`        |Read data from a tag           |
+|:cpp:class:`dicomhero::RandomUIDGenerator`        |:cpp:class:`DicomheroRandomUIDGenerator`        |Read data from a tag           |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 
 .. figure:: images/uidgenerators.jpg
@@ -28,7 +28,7 @@ The following classes are described in this chapter:
 
    Class diagram of the UID generators related classes
 
-Imebra supplies two generators that are able to produce UIDs that can be used as SOP instances UID:
+Dicomhero supplies two generators that are able to produce UIDs that can be used as SOP instances UID:
 
 - :ref:`SerialNumberUIDGenerator`, to be used when the software has a mean to know its own serial number
 - :ref:`RandomUIDGenerator`, to be used when the software is not able to retrieve its own serial number
@@ -53,13 +53,13 @@ UIDGeneratorFactory
 C++
 ,,,
 
-.. doxygenclass:: imebra::UIDGeneratorFactory
+.. doxygenclass:: dicomhero::UIDGeneratorFactory
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraUIDGeneratorFactory
+.. doxygenclass:: DicomheroUIDGeneratorFactory
    :members:
 
 
@@ -74,13 +74,13 @@ BaseUIDGenerator
 C++
 ,,,
 
-.. doxygenclass:: imebra::BaseUIDGenerator
+.. doxygenclass:: dicomhero::BaseUIDGenerator
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraBaseUIDGenerator
+.. doxygenclass:: DicomheroBaseUIDGenerator
    :members:
 
 
@@ -92,13 +92,13 @@ SerialNumberUIDGenerator
 C++
 ,,,
 
-.. doxygenclass:: imebra::SerialNumberUIDGenerator
+.. doxygenclass:: dicomhero::SerialNumberUIDGenerator
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraSerialNumberUIDGenerator
+.. doxygenclass:: DicomheroSerialNumberUIDGenerator
    :members:
 
 
@@ -110,13 +110,13 @@ RandomUIDGenerator
 C++
 ,,,
 
-.. doxygenclass:: imebra::RandomUIDGenerator
+.. doxygenclass:: dicomhero::RandomUIDGenerator
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraRandomUIDGenerator
+.. doxygenclass:: DicomheroRandomUIDGenerator
    :members:
 
 

@@ -11,25 +11,25 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |C++ class                                      |Objective-C/Swift class                      |Description                    |
 +===============================================+=============================================+===============================+
-|:cpp:class:`imebra::PresentationContext`       |:cpp:class:`ImebraPresentationContext`       |Stores an abstract syntax and  |
+|:cpp:class:`dicomhero::PresentationContext`       |:cpp:class:`DicomheroPresentationContext`       |Stores an abstract syntax and  |
 |                                               |                                             |the list of allowed transfer   |
 |                                               |                                             |syntaxes                       |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::PresentationContexts`      |:cpp:class:`ImebraPresentationContexts`      |Stores a list of Presentation  |
+|:cpp:class:`dicomhero::PresentationContexts`      |:cpp:class:`DicomheroPresentationContexts`      |Stores a list of Presentation  |
 |                                               |                                             |contexts                       |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::AssociationMessage`        |:cpp:class:`ImebraAssociationMessage`        |Stores a message sent through  |
+|:cpp:class:`dicomhero::AssociationMessage`        |:cpp:class:`DicomheroAssociationMessage`        |Stores a message sent through  |
 |                                               |                                             |an association                 |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::MutableAssociationMessage` |:cpp:class:`ImebraMutableAssociationMessage` |A mutable message (used to     |
+|:cpp:class:`dicomhero::MutableAssociationMessage` |:cpp:class:`DicomheroMutableAssociationMessage` |A mutable message (used to     |
 |                                               |                                             |create a message)              |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::AssociationBase`           |:cpp:class:`ImebraAssociationBase`           |Base class for the associations|
+|:cpp:class:`dicomhero::AssociationBase`           |:cpp:class:`DicomheroAssociationBase`           |Base class for the associations|
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::AssociationSCU`            |:cpp:class:`ImebraAssociationSCU`            |An SCU association (Service    |
+|:cpp:class:`dicomhero::AssociationSCU`            |:cpp:class:`DicomheroAssociationSCU`            |An SCU association (Service    |
 |                                               |                                             |user)                          |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::AssociationSCP`            |:cpp:class:`ImebraAssociationSCP`            |An SCP association (service    |
+|:cpp:class:`dicomhero::AssociationSCP`            |:cpp:class:`DicomheroAssociationSCP`            |An SCP association (service    |
 |                                               |                                             |provider)                      |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 
@@ -52,7 +52,7 @@ connect an SCU to a remote SCP are as follow:
 
 - Create a :ref:`TCPStream` which connects to the remote SCP
 - Allocate a :ref:`StreamReader` and a :ref:`StreamWriter` connected to the :ref:`TCPStream` input and output streams
-  (use :cpp:member:`imebra::DataSet::getStreamInput` and :cpp:member:`imebra::DataSet::getStreamOutput`)
+  (use :cpp:member:`dicomhero::DataSet::getStreamInput` and :cpp:member:`dicomhero::DataSet::getStreamOutput`)
 - Allocate a :ref:`PresentationContexts` and fill it with :ref:`PresentationContext` objects that represent the requested
   presentation contexts (abstract syntaxes and supported transfer syntaxes)
 - Allocate a :ref:`AssociationSCU` which in the constructor will perform the association negotiation through the
@@ -80,13 +80,13 @@ PresentationContext
 C++
 ,,,
 
-.. doxygenclass:: imebra::PresentationContext
+.. doxygenclass:: dicomhero::PresentationContext
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraPresentationContext
+.. doxygenclass:: DicomheroPresentationContext
    :members:
 
 
@@ -96,13 +96,13 @@ PresentationContexts
 C++
 ,,,
 
-.. doxygenclass:: imebra::PresentationContexts
+.. doxygenclass:: dicomhero::PresentationContexts
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraPresentationContexts
+.. doxygenclass:: DicomheroPresentationContexts
    :members:
 
 
@@ -118,13 +118,13 @@ AssociationBase
 C++
 ,,,
 
-.. doxygenclass:: imebra::AssociationBase
+.. doxygenclass:: dicomhero::AssociationBase
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraAssociationBase
+.. doxygenclass:: DicomheroAssociationBase
    :members:
 
 
@@ -134,13 +134,13 @@ AssociationSCU
 C++
 ,,,
 
-.. doxygenclass:: imebra::AssociationSCU
+.. doxygenclass:: dicomhero::AssociationSCU
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraAssociationSCU
+.. doxygenclass:: DicomheroAssociationSCU
    :members:
 
 
@@ -150,13 +150,13 @@ AssociationSCP
 C++
 ,,,
 
-.. doxygenclass:: imebra::AssociationSCP
+.. doxygenclass:: dicomhero::AssociationSCP
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraAssociationSCP
+.. doxygenclass:: DicomheroAssociationSCP
    :members:
 
 
@@ -169,13 +169,13 @@ AssociationMessage
 C++
 ,,,
 
-.. doxygenclass:: imebra::AssociationMessage
+.. doxygenclass:: dicomhero::AssociationMessage
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraAssociationMessage
+.. doxygenclass:: DicomheroAssociationMessage
    :members:
 
 
@@ -185,12 +185,12 @@ MutableAssociationMessage
 C++
 ,,,
 
-.. doxygenclass:: imebra::MutableAssociationMessage
+.. doxygenclass:: dicomhero::MutableAssociationMessage
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraMutableAssociationMessage
+.. doxygenclass:: DicomheroMutableAssociationMessage
    :members:
 

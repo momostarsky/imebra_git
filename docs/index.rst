@@ -1,4 +1,4 @@
-.. Imebra documentation master file, created by
+.. Dicomhero documentation master file, created by
    sphinx-quickstart on Mon Jan 11 19:08:56 2016.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
@@ -6,12 +6,12 @@
 .. default-domain:: cpp
 
 
-Imebra
+Dicomhero
 ======
 
 .. toctree::
    :maxdepth: 3
-   :caption: Download Imebra
+   :caption: Download Dicomhero
    
    download
    

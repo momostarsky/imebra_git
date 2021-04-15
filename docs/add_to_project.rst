@@ -33,8 +33,8 @@ Compile DICOMHERO by following the instructions at :ref:`compiling-dicomhero-jav
 
 In order to use DICOMHERO in your Java project, simply add the Java source code in "wrappers/javaWrapper/src" to your application.
 
-In your code call System.loadLibrary(“dicomhero6jni”) before using any of the Imebra methods.
-All the Imebra classes are in the package “com.dicomhero6”.
+In your code call System.loadLibrary(“dicomhero6jni”) before using any of the Dicomhero methods.
+All the Dicomhero classes are in the package “com.dicomhero6”.
 
 When launching your application, define the property "java.library.path" with the value of the folder containing the DICOMHERO JNI shared library (libdicomhero6jni.so).
 

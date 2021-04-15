@@ -16,7 +16,7 @@ In Java, everything is in the package imebra:
 
     import com.imebra.*;
 
-In Java, before using any Imebra class you have to load the native code contained in the jar:
+In Java, before using any Dicomhero class you have to load the native code contained in the jar:
 
 .. code-block:: java
     
@@ -26,20 +26,20 @@ In Java, before using any Imebra class you have to load the native code containe
 Loading files
 -------------
 
-Imebra can read DICOM files and Jpeg files.
+Dicomhero can read DICOM files and Jpeg files.
 
-Both the DICOM and the Jpeg codes generate an in-memory DICOM structure represented by the :cpp:class:`imebra::DataSet` class
+Both the DICOM and the Jpeg codes generate an in-memory DICOM structure represented by the :cpp:class:`dicomhero::DataSet` class
 (also the Jpeg codec produces a DICOM structure containing an embedded JPEG file).
 
-Imebra chooses the correct codec automatically according to the stream's content.
+Dicomhero chooses the correct codec automatically according to the stream's content.
 
-To create an :cpp:class:`imebra::DataSet` from a stream use the class :cpp:class:`imebra::CodecFactory`.
+To create an :cpp:class:`dicomhero::DataSet` from a stream use the class :cpp:class:`dicomhero::CodecFactory`.
 
 In C++:
 
 .. code-block:: c++
 
-    imebra::DataSet loadedDataSet(imebra::CodecFactory::load("DicomFile.dcm"));
+    dicomhero::DataSet loadedDataSet(dicomhero::CodecFactory::load("DicomFile.dcm"));
 
 
 In Java:
@@ -51,7 +51,7 @@ In Java:
 
 The previous code loads the file DicomFile.dcm.
 
-Imebra can perform a "lazy loading", which leaves the data on the input stream and loads it into memory
+Dicomhero can perform a "lazy loading", which leaves the data on the input stream and loads it into memory
 only when necessary; large tags that are not needed are loaded only when necessary and then discarded from memory 
 until they are needed once again.
 
@@ -66,7 +66,7 @@ Lazy loading in C++:
 .. code-block:: c++
 
     // Load tags in memory only if their size is equal or smaller than 2048 bytes
-    imebra::DataSet loadedDataSet(imebra::CodecFactory::load("DicomFile.dcm", 2048));
+    dicomhero::DataSet loadedDataSet(dicomhero::CodecFactory::load("DicomFile.dcm", 2048));
 
 
 in Java
@@ -88,31 +88,31 @@ fails).
 
 In order to retrieve a tag's value, use one of the following methods
 
-- :cpp:member:`imebra::DataSet::getSignedLong`
-- :cpp:member:`imebra::DataSet::getUnsignedLong`
-- :cpp:member:`imebra::DataSet::getDouble`
-- :cpp:member:`imebra::DataSet::getString`
-- :cpp:member:`imebra::DataSet::getUnicodeString` (C++ only)
-- :cpp:member:`imebra::DataSet::getPatientName`
-- :cpp:member:`imebra::DataSet::getUnicodePatientName` (C++ only)
-- :cpp:member:`imebra::DataSet::getAge`
-- :cpp:member:`imebra::DataSet::getDate`
+- :cpp:member:`dicomhero::DataSet::getSignedLong`
+- :cpp:member:`dicomhero::DataSet::getUnsignedLong`
+- :cpp:member:`dicomhero::DataSet::getDouble`
+- :cpp:member:`dicomhero::DataSet::getString`
+- :cpp:member:`dicomhero::DataSet::getUnicodeString` (C++ only)
+- :cpp:member:`dicomhero::DataSet::getPatientName`
+- :cpp:member:`dicomhero::DataSet::getUnicodePatientName` (C++ only)
+- :cpp:member:`dicomhero::DataSet::getAge`
+- :cpp:member:`dicomhero::DataSet::getDate`
 
-Alternatively, you can retrieve a :cpp:class:`imebra::ReadingDataHandler` (via :cpp:member:`imebra::DataSet::getReadingDataHandler`) and 
+Alternatively, you can retrieve a :cpp:class:`dicomhero::ReadingDataHandler` (via :cpp:member:`dicomhero::DataSet::getReadingDataHandler`) and 
 call the methods it offers to read the tag's values.
 
-If you are reading a tag containing numeric values then you can retrieve the Tag's :cpp:class:`imebra::ReadingNumericDataHandler`
-(via :cpp:member:`imebra::DataSet::getReadingDataHandlerNumeric`) which exposes the raw memory that stores the actual data: in some cases
+If you are reading a tag containing numeric values then you can retrieve the Tag's :cpp:class:`dicomhero::ReadingNumericDataHandler`
+(via :cpp:member:`dicomhero::DataSet::getReadingDataHandlerNumeric`) which exposes the raw memory that stores the actual data: in some cases
 this allow for faster information processing.
 
-In order to identify the tag to read you must use the class :cpp:class:`imebra::TagId` which takes as parameters the group ID and the tag ID or
-an :cpp:enum:`imebra::tagId_t` enumeration.
+In order to identify the tag to read you must use the class :cpp:class:`dicomhero::TagId` which takes as parameters the group ID and the tag ID or
+an :cpp:enum:`dicomhero::tagId_t` enumeration.
 
 This is how you retrieve the patient's name from the DataSet in C++:
 
 .. code-block:: c++
 
-    imebra::UnicodePatientName patientName = loadedDataSet.getUnicodePatientName(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0);
+    dicomhero::UnicodePatientName patientName = loadedDataSet.getUnicodePatientName(dicomhero::TagId(dicomhero::tagId_t::PatientName_0010_0010), 0);
 
     // A patient's name contains 3 values, representing different interpretations of the same name
     // (alphabetic representation, ideographic representation and phonetic representation).
@@ -131,15 +131,15 @@ and in Java:
     String patientNameIdeographic = patientName.getIdeographicRepresentation();
 
 
-Note that the previous code will throw one of the exceptions derived from :cpp:class:`imebra::MissingDataElementError`
-if the desidered patient name component is not present in the :cpp:class:`imebra::DataSet` (in Golang a panic is raised).
+Note that the previous code will throw one of the exceptions derived from :cpp:class:`dicomhero::MissingDataElementError`
+if the desidered patient name component is not present in the :cpp:class:`dicomhero::DataSet` (in Golang a panic is raised).
 
 You can specify a return value that is returned when the value is not present in order to avoid throwing an exception when
 a tag's value cannot be found in the DataSet :
 
 .. code-block:: c++
 
-    imebra::UnicodePatientName patientName = loadedDataSet.getUnicodePatientName(imebra::TagId(imebra::tagId_t::PatientName_0010_0010), 0, imebra::UnicodePatientName(L"", L"", L""));
+    dicomhero::UnicodePatientName patientName = loadedDataSet.getUnicodePatientName(dicomhero::TagId(dicomhero::tagId_t::PatientName_0010_0010), 0, dicomhero::UnicodePatientName(L"", L"", L""));
 
 in Java:
 
@@ -151,12 +151,12 @@ in Java:
 Retrieving an image
 -------------------
 
-Imebra exposes two methods to retrieve images from a :cpp:class:`imebra::DataSet`:
+Dicomhero exposes two methods to retrieve images from a :cpp:class:`dicomhero::DataSet`:
 
-- :cpp:member:`imebra::DataSet::getImage`
-- :cpp:member:`imebra::DataSet::getImageApplyModalityTransform`
+- :cpp:member:`dicomhero::DataSet::getImage`
+- :cpp:member:`dicomhero::DataSet::getImageApplyModalityTransform`
 
-The second method applies to the image the :cpp:member:`imebra::DataSet::ModalityVOILUT` transform automatically if present
+The second method applies to the image the :cpp:member:`dicomhero::DataSet::ModalityVOILUT` transform automatically if present
 and is the reccommended method.
 
 The retrieved image will have the color space & bits per channel as defined in the DataSet.
@@ -166,7 +166,7 @@ To retrieve an image in C++:
 .. code-block:: c++
 
     // Retrieve the first image (index = 0)
-    imebra::Image image(loadedDataSet.getImageApplyModalityTransform(0));
+    dicomhero::Image image(loadedDataSet.getImageApplyModalityTransform(0));
 
     // Get the color space
     std::string colorSpace = image.getColorSpace();
@@ -191,9 +191,9 @@ To retrieve an image in Java:
     long height = image.getHeight();
 
 
-In order to access the image's pixels you can obtain a :cpp:class:`imebra::ReadingDataHandlerNumeric` and then
-access the individual pixels via :cpp:member:`imebra::ReadingDataHandler::getSignedLong` or 
-:cpp:member:`imebra::ReadingDataHandler::getUnsignedLong`. For faster processing you could also access
+In order to access the image's pixels you can obtain a :cpp:class:`dicomhero::ReadingDataHandlerNumeric` and then
+access the individual pixels via :cpp:member:`dicomhero::ReadingDataHandler::getSignedLong` or 
+:cpp:member:`dicomhero::ReadingDataHandler::getUnsignedLong`. For faster processing you could also access
 the raw memory containing the pixels.
 
 This is how you scan all the pixels in C++, the slow way
@@ -204,7 +204,7 @@ This is how you scan all the pixels in C++, the slow way
     // (see previous code snippet)
 
     // Retrieve the data handler
-    imebra::ReadingDataHandlerNumeric dataHandler(image.getReadingDataHandler());
+    dicomhero::ReadingDataHandlerNumeric dataHandler(image.getReadingDataHandler());
 
     for(std::uint32 scanY(0); scanY != height; ++scanY)
     {
@@ -246,13 +246,13 @@ How to access the pixels in Java:
     }
 
 
-In order to make things faster you can retrieve the memory containing the data in raw format from the :cpp:class:`imebra::ReadingDataHandlerNumeric`
+In order to make things faster you can retrieve the memory containing the data in raw format from the :cpp:class:`dicomhero::ReadingDataHandlerNumeric`
 object:
 
 .. code-block:: c++
 
     // Retrieve the data handler
-    imebra::ReadingDataHandlerNumeric dataHandler(image.getReadingDataHandler());
+    dicomhero::ReadingDataHandlerNumeric dataHandler(image.getReadingDataHandler());
 
     // Get the memory pointer and the size (in bytes)
     size_t dataLength;
@@ -275,27 +275,27 @@ Usually, the computer monitor accepts 8 bit per channel RGB (or RGBA) images, wh
 may have more than 8 bits per channel (up to 32) and may have a different color space (for instance MONOCHROME1, MONOCHROME2,
 YBR_FULL, etc).
 
-While the necessary transforms are performed automatically by the :cpp:class:`imebra::DrawBitmap` class, some 
+While the necessary transforms are performed automatically by the :cpp:class:`dicomhero::DrawBitmap` class, some 
 transformations must still be performed by the client application.
 
-In particular, the :cpp:class:`imebra::DrawBitmap` class takes care of:
+In particular, the :cpp:class:`dicomhero::DrawBitmap` class takes care of:
 
 - converting the color space
 - shifting the channels values to 8 bit
 
-The client application must take care of applying the :cpp:class:`imebra::ModalityVOILUT` transform (but this is easily done
-by calling :cpp:member:`imebra::DataSet::getImageApplyModalityTransform` instead of :cpp:member:`imebra::DataSet::getImage`)
-and the :cpp:member:`imebra::VOILUT` transform.
+The client application must take care of applying the :cpp:class:`dicomhero::ModalityVOILUT` transform (but this is easily done
+by calling :cpp:member:`dicomhero::DataSet::getImageApplyModalityTransform` instead of :cpp:member:`dicomhero::DataSet::getImage`)
+and the :cpp:member:`dicomhero::VOILUT` transform.
 
-The :cpp:member:`imebra::VOILUT` can be applied only to monochromatic images and changes the image's contrast to enhance
+The :cpp:member:`dicomhero::VOILUT` can be applied only to monochromatic images and changes the image's contrast to enhance
 different portions of the image (for instance just the bones or the tissue).
 
 Usually, the dataSet contains few tags that store some pre-defined settings for the image: the client application should apply
 those values to the VOILUT transform.
 The pre-defined settings come as pairs of center/width values or as Lookup Tables stored in the DICOM sequence 0028,3010.
 
-To retrieve the pairs center/width use the method :cpp:member:`imebra::DataSet::getVOIs`, while to retrieve the LUTs use
-the method :cpp:member:`imebra::DataSet::getLUT`.
+To retrieve the pairs center/width use the method :cpp:member:`dicomhero::DataSet::getVOIs`, while to retrieve the LUTs use
+the method :cpp:member:`dicomhero::DataSet::getLUT`.
 
 in C++
 
@@ -303,26 +303,26 @@ in C++
 
     // The transforms chain will contain all the transform that we want to 
     // apply to the image before displaying it
-    imebra::TransformsChain chain;
+    dicomhero::TransformsChain chain;
 
-    if(imebra::ColorTransformsFactory::isMonochrome(image.getColorSpace())
+    if(dicomhero::ColorTransformsFactory::isMonochrome(image.getColorSpace())
     {
         // Allocate a VOILUT transform. If the DataSet does not contain any pre-defined
         //  settings then we will find the optimal ones.
         VOILUT voilutTransform;
 
         // Retrieve the VOIs (center/width pairs)
-        imebra::vois_t vois = loadedDataSet.getVOIs();
+        dicomhero::vois_t vois = loadedDataSet.getVOIs();
 
         // Retrieve the LUTs
-        std::list<imebra::LUT> luts;
+        std::list<dicomhero::LUT> luts;
         for(size_t scanLUTs(0); ; ++scanLUTs)
         {
             try
             {
-                luts.push_back(loadedDataSet.getLUT(imebra::TagId(imebra::tagId_t::VOILUTSequence_0028_3010), scanLUTs));
+                luts.push_back(loadedDataSet.getLUT(dicomhero::TagId(dicomhero::tagId_t::VOILUTSequence_0028_3010), scanLUTs));
             }
-            catch(const imebra::MissingDataElementError&)
+            catch(const dicomhero::MissingDataElementError&)
             {
                 break;
             }
@@ -398,7 +398,7 @@ in Java
 
 
 
-Now we can display the image. We use :cpp:class:`imebra::DrawBitmap` to obtain an RGB image
+Now we can display the image. We use :cpp:class:`dicomhero::DrawBitmap` to obtain an RGB image
 ready to be displayed.
 
 In C++
@@ -406,24 +406,24 @@ In C++
 .. code-block:: c++
 
     // We create a DrawBitmap that always apply the chain transform before getting the RGB image
-    imebra::DrawBitmap draw(chain);
+    dicomhero::DrawBitmap draw(chain);
 
     // Ask for the size of the buffer (in bytes)
-    size_t requestedBufferSize = draw.getBitmap(image, imebra::drawBitmapType_t::drawBitmapRGBA, 4, 0, 0);
+    size_t requestedBufferSize = draw.getBitmap(image, dicomhero::drawBitmapType_t::drawBitmapRGBA, 4, 0, 0);
     
     // Now we allocate the buffer and then ask DrawBitmap to fill it
     std::string buffer(requestedBufferSize, char(0));
-    draw.getBitmap(image, imebra::drawBitmapType_t::drawBitmapRGBA, 4, &(buffer.at(0)), requestedBufferSize);
+    draw.getBitmap(image, dicomhero::drawBitmapType_t::drawBitmapRGBA, 4, &(buffer.at(0)), requestedBufferSize);
 
-On OS-X or iOS you can use the provided method :cpp:func:`imebra::getImebraImage` to obtain a NSImage or an UIImage:
+On OS-X or iOS you can use the provided method :cpp:func:`dicomhero::getDicomheroImage` to obtain a NSImage or an UIImage:
 
 .. code-block:: c++
 
     // We create a DrawBitmap that always apply the chain transform before getting the RGB image
-    imebra::DrawBitmap draw(chain);
+    dicomhero::DrawBitmap draw(chain);
 
     // Get an NSImage (or UIImage on iOS)
-    NSImage* nsImage = getImebraImage(*ybrImage, draw);
+    NSImage* nsImage = getDicomheroImage(*ybrImage, draw);
 
 
 In Java
@@ -434,7 +434,7 @@ In Java
     com.imebra.DrawBitmap draw = new com.imebra.DrawBitmap(chain);
 
     // Ask for the size of the buffer (in bytes)
-    long requestedBufferSize = draw.getBitmap(image, imebra::drawBitmapType_t::drawBitmapRGBA, 4, new byte[0]);
+    long requestedBufferSize = draw.getBitmap(image, dicomhero::drawBitmapType_t::drawBitmapRGBA, 4, new byte[0]);
     
     byte buffer[] = new byte[(int)requestedBufferSize]; // Ideally you want to reuse this in subsequent calls to getBitmap()
     ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
@@ -450,7 +450,7 @@ In Java
 Creating an empty DataSet
 -------------------------
 
-When creating an empty :cpp:class:`imebra::DataSet` you have to specify the transfer syntax that will be used to encode it.
+When creating an empty :cpp:class:`dicomhero::DataSet` you have to specify the transfer syntax that will be used to encode it.
 The transfer syntax specifies also how the embedded images are compressed.
 
 The accepted transfer syntaxes are:
@@ -469,7 +469,7 @@ To create an empty DataSet in C++:
 .. code-block:: c++
 
     // We specify the transfer syntax and the charset
-    imebra::MutableDataSet dataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6");
+    dicomhero::MutableDataSet dataSet("1.2.840.10008.1.2.1", "ISO 2022 IR 6");
 
 
 In Java:
@@ -496,15 +496,15 @@ Once the DataSet has been loaded your application can retrieve the tags stored i
 
 In order to write a tag's value, use one of the following methods
 
-- :cpp:member:`imebra::MutableDataSet::setSignedLong`
-- :cpp:member:`imebra::MutableDataSet::setUnsignedLong`
-- :cpp:member:`imebra::MutableDataSet::setDouble`
-- :cpp:member:`imebra::MutableDataSet::setString`
-- :cpp:member:`imebra::MutableDataSet::setUnicodeString` (C++ only)
-- :cpp:member:`imebra::MutableDataSet::setpatientName`
-- :cpp:member:`imebra::MutableDataSet::setUnicodePatientName` (C++ only)
-- :cpp:member:`imebra::MutableDataSet::setAge`
-- :cpp:member:`imebra::MutableDataSet::setDate`
+- :cpp:member:`dicomhero::MutableDataSet::setSignedLong`
+- :cpp:member:`dicomhero::MutableDataSet::setUnsignedLong`
+- :cpp:member:`dicomhero::MutableDataSet::setDouble`
+- :cpp:member:`dicomhero::MutableDataSet::setString`
+- :cpp:member:`dicomhero::MutableDataSet::setUnicodeString` (C++ only)
+- :cpp:member:`dicomhero::MutableDataSet::setpatientName`
+- :cpp:member:`dicomhero::MutableDataSet::setUnicodePatientName` (C++ only)
+- :cpp:member:`dicomhero::MutableDataSet::setAge`
+- :cpp:member:`dicomhero::MutableDataSet::setDate`
 
 The WritingDataHandler and WritingDataHandlerNumeric classes contain the same setters but allow to access all the tags' elements, not just
 the first one.
@@ -515,7 +515,7 @@ In C++:
 
 .. code-block:: c++
 
-    dataSet.setUnicodePatientName(TagId(imebra::tagId_t::PatientName_0010_0010), UnicodePatientName(L"Patient^Name", "", ""));
+    dataSet.setUnicodePatientName(TagId(dicomhero::tagId_t::PatientName_0010_0010), UnicodePatientName(L"Patient^Name", "", ""));
 
 In Java:
 
@@ -534,7 +534,7 @@ in C++
 .. code-block:: c++
 
     // Create a 300 by 200 pixel image, 15 bits per color channel, RGB
-    imebra::MutableImage image(300, 200, imebra::bitDepth_t::depthU16, "RGB", 15);
+    dicomhero::MutableImage image(300, 200, dicomhero::bitDepth_t::depthU16, "RGB", 15);
     
     {
         WritingDataHandlerNumeric dataHandler(image.getWritingDataHandler());
@@ -592,7 +592,7 @@ in C++
 
 .. code-block:: c++
 
-    imebra::CodecFactory::save(dataSet, "dicomFile.dcm", imebra::codecType_t::dicom);
+    dicomhero::CodecFactory::save(dataSet, "dicomFile.dcm", dicomhero::codecType_t::dicom);
 
 in Java
 
@@ -608,14 +608,14 @@ A SCU (Service User) acts as a client in a DICOM association (negotiated connect
 
 A DICOM association uses a TCP connection to send and receive data.
 
-The DIMSE service (see :cpp:class:`imebra::DimseService`) communicates via an association, represented
-either by an AssociationSCU (see :cpp:class:`imebra::AssociationSCU`) or by an AssociationSCP (see :cpp:class:`imebra::AssociationSCP`).
+The DIMSE service (see :cpp:class:`dicomhero::DimseService`) communicates via an association, represented
+either by an AssociationSCU (see :cpp:class:`dicomhero::AssociationSCU`) or by an AssociationSCP (see :cpp:class:`dicomhero::AssociationSCP`).
 
 The AssociationSCU usually is the client of a DICOM service, but occasionally can act as an SCP if the SCP role for an abstractSyntax has been
 negotiated: this is useful to receive data via C-GET commands, where the SCP sends the requested data to the SCU via a separate C-STORE command.
 
 The following code sends a C-STORE command to an SCP: the C-STORE command instruct the SCP to take a DICOM DataSet. In the example
-we prepare the separate DataSet (see :cpp:class:`imebra::DataSet`) and we initialize it with the transfer syntax that we negotiated
+we prepare the separate DataSet (see :cpp:class:`dicomhero::DataSet`) and we initialize it with the transfer syntax that we negotiated
 in the association.
 
 We then send the command and wait for a response:
@@ -623,32 +623,32 @@ We then send the command and wait for a response:
 .. code-block:: c++
 
     // Allocate a TCP stream that connects to the DICOM SCP
-    imebra::TCPStream tcpStream(TCPActiveAddress("scpHost.company.com", "104"));
+    dicomhero::TCPStream tcpStream(TCPActiveAddress("scpHost.company.com", "104"));
 
     // Allocate a stream reader and a writer that use the TCP stream.
     // If you need a more complex stream (e.g. a stream that uses your
     // own services to send and receive data) then use a Pipe
-    imebra::StreamReader readSCU(tcpStream.getInputStream());
-    imebra::StreamWriter writeSCU(tcpStream.getOutputStream());
+    dicomhero::StreamReader readSCU(tcpStream.getInputStream());
+    dicomhero::StreamWriter writeSCU(tcpStream.getOutputStream());
 
     // Add all the abstract syntaxes and the supported transfer
     // syntaxes for each abstract syntax (the pair abstract/transfer syntax is
     // called "presentation context")
-    imebra::PresentationContext context("1.2.840.10008.5.1.4.1.1.4.1"); // Enhanced MR Image Storage
+    dicomhero::PresentationContext context("1.2.840.10008.5.1.4.1.1.4.1"); // Enhanced MR Image Storage
     context.addTransferSyntax("1.2.840.10008.1.2.1"); // Explicit VR little endian
-    imebra::PresentationContexts presentationContexts;
+    dicomhero::PresentationContexts presentationContexts;
     presentationContexts.addPresentationContext(context);
 
     // The AssociationSCU constructor will negotiate a connection through
     // the readSCU and writeSCU stream reader and writer
-    imebra::AssociationSCU scu("SCU", "SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0);
+    dicomhero::AssociationSCU scu("SCU", "SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0);
 
     // The DIMSE service will use the negotiated association to send and receive
     // DICOM commands
-    imebra::DimseService dimse(scu);
+    dicomhero::DimseService dimse(scu);
 
     // Let's prepare a dataset to store on the SCP
-    imebra::MutableDataSet payload(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.1.4.1")); // We will use the negotiated transfer syntax
+    dicomhero::MutableDataSet payload(dimse.getTransferSyntax("1.2.840.10008.5.1.4.1.1.4.1")); // We will use the negotiated transfer syntax
     payload.setString(TagId(tagId_t::SOPInstanceUID_0008_0018), "1.1.1.1");
     payload.setString(TagId(tagId_t::SOPClassUID_0008_0016), "1.2.840.10008.5.1.4.1.1.4.1");
     payload.setString(TagId(tagId_t::PatientName_0010_0010),"Patient^Test");
@@ -657,7 +657,7 @@ We then send the command and wait for a response:
     // Fill appropriately all the DataSet tag
     //
 
-    imebra::CStoreCommand command(
+    dicomhero::CStoreCommand command(
                 "1.2.840.10008.5.1.4.1.1.4.1", //< one of the negotiated abstract syntaxes
                 dimse.getNextCommandID(),
                 dimseCommandPriority_t::medium,
@@ -667,9 +667,9 @@ We then send the command and wait for a response:
                 0,
                 payload);
     dimse.sendCommandOrResponse(command);
-    imebra::DimseResponse response(dimse.getCStoreResponse(command));
+    dicomhero::DimseResponse response(dimse.getCStoreResponse(command));
 
-    if(response.getStatus() == imebra::dimseStatus_t::success)
+    if(response.getStatus() == dicomhero::dimseStatus_t::success)
     {
         // SUCCESS!
     }
@@ -681,36 +681,36 @@ Implementign a DICOM SCP
 A DICOM SCP listen for incoming connection and then communicate with the connected peer through a negotiated
 DICOM association.
 
-In this example we use the :cpp:class:`imebra::TCPListener` to wait for incoming connections and then negotiate
-the association via a AssociationSCP (see :cpp:class:`imebra::AssociationSCP`).
+In this example we use the :cpp:class:`dicomhero::TCPListener` to wait for incoming connections and then negotiate
+the association via a AssociationSCP (see :cpp:class:`dicomhero::AssociationSCP`).
 
-A :cpp:class:`imebra::DimseService` will be used on top of the :cpp:class:`imebra::AssociationSCP` in order to
+A :cpp:class:`dicomhero::DimseService` will be used on top of the :cpp:class:`dicomhero::AssociationSCP` in order to
 receive commands and send the responses.
 
 .. code-block:: c++
 
     // Bind the port 104 to a listening socket
-    imebra::TCPListener tcpListener(TCPPassiveAddress("", "104"));
+    dicomhero::TCPListener tcpListener(TCPPassiveAddress("", "104"));
     
     // Wait until a connection arrives or terminate() is called on the tcpListener
-    imebra::TCPStream tcpStream(tcpListener.waitForConnection());
+    dicomhero::TCPStream tcpStream(tcpListener.waitForConnection());
 
     // tcpStream now represents the connected socket. Allocate a stream reader and a writer
     // to read and write on the connected socket
-    imebra::StreamReader readSCU(tcpStream.getInputStream());
-    imebra::StreamWriter writeSCU(tcpStream.getOutputStream());
+    dicomhero::StreamReader readSCU(tcpStream.getInputStream());
+    dicomhero::StreamWriter writeSCU(tcpStream.getOutputStream());
 
     // Specify which presentation contexts we accept
-    imebra::PresentationContext context(sopClassUid);
+    dicomhero::PresentationContext context(sopClassUid);
     context.addTransferSyntax(transferSyntax);
-    imebra::PresentationContexts presentationContexts;
+    dicomhero::PresentationContexts presentationContexts;
     presentationContexts.addPresentationContext(context);
 
     // The AssociationSCP constructor will negotiate the assocation
-    imebra::AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0, 10);
+    dicomhero::AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0, 10);
 
     // Receive commands via the dimse service
-    imebra::DimseService dimse(scp);
+    dicomhero::DimseService dimse(scp);
 
     try
     {
@@ -719,11 +719,11 @@ receive commands and send the responses.
         {
             // We assume we are going to receive a C-Store. Normally you should check the command type
             // (using DimseCommand::getCommandType()) and then cast to the proper class.
-            imebra::CStoreCommand command(dimse.getCommand().getAsCStoreCommand());
+            dicomhero::CStoreCommand command(dimse.getCommand().getAsCStoreCommand());
 
             // The store command has a payload. We can do something with it, or we can
             // use the methods in CStoreCommand to get other data sent by the peer
-            imebra::DataSet payload = command.getPayloadDataSet();
+            dicomhero::DataSet payload = command.getPayloadDataSet();
 
             // Do something with the payload
 

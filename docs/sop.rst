@@ -2,9 +2,9 @@ Introduction
 =============================
 
 The Standard Operating Procedures (SOP) described in this chapter are meant to be followed
-by the developers of the Imebra library during the development process.
+by the developers of the Dicomhero library during the development process.
 
-Each SOP addresses a different task that occurs during the development of Imebra.
+Each SOP addresses a different task that occurs during the development of Dicomhero.
 
 Each time a specific SOP is used to perform a specific task, then a reference to the used
 SOP should appear in the library changes log or in the issues tracker.
@@ -132,7 +132,7 @@ SOP BUGUSER/1: Reporting a bug: instructions for users
 - Intended audience: bug reporters, library users
 
 The scope of this SOP is to explain to the library users how to report a bug related to the
-Imebra library.
+Dicomhero library.
 
 Once a bug has been identified, it should be reported on the issue tracker
 located at https://bitbucket.org/binarno/imebra/issues.
@@ -171,7 +171,7 @@ SOP BUGDEV/1: Reporting a bug: instructions for the library developers
 - Intended audience: developers, QA
 
 The scope of this SOP is to explain to the library developers how to report a bug related to the
-Imebra library.
+Dicomhero library.
 
 Once a bug has been identified, it should be reported on the issue tracker
 located at https://bitbucket.org/binarno/imebra/issues.
@@ -238,11 +238,11 @@ Replaces :ref:`FIXBUG_1`
 - Author: Paolo Brandoli
 - Intended audience: QA, developers
 
-The scope of this SOP is to guide the developer through the procedures necessary to fix a bug in Imebra.
+The scope of this SOP is to guide the developer through the procedures necessary to fix a bug in Dicomhero.
 
 This SOP can be executed only after the :ref:`ACKBUG_1` has been executed for the bug being fixed.
 
-- if the bug is specific to a specific branch of Imebra (e.g. 4.0 or 4.1) then switch the active branch
+- if the bug is specific to a specific branch of Dicomhero (e.g. 4.0 or 4.1) then switch the active branch
   to the specific branch on the development machine, otherwise switch to the default branch.
 - write a test unit that forces the bug to manifest itself and cause the test to fail
 - start fixing the bug on the development machine
@@ -273,11 +273,11 @@ Superseded by :ref:`FIXBUG_2`
 - Author: Paolo Brandoli
 - Intended audience: QA, developers
 
-The scope of this SOP is to guide the developer through the procedures necessary to fix a bug in Imebra.
+The scope of this SOP is to guide the developer through the procedures necessary to fix a bug in Dicomhero.
 
 This SOP can be executed only after the :ref:`ACKBUG_1` has been executed for the bug being fixed.
 
-- if the feature is specific to a specific branch of Imebra (e.g. 4.0 or 4.1) then switch the active branch
+- if the feature is specific to a specific branch of Dicomhero (e.g. 4.0 or 4.1) then switch the active branch
   to the specific branch on the development machine, otherwise switch to the master (default) branch.
 - write a test unit that forces the bug to manifest itself and cause the test to fail
 - start fixing the bug on the development machine
@@ -565,20 +565,20 @@ SOP CHGLOG/1 Preparing the changelog
 - Author: Paolo Brandoli
 - Intended audience: developers
 
-The scope of this SOP is to explain how to update the changelog that appears in the Imebra's manual.
+The scope of this SOP is to explain how to update the changelog that appears in the Dicomhero's manual.
 
 Open the file docs/changes_log.txt in a text editor.
 
 Step 1
 ......
 
-If this is the first modification to the changelog since the last Imebra public distribution, then rename the title
+If this is the first modification to the changelog since the last Dicomhero public distribution, then rename the title
 
 ::
 
     Version |release| (this version)
 
-with the actual name of the last Imebra public distribution, otherwise skip to step 2.
+with the actual name of the last Dicomhero public distribution, otherwise skip to step 2.
 
 For instance, the following text:
 
@@ -657,7 +657,7 @@ Replaces :ref:`RELEASE_2`
 - Author: Paolo Brandoli
 - Intended audience: developers
 
-The scope of this SOP is to explain how to produce a new public release of Imebra.
+The scope of this SOP is to explain how to produce a new public release of Dicomhero.
 
 A new release can be prepared after features or bugs have been addressed by following :ref:`DEVENH_2`, :ref:`DEVFEAT_3` or :ref:`FIXBUG_2`.
 
@@ -695,7 +695,7 @@ If the build fails, then fix the code in the proper branch (the branch that wher
 
 After the builds succeed:
 
-- upload the build from Dropbox to the Imebra Download Files on Bitbucket (https://bitbucket.org/binarno/imebra_git/downloads).
+- upload the build from Dropbox to the Dicomhero Download Files on Bitbucket (https://bitbucket.org/binarno/imebra_git/downloads).
 - on the local repository, switch the branch back to master
 - from the master branch, tag the commit used for the build with the actual build number (e.g. 4.5.2.1)
 - push the repository to Bitbucket (`git push --tags`)
@@ -713,7 +713,7 @@ Superseeded by :ref:`RELEASE_3`
 - Author: Paolo Brandoli
 - Intended audience: developers
 
-The scope of this SOP is to explain how to produce a new public release of Imebra.
+The scope of this SOP is to explain how to produce a new public release of Dicomhero.
 
 A new release can be prepared after features or bugs have been addressed by following :ref:`DEVENH_2`, :ref:`DEVFEAT_2` or :ref:`FIXBUG_2`.
 
@@ -744,7 +744,7 @@ If the build fails, then fix the code in the proper branch (the branch that wher
 
 After the builds succeed:
 
-- upload the build from Dropbox to the Imebra Download Files on Bitbucket (https://bitbucket.org/binarno/imebra/downloads).
+- upload the build from Dropbox to the Dicomhero Download Files on Bitbucket (https://bitbucket.org/binarno/imebra/downloads).
 - on the local repository, switch the branch back to default
 - from the default branch, tag the commit used for the build with the actual build number (e.g. 4.5.2.1)
 - push the repository to Bitbucket (hg push)
@@ -762,7 +762,7 @@ Superseeded by :ref:`RELEASE_2`
 - Author: Paolo Brandoli
 - Intended audience: developers
 
-The scope of this SOP is to explain how to produce a new public release of Imebra.
+The scope of this SOP is to explain how to produce a new public release of Dicomhero.
 
 A new release can be prepared after features or bugs have been addressed by following :ref:`DEVENH_2`, :ref:`DEVFEAT_2` or :ref:`FIXBUG_2`.
 
@@ -793,7 +793,7 @@ If the build fails, then fix the code in the proper branch (the branch that wher
 
 After the builds succeed:
 
-- upload the build from Dropbox to the Imebra Download Files on Bitbucket (https://bitbucket.org/binarno/imebra/downloads).
+- upload the build from Dropbox to the Dicomhero Download Files on Bitbucket (https://bitbucket.org/binarno/imebra/downloads).
 - on the local repository, switch the branch back to default
 - from the default branch, tag the commit used for the build with the actual build number (e.g. 4.5.2.1)
 - push the repository to Bitbucket (hg push)
@@ -809,7 +809,7 @@ Replaces :ref:`MAJORVERSION_1`
 - Author: Paolo Brandoli
 - Intended audience: developers
 
-The scope of this SOP is to explain how to start the development of a new major version of Imebra (e.g. version 5.x.x or version 6.x.x).
+The scope of this SOP is to explain how to start the development of a new major version of Dicomhero (e.g. version 5.x.x or version 6.x.x).
 
 - from the master branch create a new version branch, named "imebra_vX" where X is the major version number
 
@@ -821,7 +821,7 @@ When the new version is ready to be released, then it will become the new master
 
   - git checkout master
   - git checkout -b imebra_legacy_vY
-  - git commit --allow-empty -m "Imebra vY moved to legacy branch"
+  - git commit --allow-empty -m "Dicomhero vY moved to legacy branch"
 
 - move "imebra_vX" to master
 
@@ -846,7 +846,7 @@ Superseeded by :ref:`MAJORVERSION_2`
 - Author: Paolo Brandoli
 - Intended audience: developers
 
-The scope of this SOP is to explain how to start the development of a new major version of Imebra (e.g. version 5.x.x or version 6.x.x).
+The scope of this SOP is to explain how to start the development of a new major version of Dicomhero (e.g. version 5.x.x or version 6.x.x).
 
 - from the master branch create a new version branch, named "imebra_vX" where X is the major version number
 
@@ -858,17 +858,17 @@ When the new version is ready to be released, then it will become the new defaul
 
   - hg update default
   - hg branch "imebra_legacy_vY"
-  - hg commit -m "Move Imebra vY to legacy"
+  - hg commit -m "Move Dicomhero vY to legacy"
   - hg update default
-  - hg commit --close-branch -m"Imebra vY moved to legacy branch"
+  - hg commit --close-branch -m"Dicomhero vY moved to legacy branch"
 
 - rename the "imebra_vX" branch to default
 
   - hg update "imebra_vX"
   - hg branch default
-  - hg commit -m "Move Imebra vX to default"
+  - hg commit -m "Move Dicomhero vX to default"
   - hg update "imebra_vX"
-  - hg commit --close-branch -m"Imebra vX moved to default branch"
+  - hg commit --close-branch -m"Dicomhero vX moved to default branch"
 
 - push the repository to Bitbucket (hg push)
 

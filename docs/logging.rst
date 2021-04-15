@@ -3,7 +3,7 @@
 Logging
 =======
 
-Imebra can log the most important operations to one of the following logging frameworks:
+Dicomhero can log the most important operations to one of the following logging frameworks:
 
 - log4cxx
 - Android native logging
@@ -11,7 +11,7 @@ Imebra can log the most important operations to one of the following logging fra
 - syslog (on Posix systems)
 - standard output
 
-The logging is disabled by default and can be enabled during the compilation phase of Imebra by setting IMEBRA_LOG_LEVEL
+The logging is disabled by default and can be enabled during the compilation phase of Dicomhero by setting IMEBRA_LOG_LEVEL
 to one of the following values when launching cmake:
 
 - *TRACE*
@@ -21,7 +21,7 @@ to one of the following values when launching cmake:
 - *ERROR*
 - *TRACE*
 
-When the logging is enabled then Imebra will decide which logging framework to use, unless you override
+When the logging is enabled then Dicomhero will decide which logging framework to use, unless you override
 the decision by defining setting IMEBRA_LOG_FRAMEWORK to one of the following values when launching cmake:
 
 - *LOG4CXX*
@@ -30,7 +30,7 @@ the decision by defining setting IMEBRA_LOG_FRAMEWORK to one of the following va
 - *APPLE*
 - *ANDROID*
 
-The following list describes the logging framework used by Imebra, based on the operating system:
+The following list describes the logging framework used by Dicomhero, based on the operating system:
 
 - On Apple systems: NSLog
 - On Android: the Android logging system
@@ -41,14 +41,14 @@ The following list describes the logging framework used by Imebra, based on the 
 Linux specific instructions
 ---------------------------
 
-When compiled on Linux then Imebra uses the syslog call to output the logs, unless a different logging framework is selected by setting
+When compiled on Linux then Dicomhero uses the syslog call to output the logs, unless a different logging framework is selected by setting
 the CMAKE variable IMEBRA_LOG_FRAMEWORK to one of the following values:
 
 - *LOG4CXX*
 - *SYSLOG*
 - *COUT*
 
-The following example shows how to compile Imebra on Linux with the INFO logging level enabled. The logs will be produced using the posix syslog call:
+The following example shows how to compile Dicomhero on Linux with the INFO logging level enabled. The logs will be produced using the posix syslog call:
 
 ::
 
@@ -60,7 +60,7 @@ The following example shows how to compile Imebra on Linux with the INFO logging
     sudo ldconfig
 
 
-The following example shows how to compile Imebra on Linux with the WARNING logging level enabled and output to log4cxx:
+The following example shows how to compile Dicomhero on Linux with the WARNING logging level enabled and output to log4cxx:
 
 ::
 
@@ -75,7 +75,7 @@ The following example shows how to compile Imebra on Linux with the WARNING logg
 Apple specific instructions
 ---------------------------
 
-The following example shows how to compile Imebra for iPhone with the INFO logging level enabled. The logs will be produced using the NSLog call:
+The following example shows how to compile Dicomhero for iPhone with the INFO logging level enabled. The logs will be produced using the NSLog call:
 
 ::
 
@@ -119,13 +119,13 @@ The following example set the log level to WARNING:
 Windows specific instructions
 -----------------------------
 
-When compiled on Windows then Imebra uses the standard output to output the logs, unless a different logging framework is selected by setting
+When compiled on Windows then Dicomhero uses the standard output to output the logs, unless a different logging framework is selected by setting
 the CMake variable IMEBRA_LOG_FRAMEWORK to one of the following values:
 
 - *LOG4CXX*
 - *COUT*
 
-The following example shows how to compile Imebra on Linux with the INFO logging level enabled. The logs will be produced using the standard output:
+The following example shows how to compile Dicomhero on Linux with the INFO logging level enabled. The logs will be produced using the standard output:
 
 ::
 
@@ -135,7 +135,7 @@ The following example shows how to compile Imebra on Linux with the INFO logging
     cmake --build .
 
 
-The following example shows how to compile Imebra on Windows with the WARNING logging level enabled and output to log4cxx:
+The following example shows how to compile Dicomhero on Windows with the WARNING logging level enabled and output to log4cxx:
 
 ::
 

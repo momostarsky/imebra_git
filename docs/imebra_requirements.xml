@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="imebrav4" xsi:noNamespaceSchemaLocation="./riskAnalysis.xsd">
-  <title>Imebra v.4</title>
+  <title>Dicomhero v.4</title>
 
   <description/>
 
@@ -403,7 +403,7 @@
       <description>To be able to perform fast image processing, the client application needs access to the images or
                 LUTs raw memory data.
                 
-                This implies that Imebra must be able to expose the raw memory used to store numeric tags (VRs: AT, FL, FD,
+                This implies that Dicomhero must be able to expose the raw memory used to store numeric tags (VRs: AT, FL, FD,
                 OF, OW, OD, SS, SL, UL, US).
             </description>
 
@@ -474,9 +474,9 @@
 
       <introducedBy/>
 
-      <title>Imebra must be able to create an image ready to be displayed on the computer screen</title>
+      <title>Dicomhero must be able to create an image ready to be displayed on the computer screen</title>
 
-      <description>Imebra must be able to convert the images extracted from DICOM structures into RGBA images ready to
+      <description>Dicomhero must be able to convert the images extracted from DICOM structures into RGBA images ready to
                 be displayed into computer screens
             </description>
 
@@ -498,9 +498,9 @@
 
       <introducedBy/>
 
-      <title>Imebra must be able to decompress images contained in the DICOM dataset</title>
+      <title>Dicomhero must be able to decompress images contained in the DICOM dataset</title>
 
-      <description>Imebra must be able to extract decompressed images from the DICOM dataset.
+      <description>Dicomhero must be able to extract decompressed images from the DICOM dataset.
                 The recognized transfer syntaxes for the image compression are:
                 
                 - jpeg baseline (8 bits per color channel lossy), transfer syntax 1.2.840.10008.1.2.4.50
@@ -518,9 +518,9 @@
 
       <introducedBy/>
 
-      <title>Imebra must be able to compress images and insert them in the DICOM dataset</title>
+      <title>Dicomhero must be able to compress images and insert them in the DICOM dataset</title>
 
-      <description>Imebra must be able to compress images and insert them in the DICOM dataset.
+      <description>Dicomhero must be able to compress images and insert them in the DICOM dataset.
                 
                 The recognized transfer syntaxes for the image compression are:
                 
@@ -541,7 +541,7 @@
 
       <title>The library must be able to parse DICOMDIR structures and the records they contain</title>
 
-      <description>Imebra must be able to parse DICOMDIR structures and the records they contain.</description>
+      <description>Dicomhero must be able to parse DICOMDIR structures and the records they contain.</description>
 
       <priority>99</priority>
     </requirement>
@@ -553,7 +553,7 @@
 
       <title>The library must be able to build DICOMDIR structures and the records they contain</title>
 
-      <description>Imebra must be able to build DICOMDIR structures and the records they contain.</description>
+      <description>Dicomhero must be able to build DICOMDIR structures and the records they contain.</description>
 
       <priority>99</priority>
     </requirement>
@@ -687,7 +687,7 @@
       <title>There must be a generic streaming protocol able to transport DIMSE messages</title>
       <description>There must be a generic streaming protocol able to transport DIMSE messages.
 
-          The generic streaming protocol must derive from the Imebra base stream class and offer
+          The generic streaming protocol must derive from the Dicomhero base stream class and offer
           timeout capabilities and termination capabilities when waiting for incoming or outgoing data.
       </description>
       <priority>100</priority>
@@ -700,7 +700,7 @@
         <parentRequirement idref="REQ_DIMSE"/>
       </introducedBy>
 
-      <title>Imebra must supply a basic TCP streaming class</title>
+      <title>Dicomhero must supply a basic TCP streaming class</title>
       <description>A basic TCP streaming class must be provided so that it can be used with DUL.
 
           TLS is out of the scope of this class.
@@ -715,8 +715,8 @@
         <parentRequirement idref="REQ_TCPIP_PROTOCOL"/>
       </introducedBy>
 
-      <title>Imebra must supply a base class for IO streaming</title>
-      <description>Since Imebra does not provide TLS, it must provide a base IO streaming class
+      <title>Dicomhero must supply a base class for IO streaming</title>
+      <description>Since Dicomhero does not provide TLS, it must provide a base IO streaming class
       	  from which the user can build its own streaming class.
       </description>
       <priority>100</priority>
@@ -753,9 +753,9 @@
         <parentRequirement idref="REQ_USER_PROTOCOL"/>
       </introducedBy>
 
-      <title>User extensions should not be achievable by extending Imebra classes or by supplying callbacks</title>
-      <description>Allowing the user to extend Imebra classes or to provide callback functions complicates the separation
-          between the Imebra's interface and its implementation.
+      <title>User extensions should not be achievable by extending Dicomhero classes or by supplying callbacks</title>
+      <description>Allowing the user to extend Dicomhero classes or to provide callback functions complicates the separation
+          between the Dicomhero's interface and its implementation.
       </description>
       <priority>100</priority>
     </requirement>

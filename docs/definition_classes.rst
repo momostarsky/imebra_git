@@ -4,7 +4,7 @@ Definitions
 Introduction
 ------------
 
-This chapter describes the auxiliary classes and definitions of the Imebra library.
+This chapter describes the auxiliary classes and definitions of the Dicomhero library.
 
 
 The following classes are described in this chapter:
@@ -12,39 +12,39 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |C++ class                                      |Objective-C/Swift class                      |Description                    |
 +===============================================+=============================================+===============================+
-|:cpp:class:`imebra::tagId_t`                   |:cpp:class:`ImebraTagEnum`                   |Enumerates the known DICOM     |
+|:cpp:class:`dicomhero::tagId_t`                   |:cpp:class:`DicomheroTagEnum`                   |Enumerates the known DICOM     |
 |                                               |                                             |tags                           |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::ageUnit_t`                 |:cpp:class:`ImebraAgeUnit`                   |Enumerates the Age units       |
+|:cpp:class:`dicomhero::ageUnit_t`                 |:cpp:class:`DicomheroAgeUnit`                   |Enumerates the Age units       |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::tagVR_t`                   |:cpp:class:`ImebraTagType`                   |Enumerates the DICOM VRs       |
+|:cpp:class:`dicomhero::tagVR_t`                   |:cpp:class:`DicomheroTagType`                   |Enumerates the DICOM VRs       |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::imageQuality_t`            |:cpp:class:`ImebraImageQuality`              |Enumerates the image quality   |
+|:cpp:class:`dicomhero::imageQuality_t`            |:cpp:class:`DicomheroImageQuality`              |Enumerates the image quality   |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::bitDepth_t`                |:cpp:class:`ImebraBitDepth`                  |Enumerates the image bit depths|
+|:cpp:class:`dicomhero::bitDepth_t`                |:cpp:class:`DicomheroBitDepth`                  |Enumerates the image bit depths|
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::drawBitmapType_t`          |:cpp:class:`ImebraDrawBitmapType`            |Enumerates the bitmap types    |
+|:cpp:class:`dicomhero::drawBitmapType_t`          |:cpp:class:`DicomheroDrawBitmapType`            |Enumerates the bitmap types    |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::OverlayType_t`             |:cpp:class:`ImebraOverlayType`               |Enumerates the overlay types   |
+|:cpp:class:`dicomhero::OverlayType_t`             |:cpp:class:`DicomheroOverlayType`               |Enumerates the overlay types   |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::dicomVOIFunction_t`        |:cpp:class:`ImebraDicomVOIFunction`          |Enumerates VOI functions       |
+|:cpp:class:`dicomhero::dicomVOIFunction_t`        |:cpp:class:`DicomheroDicomVOIFunction`          |Enumerates VOI functions       |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::fileParts_t`               |NSArray                                      |List of file path parts        |
+|:cpp:class:`dicomhero::fileParts_t`               |NSArray                                      |List of file path parts        |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::codecType_t`               |:cpp:class:`ImebraCodecType`                 |Enumerates the codec types     |
+|:cpp:class:`dicomhero::codecType_t`               |:cpp:class:`DicomheroCodecType`                 |Enumerates the codec types     |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::vois_t`                    |NSArray                                      |List of VOIs descriptions      |
+|:cpp:class:`dicomhero::vois_t`                    |NSArray                                      |List of VOIs descriptions      |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::dimseCommandType_t`        |:cpp:class:`ImebraDimseCommandType`          |Enumerates the DIMSE commands  |
+|:cpp:class:`dicomhero::dimseCommandType_t`        |:cpp:class:`DicomheroDimseCommandType`          |Enumerates the DIMSE commands  |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::dimseCommandPriority_t`    |:cpp:class:`ImebraDimseCommandPriority`      |Enumerates the DIMSE priorities|
+|:cpp:class:`dicomhero::dimseCommandPriority_t`    |:cpp:class:`DicomheroDimseCommandPriority`      |Enumerates the DIMSE priorities|
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::dimseStatusCode_t`         |:cpp:class:`ImebraDimseStatusCode`           |Enumerates the DIMSE status    |
+|:cpp:class:`dicomhero::dimseStatusCode_t`         |:cpp:class:`DicomheroDimseStatusCode`           |Enumerates the DIMSE status    |
 |                                               |                                             |codes                          |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::dimseStatus_t`             |:cpp:class:`ImebraDimseStatus`               |Enumerates the DIMSE statuses  |
+|:cpp:class:`dicomhero::dimseStatus_t`             |:cpp:class:`DicomheroDimseStatus`               |Enumerates the DIMSE statuses  |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::attributeIdentifierList_t` |NSArray                                      |List of attribute identifiers  |
+|:cpp:class:`dicomhero::attributeIdentifierList_t` |NSArray                                      |List of attribute identifiers  |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 
 
@@ -57,12 +57,12 @@ tagId_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::tagId_t
+.. doxygenenum:: dicomhero::tagId_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraTagEnum
+.. doxygenenum:: DicomheroTagEnum
 
 
 ageUnit_t
@@ -71,12 +71,12 @@ ageUnit_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::ageUnit_t
+.. doxygenenum:: dicomhero::ageUnit_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraAgeUnit
+.. doxygenenum:: DicomheroAgeUnit
 
 
 tagVR_t
@@ -85,12 +85,12 @@ tagVR_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::tagVR_t
+.. doxygenenum:: dicomhero::tagVR_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraTagType
+.. doxygenenum:: DicomheroTagType
 
 
 Image related definitions
@@ -102,12 +102,12 @@ imageQuality_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::imageQuality_t
+.. doxygenenum:: dicomhero::imageQuality_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraImageQuality
+.. doxygenenum:: DicomheroImageQuality
 
 
 bitDepth_t
@@ -116,12 +116,12 @@ bitDepth_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::bitDepth_t
+.. doxygenenum:: dicomhero::bitDepth_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraBitDepth
+.. doxygenenum:: DicomheroBitDepth
 
 
 drawBitmapType_t
@@ -130,12 +130,12 @@ drawBitmapType_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::drawBitmapType_t
+.. doxygenenum:: dicomhero::drawBitmapType_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraDrawBitmapType
+.. doxygenenum:: DicomheroDrawBitmapType
 
 
 overlayType_t
@@ -144,12 +144,12 @@ overlayType_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::overlayType_t
+.. doxygenenum:: dicomhero::overlayType_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraOverlayType_t
+.. doxygenenum:: DicomheroOverlayType_t
 
 
 dicomVOIFunction_t
@@ -158,12 +158,12 @@ dicomVOIFunction_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::dicomVOIFunction_t
+.. doxygenenum:: dicomhero::dicomVOIFunction_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraDicomVOIFunction
+.. doxygenenum:: DicomheroDicomVOIFunction
 
 
 DICOMDIR related definitions
@@ -175,7 +175,7 @@ fileParts_t
 C++
 ,,,
 
-.. doxygentypedef:: imebra::fileParts_t
+.. doxygentypedef:: dicomhero::fileParts_t
 
 
 Codec Factory related definitions
@@ -187,12 +187,12 @@ codecType_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::codecType_t
+.. doxygenenum:: dicomhero::codecType_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraCodecType
+.. doxygenenum:: DicomheroCodecType
 
 
 VOI related definitions
@@ -204,12 +204,12 @@ dicomVOIFunction_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::dicomVOIFunction_t
+.. doxygenenum:: dicomhero::dicomVOIFunction_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraDicomVOIFunction_t
+.. doxygenenum:: DicomheroDicomVOIFunction_t
 
 
 vois_t
@@ -218,7 +218,7 @@ vois_t
 C++
 ,,,
 
-.. doxygentypedef:: imebra::vois_t
+.. doxygentypedef:: dicomhero::vois_t
 
 
 
@@ -231,12 +231,12 @@ dimseCommandType_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::dimseCommandType_t
+.. doxygenenum:: dicomhero::dimseCommandType_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraDimseCommandType
+.. doxygenenum:: DicomheroDimseCommandType
 
 
 dimseCommandPriority_t
@@ -245,12 +245,12 @@ dimseCommandPriority_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::dimseCommandPriority_t
+.. doxygenenum:: dicomhero::dimseCommandPriority_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraDimseCommandPriority
+.. doxygenenum:: DicomheroDimseCommandPriority
 
 
 dimseStatusCode_t
@@ -259,12 +259,12 @@ dimseStatusCode_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::dimseStatusCode_t
+.. doxygenenum:: dicomhero::dimseStatusCode_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraDimseStatusCode
+.. doxygenenum:: DicomheroDimseStatusCode
 
 
 dimseStatus_t
@@ -273,12 +273,12 @@ dimseStatus_t
 C++
 ,,,
 
-.. doxygenenum:: imebra::dimseStatus_t
+.. doxygenenum:: dicomhero::dimseStatus_t
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenenum:: ImebraDimseStatus
+.. doxygenenum:: DicomheroDimseStatus
 
 
 attributeIdentifierList_t
@@ -287,6 +287,6 @@ attributeIdentifierList_t
 C++
 ,,,
 
-.. doxygentypedef:: imebra::attributeIdentifierList_t
+.. doxygentypedef:: dicomhero::attributeIdentifierList_t
 
 

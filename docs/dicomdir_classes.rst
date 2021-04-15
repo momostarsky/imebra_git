@@ -11,16 +11,16 @@ The following classes are described in this chapter:
 +-------------------------------------------+-----------------------------------------+-----------------------------------+
 |C++ class                                  |Objective-C/Swift class                  |Description                        |
 +===========================================+=========================================+===================================+
-|:cpp:class:`imebra::DicomDir`              |:cpp:class:`ImebraDicomDir`              |Allows to access the DICOMDIR      |
+|:cpp:class:`dicomhero::DicomDir`              |:cpp:class:`DicomheroDicomDir`              |Allows to access the DICOMDIR      |
 |                                           |                                         |entries stored in a :ref:`DataSet` |
 +-------------------------------------------+-----------------------------------------+-----------------------------------+
-|:cpp:class:`imebra::MutableDicomDir`       |:cpp:class:`ImebraMutableDicomDir`       |Allows to create a DICOMDIR        |
+|:cpp:class:`dicomhero::MutableDicomDir`       |:cpp:class:`DicomheroMutableDicomDir`       |Allows to create a DICOMDIR        |
 |                                           |                                         |dataset                            |
 +-------------------------------------------+-----------------------------------------+-----------------------------------+
-|:cpp:class:`imebra::DicomDirEntry`         |:cpp:class:`ImebraDicomDirEntry`         |Represents a single DICOMDIR       |
+|:cpp:class:`dicomhero::DicomDirEntry`         |:cpp:class:`DicomheroDicomDirEntry`         |Represents a single DICOMDIR       |
 |                                           |                                         |entry                              |
 +-------------------------------------------+-----------------------------------------+-----------------------------------+
-|:cpp:class:`imebra::MutableDicomDirEntry`  |:cpp:class:`ImebraMutableDicomDirEntry`  |Creates a single DICOMDIR entry    |
+|:cpp:class:`dicomhero::MutableDicomDirEntry`  |:cpp:class:`DicomheroMutableDicomDirEntry`  |Creates a single DICOMDIR entry    |
 +-------------------------------------------+-----------------------------------------+-----------------------------------+
 
 .. figure:: images/dicomdir.jpg
@@ -39,13 +39,13 @@ DicomDir
 C++
 ,,,
 
-.. doxygenclass:: imebra::DicomDir
+.. doxygenclass:: dicomhero::DicomDir
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraDicomDir
+.. doxygenclass:: DicomheroDicomDir
    :members:
 
 
@@ -55,13 +55,13 @@ MutableDicomDir
 C++
 ,,,
 
-.. doxygenclass:: imebra::MutableDicomDir
+.. doxygenclass:: dicomhero::MutableDicomDir
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraMutableDicomDir
+.. doxygenclass:: DicomheroMutableDicomDir
    :members:
 
 
@@ -71,13 +71,13 @@ DicomDirEntry
 C++
 ,,,
 
-.. doxygenclass:: imebra::DicomDirEntry
+.. doxygenclass:: dicomhero::DicomDirEntry
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraDicomDirEntry
+.. doxygenclass:: DicomheroDicomDirEntry
    :members:
 
 
@@ -87,12 +87,12 @@ MutableDicomDirEntry
 C++
 ,,,
 
-.. doxygenclass:: imebra::MutableDicomDirEntry
+.. doxygenclass:: dicomhero::MutableDicomDirEntry
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraMutableDicomDirEntry
+.. doxygenclass:: DicomheroMutableDicomDirEntry
    :members:
 

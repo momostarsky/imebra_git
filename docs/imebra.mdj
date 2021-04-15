@@ -1,7 +1,7 @@
 {
 	"_type": "Project",
 	"_id": "AAAAAAFF+h6SjaM2Hec=",
-	"name": "Imebra",
+	"name": "Dicomhero",
 	"ownedElements": [
 		{
 			"_type": "UMLModel",
@@ -30309,7 +30309,7 @@
 														"$ref": "AAAAAAFmjR1jM9YeqTg="
 													},
 													"edgePosition": 1,
-													"text": "7 : Pass the stream writer to an Imebra object(CodecFactory, AssociationSCU, etc)"
+													"text": "7 : Pass the stream writer to an Dicomhero object(CodecFactory, AssociationSCU, etc)"
 												},
 												{
 													"_type": "EdgeLabelView",
@@ -31082,7 +31082,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFmjQDNX9PdSjw="
 									},
-									"name": "Pass the stream writer to an Imebra object",
+									"name": "Pass the stream writer to an Dicomhero object",
 									"source": {
 										"$ref": "AAAAAAFmjQPvftQOpI8="
 									},

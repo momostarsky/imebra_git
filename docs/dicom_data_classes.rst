@@ -12,31 +12,31 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |C++ class                                      |Objective-C/Swift class                      |Description                    |
 +===============================================+=============================================+===============================+
-|:cpp:class:`imebra::DataSet`                   |:cpp:class:`ImebraDataSet`                   |An immutable DICOM structure   |
+|:cpp:class:`dicomhero::DataSet`                   |:cpp:class:`DicomheroDataSet`                   |An immutable DICOM structure   |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::MutableDataSet`            |:cpp:class:`ImebraMutableDataSet`            |Mutable DICOM structure        |
+|:cpp:class:`dicomhero::MutableDataSet`            |:cpp:class:`DicomheroMutableDataSet`            |Mutable DICOM structure        |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::Tag`                       |:cpp:class:`ImebraTag`                       |A single immutable DICOM tag   |
+|:cpp:class:`dicomhero::Tag`                       |:cpp:class:`DicomheroTag`                       |A single immutable DICOM tag   |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::MutableTag`                |:cpp:class:`ImebraMutableTag`                |A single mutable DICOM tag     |
+|:cpp:class:`dicomhero::MutableTag`                |:cpp:class:`DicomheroMutableTag`                |A single mutable DICOM tag     |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::TagId`                     |:cpp:class:`ImebraTagId`                     |Identifies a tag               |
+|:cpp:class:`dicomhero::TagId`                     |:cpp:class:`DicomheroTagId`                     |Identifies a tag               |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::ReadingDataHandler`        |:cpp:class:`ImebraReadingDataHandler`        |Read data from a tag           |
+|:cpp:class:`dicomhero::ReadingDataHandler`        |:cpp:class:`DicomheroReadingDataHandler`        |Read data from a tag           |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::ReadingDataHandlerNumeric` |:cpp:class:`ImebraReadingDataHandlerNumeric` |Read data from a numeric tag   |
+|:cpp:class:`dicomhero::ReadingDataHandlerNumeric` |:cpp:class:`DicomheroReadingDataHandlerNumeric` |Read data from a numeric tag   |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::WritingDataHandler`        |:cpp:class:`ImebraWritingDataHandler`        |Write into a tag               |
+|:cpp:class:`dicomhero::WritingDataHandler`        |:cpp:class:`DicomheroWritingDataHandler`        |Write into a tag               |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::WritingDataHandlerNumeric` |:cpp:class:`ImebraWritingDataHandlerNumeric` |Write into a numeric tag       |
+|:cpp:class:`dicomhero::WritingDataHandlerNumeric` |:cpp:class:`DicomheroWritingDataHandlerNumeric` |Write into a numeric tag       |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::Date`                      |:cpp:class:`ImebraDate`                      |Stores a DICOM date/time       |
+|:cpp:class:`dicomhero::Date`                      |:cpp:class:`DicomheroDate`                      |Stores a DICOM date/time       |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::Age`                       |:cpp:class:`ImebraAge`                       |Stores a DICOM Age             |
+|:cpp:class:`dicomhero::Age`                       |:cpp:class:`DicomheroAge`                       |Stores a DICOM Age             |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::PatientName`               |:cpp:class:`ImebraPatientName`               |Stores a patient name          |
+|:cpp:class:`dicomhero::PatientName`               |:cpp:class:`DicomheroPatientName`               |Stores a patient name          |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`imebra::UnicodePatientName`        |                                             |Stores a patient name (unicode)|
+|:cpp:class:`dicomhero::UnicodePatientName`        |                                             |Stores a patient name (unicode)|
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 
 .. figure:: images/data.jpg
@@ -68,13 +68,13 @@ DataSet
 C++
 ,,,
 
-.. doxygenclass:: imebra::DataSet
+.. doxygenclass:: dicomhero::DataSet
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraDataSet
+.. doxygenclass:: DicomheroDataSet
    :members:
 
 
@@ -86,13 +86,13 @@ MutableDataSet
 C++
 ,,,
 
-.. doxygenclass:: imebra::MutableDataSet
+.. doxygenclass:: dicomhero::MutableDataSet
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraMutableDataSet
+.. doxygenclass:: DicomheroMutableDataSet
    :members:
 
 
@@ -104,13 +104,13 @@ Tag
 C++
 ,,,
 
-.. doxygenclass:: imebra::Tag
+.. doxygenclass:: dicomhero::Tag
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraTag
+.. doxygenclass:: DicomheroTag
    :members:
 
 
@@ -122,13 +122,13 @@ MutableTag
 C++
 ,,,
 
-.. doxygenclass:: imebra::MutableTag
+.. doxygenclass:: dicomhero::MutableTag
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraMutableTag
+.. doxygenclass:: DicomheroMutableTag
    :members:
 
 
@@ -164,13 +164,13 @@ TagId
 C++
 ,,,
 
-.. doxygenclass:: imebra::TagId
+.. doxygenclass:: dicomhero::TagId
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraTagId
+.. doxygenclass:: DicomheroTagId
    :members:
 
 
@@ -182,13 +182,13 @@ ReadingDataHandler
 C++
 ,,,
 
-.. doxygenclass:: imebra::ReadingDataHandler
+.. doxygenclass:: dicomhero::ReadingDataHandler
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraReadingDataHandler
+.. doxygenclass:: DicomheroReadingDataHandler
    :members:
 
 
@@ -200,13 +200,13 @@ ReadingDataHandlerNumeric
 C++
 ,,,
 
-.. doxygenclass:: imebra::ReadingDataHandlerNumeric
+.. doxygenclass:: dicomhero::ReadingDataHandlerNumeric
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraReadingDataHandlerNumeric
+.. doxygenclass:: DicomheroReadingDataHandlerNumeric
    :members:
 
 
@@ -218,13 +218,13 @@ WritingDataHandler
 C++
 ,,,
 
-.. doxygenclass:: imebra::WritingDataHandler
+.. doxygenclass:: dicomhero::WritingDataHandler
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraWritingDataHandler
+.. doxygenclass:: DicomheroWritingDataHandler
    :members:
 
 
@@ -236,13 +236,13 @@ WritingDataHandlerNumeric
 C++
 ,,,
 
-.. doxygenclass:: imebra::WritingDataHandlerNumeric
+.. doxygenclass:: dicomhero::WritingDataHandlerNumeric
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraWritingDataHandlerNumeric
+.. doxygenclass:: DicomheroWritingDataHandlerNumeric
    :members:
 
 Date
@@ -251,13 +251,13 @@ Date
 C++
 ,,,
 
-.. doxygenclass:: imebra::Date
+.. doxygenclass:: dicomhero::Date
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraDate
+.. doxygenclass:: DicomheroDate
    :members:
 
 Age
@@ -266,13 +266,13 @@ Age
 C++
 ,,,
 
-.. doxygenclass:: imebra::Age
+.. doxygenclass:: dicomhero::Age
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraAge
+.. doxygenclass:: DicomheroAge
    :members:
 
 PatientName
@@ -281,13 +281,13 @@ PatientName
 C++
 ,,,
 
-.. doxygenclass:: imebra::PatientName
+.. doxygenclass:: dicomhero::PatientName
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-.. doxygenclass:: ImebraPatientName
+.. doxygenclass:: DicomheroPatientName
    :members:
 
 UnicodePatientName
@@ -296,13 +296,13 @@ UnicodePatientName
 C++
 ,,,
 
-.. doxygenclass:: imebra::UnicodePatientName
+.. doxygenclass:: dicomhero::UnicodePatientName
    :members:
 
 Objective-C/Swift
 ,,,,,,,,,,,,,,,,,
 
-Not available (:cpp:class:`ImebraPatientName` uses Unicode on Objective-C/Swift)
+Not available (:cpp:class:`DicomheroPatientName` uses Unicode on Objective-C/Swift)
 
 
 
