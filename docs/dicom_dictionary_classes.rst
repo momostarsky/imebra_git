@@ -11,7 +11,7 @@ The following class is described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |C++ class                                      |Objective-C/Swift class                      |Description                    |
 +===============================================+=============================================+===============================+
-|:cpp:class:`dicomhero::DicomDictionary`           |:cpp:class:`DicomheroDicomDictionary`           |Returns description and VRs of |
+|:cpp:class:`dicomhero::DicomDictionary`        |:cpp:class:`DicomheroDicomDictionary`        |Returns description and VRs of |
 |                                               |                                             |well known tags                |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 

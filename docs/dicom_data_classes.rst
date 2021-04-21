@@ -9,35 +9,35 @@ DICOM structure, represented by the class :ref:`DataSet`.
 
 The following classes are described in this chapter:
 
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|C++ class                                      |Objective-C/Swift class                      |Description                    |
-+===============================================+=============================================+===============================+
-|:cpp:class:`dicomhero::DataSet`                   |:cpp:class:`DicomheroDataSet`                   |An immutable DICOM structure   |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::MutableDataSet`            |:cpp:class:`DicomheroMutableDataSet`            |Mutable DICOM structure        |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::Tag`                       |:cpp:class:`DicomheroTag`                       |A single immutable DICOM tag   |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::MutableTag`                |:cpp:class:`DicomheroMutableTag`                |A single mutable DICOM tag     |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::TagId`                     |:cpp:class:`DicomheroTagId`                     |Identifies a tag               |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::ReadingDataHandler`        |:cpp:class:`DicomheroReadingDataHandler`        |Read data from a tag           |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::ReadingDataHandlerNumeric` |:cpp:class:`DicomheroReadingDataHandlerNumeric` |Read data from a numeric tag   |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::WritingDataHandler`        |:cpp:class:`DicomheroWritingDataHandler`        |Write into a tag               |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::WritingDataHandlerNumeric` |:cpp:class:`DicomheroWritingDataHandlerNumeric` |Write into a numeric tag       |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::Date`                      |:cpp:class:`DicomheroDate`                      |Stores a DICOM date/time       |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::Age`                       |:cpp:class:`DicomheroAge`                       |Stores a DICOM Age             |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::PatientName`               |:cpp:class:`DicomheroPatientName`               |Stores a patient name          |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::UnicodePatientName`        |                                             |Stores a patient name (unicode)|
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|C++ class                                         |Objective-C/Swift class                         |Description                     |
++==================================================+================================================+================================+
+|:cpp:class:`dicomhero::DataSet`                   |:cpp:class:`DicomheroDataSet`                   |An immutable DICOM structure    |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::MutableDataSet`            |:cpp:class:`DicomheroMutableDataSet`            |Mutable DICOM structure         |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::Tag`                       |:cpp:class:`DicomheroTag`                       |A single immutable DICOM tag    |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::MutableTag`                |:cpp:class:`DicomheroMutableTag`                |A single mutable DICOM tag      |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::TagId`                     |:cpp:class:`DicomheroTagId`                     |Identifies a tag                |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::ReadingDataHandler`        |:cpp:class:`DicomheroReadingDataHandler`        |Read data from a tag            |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::ReadingDataHandlerNumeric` |:cpp:class:`DicomheroReadingDataHandlerNumeric` |Read data from a numeric tag    |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::WritingDataHandler`        |:cpp:class:`DicomheroWritingDataHandler`        |Write into a tag                |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::WritingDataHandlerNumeric` |:cpp:class:`DicomheroWritingDataHandlerNumeric` |Write into a numeric tag        |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::Date`                      |:cpp:class:`DicomheroDate`                      |Stores a DICOM date/time        |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::Age`                       |:cpp:class:`DicomheroAge`                       |Stores a DICOM Age              |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::PatientName`               |:cpp:class:`DicomheroPatientName`               |Stores a patient name           |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::UnicodePatientName`        |                                                |Stores a patient name (unicode) |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
 
 .. figure:: images/data.jpg
    :target: _images/data.jpg

@@ -8,30 +8,30 @@ This chapter describes the ACSE related classes and methods. ACSE stands for (As
 
 The following classes are described in this chapter:
 
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|C++ class                                      |Objective-C/Swift class                      |Description                    |
-+===============================================+=============================================+===============================+
-|:cpp:class:`dicomhero::PresentationContext`       |:cpp:class:`DicomheroPresentationContext`       |Stores an abstract syntax and  |
-|                                               |                                             |the list of allowed transfer   |
-|                                               |                                             |syntaxes                       |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::PresentationContexts`      |:cpp:class:`DicomheroPresentationContexts`      |Stores a list of Presentation  |
-|                                               |                                             |contexts                       |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::AssociationMessage`        |:cpp:class:`DicomheroAssociationMessage`        |Stores a message sent through  |
-|                                               |                                             |an association                 |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::MutableAssociationMessage` |:cpp:class:`DicomheroMutableAssociationMessage` |A mutable message (used to     |
-|                                               |                                             |create a message)              |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::AssociationBase`           |:cpp:class:`DicomheroAssociationBase`           |Base class for the associations|
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::AssociationSCU`            |:cpp:class:`DicomheroAssociationSCU`            |An SCU association (Service    |
-|                                               |                                             |user)                          |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::AssociationSCP`            |:cpp:class:`DicomheroAssociationSCP`            |An SCP association (service    |
-|                                               |                                             |provider)                      |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|C++ class                                         |Objective-C/Swift class                         |Description                     |
++==================================================+================================================+================================+
+|:cpp:class:`dicomhero::PresentationContext`       |:cpp:class:`DicomheroPresentationContext`       |Stores an abstract syntax and   |
+|                                                  |                                                |the list of allowed transfer    |
+|                                                  |                                                |syntaxes                        |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::PresentationContexts`      |:cpp:class:`DicomheroPresentationContexts`      |Stores a list of Presentation   |
+|                                                  |                                                |contexts                        |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::AssociationMessage`        |:cpp:class:`DicomheroAssociationMessage`        |Stores a message sent through   |
+|                                                  |                                                |an association                  |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::MutableAssociationMessage` |:cpp:class:`DicomheroMutableAssociationMessage` |A mutable message (used to      |
+|                                                  |                                                |create a message)               |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::AssociationBase`           |:cpp:class:`DicomheroAssociationBase`           |Base class for the associations |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::AssociationSCU`            |:cpp:class:`DicomheroAssociationSCU`            |An SCU association (Service     |
+|                                                  |                                                |user)                           |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::AssociationSCP`            |:cpp:class:`DicomheroAssociationSCP`            |An SCP association (service     |
+|                                                  |                                                |provider)                       |
++--------------------------------------------------+------------------------------------------------+--------------------------------+
 
 .. figure:: images/acse.jpg
    :target: _images/acse.jpg

@@ -9,49 +9,49 @@ and to send and receive DICOM messages.
 
 The following classes are described in this chapter:
 
-+----------------------------------------+--------------------------------------+-------------------------------+
-|C++ class                               |Objective-C/Swift class               |Description                    |
-+========================================+======================================+===============================+
-|:cpp:class:`dicomhero::CodecFactory`       |:cpp:class:`DicomheroCodecFactory`       |Load/Save a DICOM structure    |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::BaseStreamInput`    |:cpp:class:`DicomheroBaseStreamInput`    |Base class for input streams   |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::BaseStreamOutput`   |:cpp:class:`DicomheroBaseStreamOutput`   |Base class for output streams  |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::StreamReader`       |:cpp:class:`DicomheroStreamReader`       |Read from an input stream      |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::StreamWriter`       |:cpp:class:`DicomheroStreamWriter`       |Write into an output stream    |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::FileStreamInput`    |:cpp:class:`DicomheroFileStreamInput`    |File input stream              |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::FileStreamOutput`   |:cpp:class:`DicomheroFileStreamOutput`   |File output stream             |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::MemoryStreamInput`  |:cpp:class:`DicomheroMemoryStreamInput`  |Memory input stream            |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::MemoryStreamOutput` |:cpp:class:`DicomheroMemoryStreamOutput` |Memory output stream           |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::StreamTimeout`      |:cpp:class:`DicomheroStreamTimeout`      |Causes a stream to fail after  |
-|                                        |                                      |a timeout has expired          |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::PipeStream`         |:cpp:class:`DicomheroPipeStream`         |Allow to implement custom      |
-|                                        |                                      |input and output streams       |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::TCPStream`          |:cpp:class:`DicomheroTCPStream`          |Implement an input and output  |
-|                                        |                                      |stream on a TCP connection     |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::TCPListener`        |:cpp:class:`DicomheroTCPListener`        |Listen for incoming TCP        |
-|                                        |                                      |connections                    |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::TCPAddress`         |:cpp:class:`DicomheroTCPAddress`         |Represents a TCP address       |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::TCPPassiveAddress`  |:cpp:class:`DicomheroTCPPassiveAddress`  |Represents a passive TCP       |
-|                                        |                                      |address (used by the connection|
-|                                        |                                      |listener)                      |
-+----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::TCPActiveAddress`   |:cpp:class:`DicomheroTCPActiveAddress`   |Represents an active TCP       |
-|                                        |                                      |address (used to connect to    |
-|                                        |                                      |a peer)                        |
-+----------------------------------------+--------------------------------------+-------------------------------+
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|C++ class                                  |Objective-C/Swift class                  |Description                     |
++===========================================+=========================================+================================+
+|:cpp:class:`dicomhero::CodecFactory`       |:cpp:class:`DicomheroCodecFactory`       |Load/Save a DICOM structure     |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::BaseStreamInput`    |:cpp:class:`DicomheroBaseStreamInput`    |Base class for input streams    |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::BaseStreamOutput`   |:cpp:class:`DicomheroBaseStreamOutput`   |Base class for output streams   |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::StreamReader`       |:cpp:class:`DicomheroStreamReader`       |Read from an input stream       |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::StreamWriter`       |:cpp:class:`DicomheroStreamWriter`       |Write into an output stream     |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::FileStreamInput`    |:cpp:class:`DicomheroFileStreamInput`    |File input stream               |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::FileStreamOutput`   |:cpp:class:`DicomheroFileStreamOutput`   |File output stream              |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::MemoryStreamInput`  |:cpp:class:`DicomheroMemoryStreamInput`  |Memory input stream             |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::MemoryStreamOutput` |:cpp:class:`DicomheroMemoryStreamOutput` |Memory output stream            |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::StreamTimeout`      |:cpp:class:`DicomheroStreamTimeout`      |Causes a stream to fail after   |
+|                                           |                                         |a timeout has expired           |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::PipeStream`         |:cpp:class:`DicomheroPipeStream`         |Allow to implement custom       |
+|                                           |                                         |input and output streams        |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::TCPStream`          |:cpp:class:`DicomheroTCPStream`          |Implement an input and output   |
+|                                           |                                         |stream on a TCP connection      |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::TCPListener`        |:cpp:class:`DicomheroTCPListener`        |Listen for incoming TCP         |
+|                                           |                                         |connections                     |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::TCPAddress`         |:cpp:class:`DicomheroTCPAddress`         |Represents a TCP address        |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::TCPPassiveAddress`  |:cpp:class:`DicomheroTCPPassiveAddress`  |Represents a passive TCP        |
+|                                           |                                         |address (used by the connection |
+|                                           |                                         |listener)                       |
++-------------------------------------------+-----------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::TCPActiveAddress`   |:cpp:class:`DicomheroTCPActiveAddress`   |Represents an active TCP        |
+|                                           |                                         |address (used to connect to     |
+|                                           |                                         |a peer)                         |
++-------------------------------------------+-----------------------------------------+--------------------------------+
 
 .. figure:: images/streams.jpg
    :target: _images/streams.jpg

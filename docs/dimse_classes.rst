@@ -8,68 +8,68 @@ This chapter describes the classes and methods responsible for constructing and 
 
 The following classes are described in this chapter:
 
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|C++ class                                      |Objective-C/Swift class                      |Description                    |
-+===============================================+=============================================+===============================+
-|:cpp:class:`dicomhero::DimseService`              |:cpp:class:`DicomheroDimseService`              |Sends and receives DIMSE       |
-|                                               |                                             |commands and responses         |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::DimseCommandBase`          |:cpp:class:`DicomheroDimseCommandBase`          |Base class for DIMSE           |
-|                                               |                                             |commands and responses         |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::DimseCommand`              |:cpp:class:`DicomheroDimseCommand`              |Base class for DIMSE commands  |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::DimseResponse`             |:cpp:class:`DicomheroDimseResponse`             |Base class for DIMSE responses |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::CStoreCommand`             |:cpp:class:`DicomheroCStoreCommand`             |DIMSE C-STORE command          |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::CGetCommand`               |:cpp:class:`DicomheroCGetCommand`               |DIMSE C-GET command            |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::CFindCommand`              |:cpp:class:`DicomheroCFindCommand`              |DIMSE C-FIND command           |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::CMoveCommand`              |:cpp:class:`DicomheroCMoveCommand`              |DIMSE C-MOVE command           |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::CEchoCommand`              |:cpp:class:`DicomheroCEchoCommand`              |DIMSE C-ECHO command           |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::CCancelCommand`            |:cpp:class:`DicomheroCCancelCommand`            |DIMSE C-CANCEL command         |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::CPartialResponse`          |:cpp:class:`DicomheroCPartialResponse`          |Base clas for DIMSE partial    |
-|                                               |                                             |responses                      |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::CStoreResponse`            |:cpp:class:`DicomheroCStoreResponse`            |DIMSE C-STORE response         |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::CGetResponse`              |:cpp:class:`DicomheroCGetResponse`              |DIMSE C-GET response           |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::CFindResponse`             |:cpp:class:`DicomheroCFindResponse`             |DIMSE C-FIND response          |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::CMoveResponse`             |:cpp:class:`DicomheroCMoveResponse`             |DIMSE C-MOVE response          |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::CEchoResponse`             |:cpp:class:`DicomheroCEchoResponse`             |DIMSE C-ECHO response          |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::NEventReportCommand`       |:cpp:class:`DicomheroNEventReportCommand`       |DIMSE N-EVENT-REPORT command   |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::NSetCommand`               |:cpp:class:`DicomheroNSetCommand`               |DIMSE N-SET command            |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::NGetCommand`               |:cpp:class:`DicomheroNGetCommand`               |DIMSE N-GET command            |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::NActionCommand`            |:cpp:class:`DicomheroNActionCommand`            |DIMSE N-ACTION command         |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::NCreateCommand`            |:cpp:class:`DicomheroNCreateCommand`            |DIMSE N-CREATE command         |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::NDeleteCommand`            |:cpp:class:`DicomheroNDeleteCommand`            |DIMSE N-DELETE command         |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::NEventReportResponse`      |:cpp:class:`DicomheroNEventReportResponse`      |DIMSE N-EVENT-REPORT response  |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::NSetResponse`              |:cpp:class:`DicomheroNSetResponse`              |DIMSE N-SET response           |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::NGetCommand`               |:cpp:class:`DicomheroNGetCommand`               |DIMSE N-GET response           |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::NActionResponse`           |:cpp:class:`DicomheroNActionResponse`           |DIMSE N-ACTION response        |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::NCreateResponse`           |:cpp:class:`DicomheroNCreateResponse`           |DIMSE N-CREATE response        |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::NDeleteResponse`           |:cpp:class:`DicomheroNDeleteResponse`           |DIMSE N-DELETE response        |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|C++ class                                         |Objective-C/Swift class                      |Description                    |
++==================================================+=============================================+===============================+
+|:cpp:class:`dicomhero::DimseService`              |:cpp:class:`DicomheroDimseService`           |Sends and receives DIMSE       |
+|                                                  |                                             |commands and responses         |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::DimseCommandBase`          |:cpp:class:`DicomheroDimseCommandBase`       |Base class for DIMSE           |
+|                                                  |                                             |commands and responses         |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::DimseCommand`              |:cpp:class:`DicomheroDimseCommand`           |Base class for DIMSE commands  |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::DimseResponse`             |:cpp:class:`DicomheroDimseResponse`          |Base class for DIMSE responses |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::CStoreCommand`             |:cpp:class:`DicomheroCStoreCommand`          |DIMSE C-STORE command          |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::CGetCommand`               |:cpp:class:`DicomheroCGetCommand`            |DIMSE C-GET command            |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::CFindCommand`              |:cpp:class:`DicomheroCFindCommand`           |DIMSE C-FIND command           |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::CMoveCommand`              |:cpp:class:`DicomheroCMoveCommand`           |DIMSE C-MOVE command           |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::CEchoCommand`              |:cpp:class:`DicomheroCEchoCommand`           |DIMSE C-ECHO command           |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::CCancelCommand`            |:cpp:class:`DicomheroCCancelCommand`         |DIMSE C-CANCEL command         |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::CPartialResponse`          |:cpp:class:`DicomheroCPartialResponse`       |Base clas for DIMSE partial    |
+|                                                  |                                             |responses                      |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::CStoreResponse`            |:cpp:class:`DicomheroCStoreResponse`         |DIMSE C-STORE response         |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::CGetResponse`              |:cpp:class:`DicomheroCGetResponse`           |DIMSE C-GET response           |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::CFindResponse`             |:cpp:class:`DicomheroCFindResponse`          |DIMSE C-FIND response          |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::CMoveResponse`             |:cpp:class:`DicomheroCMoveResponse`          |DIMSE C-MOVE response          |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::CEchoResponse`             |:cpp:class:`DicomheroCEchoResponse`          |DIMSE C-ECHO response          |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::NEventReportCommand`       |:cpp:class:`DicomheroNEventReportCommand`    |DIMSE N-EVENT-REPORT command   |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::NSetCommand`               |:cpp:class:`DicomheroNSetCommand`            |DIMSE N-SET command            |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::NGetCommand`               |:cpp:class:`DicomheroNGetCommand`            |DIMSE N-GET command            |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::NActionCommand`            |:cpp:class:`DicomheroNActionCommand`         |DIMSE N-ACTION command         |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::NCreateCommand`            |:cpp:class:`DicomheroNCreateCommand`         |DIMSE N-CREATE command         |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::NDeleteCommand`            |:cpp:class:`DicomheroNDeleteCommand`         |DIMSE N-DELETE command         |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::NEventReportResponse`      |:cpp:class:`DicomheroNEventReportResponse`   |DIMSE N-EVENT-REPORT response  |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::NSetResponse`              |:cpp:class:`DicomheroNSetResponse`           |DIMSE N-SET response           |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::NGetCommand`               |:cpp:class:`DicomheroNGetCommand`            |DIMSE N-GET response           |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::NActionResponse`           |:cpp:class:`DicomheroNActionResponse`        |DIMSE N-ACTION response        |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::NCreateResponse`           |:cpp:class:`DicomheroNCreateResponse`        |DIMSE N-CREATE response        |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
+|:cpp:class:`dicomhero::NDeleteResponse`           |:cpp:class:`DicomheroNDeleteResponse`        |DIMSE N-DELETE response        |
++--------------------------------------------------+---------------------------------------------+-------------------------------+
 
 
 .. figure:: images/dimse.jpg

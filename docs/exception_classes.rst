@@ -8,235 +8,235 @@ This chapter describes the exception classes thrown by Dicomhero.
 
 The following classes are described in this chapter:
 
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|C++ class                                                            |Objective-C/Swift class                                            |Description                                     |
-+=====================================================================+===================================================================+================================================+
-|:cpp:class:`dicomhero::ExceptionsManager`                               |N/A                                                                |Keeps track of the methods travelled by the     |
-|                                                                     |                                                                   |exception                                       |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::MissingDataElementError`                         |:cpp:class:`DicomheroMissingDataElementError`                         |Base class for the "missing data" exceptions    |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::MissingGroupError`                               |:cpp:class:`DicomheroMissingGroupError`                               |Thrown when a tag group is missing              |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::MissingTagError`                                 |:cpp:class:`DicomheroMissingTagError`                                 |Thrown when a tag is missing                    |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::MissingBufferError`                              |:cpp:class:`DicomheroMissingBufferError`                              |Thrown when a tag's buffer is missing           |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::MissingItemError`                                |:cpp:class:`DicomheroMissingItemError`                                |Thrown when a sequence item is missing          |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::StreamError`                                     |:cpp:class:`DicomheroStreamError`                                     |Base class for stream related exceptions        |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::StreamOpenError`                                 |:cpp:class:`DicomheroStreamOpenError`                                 |Thrown when the stream cannot be open           |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::StreamReadError`                                 |:cpp:class:`DicomheroStreamReadError`                                 |Thrown when the stream cannot be read           |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::StreamWriteError`                                |:cpp:class:`DicomheroStreamWriteError`                                |Thrown when the stream cannot be written        |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::StreamClosedError`                               |:cpp:class:`DicomheroStreamClosedError`                               |Thrown when accessing a closed stream           |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::StreamEOFError`                                  |:cpp:class:`DicomheroStreamEOFError`                                  |Thrown when the end of the stream has been      |
-|                                                                     |                                                                   |reached                                         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::TCPConnectionRefused`                            |:cpp:class:`DicomheroTCPConnectionRefused`                            |Thrown when a TCP connection is refused         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::TCPAddressAlreadyInUse`                          |:cpp:class:`DicomheroTCPAddressAlreadyInUse`                          |Thrown when using an already used address       |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::PermissionDeniedError`                           |:cpp:class:`DicomheroPermissionDeniedError`                           |Thrown when using a privileged TCP port         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AddressError`                                    |:cpp:class:`DicomheroAddressError`                                    |Base class for TCP address related exceptions   |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AddressTryAgainError`                            |:cpp:class:`DicomheroAddressTryAgainError`                            |Thrown when the address cannot momentarily be   |
-|                                                                     |                                                                   |resolved                                        |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AddressNoNameError`                              |:cpp:class:`DicomheroAddressNoNameError`                              |Thrown when the name cannot be resolved         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AddressServiceNotSupportedError`                 |:cpp:class:`DicomheroAddressServiceNotSupportedError`                 |Thrown when the requested service is unknown    |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DictionaryError`                                 |:cpp:class:`DicomheroDictionaryError`                                 |Base class for Dictionary related exceptions    |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DictionaryUnknownTagError`                       |:cpp:class:`DicomheroDictionaryUnknownTagError`                       |Thrown when the tag is unknown                  |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DictionaryUnknownDataTypeError`                  |:cpp:class:`DicomheroDictionaryUnknownDataTypeError`                  |Thrown when a data type is unknown              |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::CharsetConversionError`                          |:cpp:class:`DicomheroCharsetConversionError`                          |Base class for charset conversion related       |
-|                                                                     |                                                                   |exceptions                                      |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::CharsetConversionNoTableError`                   |:cpp:class:`DicomheroCharsetConversionNoTableError`                   |The charset table is unknown                    |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::CharsetConversionNoSupportedTableError`          |:cpp:class:`DicomheroCharsetConversionNoSupportedTableError`          |The charset table is not installed on the system|
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::CharsetConversionCannotConvert`                  |:cpp:class:`CharsetConversionCannotConvert`                        |Thrown when a string cannot be converted using  |
-|                                                                     |                                                                   |the charsets declared in the dataset            |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::CodecError`                                      |:cpp:class:`DicomheroCodecError`                                      |Base class for codec related exceptions         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::CodecWrongFormatError`                           |:cpp:class:`DicomheroCodecWrongFormatError`                           |Thrown when a codec cannot parse the byte stream|
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::CodecCorruptedFileError`                         |:cpp:class:`DicomheroCodecCorruptedFileError`                         |Thrown when the byte stream is corrupted        |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::CodecWrongTransferSyntaxError`                   |:cpp:class:`DicomheroCodecWrongTransferSyntaxError`                   |Thrown when the transfer syntax is unknown      |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::CodecImageTooBigError`                           |:cpp:class:`DicomheroCodecImageTooBigError`                           |Thrown when the image size is too big           |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::InvalidSequenceItemError`                        |:cpp:class:`DicomheroInvalidSequenceItemError`                        |Thrown when a sequence has a wrong VR           |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::StreamJpegTagInStreamError`                      |:cpp:class:`DicomheroStreamJpegTagInStreamError`                      |Thrown when a jpeg tag is in the wrong position |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DicomCodecError`                                 |:cpp:class:`DicomheroDicomCodecError`                                 |Base class for DICOM codec exceptions           |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DicomCodecDepthLimitReachedError`                |:cpp:class:`DicomheroDicomCodecDepthLimitReachedError`                |Thrown when too many sequences are embedded into|
-|                                                                     |                                                                   |each other                                      |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::JpegCodecError`                                  |:cpp:class:`DicomheroJpegCodecError`                                  |Base class for jpeg related exceptions          |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::JpegCodecCannotHandleSyntaxError`                |:cpp:class:`DicomheroJpegCodecCannotHandleSyntaxError`                |Thrown when the JPEG SOF ID cannot be processed |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DataHandlerError`                                |:cpp:class:`DicomheroDataHandlerError`                                |Base class for data handler related exceptions  |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DataHandlerConversionError`                      |:cpp:class:`DicomheroDataHandlerConversionError`                      |Thrown when the data cannot be converted        |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DataHandlerCorruptedBufferError`                 |:cpp:class:`DicomheroDataHandlerCorruptedBufferError`                 |Thrown when a data buffer is corrupted          |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DataHandlerInvalidDataError`                     |:cpp:class:`DicomheroDataHandlerInvalidDataError`                     |Thrown when trying to store invalid data        |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DataSetError`                                    |:cpp:class:`DicomheroDataSetError`                                    |Base class for DataSet related exceptions       |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DataSetDifferentFormatError`                     |:cpp:class:`DicomheroDataSetDifferentFormatError`                     |Thrown when the operation requires a change of  |
-|                                                                     |                                                                   |transfer syntax                                 |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DataSetUnknownTransferSyntaxError`               |:cpp:class:`DicomheroDataSetUnknownTransferSyntaxError`               |Thrown when none of the code support the        |
-|                                                                     |                                                                   |transfer syntax                                 |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DataSetWrongFrameError`                          |:cpp:class:`DicomheroDataSetWrongFrameError`                          |Thrown when storing the wrong frame             |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DataSetImageDoesntExistError`                    |:cpp:class:`DicomheroDataSetImageDoesntExistError`                    |Thrown when attempting to retrieve a frame that |
-|                                                                     |                                                                   |does not exist                                  |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DataSetImagePaletteColorIsReadOnly`              |:cpp:class:`DicomheroDataSetImagePaletteColorIsReadOnly`              |Thrown when trying to write a Palette image     |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DataSetCorruptedOffsetTableError`                |:cpp:class:`DicomheroDataSetCorruptedOffsetTableError`                |Thrown when the table offset for the images is  |
-|                                                                     |                                                                   |corrupted                                       |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DicomDirError`                                   |:cpp:class:`DicomheroDicomDirError`                                   |Base class for DICOMDIR related exceptions      |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DicomDirCircularReferenceError`                  |:cpp:class:`DicomheroDicomDirCircularReferenceError`                  |Thrown when a dicomentry references a           |
-|                                                                     |                                                                   |parent entry as a child                         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::HuffmanError`                                    |:cpp:class:`DicomheroHuffmanError`                                    |Base class for huffman related exceptions       |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::HuffmanCreateTableError`                         |:cpp:class:`DicomheroHuffmanCreateTableError`                         |Thrown when the Huffman table cannot be created |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::HuffmanReadError`                                |:cpp:class:`DicomheroHuffmanReadError`                                |Thrown when an invalid Huffman code is read     |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::HuffmanWriteError`                               |:cpp:class:`DicomheroHuffmanWriteError`                               |Thrown when writing a value that is not in the  |
-|                                                                     |                                                                   |Huffman table                                   |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::ImageError`                                      |:cpp:class:`DicomheroImageError`                                      |Base class for Image related exceptions         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::ImageUnknownDepthError`                          |:cpp:class:`DicomheroImageUnknownDepthError`                          |Thrown when the bit depth parameter is wrong    |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::ImageUnknownColorSpaceError`                     |:cpp:class:`DicomheroImageUnknownColorSpaceError`                     |Thrown when the color space is not recognized   |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::ImageInvalidSizeError`                           |:cpp:class:`DicomheroImageInvalidSizeError`                           |Thrown when the image size is invalid           |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::TransformError`                                  |:cpp:class:`DicomheroTransformError`                                  |Base class for Transform related exceptions     |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::TransformInvalidAreaError`                       |:cpp:class:`DicomheroTransformInvalidAreaError`                       |Thrown when the transform area is invalid       |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::TransformDifferentHighBitError`                  |:cpp:class:`DicomheroTransformDifferentHighBitError`                  |Thrown when the high bit of the input image is  |
-|                                                                     |                                                                   |different from the high bit of the output image |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::ColorTransformError`                             |:cpp:class:`DicomheroColorTransformError`                             |Base class for Color Transform related          |
-|                                                                     |                                                                   |exceptions                                      |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::ColorTransformWrongColorSpaceError`              |:cpp:class:`DicomheroColorTransformWrongColorSpaceError`              |Thrown when the input or output images of a     |
-|                                                                     |                                                                   |color transform have the wrong color space      |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::ColorTransformsFactoryError`                     |:cpp:class:`DicomheroColorTransformsFactoryError`                     |Base class for Color Transform Factory related  |
-|                                                                     |                                                                   |exceptions                                      |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::ColorTransformsFactoryNoTransformError`          |:cpp:class:`DicomheroColorTransformsFactoryNoTransformError`          |Thrown when a conversion between the specified  |
-|                                                                     |                                                                   |color spaces does not exist                     |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::TransformDifferentColorSpacesError`              |:cpp:class:`DicomheroTransformDifferentColorSpacesError`              |Thrown when the input and output images of a    |
-|                                                                     |                                                                   |High Bit Transform have different color spaces  |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::ModalityVOILUTError`                             |:cpp:class:`DicomheroModalityVOILUTError`                             |Thrown when the input or output images of a     |
-|                                                                     |                                                                   |VOILUT transform are not monochromatic          |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DicomheroBadAlloc`                                  |:cpp:class:`DicomheroBadAlloc`                                        |Thrown when Dicomhero cannot allocate memory       |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::MemoryError`                                     |:cpp:class:`DicomheroMemoryError`                                     |Base class for ReadMemory and ReadWriteMemory   |
-|                                                                     |                                                                   |related exceptions                              |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::MemorySizeError`                                 |:cpp:class:`DicomheroMemorySizeError`                                 |Thrown when the allocated memory is too small   |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::LutError`                                        |:cpp:class:`DicomheroLutError`                                        |Base class for LUT related exceptions           |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::LutCorruptedError`                               |:cpp:class:`DicomheroLutCorruptedError`                               |Thrown when the LUT content is corrupted        |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseError`                                       |:cpp:class:`DicomheroAcseError`                                       |Base class for ACSE related exceptions          |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseCorruptedMessageError`                       |:cpp:class:`DicomheroAcseCorruptedMessageError`                       |Thrown when an ACSE message is corrupted        |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseNoTransferSyntaxError`                       |:cpp:class:`DicomheroAcseNoTransferSyntaxError`                       |Thrown when a transfer syntax is not available  |
-|                                                                     |                                                                   |for the abstract syntax                         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcsePresentationContextNotRequestedError`        |:cpp:class:`DicomheroAcsePresentationContextNotRequestedError`        |Thrown when the presentation context wasn't     |
-|                                                                     |                                                                   |requested during the association negotiation    |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseWrongRoleError`                              |:cpp:class:`DicomheroAcseWrongRoleError`                              |Thrown if the service is using the wrong role   |
-|                                                                     |                                                                   |for the presentation context                    |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseWrongIdError`                                |:cpp:class:`DicomheroAcseWrongIdError`                                |Base class for wrong message ID exceptions      |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseWrongResponseIdError`                        |:cpp:class:`DicomheroAcseWrongResponseIdError`                        |Thrown when a response has the wrong ID         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseWrongCommandIdError`                         |:cpp:class:`DicomheroAcseWrongCommandIdError`                         |Thrown when a command has the wrong ID          |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseRejectedAssociationError`                    |:cpp:class:`DicomheroAcseRejectedAssociationError`                    |Base class for association negotiation related  |
-|                                                                     |                                                                   |exceptions                                      |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseSCUNoReasonGivenError`                       |:cpp:class:`DicomheroAcseSCUNoReasonGivenError`                       |Association rejected by SCU with no given       |
-|                                                                     |                                                                   |reasons                                         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseSCUApplicationContextNameNotSupportedError`  |:cpp:class:`DicomheroAcseSCUApplicationContextNameNotSupportedError`  |Association rejected by SCU because of wrong    |
-|                                                                     |                                                                   |application context name                        |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseSCUCallingAETNotRecognizedError`             |:cpp:class:`DicomheroAcseSCUCallingAETNotRecognizedError`             |Association rejected by SCU because the calling |
-|                                                                     |                                                                   |AET was not recognized                          |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseSCUCalledAETNotRecognizedError`              |:cpp:class:`DicomheroAcseSCUCalledAETNotRecognizedError`              |Association rejected by SCU because the called  |
-|                                                                     |                                                                   |AET was not recognized                          |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseSCPNoReasonGivenError`                       |:cpp:class:`DicomheroAcseSCPNoReasonGivenError`                       |Association rejected by SCP with no given       |
-|                                                                     |                                                                   |reasons                                         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseSCPAcseProtocolVersionNotSupportedError`     |:cpp:class:`DicomheroAcseSCPAcseProtocolVersionNotSupportedError`     |Association rejected by SCP because the protocol|
-|                                                                     |                                                                   |version was not supported                       |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseSCPPresentationReservedError`                |:cpp:class:`DicomheroAcseSCPPresentationReservedError`                |Association rejected by SCP because of the usage|
-|                                                                     |                                                                   |of a reserved presentation context ID           |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseSCPPresentationTemporaryCongestionError`     |:cpp:class:`DicomheroAcseSCPPresentationTemporaryCongestionError`     |Association rejected by SCP because of a        |
-|                                                                     |                                                                   |temporary congestion                            |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseSCPPresentationLocalLimitExcededError`       |:cpp:class:`DicomheroAcseSCPPresentationLocalLimitExcededError`       |Association rejected by SCP because of a        |
-|                                                                     |                                                                   |exustion of simultaneous connections            |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseTooManyOperationsPerformedError`             |:cpp:class:`DicomheroAcseTooManyOperationsPerformedError`             |Thrown when too many operations are being       |
-|                                                                     |                                                                   |performed                                       |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseTooManyOperationsInvokedError`               |:cpp:class:`DicomheroAcseTooManyOperationsInvokedError`               |Thrown when too many operations are being       |
-|                                                                     |                                                                   |invoked                                         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::AcseNoPayloadError`                              |:cpp:class:`DicomheroAcseNoPayloadError`                              |Thrown when a payload was expected but is       |
-|                                                                     |                                                                   |missing                                         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DimseError`                                      |:cpp:class:`DicomheroDimseError`                                      |Base class for DIMSE related exceptions         |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
-|:cpp:class:`dicomhero::DimseInvalidCommand`                             |:cpp:class:`DicomheroDimseInvalidCommand`                             |Thrown when an invalid command is received      |
-+---------------------------------------------------------------------+-------------------------------------------------------------------+------------------------------------------------+
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|C++ class                                                               |Objective-C/Swift class                                               |Description                                      |
++========================================================================+======================================================================+=================================================+
+|:cpp:class:`dicomhero::ExceptionsManager`                               |N/A                                                                   |Keeps track of the methods travelled by the      |
+|                                                                        |                                                                      |exception                                        |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::MissingDataElementError`                         |:cpp:class:`DicomheroMissingDataElementError`                         |Base class for the "missing data" exceptions     |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::MissingGroupError`                               |:cpp:class:`DicomheroMissingGroupError`                               |Thrown when a tag group is missing               |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::MissingTagError`                                 |:cpp:class:`DicomheroMissingTagError`                                 |Thrown when a tag is missing                     |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::MissingBufferError`                              |:cpp:class:`DicomheroMissingBufferError`                              |Thrown when a tag's buffer is missing            |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::MissingItemError`                                |:cpp:class:`DicomheroMissingItemError`                                |Thrown when a sequence item is missing           |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::StreamError`                                     |:cpp:class:`DicomheroStreamError`                                     |Base class for stream related exceptions         |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::StreamOpenError`                                 |:cpp:class:`DicomheroStreamOpenError`                                 |Thrown when the stream cannot be open            |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::StreamReadError`                                 |:cpp:class:`DicomheroStreamReadError`                                 |Thrown when the stream cannot be read            |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::StreamWriteError`                                |:cpp:class:`DicomheroStreamWriteError`                                |Thrown when the stream cannot be written         |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::StreamClosedError`                               |:cpp:class:`DicomheroStreamClosedError`                               |Thrown when accessing a closed stream            |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::StreamEOFError`                                  |:cpp:class:`DicomheroStreamEOFError`                                  |Thrown when the end of the stream has been       |
+|                                                                        |                                                                      |reached                                          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::TCPConnectionRefused`                            |:cpp:class:`DicomheroTCPConnectionRefused`                            |Thrown when a TCP connection is refused          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::TCPAddressAlreadyInUse`                          |:cpp:class:`DicomheroTCPAddressAlreadyInUse`                          |Thrown when using an already used address        |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::PermissionDeniedError`                           |:cpp:class:`DicomheroPermissionDeniedError`                           |Thrown when using a privileged TCP port          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AddressError`                                    |:cpp:class:`DicomheroAddressError`                                    |Base class for TCP address related exceptions    |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AddressTryAgainError`                            |:cpp:class:`DicomheroAddressTryAgainError`                            |Thrown when the address cannot momentarily be    |
+|                                                                        |                                                                      |resolved                                         |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AddressNoNameError`                              |:cpp:class:`DicomheroAddressNoNameError`                              |Thrown when the name cannot be resolved          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AddressServiceNotSupportedError`                 |:cpp:class:`DicomheroAddressServiceNotSupportedError`                 |Thrown when the requested service is unknown     |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DictionaryError`                                 |:cpp:class:`DicomheroDictionaryError`                                 |Base class for Dictionary related exceptions     |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DictionaryUnknownTagError`                       |:cpp:class:`DicomheroDictionaryUnknownTagError`                       |Thrown when the tag is unknown                   |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DictionaryUnknownDataTypeError`                  |:cpp:class:`DicomheroDictionaryUnknownDataTypeError`                  |Thrown when a data type is unknown               |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::CharsetConversionError`                          |:cpp:class:`DicomheroCharsetConversionError`                          |Base class for charset conversion related        |
+|                                                                        |                                                                      |exceptions                                       |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::CharsetConversionNoTableError`                   |:cpp:class:`DicomheroCharsetConversionNoTableError`                   |The charset table is unknown                     |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::CharsetConversionNoSupportedTableError`          |:cpp:class:`DicomheroCharsetConversionNoSupportedTableError`          |The charset table is not installed on the system |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::CharsetConversionCannotConvert`                  |:cpp:class:`CharsetConversionCannotConvert`                           |Thrown when a string cannot be converted using   |
+|                                                                        |                                                                      |the charsets declared in the dataset             |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::CodecError`                                      |:cpp:class:`DicomheroCodecError`                                      |Base class for codec related exceptions          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::CodecWrongFormatError`                           |:cpp:class:`DicomheroCodecWrongFormatError`                           |Thrown when a codec cannot parse the byte stream |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::CodecCorruptedFileError`                         |:cpp:class:`DicomheroCodecCorruptedFileError`                         |Thrown when the byte stream is corrupted         |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::CodecWrongTransferSyntaxError`                   |:cpp:class:`DicomheroCodecWrongTransferSyntaxError`                   |Thrown when the transfer syntax is unknown       |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::CodecImageTooBigError`                           |:cpp:class:`DicomheroCodecImageTooBigError`                           |Thrown when the image size is too big            |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::InvalidSequenceItemError`                        |:cpp:class:`DicomheroInvalidSequenceItemError`                        |Thrown when a sequence has a wrong VR            |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::StreamJpegTagInStreamError`                      |:cpp:class:`DicomheroStreamJpegTagInStreamError`                      |Thrown when a jpeg tag is in the wrong position  |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DicomCodecError`                                 |:cpp:class:`DicomheroDicomCodecError`                                 |Base class for DICOM codec exceptions            |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DicomCodecDepthLimitReachedError`                |:cpp:class:`DicomheroDicomCodecDepthLimitReachedError`                |Thrown when too many sequences are embedded into |
+|                                                                        |                                                                      |each other                                       |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::JpegCodecError`                                  |:cpp:class:`DicomheroJpegCodecError`                                  |Base class for jpeg related exceptions           |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::JpegCodecCannotHandleSyntaxError`                |:cpp:class:`DicomheroJpegCodecCannotHandleSyntaxError`                |Thrown when the JPEG SOF ID cannot be processed  |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DataHandlerError`                                |:cpp:class:`DicomheroDataHandlerError`                                |Base class for data handler related exceptions   |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DataHandlerConversionError`                      |:cpp:class:`DicomheroDataHandlerConversionError`                      |Thrown when the data cannot be converted         |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DataHandlerCorruptedBufferError`                 |:cpp:class:`DicomheroDataHandlerCorruptedBufferError`                 |Thrown when a data buffer is corrupted           |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DataHandlerInvalidDataError`                     |:cpp:class:`DicomheroDataHandlerInvalidDataError`                     |Thrown when trying to store invalid data         |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DataSetError`                                    |:cpp:class:`DicomheroDataSetError`                                    |Base class for DataSet related exceptions        |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DataSetDifferentFormatError`                     |:cpp:class:`DicomheroDataSetDifferentFormatError`                     |Thrown when the operation requires a change of   |
+|                                                                        |                                                                      |transfer syntax                                  |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DataSetUnknownTransferSyntaxError`               |:cpp:class:`DicomheroDataSetUnknownTransferSyntaxError`               |Thrown when none of the code support the         |
+|                                                                        |                                                                      |transfer syntax                                  |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DataSetWrongFrameError`                          |:cpp:class:`DicomheroDataSetWrongFrameError`                          |Thrown when storing the wrong frame              |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DataSetImageDoesntExistError`                    |:cpp:class:`DicomheroDataSetImageDoesntExistError`                    |Thrown when attempting to retrieve a frame that  |
+|                                                                        |                                                                      |does not exist                                   |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DataSetImagePaletteColorIsReadOnly`              |:cpp:class:`DicomheroDataSetImagePaletteColorIsReadOnly`              |Thrown when trying to write a Palette image      |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DataSetCorruptedOffsetTableError`                |:cpp:class:`DicomheroDataSetCorruptedOffsetTableError`                |Thrown when the table offset for the images is   |
+|                                                                        |                                                                      |corrupted                                        |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DicomDirError`                                   |:cpp:class:`DicomheroDicomDirError`                                   |Base class for DICOMDIR related exceptions       |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DicomDirCircularReferenceError`                  |:cpp:class:`DicomheroDicomDirCircularReferenceError`                  |Thrown when a dicomentry references a            |
+|                                                                        |                                                                      |parent entry as a child                          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::HuffmanError`                                    |:cpp:class:`DicomheroHuffmanError`                                    |Base class for huffman related exceptions        |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::HuffmanCreateTableError`                         |:cpp:class:`DicomheroHuffmanCreateTableError`                         |Thrown when the Huffman table cannot be created  |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::HuffmanReadError`                                |:cpp:class:`DicomheroHuffmanReadError`                                |Thrown when an invalid Huffman code is read      |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::HuffmanWriteError`                               |:cpp:class:`DicomheroHuffmanWriteError`                               |Thrown when writing a value that is not in the   |
+|                                                                        |                                                                      |Huffman table                                    |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::ImageError`                                      |:cpp:class:`DicomheroImageError`                                      |Base class for Image related exceptions          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::ImageUnknownDepthError`                          |:cpp:class:`DicomheroImageUnknownDepthError`                          |Thrown when the bit depth parameter is wrong     |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::ImageUnknownColorSpaceError`                     |:cpp:class:`DicomheroImageUnknownColorSpaceError`                     |Thrown when the color space is not recognized    |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::ImageInvalidSizeError`                           |:cpp:class:`DicomheroImageInvalidSizeError`                           |Thrown when the image size is invalid            |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::TransformError`                                  |:cpp:class:`DicomheroTransformError`                                  |Base class for Transform related exceptions      |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::TransformInvalidAreaError`                       |:cpp:class:`DicomheroTransformInvalidAreaError`                       |Thrown when the transform area is invalid        |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::TransformDifferentHighBitError`                  |:cpp:class:`DicomheroTransformDifferentHighBitError`                  |Thrown when the high bit of the input image is   |
+|                                                                        |                                                                      |different from the high bit of the output image  |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::ColorTransformError`                             |:cpp:class:`DicomheroColorTransformError`                             |Base class for Color Transform related           |
+|                                                                        |                                                                      |exceptions                                       |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::ColorTransformWrongColorSpaceError`              |:cpp:class:`DicomheroColorTransformWrongColorSpaceError`              |Thrown when the input or output images of a      |
+|                                                                        |                                                                      |color transform have the wrong color space       |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::ColorTransformsFactoryError`                     |:cpp:class:`DicomheroColorTransformsFactoryError`                     |Base class for Color Transform Factory related   |
+|                                                                        |                                                                      |exceptions                                       |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::ColorTransformsFactoryNoTransformError`          |:cpp:class:`DicomheroColorTransformsFactoryNoTransformError`          |Thrown when a conversion between the specified   |
+|                                                                        |                                                                      |color spaces does not exist                      |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::TransformDifferentColorSpacesError`              |:cpp:class:`DicomheroTransformDifferentColorSpacesError`              |Thrown when the input and output images of a     |
+|                                                                        |                                                                      |High Bit Transform have different color spaces   |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::ModalityVOILUTError`                             |:cpp:class:`DicomheroModalityVOILUTError`                             |Thrown when the input or output images of a      |
+|                                                                        |                                                                      |VOILUT transform are not monochromatic           |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DicomheroBadAlloc`                               |:cpp:class:`DicomheroBadAlloc`                                        |Thrown when Dicomhero cannot allocate memory     |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::MemoryError`                                     |:cpp:class:`DicomheroMemoryError`                                     |Base class for ReadMemory and ReadWriteMemory    |
+|                                                                        |                                                                      |related exceptions                               |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::MemorySizeError`                                 |:cpp:class:`DicomheroMemorySizeError`                                 |Thrown when the allocated memory is too small    |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::LutError`                                        |:cpp:class:`DicomheroLutError`                                        |Base class for LUT related exceptions            |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::LutCorruptedError`                               |:cpp:class:`DicomheroLutCorruptedError`                               |Thrown when the LUT content is corrupted         |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseError`                                       |:cpp:class:`DicomheroAcseError`                                       |Base class for ACSE related exceptions           |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseCorruptedMessageError`                       |:cpp:class:`DicomheroAcseCorruptedMessageError`                       |Thrown when an ACSE message is corrupted         |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseNoTransferSyntaxError`                       |:cpp:class:`DicomheroAcseNoTransferSyntaxError`                       |Thrown when a transfer syntax is not available   |
+|                                                                        |                                                                      |for the abstract syntax                          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcsePresentationContextNotRequestedError`        |:cpp:class:`DicomheroAcsePresentationContextNotRequestedError`        |Thrown when the presentation context wasn't      |
+|                                                                        |                                                                      |requested during the association negotiation     |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseWrongRoleError`                              |:cpp:class:`DicomheroAcseWrongRoleError`                              |Thrown if the service is using the wrong role    |
+|                                                                        |                                                                      |for the presentation context                     |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseWrongIdError`                                |:cpp:class:`DicomheroAcseWrongIdError`                                |Base class for wrong message ID exceptions       |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseWrongResponseIdError`                        |:cpp:class:`DicomheroAcseWrongResponseIdError`                        |Thrown when a response has the wrong ID          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseWrongCommandIdError`                         |:cpp:class:`DicomheroAcseWrongCommandIdError`                         |Thrown when a command has the wrong ID           |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseRejectedAssociationError`                    |:cpp:class:`DicomheroAcseRejectedAssociationError`                    |Base class for association negotiation related   |
+|                                                                        |                                                                      |exceptions                                       |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseSCUNoReasonGivenError`                       |:cpp:class:`DicomheroAcseSCUNoReasonGivenError`                       |Association rejected by SCU with no given        |
+|                                                                        |                                                                      |reasons                                          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseSCUApplicationContextNameNotSupportedError`  |:cpp:class:`DicomheroAcseSCUApplicationContextNameNotSupportedError`  |Association rejected by SCU because of wrong     |
+|                                                                        |                                                                      |application context name                         |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseSCUCallingAETNotRecognizedError`             |:cpp:class:`DicomheroAcseSCUCallingAETNotRecognizedError`             |Association rejected by SCU because the calling  |
+|                                                                        |                                                                      |AET was not recognized                           |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseSCUCalledAETNotRecognizedError`              |:cpp:class:`DicomheroAcseSCUCalledAETNotRecognizedError`              |Association rejected by SCU because the called   |
+|                                                                        |                                                                      |AET was not recognized                           |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseSCPNoReasonGivenError`                       |:cpp:class:`DicomheroAcseSCPNoReasonGivenError`                       |Association rejected by SCP with no given        |
+|                                                                        |                                                                      |reasons                                          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseSCPAcseProtocolVersionNotSupportedError`     |:cpp:class:`DicomheroAcseSCPAcseProtocolVersionNotSupportedError`     |Association rejected by SCP because the protocol |
+|                                                                        |                                                                      |version was not supported                        |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseSCPPresentationReservedError`                |:cpp:class:`DicomheroAcseSCPPresentationReservedError`                |Association rejected by SCP because of the usage |
+|                                                                        |                                                                      |of a reserved presentation context ID            |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseSCPPresentationTemporaryCongestionError`     |:cpp:class:`DicomheroAcseSCPPresentationTemporaryCongestionError`     |Association rejected by SCP because of a         |
+|                                                                        |                                                                      |temporary congestion                             |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseSCPPresentationLocalLimitExcededError`       |:cpp:class:`DicomheroAcseSCPPresentationLocalLimitExcededError`       |Association rejected by SCP because of a         |
+|                                                                        |                                                                      |exustion of simultaneous connections             |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseTooManyOperationsPerformedError`             |:cpp:class:`DicomheroAcseTooManyOperationsPerformedError`             |Thrown when too many operations are being        |
+|                                                                        |                                                                      |performed                                        |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseTooManyOperationsInvokedError`               |:cpp:class:`DicomheroAcseTooManyOperationsInvokedError`               |Thrown when too many operations are being        |
+|                                                                        |                                                                      |invoked                                          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::AcseNoPayloadError`                              |:cpp:class:`DicomheroAcseNoPayloadError`                              |Thrown when a payload was expected but is        |
+|                                                                        |                                                                      |missing                                          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DimseError`                                      |:cpp:class:`DicomheroDimseError`                                      |Base class for DIMSE related exceptions          |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
+|:cpp:class:`dicomhero::DimseInvalidCommand`                             |:cpp:class:`DicomheroDimseInvalidCommand`                             |Thrown when an invalid command is received       |
++------------------------------------------------------------------------+----------------------------------------------------------------------+-------------------------------------------------+
 
 
 Exceptions manager

@@ -11,13 +11,13 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |C++ class                                      |Objective-C/Swift class                      |Description                    |
 +===============================================+=============================================+===============================+
-|:cpp:class:`dicomhero::Memory`                    |:cpp:class:`DicomheroMemory`                    |Allows to read the memory      |
+|:cpp:class:`dicomhero::Memory`                 |:cpp:class:`DicomheroMemory`                 |Allows to read the memory      |
 |                                               |                                             |content                        |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::MutableMemory`             |:cpp:class:`DicomheroMutableMemory`             |Allows to read and write the   |
+|:cpp:class:`dicomhero::MutableMemory`          |:cpp:class:`DicomheroMutableMemory`          |Allows to read and write the   |
 |                                               |                                             |memory content                 |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::MemoryPool`                |:cpp:class:`DicomheroMemoryPool`                |Allocatess or reuse a memory   |
+|:cpp:class:`dicomhero::MemoryPool`             |:cpp:class:`DicomheroMemoryPool`             |Allocatess or reuse a memory   |
 |                                               |                                             |block                          |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 

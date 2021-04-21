@@ -9,43 +9,43 @@ This chapter describes the auxiliary classes and definitions of the Dicomhero li
 
 The following classes are described in this chapter:
 
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|C++ class                                      |Objective-C/Swift class                      |Description                    |
-+===============================================+=============================================+===============================+
-|:cpp:class:`dicomhero::tagId_t`                   |:cpp:class:`DicomheroTagEnum`                   |Enumerates the known DICOM     |
-|                                               |                                             |tags                           |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::ageUnit_t`                 |:cpp:class:`DicomheroAgeUnit`                   |Enumerates the Age units       |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::tagVR_t`                   |:cpp:class:`DicomheroTagType`                   |Enumerates the DICOM VRs       |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::imageQuality_t`            |:cpp:class:`DicomheroImageQuality`              |Enumerates the image quality   |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::bitDepth_t`                |:cpp:class:`DicomheroBitDepth`                  |Enumerates the image bit depths|
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::drawBitmapType_t`          |:cpp:class:`DicomheroDrawBitmapType`            |Enumerates the bitmap types    |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::OverlayType_t`             |:cpp:class:`DicomheroOverlayType`               |Enumerates the overlay types   |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::dicomVOIFunction_t`        |:cpp:class:`DicomheroDicomVOIFunction`          |Enumerates VOI functions       |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::fileParts_t`               |NSArray                                      |List of file path parts        |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::codecType_t`               |:cpp:class:`DicomheroCodecType`                 |Enumerates the codec types     |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::vois_t`                    |NSArray                                      |List of VOIs descriptions      |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::dimseCommandType_t`        |:cpp:class:`DicomheroDimseCommandType`          |Enumerates the DIMSE commands  |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::dimseCommandPriority_t`    |:cpp:class:`DicomheroDimseCommandPriority`      |Enumerates the DIMSE priorities|
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::dimseStatusCode_t`         |:cpp:class:`DicomheroDimseStatusCode`           |Enumerates the DIMSE status    |
-|                                               |                                             |codes                          |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::dimseStatus_t`             |:cpp:class:`DicomheroDimseStatus`               |Enumerates the DIMSE statuses  |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::attributeIdentifierList_t` |NSArray                                      |List of attribute identifiers  |
-+-----------------------------------------------+---------------------------------------------+-------------------------------+
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|C++ class                                         |Objective-C/Swift class                      |Description                     |
++==================================================+=============================================+================================+
+|:cpp:class:`dicomhero::tagId_t`                   |:cpp:class:`DicomheroTagEnum`                |Enumerates the known DICOM      |
+|                                                  |                                             |tags                            |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::ageUnit_t`                 |:cpp:class:`DicomheroAgeUnit`                |Enumerates the Age units        |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::tagVR_t`                   |:cpp:class:`DicomheroTagType`                |Enumerates the DICOM VRs        |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::imageQuality_t`            |:cpp:class:`DicomheroImageQuality`           |Enumerates the image quality    |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::bitDepth_t`                |:cpp:class:`DicomheroBitDepth`               |Enumerates the image bit depths |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::drawBitmapType_t`          |:cpp:class:`DicomheroDrawBitmapType`         |Enumerates the bitmap types     |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::OverlayType_t`             |:cpp:class:`DicomheroOverlayType`            |Enumerates the overlay types    |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::dicomVOIFunction_t`        |:cpp:class:`DicomheroDicomVOIFunction`       |Enumerates VOI functions        |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::fileParts_t`               |NSArray                                      |List of file path parts         |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::codecType_t`               |:cpp:class:`DicomheroCodecType`              |Enumerates the codec types      |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::vois_t`                    |NSArray                                      |List of VOIs descriptions       |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::dimseCommandType_t`        |:cpp:class:`DicomheroDimseCommandType`       |Enumerates the DIMSE commands   |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::dimseCommandPriority_t`    |:cpp:class:`DicomheroDimseCommandPriority`   |Enumerates the DIMSE priorities |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::dimseStatusCode_t`         |:cpp:class:`DicomheroDimseStatusCode`        |Enumerates the DIMSE status     |
+|                                                  |                                             |codes                           |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::dimseStatus_t`             |:cpp:class:`DicomheroDimseStatus`            |Enumerates the DIMSE statuses   |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
+|:cpp:class:`dicomhero::attributeIdentifierList_t` |NSArray                                      |List of attribute identifiers   |
++--------------------------------------------------+---------------------------------------------+--------------------------------+
 
 
 Tag related definitions

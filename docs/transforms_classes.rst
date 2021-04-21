@@ -14,23 +14,23 @@ The following classes are described in this chapter:
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 |C++ class                                      |Objective-C/Swift class                      |Description                    |
 +===============================================+=============================================+===============================+
-|:cpp:class:`dicomhero::Transform`                 |:cpp:class:`DicomheroTransform`                 |Base class for all the         |
+|:cpp:class:`dicomhero::Transform`              |:cpp:class:`DicomheroTransform`              |Base class for all the         |
 |                                               |                                             |transforms                     |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::TransformsChain`           |:cpp:class:`DicomheroTransformsChain`           |Apply a sequence of transforms |
+|:cpp:class:`dicomhero::TransformsChain`        |:cpp:class:`DicomheroTransformsChain`        |Apply a sequence of transforms |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::VOILUT`                    |:cpp:class:`DicomheroVOILUT`                    |Apply a presentation VOI or    |
+|:cpp:class:`dicomhero::VOILUT`                 |:cpp:class:`DicomheroVOILUT`                 |Apply a presentation VOI or    |
 |                                               |                                             |LUT                            |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::VOIDescription`            |:cpp:class:`DicomheroVOIDescription`            |Describes the VOI's parameters |
+|:cpp:class:`dicomhero::VOIDescription`         |:cpp:class:`DicomheroVOIDescription`         |Describes the VOI's parameters |
 |                                               |                                             |(center, width, function)      |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::ModalityVOILUT`            |:cpp:class:`DicomheroModalityVOILUT`            |Apply the modality VOI or      |
+|:cpp:class:`dicomhero::ModalityVOILUT`         |:cpp:class:`DicomheroModalityVOILUT`         |Apply the modality VOI or      |
 |                                               |                                             |LUT                            |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::TransformHighBit`          |:cpp:class:`DicomheroTransformHighBit`          |Shift the pixels bits          |
+|:cpp:class:`dicomhero::TransformHighBit`       |:cpp:class:`DicomheroTransformHighBit`       |Shift the pixels bits          |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::ColorTransformsFactory`    |:cpp:class:`DicomheroColorTransformsFactory`    |Transform the color space      |
+|:cpp:class:`dicomhero::ColorTransformsFactory` |:cpp:class:`DicomheroColorTransformsFactory` |Transform the color space      |
 +-----------------------------------------------+---------------------------------------------+-------------------------------+
 
 .. figure:: images/transforms.jpg

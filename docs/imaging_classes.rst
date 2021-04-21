@@ -11,15 +11,15 @@ The following classes are described in this chapter:
 +----------------------------------------+--------------------------------------+-------------------------------+
 |C++ class                               |Objective-C/Swift class               |Description                    |
 +========================================+======================================+===============================+
-|:cpp:class:`dicomhero::Image`              |:cpp:class:`DicomheroImage`              |Stores a decompressed image    |
+|:cpp:class:`dicomhero::Image`           |:cpp:class:`DicomheroImage`           |Stores a decompressed image    |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::MutableImage`       |:cpp:class:`DicomheroMutableImage`       |A mutable decompressed image   |
+|:cpp:class:`dicomhero::MutableImage`    |:cpp:class:`DicomheroMutableImage`    |A mutable decompressed image   |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::Overlay`            |:cpp:class:`DicomheroOverlay`            |Stores overlay data            |
+|:cpp:class:`dicomhero::Overlay`         |:cpp:class:`DicomheroOverlay`         |Stores overlay data            |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::MutableOverlay`     |:cpp:class:`DicomheroMutableOverlay`     |A mutable overlay data         |
+|:cpp:class:`dicomhero::MutableOverlay`  |:cpp:class:`DicomheroMutableOverlay`  |A mutable overlay data         |
 +----------------------------------------+--------------------------------------+-------------------------------+
-|:cpp:class:`dicomhero::DrawBitmap`         |:cpp:class:`DicomheroDrawBitmap`         |Render an image into a bitmap  |
+|:cpp:class:`dicomhero::DrawBitmap`      |:cpp:class:`DicomheroDrawBitmap`      |Render an image into a bitmap  |
 +----------------------------------------+--------------------------------------+-------------------------------+
 
 Images can be obtained from a :ref:`DataSet` object by calling the getImage or getImageApplyModality methods.
