@@ -1,8 +1,7 @@
 Copyright
 =========
 
-Copyright 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016
-by Paolo Brandoli/Binarno s.p.
+Copyright 2005 - 2021 by Paolo Brandoli/Binarno s.p.
 
 Dicomhero is available for free under the :ref:`gpl-license` and for a fee under a commercial license.
 
