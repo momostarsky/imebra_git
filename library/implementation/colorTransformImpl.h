@@ -1,5 +1,5 @@
 /*
-Copyright 2005 - 2017 by Paolo Brandoli/Binarno s.p.
+Copyright 2005 - 2021 by Paolo Brandoli/Binarno s.p.
 
 DICOMHero/Imebra is available for free under the GNU General Public License.
 
