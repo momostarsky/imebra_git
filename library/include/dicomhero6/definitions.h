@@ -58,7 +58,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #endif
 
 #ifndef DICOMHERO_IMPLEMENTATION_NAME
-#define DICOMHERO_IMPLEMENTATION_NAME "Imebra 4"
+#define DICOMHERO_IMPLEMENTATION_NAME "DicomHero 6"
 #endif
 
 #endif // SWIG
