@@ -3,3 +3,5 @@ version.property
 imebra_*.zip
 *.user
 
+
+.DS_Store
