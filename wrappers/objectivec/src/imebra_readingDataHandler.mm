@@ -51,6 +51,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     return (unsigned int)get_imebra_object_holder(ReadingDataHandler)->getSize();
 }
 
+-(signed long long) getInt64:(unsigned int)index error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(ReadingDataHandler)->getInt64(index);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
 -(signed int) getInt32:(unsigned int)index error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
@@ -83,6 +92,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     return get_imebra_object_holder(ReadingDataHandler)->getInt8(index);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
+-(unsigned long long) getUint64:(unsigned int)index error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(ReadingDataHandler)->getUint64(index);
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
