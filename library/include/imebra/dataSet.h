@@ -72,6 +72,8 @@ class Overlay;
 /// - getImage()
 /// - getImageApplyModalityTransform()
 /// - getSequenceItem()
+/// - getInt64()
+/// - getUInt64()
 /// - getInt32()
 /// - getUint32()
 /// - getInt16()
@@ -892,8 +894,9 @@ private:
 ///
 /// To set the DataSet's content, use one of the following methods:
 /// - setImage()
-/// - setSequenceItem()
-/// - setInt32()
+/// - appendSequenceItem()
+/// - setInt64()
+/// - setUInt64()
 /// - setUint32()
 /// - setInt16()
 /// - setUint16()
