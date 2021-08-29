@@ -60,6 +60,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///////////////////////////////////////////////////////////////////////////////
     @property (readonly) unsigned int size;
 
+    /// \brief Retrieve a buffer's value as signed very long integer (64 bit).
+    ///
+    /// If the buffer's value cannot be converted to a signed very long integer
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param pError set to a NSError derived class in case of error
+    /// \return the tag's value as a signed 364 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(signed long long) getInt64:(unsigned int)index error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
     /// \brief Retrieve a buffer's value as signed long integer (32 bit).
     ///
     /// If the buffer's value cannot be converted to a signed long integer
@@ -106,6 +120,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(signed char) getInt8:(unsigned int)index error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Retrieve a buffer's value as an unsigned very long integer (64 bit).
+    ///
+    /// If the buffer's value cannot be converted to a unsigned very long integer
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        getSize()
+    /// \param pError set to a NSError derived class in case of error
+    /// \return the tag's value as an unsigned 64 bit integer
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(unsigned long long) getUint64:(unsigned int)index error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Retrieve a buffer's value as an unsigned long integer (32 bit).

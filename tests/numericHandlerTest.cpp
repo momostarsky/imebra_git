@@ -10,19 +10,22 @@ namespace dicomhero
 namespace tests
 {
 
-tagVR_t integerTags[] = {tagVR_t::OB, tagVR_t::OL, tagVR_t::SB, tagVR_t::UN, tagVR_t::OW, tagVR_t::SL, tagVR_t::SS, tagVR_t::UL, tagVR_t::US};
+tagVR_t integerTags[] = {tagVR_t::OB, tagVR_t::OL, tagVR_t::SB, tagVR_t::UN, tagVR_t::OW, tagVR_t::SL, tagVR_t::SS, tagVR_t::UL, tagVR_t::US, tagVR_t::OV, tagVR_t::SV, tagVR_t::UV};
 tagVR_t floatTags[] = {tagVR_t::FL, tagVR_t::OF, tagVR_t::FD, tagVR_t::OD};
 tagVR_t allTags[] = {
     tagVR_t::AT,
     tagVR_t::OB,
     tagVR_t::OL,
+    tagVR_t::OV,
     tagVR_t::SB,
     tagVR_t::UN,
     tagVR_t::OW,
     tagVR_t::SL,
     tagVR_t::SS,
+    tagVR_t::SV,
     tagVR_t::UL,
     tagVR_t::US,
+    tagVR_t::UV,
     tagVR_t::FL,
     tagVR_t::OF,
     tagVR_t::FD,
@@ -79,6 +82,7 @@ TEST(numericHandlerTest, testDouble)
         ASSERT_FLOAT_EQ(123.7f, testDataSet.getFloat(TagId(10, 10), 6));
         ASSERT_FLOAT_EQ(124.9f, testDataSet.getFloat(TagId(10, 10), 7));
         ASSERT_FLOAT_EQ(-1.0f, testDataSet.getFloat(TagId(10, 10), 9));
+        ASSERT_THROW(testDataSet.getUint64(TagId(10, 10), 9), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.getUint32(TagId(10, 10), 9), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.getUint16(TagId(10, 10), 9), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.getUint8(TagId(10, 10), 9), DataHandlerConversionError);
@@ -184,7 +188,8 @@ TEST(numericHandlerTest, testInteger)
             ASSERT_EQ(integerTags[scanVR] == tagVR_t::OL ||
                       integerTags[scanVR] == tagVR_t::SB ||
                       integerTags[scanVR] == tagVR_t::SL ||
-                      integerTags[scanVR] == tagVR_t::SS,
+                      integerTags[scanVR] == tagVR_t::SS ||
+                      integerTags[scanVR] == tagVR_t::SV,
                       handler.isSigned());
 
             ASSERT_FALSE(handler.isFloat());
@@ -471,6 +476,36 @@ TEST(numericHandlerTest, testLimits)
     }
 
     {
+        // UV (uint64)
+        MutableDataSet testDataSet;
+        testDataSet.setUint64(TagId(0x10, 0x10), std::numeric_limits<std::uint64_t>::max(), tagVR_t::UV);
+        ASSERT_THROW(testDataSet.getUint8(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint16(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_EQ(std::numeric_limits<std::uint64_t>::max(), testDataSet.getUint64(TagId(0x10, 0x10), 0));
+        ASSERT_FLOAT_EQ(static_cast<float>(std::numeric_limits<std::uint64_t>::max()), testDataSet.getFloat(TagId(0x10, 0x10), 0));
+        ASSERT_DOUBLE_EQ(static_cast<double>(std::numeric_limits<std::uint64_t>::max()), testDataSet.getDouble(TagId(0x10, 0x10), 0));
+        ASSERT_THROW(testDataSet.getInt8(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt16(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt32(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setDouble(TagId(0x10, 0x10), static_cast<double>(std::numeric_limits<std::uint64_t>::max()) * 10.0, tagVR_t::UL), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setDouble(TagId(0x10, 0x10), static_cast<double>(std::numeric_limits<std::uint64_t>::lowest()) - 1.0, tagVR_t::UL), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setFloat(TagId(0x10, 0x10), static_cast<float>(std::numeric_limits<std::uint64_t>::max()) * 10.0f, tagVR_t::UL), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setFloat(TagId(0x10, 0x10), static_cast<float>(std::numeric_limits<std::uint64_t>::lowest()) - 1000.0f, tagVR_t::UL), DataHandlerConversionError);
+
+        testDataSet.setUint64(TagId(0x10, 0x10), 1, tagVR_t::UL);
+        ASSERT_EQ(1u, testDataSet.getUint8(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1u, testDataSet.getUint16(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1u, testDataSet.getUint32(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1u, testDataSet.getUint64(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1, testDataSet.getInt8(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1, testDataSet.getInt16(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1, testDataSet.getInt32(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1, testDataSet.getInt64(TagId(0x10, 0x10), 0));
+        ASSERT_FLOAT_EQ(1.0f, testDataSet.getFloat(TagId(0x10, 0x10), 0));
+        ASSERT_DOUBLE_EQ(1.0, testDataSet.getDouble(TagId(0x10, 0x10), 0));
+    }
+
+    {
         // SL (int32)
         MutableDataSet testDataSet;
         testDataSet.setInt32(TagId(0x10, 0x10), std::numeric_limits<std::int32_t>::max(), tagVR_t::SL);
@@ -487,13 +522,45 @@ TEST(numericHandlerTest, testLimits)
         ASSERT_THROW(testDataSet.setFloat(TagId(0x10, 0x10), static_cast<float>(std::numeric_limits<std::int32_t>::max()) + 1000.0f, tagVR_t::SL), DataHandlerConversionError);
         ASSERT_THROW(testDataSet.setFloat(TagId(0x10, 0x10), static_cast<float>(std::numeric_limits<std::int32_t>::lowest()) - 1000.0f, tagVR_t::SL), DataHandlerConversionError);
 
-        testDataSet.setUint16(TagId(0x10, 0x10), 1, tagVR_t::SL);
+        testDataSet.setUint32(TagId(0x10, 0x10), 1, tagVR_t::SL);
         ASSERT_EQ(1u, testDataSet.getUint8(TagId(0x10, 0x10), 0));
         ASSERT_EQ(1u, testDataSet.getUint16(TagId(0x10, 0x10), 0));
         ASSERT_EQ(1u, testDataSet.getUint32(TagId(0x10, 0x10), 0));
         ASSERT_EQ(1, testDataSet.getInt8(TagId(0x10, 0x10), 0));
         ASSERT_EQ(1, testDataSet.getInt16(TagId(0x10, 0x10), 0));
         ASSERT_EQ(1, testDataSet.getInt32(TagId(0x10, 0x10), 0));
+        ASSERT_FLOAT_EQ(1.0f, testDataSet.getFloat(TagId(0x10, 0x10), 0));
+        ASSERT_DOUBLE_EQ(1.0, testDataSet.getDouble(TagId(0x10, 0x10), 0));
+    }
+
+    {
+        // SV (int64)
+        MutableDataSet testDataSet;
+        testDataSet.setInt64(TagId(0x10, 0x10), std::numeric_limits<std::int64_t>::max(), tagVR_t::SV);
+        ASSERT_THROW(testDataSet.getUint8(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint16(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getUint32(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_EQ(static_cast<std::uint64_t>(std::numeric_limits<std::int64_t>::max()), testDataSet.getUint64(TagId(0x10, 0x10), 0));
+        ASSERT_FLOAT_EQ(static_cast<float>(std::numeric_limits<std::int64_t>::max()), testDataSet.getFloat(TagId(0x10, 0x10), 0));
+        ASSERT_DOUBLE_EQ(static_cast<double>(std::numeric_limits<std::int64_t>::max()), testDataSet.getDouble(TagId(0x10, 0x10), 0));
+        ASSERT_THROW(testDataSet.getInt8(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt16(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.getInt32(TagId(0x10, 0x10), 0), DataHandlerConversionError);
+        ASSERT_EQ(std::numeric_limits<std::int64_t>::max(), testDataSet.getInt64(TagId(0x10, 0x10), 0));
+        ASSERT_THROW(testDataSet.setDouble(TagId(0x10, 0x10), static_cast<double>(std::numeric_limits<std::int64_t>::max()) * 1000.0, tagVR_t::SL), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setDouble(TagId(0x10, 0x10), static_cast<double>(std::numeric_limits<std::int64_t>::lowest()) * 1000.0, tagVR_t::SL), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setFloat(TagId(0x10, 0x10), static_cast<float>(std::numeric_limits<std::int64_t>::max()) * 1000.0f, tagVR_t::SL), DataHandlerConversionError);
+        ASSERT_THROW(testDataSet.setFloat(TagId(0x10, 0x10), static_cast<float>(std::numeric_limits<std::int64_t>::lowest()) * 1000.0f, tagVR_t::SL), DataHandlerConversionError);
+
+        testDataSet.setUint64(TagId(0x10, 0x10), 1, tagVR_t::SL);
+        ASSERT_EQ(1u, testDataSet.getUint8(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1u, testDataSet.getUint16(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1u, testDataSet.getUint32(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1u, testDataSet.getUint64(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1, testDataSet.getInt8(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1, testDataSet.getInt16(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1, testDataSet.getInt32(TagId(0x10, 0x10), 0));
+        ASSERT_EQ(1, testDataSet.getInt64(TagId(0x10, 0x10), 0));
         ASSERT_FLOAT_EQ(1.0f, testDataSet.getFloat(TagId(0x10, 0x10), 0));
         ASSERT_DOUBLE_EQ(1.0, testDataSet.getDouble(TagId(0x10, 0x10), 0));
     }

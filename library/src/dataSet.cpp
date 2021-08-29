@@ -205,11 +205,29 @@ bool DataSet::bufferExists(const TagId& tagId, size_t bufferId) const
     DICOMHERO_FUNCTION_END_LOG();
 }
 
+std::int64_t DataSet::getInt64(const TagId& tagId, size_t elementNumber) const
+{
+    DICOMHERO_FUNCTION_START();
+
+    return m_pDataSet->getInt64(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+
+    DICOMHERO_FUNCTION_END_LOG();
+}
+
 std::int32_t DataSet::getInt32(const TagId& tagId, size_t elementNumber) const
 {
     DICOMHERO_FUNCTION_START();
 
     return m_pDataSet->getInt32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+
+    DICOMHERO_FUNCTION_END_LOG();
+}
+
+std::int64_t DataSet::getInt64(const TagId& tagId, size_t elementNumber, std::int64_t defaultValue) const
+{
+    DICOMHERO_FUNCTION_START();
+
+    return m_pDataSet->getInt64(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
 
     DICOMHERO_FUNCTION_END_LOG();
 }
@@ -241,11 +259,29 @@ std::int32_t DataSet::getSignedLong(const TagId& tagId, size_t elementNumber, st
     DICOMHERO_FUNCTION_END_LOG();
 }
 
+std::uint64_t DataSet::getUint64(const TagId& tagId, size_t elementNumber) const
+{
+    DICOMHERO_FUNCTION_START();
+
+    return m_pDataSet->getUint64(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+
+    DICOMHERO_FUNCTION_END_LOG();
+}
+
 std::uint32_t DataSet::getUint32(const TagId& tagId, size_t elementNumber) const
 {
     DICOMHERO_FUNCTION_START();
 
     return m_pDataSet->getUint32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber);
+
+    DICOMHERO_FUNCTION_END_LOG();
+}
+
+std::uint64_t DataSet::getUint64(const TagId& tagId, size_t elementNumber, std::uint64_t defaultValue) const
+{
+    DICOMHERO_FUNCTION_START();
+
+    return m_pDataSet->getUint64(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, elementNumber, defaultValue);
 
     DICOMHERO_FUNCTION_END_LOG();
 }
@@ -646,6 +682,15 @@ MutableDataSet MutableDataSet::appendSequenceItem(const TagId &tagId)
     DICOMHERO_FUNCTION_END_LOG();
 }
 
+void MutableDataSet::setInt64(const TagId& tagId, std::int64_t newValue, tagVR_t tagVR)
+{
+    DICOMHERO_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setInt64(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+
+    DICOMHERO_FUNCTION_END_LOG();
+}
+
 void MutableDataSet::setInt32(const TagId& tagId, std::int32_t newValue, tagVR_t tagVR)
 {
     DICOMHERO_FUNCTION_START();
@@ -660,6 +705,15 @@ void MutableDataSet::setSignedLong(const TagId& tagId, std::int32_t newValue, ta
     DICOMHERO_FUNCTION_START();
 
     getDataSetImplementation(*this)->setInt32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+
+    DICOMHERO_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setInt64(const TagId& tagId, std::int64_t newValue)
+{
+    DICOMHERO_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setInt64(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
 
     DICOMHERO_FUNCTION_END_LOG();
 }
@@ -682,6 +736,15 @@ void MutableDataSet::setSignedLong(const TagId& tagId, std::int32_t newValue)
     DICOMHERO_FUNCTION_END_LOG();
 }
 
+void MutableDataSet::setUint64(const TagId& tagId, std::uint64_t newValue, tagVR_t tagVR)
+{
+    DICOMHERO_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setUint64(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+
+    DICOMHERO_FUNCTION_END_LOG();
+}
+
 void MutableDataSet::setUint32(const TagId& tagId, std::uint32_t newValue, tagVR_t tagVR)
 {
     DICOMHERO_FUNCTION_START();
@@ -696,6 +759,15 @@ void MutableDataSet::setUnsignedLong(const TagId& tagId, std::uint32_t newValue,
     DICOMHERO_FUNCTION_START();
 
     getDataSetImplementation(*this)->setUint32(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue, tagVR);
+
+    DICOMHERO_FUNCTION_END_LOG();
+}
+
+void MutableDataSet::setUint64(const TagId& tagId, std::uint64_t newValue)
+{
+    DICOMHERO_FUNCTION_START();
+
+    getDataSetImplementation(*this)->setUint64(tagId.getGroupId(), tagId.getGroupOrder(), tagId.getTagId(), 0, newValue);
 
     DICOMHERO_FUNCTION_END_LOG();
 }

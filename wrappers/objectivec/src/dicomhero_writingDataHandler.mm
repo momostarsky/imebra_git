@@ -59,6 +59,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
     }
 }
 
+-(void) setInt64:(unsigned int)index newValue:(signed long long)value error:(NSError**)pError
+{
+    OBJC_DICOMHERO_FUNCTION_START();
+
+    if(get_imebra_object_holder(WritingDataHandler) != nullptr)
+    {
+      get_imebra_object_holder(WritingDataHandler)->setInt64(index, value);
+    }
+
+    OBJC_DICOMHERO_FUNCTION_END();
+}
+
 -(void) setInt32:(unsigned int)index newValue:(signed int)value error:(NSError**)pError
 {
     OBJC_DICOMHERO_FUNCTION_START();
@@ -102,6 +114,18 @@ If you do not want to be bound by the GPL terms (such as the requirement
     if(get_dicomhero_object_holder(WritingDataHandler) != nullptr)
     {
         get_dicomhero_object_holder(WritingDataHandler)->setInt8(index, value);
+    }
+
+    OBJC_DICOMHERO_FUNCTION_END();
+}
+
+-(void) setUint64:(unsigned int)index newValue:(unsigned long long)value error:(NSError**)pError
+{
+    OBJC_DICOMHERO_FUNCTION_START();
+
+    if(get_imebra_object_holder(WritingDataHandler) != nullptr)
+    {
+        get_imebra_object_holder(WritingDataHandler)->setUint64(index, value);
     }
 
     OBJC_DICOMHERO_FUNCTION_END();

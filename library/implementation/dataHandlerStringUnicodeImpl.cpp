@@ -86,6 +86,28 @@ readingDataHandlerStringUnicode::readingDataHandlerStringUnicode(const memory& p
 
 }
 
+// Get the data element as a int64_t
+///////////////////////////////////////////////////////////
+std::int64_t readingDataHandlerStringUnicode::getInt64(const size_t index) const
+{
+    DICOMHERO_FUNCTION_START();
+
+    return convertFromString<std::wstring, std::int64_t>(getUnicodeString(index));
+
+    DICOMHERO_FUNCTION_END();
+}
+
+// Get the data element as an uint64_t
+///////////////////////////////////////////////////////////
+std::uint64_t readingDataHandlerStringUnicode::getUint64(const size_t index) const
+{
+    DICOMHERO_FUNCTION_START();
+
+    return convertFromString<std::wstring, std::uint64_t>(getUnicodeString(index));
+
+    DICOMHERO_FUNCTION_END();
+}
+
 // Get the data element as a signed long
 ///////////////////////////////////////////////////////////
 std::int32_t readingDataHandlerStringUnicode::getInt32(const size_t index) const
@@ -221,15 +243,35 @@ writingDataHandlerStringUnicode::~writingDataHandlerStringUnicode()
     m_buffer->commit(m_commitMemory);
 }
 
+// Set the data element as a int64_t
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringUnicode::setInt64(const size_t index, const std::int64_t value)
+{
+    DICOMHERO_FUNCTION_START();
+
+    convertToString<std::int64_t>(index, value);
+
+    DICOMHERO_FUNCTION_END();
+}
+
+// Set the data element as an uint64_t
+///////////////////////////////////////////////////////////
+void writingDataHandlerStringUnicode::setUint64(const size_t index, const std::uint64_t value)
+{
+    DICOMHERO_FUNCTION_START();
+
+    convertToString<std::uint64_t>(index, value);
+
+    DICOMHERO_FUNCTION_END();
+}
+
 // Set the data element as a signed long
 ///////////////////////////////////////////////////////////
 void writingDataHandlerStringUnicode::setInt32(const size_t index, const std::int32_t value)
 {
     DICOMHERO_FUNCTION_START();
 
-    std::wostringstream conversion;
-    conversion << value;
-    setUnicodeString(index, conversion.str());
+    convertToString<std::int32_t>(index, value);
 
     DICOMHERO_FUNCTION_END();
 }
@@ -240,9 +282,7 @@ void writingDataHandlerStringUnicode::setUint32(const size_t index, const std::u
 {
     DICOMHERO_FUNCTION_START();
 
-    std::wostringstream conversion;
-    conversion << value;
-    setUnicodeString(index, conversion.str());
+    convertToString<std::uint32_t>(index, value);
 
     DICOMHERO_FUNCTION_END();
 }

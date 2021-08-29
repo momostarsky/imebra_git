@@ -1,14 +1,14 @@
 /*
 Copyright 2005 - 2017 by Paolo Brandoli/Binarno s.p.
 
-Imebra is available for free under the GNU General Public License.
+Dicomhero is available for free under the GNU General Public License.
 
 The full text of the license is available in the file license.rst
  in the project root folder.
 
 If you do not want to be bound by the GPL terms (such as the requirement
  that your application must also be GPL), you may purchase a commercial
- license for Imebra from the Imebra’s website (http://imebra.com).
+ license for Dicomhero from the Dicomhero’s website (https://dicomhero.com).
 */
 
 #import "../include/dicomhero6_objc/dicomhero_dataset.h"
@@ -172,7 +172,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroLUT alloc] initWithImebraLut:
+    return [[DicomheroLUT alloc] initWithDicomheroLut:
             new dicomhero::LUT(get_dicomhero_object_holder(DataSet)->getLUT(dicomhero::TagId((std::uint16_t)pTagId.groupId, (std::uint32_t)pTagId.groupOrder, (std::uint16_t)pTagId.tagId), (size_t)itemId))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
@@ -217,6 +217,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
+-(signed long long)getInt64:(DicomheroTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+{
+    OBJC_DICOMHERO_FUNCTION_START();
+
+    return get_dicomhero_object_holder(DataSet)->getInt64(*get_other_dicomhero_object_holder(tagId, TagId), elementNumber);
+
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
+}
+
 -(signed int)getSignedLong:(DicomheroTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
 {
     OBJC_DICOMHERO_FUNCTION_START();
@@ -249,6 +258,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_DICOMHERO_FUNCTION_START();
 
     return get_dicomhero_object_holder(DataSet)->getInt32(*get_other_dicomhero_object_holder(tagId, TagId), elementNumber, defaultValue);
+
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
+}
+
+-(signed long long)getInt64:(DicomheroTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(signed long long)defaultValue error:(NSError**)pError
+{
+    OBJC_DICOMHERO_FUNCTION_START();
+
+    return get_dicomhero_object_holder(DataSet)->getInt64(*get_other_dicomhero_object_holder(tagId, TagId), elementNumber, defaultValue);
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
@@ -289,6 +307,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
+-(unsigned long long)getUint64:(DicomheroTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+{
+    OBJC_DICOMHERO_FUNCTION_START();
+
+    return get_dicomhero_object_holder(DataSet)->getUint64(*get_other_dicomhero_object_holder(tagId, TagId), elementNumber);
+
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
+}
+
 -(unsigned int)getUnsignedLong:(DicomheroTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
 {
     OBJC_DICOMHERO_FUNCTION_START();
@@ -321,6 +348,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_DICOMHERO_FUNCTION_START();
 
     return get_dicomhero_object_holder(DataSet)->getUint32(*get_other_dicomhero_object_holder(tagId, TagId), elementNumber, defaultValue);
+
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
+}
+
+-(unsigned long long)getUint64:(DicomheroTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(unsigned long long)defaultValue error:(NSError**)pError
+{
+    OBJC_DICOMHERO_FUNCTION_START();
+
+    return get_dicomhero_object_holder(DataSet)->getUint64(*get_other_dicomhero_object_holder(tagId, TagId), elementNumber, defaultValue);
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
@@ -632,6 +668,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
 
+-(void)setInt64:(DicomheroTagId*)tagId newValue:(signed long long)newValue tagVR:(DicomheroTagType)tagVR error:(NSError**)pError
+{
+    OBJC_DICOMHERO_FUNCTION_START();
+
+    ((dicomhero::MutableDataSet*)get_dicomhero_object_holder(DataSet))->setInt64(*get_other_dicomhero_object_holder(tagId, TagId), newValue, (dicomhero::tagVR_t)tagVR);
+
+    OBJC_DICOMHERO_FUNCTION_END();
+}
+
 -(void)setInt32:(DicomheroTagId*)tagId newValue:(signed int)newValue tagVR:(DicomheroTagType)tagVR error:(NSError**)pError
 {
     OBJC_DICOMHERO_FUNCTION_START();
@@ -664,6 +709,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_DICOMHERO_FUNCTION_START();
 
     ((dicomhero::MutableDataSet*)get_dicomhero_object_holder(DataSet))->setInt8(*get_other_dicomhero_object_holder(tagId, TagId), newValue, (dicomhero::tagVR_t)tagVR);
+
+    OBJC_DICOMHERO_FUNCTION_END();
+}
+
+-(void)setInt64:(DicomheroTagId*)tagId newValue:(signed long long)newValue error:(NSError**)pError
+{
+    OBJC_DICOMHERO_FUNCTION_START();
+
+    ((dicomhero::MutableDataSet*)get_dicomhero_object_holder(DataSet))->setInt64(*get_other_dicomhero_object_holder(tagId, TagId), newValue);
 
     OBJC_DICOMHERO_FUNCTION_END();
 }
@@ -704,6 +758,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_DICOMHERO_FUNCTION_END();
 }
 
+-(void)setUint64:(DicomheroTagId*)tagId newValue:(unsigned long long)newValue tagVR:(DicomheroTagType)tagVR error:(NSError**)pError
+{
+    OBJC_DICOMHERO_FUNCTION_START();
+
+    ((dicomhero::MutableDataSet*)get_dicomhero_object_holder(DataSet))->setUint64(*get_other_dicomhero_object_holder(tagId, TagId), newValue, (dicomhero::tagVR_t)tagVR);
+
+    OBJC_DICOMHERO_FUNCTION_END();
+}
+
 -(void)setUint32:(DicomheroTagId*)tagId newValue:(unsigned int)newValue tagVR:(DicomheroTagType)tagVR error:(NSError**)pError
 {
     OBJC_DICOMHERO_FUNCTION_START();
@@ -736,6 +799,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_DICOMHERO_FUNCTION_START();
 
     ((dicomhero::MutableDataSet*)get_dicomhero_object_holder(DataSet))->setUint8(*get_other_dicomhero_object_holder(tagId, TagId), newValue, (dicomhero::tagVR_t)tagVR);
+
+    OBJC_DICOMHERO_FUNCTION_END();
+}
+
+-(void)setUint64:(DicomheroTagId*)tagId newValue:(unsigned long long)newValue error:(NSError**)pError
+{
+    OBJC_DICOMHERO_FUNCTION_START();
+
+    ((dicomhero::MutableDataSet*)get_dicomhero_object_holder(DataSet))->setUint64(*get_other_dicomhero_object_holder(tagId, TagId), newValue);
 
     OBJC_DICOMHERO_FUNCTION_END();
 }

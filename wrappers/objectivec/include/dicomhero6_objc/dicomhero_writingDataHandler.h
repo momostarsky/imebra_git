@@ -62,6 +62,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///////////////////////////////////////////////////////////////////////////////
     @property unsigned int size;
 
+    /// \brief Write a signed very long integer (64 bit).
+    ///
+    /// If the value cannot be converted from a signed very long integer
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        size()
+    /// \param value the value to write
+    /// \param pError set to a NSError derived class in case of error
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) setInt64:(unsigned int)index newValue:(signed long long)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
     /// \brief Write a signed long integer (32 bit).
     ///
     /// If the value cannot be converted from a signed long integer
@@ -108,6 +122,20 @@ If you do not want to be bound by the GPL terms (such as the requirement
     ///
     ///////////////////////////////////////////////////////////////////////////////
     -(void) setInt8:(unsigned int)index newValue:(signed char)value error:(NSError**)pError
+        __attribute__((swift_error(nonnull_error)));
+
+    /// \brief Write an unsigned very long integer (64 bit).
+    ///
+    /// If the value cannot be converted from an unsigned very long integer
+    /// then set pError to ImebraDataHandlerConversionError.
+    ///
+    /// \param index the element number within the buffer. Must be smaller than
+    ///        size()
+    /// \param value the value to write
+    /// \param pError set to a NSError derived class in case of error
+    ///
+    ///////////////////////////////////////////////////////////////////////////////
+    -(void) setUint64:(unsigned int)index newValue:(unsigned long long)value error:(NSError**)pError
         __attribute__((swift_error(nonnull_error)));
 
     /// \brief Write an unsigned long integer (32 bit).

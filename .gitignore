@@ -5,5 +5,5 @@ imebra_*.zip
 
 
 *.autosave
-
+*.DS_Store
 *.zip

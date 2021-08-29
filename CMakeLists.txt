@@ -185,7 +185,7 @@ endif("${DICOMHERO_OBJC}" STREQUAL "1")
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     message(STATUS "MSVC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /bigobj")
     set(dicomhero_libraries ${dicomhero_libraries} Kernel32)
 
 else()
