@@ -6,9 +6,10 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
-- Fixed bug #341 (Some ISO 2022 conversions allow 2 escaping sequences, and some ICONV mappings are wrong)
+- Implemented enhancement #315 (Add support for the VR SV, UV, OV) as per SOP :ref:`DEVENH_2`
+- Fixed bug #341 (Some ISO 2022 conversions allow 2 escaping sequences, and some ICONV mappings are wrong) as per SOP :ref:`FIXBUG_2`
 
-Version 5.2.2.1
+Version 5.2.1.2
 --------------------------------
 
 - Fixed bug #337 (The IOS variable used in CMake conflicts with the same variable that CMake sets when the system is set to "iOS") as per SOP :ref:`FIXBUG_2`

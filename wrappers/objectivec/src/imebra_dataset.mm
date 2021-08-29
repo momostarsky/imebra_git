@@ -217,6 +217,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
 
+-(signed long long)getInt64:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(DataSet)->getInt64(*get_other_imebra_object_holder(tagId, TagId), elementNumber);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
 -(signed int)getSignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
@@ -249,6 +258,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     return get_imebra_object_holder(DataSet)->getInt32(*get_other_imebra_object_holder(tagId, TagId), elementNumber, defaultValue);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
+-(signed long long)getInt64:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(signed long long)defaultValue error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(DataSet)->getInt64(*get_other_imebra_object_holder(tagId, TagId), elementNumber, defaultValue);
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
@@ -289,6 +307,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
 
+-(unsigned long long)getUint64:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(DataSet)->getUint64(*get_other_imebra_object_holder(tagId, TagId), elementNumber);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
 -(unsigned int)getUnsignedLong:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
@@ -321,6 +348,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     return get_imebra_object_holder(DataSet)->getUint32(*get_other_imebra_object_holder(tagId, TagId), elementNumber, defaultValue);
+
+    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+}
+
+-(unsigned long long)getUint64:(ImebraTagId*)tagId elementNumber:(unsigned int)elementNumber defaultValue:(unsigned long long)defaultValue error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    return get_imebra_object_holder(DataSet)->getUint64(*get_other_imebra_object_holder(tagId, TagId), elementNumber, defaultValue);
 
     OBJC_IMEBRA_FUNCTION_END_RETURN(0);
 }
@@ -632,6 +668,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END_RETURN(nil);
 }
 
+-(void)setInt64:(ImebraTagId*)tagId newValue:(signed long long)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setInt64(*get_other_imebra_object_holder(tagId, TagId), newValue, (imebra::tagVR_t)tagVR);
+
+    OBJC_IMEBRA_FUNCTION_END();
+}
+
 -(void)setInt32:(ImebraTagId*)tagId newValue:(signed int)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
@@ -664,6 +709,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setInt8(*get_other_imebra_object_holder(tagId, TagId), newValue, (imebra::tagVR_t)tagVR);
+
+    OBJC_IMEBRA_FUNCTION_END();
+}
+
+-(void)setInt64:(ImebraTagId*)tagId newValue:(signed long long)newValue error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setInt64(*get_other_imebra_object_holder(tagId, TagId), newValue);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
@@ -704,6 +758,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_END();
 }
 
+-(void)setUint64:(ImebraTagId*)tagId newValue:(unsigned long long)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setUint64(*get_other_imebra_object_holder(tagId, TagId), newValue, (imebra::tagVR_t)tagVR);
+
+    OBJC_IMEBRA_FUNCTION_END();
+}
+
 -(void)setUint32:(ImebraTagId*)tagId newValue:(unsigned int)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
 {
     OBJC_IMEBRA_FUNCTION_START();
@@ -736,6 +799,15 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_IMEBRA_FUNCTION_START();
 
     ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setUint8(*get_other_imebra_object_holder(tagId, TagId), newValue, (imebra::tagVR_t)tagVR);
+
+    OBJC_IMEBRA_FUNCTION_END();
+}
+
+-(void)setUint64:(ImebraTagId*)tagId newValue:(unsigned long long)newValue error:(NSError**)pError
+{
+    OBJC_IMEBRA_FUNCTION_START();
+
+    ((imebra::MutableDataSet*)get_imebra_object_holder(DataSet))->setUint64(*get_other_imebra_object_holder(tagId, TagId), newValue);
 
     OBJC_IMEBRA_FUNCTION_END();
 }
