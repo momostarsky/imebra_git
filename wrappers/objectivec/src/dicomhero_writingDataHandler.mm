@@ -63,9 +63,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    if(get_imebra_object_holder(WritingDataHandler) != nullptr)
+    if(get_dicomhero_object_holder(WritingDataHandler) != nullptr)
     {
-      get_imebra_object_holder(WritingDataHandler)->setInt64(index, value);
+      get_dicomhero_object_holder(WritingDataHandler)->setInt64(index, value);
     }
 
     OBJC_DICOMHERO_FUNCTION_END();
@@ -123,9 +123,9 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    if(get_imebra_object_holder(WritingDataHandler) != nullptr)
+    if(get_dicomhero_object_holder(WritingDataHandler) != nullptr)
     {
-        get_imebra_object_holder(WritingDataHandler)->setUint64(index, value);
+        get_dicomhero_object_holder(WritingDataHandler)->setUint64(index, value);
     }
 
     OBJC_DICOMHERO_FUNCTION_END();

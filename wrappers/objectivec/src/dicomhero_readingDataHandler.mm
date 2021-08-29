@@ -53,11 +53,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(signed long long) getInt64:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
-    return get_imebra_object_holder(ReadingDataHandler)->getInt64(index);
+    return get_dicomhero_object_holder(ReadingDataHandler)->getInt64(index);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 -(signed int) getInt32:(unsigned int)index error:(NSError**)pError
@@ -98,11 +98,11 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 -(unsigned long long) getUint64:(unsigned int)index error:(NSError**)pError
 {
-    OBJC_IMEBRA_FUNCTION_START();
+    OBJC_DICOMHERO_FUNCTION_START();
 
-    return get_imebra_object_holder(ReadingDataHandler)->getUint64(index);
+    return get_dicomhero_object_holder(ReadingDataHandler)->getUint64(index);
 
-    OBJC_IMEBRA_FUNCTION_END_RETURN(0);
+    OBJC_DICOMHERO_FUNCTION_END_RETURN(0);
 }
 
 -(unsigned int) getUint32:(unsigned int)index error:(NSError**)pError
