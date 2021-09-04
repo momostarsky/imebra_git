@@ -1,28 +1,26 @@
 /*
-Copyright 2005 - 2019 by Paolo Brandoli/Binarno s.p.
+Copyright 2005 - 2020 by Paolo Brandoli/Binarno s.p.
 
-DICOMHero/Imebra is available for free under the GNU General Public License.
+DICOMHERO/Imebra is available for free under the GNU General Public License.
 
 The full text of the license is available in the file license.rst
  in the project root folder.
 
 If you do not want to be bound by the GPL terms (such as the requirement
- that your application must also be GPL), you may purchase a commercial
- license for Imebra from the Imebra's website (https://dicomhero.com).
+ that your application must also be GPL), you may purchase a commercial 
+ license for DICOMHERO/Imebra from the DICOMHERO's website (https://dicomhero.com).
 
 This file was automatically generated
 */
 
-#if !defined(imebraTagsEnumeration_dicom2018e_INCLUDED_)
-#define imebraTagsEnumeration_dicom2018e_INCLUDED_
+#if !defined(dicomheroTagsEnumeration_dicom2021b_INCLUDED_)
+#define dicomheroTagsEnumeration_dicom2021b_INCLUDED_
 
-#define DICOM_VERSION DICOM2018e
+#define DICOM_VERSION DICOM2021b
 
-namespace dicomhero
-{
+namespace dicomhero {
 
 #if !defined(SWIGJAVA) && !defined(DICOMHERO_USE_JAVA)
-
 
 /// \brief Enumerates the tags stored in the DicomDictionary.
 ///
@@ -35,8 +33,7 @@ namespace dicomhero
 ///          the tagId_t enumeration is not supported in Java.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-enum class tagId_t: std::uint32_t
-{
+enum class tagId_t : std::uint32_t {
 
     CommandGroupLength_0000_0000 = 0x00000000, ///< Command Group Length (0000,0000)
     CommandLengthToEnd_0000_0001 = 0x00000001, ///< Command Length to End (0000,0001)
@@ -94,6 +91,16 @@ enum class tagId_t: std::uint32_t
     SourceApplicationEntityTitle_0002_0016 = 0x00020016, ///< Source Application Entity Title (0002,0016)
     SendingApplicationEntityTitle_0002_0017 = 0x00020017, ///< Sending Application Entity Title (0002,0017)
     ReceivingApplicationEntityTitle_0002_0018 = 0x00020018, ///< Receiving Application Entity Title (0002,0018)
+    SourcePresentationAddress_0002_0026 = 0x00020026, ///< Source Presentation Address (0002,0026)
+    SendingPresentationAddress_0002_0027 = 0x00020027, ///< Sending Presentation Address (0002,0027)
+    ReceivingPresentationAddress_0002_0028 = 0x00020028, ///< Receiving Presentation Address (0002,0028)
+    RTVMetaInformationVersion_0002_0031 = 0x00020031, ///< RTV Meta Information Version (0002,0031)
+    RTVCommunicationSOPClassUID_0002_0032 = 0x00020032, ///< RTV Communication SOP Class UID (0002,0032)
+    RTVCommunicationSOPInstanceUID_0002_0033 = 0x00020033, ///< RTV Communication SOP Instance UID (0002,0033)
+    RTVSourceIdentifier_0002_0035 = 0x00020035, ///< RTV Source Identifier (0002,0035)
+    RTVFlowIdentifier_0002_0036 = 0x00020036, ///< RTV Flow Identifier (0002,0036)
+    RTVFlowRTPSamplingRate_0002_0037 = 0x00020037, ///< RTV Flow RTP Sampling Rate (0002,0037)
+    RTVFlowActualFrameDuration_0002_0038 = 0x00020038, ///< RTV Flow Actual Frame Duration (0002,0038)
     PrivateInformationCreatorUID_0002_0100 = 0x00020100, ///< Private Information Creator UID (0002,0100)
     PrivateInformation_0002_0102 = 0x00020102, ///< Private Information (0002,0102)
     FileSetID_0004_1130 = 0x00041130, ///< File-set ID (0004,1130)
@@ -115,6 +122,7 @@ enum class tagId_t: std::uint32_t
     ReferencedTransferSyntaxUIDInFile_0004_1512 = 0x00041512, ///< Referenced Transfer Syntax UID in File (0004,1512)
     ReferencedRelatedGeneralSOPClassUIDInFile_0004_151A = 0x0004151A, ///< Referenced Related General SOP Class UID in File (0004,151A)
     NumberOfReferences_0004_1600 = 0x00041600, ///< Number of References (0004,1600)
+    CurrentFrameFunctionalGroupsSequence_0006_0001 = 0x00060001, ///< Current Frame Functional Groups Sequence (0006,0001)
     LengthToEnd_0008_0001 = 0x00080001, ///< Length to End (0008,0001)
     SpecificCharacterSet_0008_0005 = 0x00080005, ///< Specific Character Set (0008,0005)
     LanguageCodeSequence_0008_0006 = 0x00080006, ///< Language Code Sequence (0008,0006)
@@ -149,7 +157,7 @@ enum class tagId_t: std::uint32_t
     QueryRetrieveLevel_0008_0052 = 0x00080052, ///< Query/Retrieve Level (0008,0052)
     QueryRetrieveView_0008_0053 = 0x00080053, ///< Query/Retrieve View (0008,0053)
     RetrieveAETitle_0008_0054 = 0x00080054, ///< Retrieve AE Title (0008,0054)
-    StationAETitle_0008_0055 = 0x00080055, ///< Station  AE Title (0008,0055)
+    StationAETitle_0008_0055 = 0x00080055, ///< Station AE Title (0008,0055)
     InstanceAvailability_0008_0056 = 0x00080056, ///< Instance Availability (0008,0056)
     FailedSOPInstanceUIDList_0008_0058 = 0x00080058, ///< Failed SOP Instance UID List (0008,0058)
     Modality_0008_0060 = 0x00080060, ///< Modality (0008,0060)
@@ -308,6 +316,7 @@ enum class tagId_t: std::uint32_t
     AnatomicStructureSpaceOrRegionModifierCodeSequenceTrial_0008_225A = 0x0008225A, ///< Anatomic Structure Space Or Region Modifier Code Sequence (Trial) (0008,225A)
     OnAxisBackgroundAnatomicStructureCodeSequenceTrial_0008_225C = 0x0008225C, ///< On Axis Background Anatomic Structure Code Sequence (Trial) (0008,225C)
     AlternateRepresentationSequence_0008_3001 = 0x00083001, ///< Alternate Representation Sequence (0008,3001)
+    AvailableTransferSyntaxUID_0008_3002 = 0x00083002, ///< Available Transfer Syntax UID (0008,3002)
     IrradiationEventUID_0008_3010 = 0x00083010, ///< Irradiation Event UID (0008,3010)
     SourceIrradiationEventSequence_0008_3011 = 0x00083011, ///< Source Irradiation Event Sequence (0008,3011)
     RadiopharmaceuticalAdministrationEventUID_0008_3012 = 0x00083012, ///< Radiopharmaceutical Administration Event UID (0008,3012)
@@ -621,6 +630,116 @@ enum class tagId_t: std::uint32_t
     WedgeChamferHeight_0014_511D = 0x0014511D, ///< Wedge Chamfer Height (0014,511D)
     WedgeCurve_0014_511E = 0x0014511E, ///< Wedge Curve (0014,511E)
     RadiusAlongWedge_0014_511F = 0x0014511F, ///< Radius Along the Wedge (0014,511F)
+    WhitePoint_0016_0001 = 0x00160001, ///< White Point (0016,0001)
+    PrimaryChromaticities_0016_0002 = 0x00160002, ///< Primary Chromaticities (0016,0002)
+    BatteryLevel_0016_0003 = 0x00160003, ///< Battery Level (0016,0003)
+    ExposureTimeInSeconds_0016_0004 = 0x00160004, ///< Exposure Time in Seconds (0016,0004)
+    FNumber_0016_0005 = 0x00160005, ///< F-Number (0016,0005)
+    OECFRows_0016_0006 = 0x00160006, ///< OECF Rows (0016,0006)
+    OECFColumns_0016_0007 = 0x00160007, ///< OECF Columns (0016,0007)
+    OECFColumnNames_0016_0008 = 0x00160008, ///< OECF Column Names (0016,0008)
+    OECFValues_0016_0009 = 0x00160009, ///< OECF Values (0016,0009)
+    SpatialFrequencyResponseRows_0016_000A = 0x0016000A, ///< Spatial Frequency Response Rows (0016,000A)
+    SpatialFrequencyResponseColumns_0016_000B = 0x0016000B, ///< Spatial Frequency Response Columns (0016,000B)
+    SpatialFrequencyResponseColumnNames_0016_000C = 0x0016000C, ///< Spatial Frequency Response Column Names (0016,000C)
+    SpatialFrequencyResponseValues_0016_000D = 0x0016000D, ///< Spatial Frequency Response Values (0016,000D)
+    ColorFilterArrayPatternRows_0016_000E = 0x0016000E, ///< Color Filter Array Pattern Rows (0016,000E)
+    ColorFilterArrayPatternColumns_0016_000F = 0x0016000F, ///< Color Filter Array Pattern Columns (0016,000F)
+    ColorFilterArrayPatternValues_0016_0010 = 0x00160010, ///< Color Filter Array Pattern Values (0016,0010)
+    FlashFiringStatus_0016_0011 = 0x00160011, ///< Flash Firing Status (0016,0011)
+    FlashReturnStatus_0016_0012 = 0x00160012, ///< Flash Return Status (0016,0012)
+    FlashMode_0016_0013 = 0x00160013, ///< Flash Mode (0016,0013)
+    FlashFunctionPresent_0016_0014 = 0x00160014, ///< Flash Function Present (0016,0014)
+    FlashRedEyeMode_0016_0015 = 0x00160015, ///< Flash Red Eye Mode (0016,0015)
+    ExposureProgram_0016_0016 = 0x00160016, ///< Exposure Program (0016,0016)
+    SpectralSensitivity_0016_0017 = 0x00160017, ///< Spectral Sensitivity (0016,0017)
+    PhotographicSensitivity_0016_0018 = 0x00160018, ///< Photographic Sensitivity (0016,0018)
+    SelfTimerMode_0016_0019 = 0x00160019, ///< Self Timer Mode (0016,0019)
+    SensitivityType_0016_001A = 0x0016001A, ///< Sensitivity Type (0016,001A)
+    StandardOutputSensitivity_0016_001B = 0x0016001B, ///< Standard Output Sensitivity (0016,001B)
+    RecommendedExposureIndex_0016_001C = 0x0016001C, ///< Recommended Exposure Index (0016,001C)
+    ISOSpeed_0016_001D = 0x0016001D, ///< ISO Speed (0016,001D)
+    ISOSpeedLatitudeyyy_0016_001E = 0x0016001E, ///< ISO Speed Latitude yyy (0016,001E)
+    ISOSpeedLatitudezzz_0016_001F = 0x0016001F, ///< ISO Speed Latitude zzz (0016,001F)
+    EXIFVersion_0016_0020 = 0x00160020, ///< EXIF Version (0016,0020)
+    ShutterSpeedValue_0016_0021 = 0x00160021, ///< Shutter Speed Value (0016,0021)
+    ApertureValue_0016_0022 = 0x00160022, ///< Aperture Value (0016,0022)
+    BrightnessValue_0016_0023 = 0x00160023, ///< Brightness Value (0016,0023)
+    ExposureBiasValue_0016_0024 = 0x00160024, ///< Exposure Bias Value (0016,0024)
+    MaxApertureValue_0016_0025 = 0x00160025, ///< Max Aperture Value (0016,0025)
+    SubjectDistance_0016_0026 = 0x00160026, ///< Subject Distance (0016,0026)
+    MeteringMode_0016_0027 = 0x00160027, ///< Metering Mode (0016,0027)
+    LightSource_0016_0028 = 0x00160028, ///< Light Source (0016,0028)
+    FocalLength_0016_0029 = 0x00160029, ///< Focal Length (0016,0029)
+    SubjectArea_0016_002A = 0x0016002A, ///< Subject Area (0016,002A)
+    MakerNote_0016_002B = 0x0016002B, ///< Maker Note (0016,002B)
+    Temperature_0016_0030 = 0x00160030, ///< Temperature (0016,0030)
+    Humidity_0016_0031 = 0x00160031, ///< Humidity (0016,0031)
+    Pressure_0016_0032 = 0x00160032, ///< Pressure (0016,0032)
+    WaterDepth_0016_0033 = 0x00160033, ///< Water Depth (0016,0033)
+    Acceleration_0016_0034 = 0x00160034, ///< Acceleration (0016,0034)
+    CameraElevationAngle_0016_0035 = 0x00160035, ///< Camera Elevation Angle (0016,0035)
+    FlashEnergy_0016_0036 = 0x00160036, ///< Flash Energy (0016,0036)
+    SubjectLocation_0016_0037 = 0x00160037, ///< Subject Location (0016,0037)
+    PhotographicExposureIndex_0016_0038 = 0x00160038, ///< Photographic Exposure Index (0016,0038)
+    SensingMethod_0016_0039 = 0x00160039, ///< Sensing Method (0016,0039)
+    FileSource_0016_003A = 0x0016003A, ///< File Source (0016,003A)
+    SceneType_0016_003B = 0x0016003B, ///< Scene Type (0016,003B)
+    CustomRendered_0016_0041 = 0x00160041, ///< Custom Rendered (0016,0041)
+    ExposureMode_0016_0042 = 0x00160042, ///< Exposure Mode (0016,0042)
+    WhiteBalance_0016_0043 = 0x00160043, ///< White Balance (0016,0043)
+    DigitalZoomRatio_0016_0044 = 0x00160044, ///< Digital Zoom Ratio (0016,0044)
+    FocalLengthIn35mmFilm_0016_0045 = 0x00160045, ///< Focal Length In 35mm Film (0016,0045)
+    SceneCaptureType_0016_0046 = 0x00160046, ///< Scene Capture Type (0016,0046)
+    GainControl_0016_0047 = 0x00160047, ///< Gain Control (0016,0047)
+    Contrast_0016_0048 = 0x00160048, ///< Contrast (0016,0048)
+    Saturation_0016_0049 = 0x00160049, ///< Saturation (0016,0049)
+    Sharpness_0016_004A = 0x0016004A, ///< Sharpness (0016,004A)
+    DeviceSettingDescription_0016_004B = 0x0016004B, ///< Device Setting Description (0016,004B)
+    SubjectDistanceRange_0016_004C = 0x0016004C, ///< Subject Distance Range (0016,004C)
+    CameraOwnerName_0016_004D = 0x0016004D, ///< Camera Owner Name (0016,004D)
+    LensSpecification_0016_004E = 0x0016004E, ///< Lens Specification (0016,004E)
+    LensMake_0016_004F = 0x0016004F, ///< Lens Make (0016,004F)
+    LensModel_0016_0050 = 0x00160050, ///< Lens Model (0016,0050)
+    LensSerialNumber_0016_0051 = 0x00160051, ///< Lens Serial Number (0016,0051)
+    InteroperabilityIndex_0016_0061 = 0x00160061, ///< Interoperability Index (0016,0061)
+    InteroperabilityVersion_0016_0062 = 0x00160062, ///< Interoperability Version (0016,0062)
+    GPSVersionID_0016_0070 = 0x00160070, ///< GPS Version ID (0016,0070)
+    GPSLatitudeRef_0016_0071 = 0x00160071, ///< GPS Latitude Ref (0016,0071)
+    GPSLatitude_0016_0072 = 0x00160072, ///< GPS Latitude (0016,0072)
+    GPSLongitudeRef_0016_0073 = 0x00160073, ///< GPS Longitude Ref (0016,0073)
+    GPSLongitude_0016_0074 = 0x00160074, ///< GPS Longitude (0016,0074)
+    GPSAltitudeRef_0016_0075 = 0x00160075, ///< GPS Altitude Ref (0016,0075)
+    GPSAltitude_0016_0076 = 0x00160076, ///< GPS Altitude (0016,0076)
+    GPSTimeStamp_0016_0077 = 0x00160077, ///< GPS Time Stamp (0016,0077)
+    GPSSatellites_0016_0078 = 0x00160078, ///< GPS Satellites (0016,0078)
+    GPSStatus_0016_0079 = 0x00160079, ///< GPS Status (0016,0079)
+    GPSMeasureMode_0016_007A = 0x0016007A, ///< GPS Measure Mode (0016,007A)
+    GPSDOP_0016_007B = 0x0016007B, ///< GPS DOP (0016,007B)
+    GPSSpeedRef_0016_007C = 0x0016007C, ///< GPS Speed Ref (0016,007C)
+    GPSSpeed_0016_007D = 0x0016007D, ///< GPS Speed (0016,007D)
+    GPSTrackRef_0016_007E = 0x0016007E, ///< GPS Track Ref (0016,007E)
+    GPSTrack_0016_007F = 0x0016007F, ///< GPS Track (0016,007F)
+    GPSImgDirectionRef_0016_0080 = 0x00160080, ///< GPS Img Direction Ref (0016,0080)
+    GPSImgDirection_0016_0081 = 0x00160081, ///< GPS Img Direction (0016,0081)
+    GPSMapDatum_0016_0082 = 0x00160082, ///< GPS Map Datum (0016,0082)
+    GPSDestLatitudeRef_0016_0083 = 0x00160083, ///< GPS Dest Latitude Ref (0016,0083)
+    GPSDestLatitude_0016_0084 = 0x00160084, ///< GPS Dest Latitude (0016,0084)
+    GPSDestLongitudeRef_0016_0085 = 0x00160085, ///< GPS Dest Longitude Ref (0016,0085)
+    GPSDestLongitude_0016_0086 = 0x00160086, ///< GPS Dest Longitude (0016,0086)
+    GPSDestBearingRef_0016_0087 = 0x00160087, ///< GPS Dest Bearing Ref (0016,0087)
+    GPSDestBearing_0016_0088 = 0x00160088, ///< GPS Dest Bearing (0016,0088)
+    GPSDestDistanceRef_0016_0089 = 0x00160089, ///< GPS Dest Distance Ref (0016,0089)
+    GPSDestDistance_0016_008A = 0x0016008A, ///< GPS Dest Distance (0016,008A)
+    GPSProcessingMethod_0016_008B = 0x0016008B, ///< GPS Processing Method (0016,008B)
+    GPSAreaInformation_0016_008C = 0x0016008C, ///< GPS Area Information (0016,008C)
+    GPSDateStamp_0016_008D = 0x0016008D, ///< GPS Date Stamp (0016,008D)
+    GPSDifferential_0016_008E = 0x0016008E, ///< GPS Differential (0016,008E)
+    LightSourcePolarization_0016_1001 = 0x00161001, ///< Light Source Polarization (0016,1001)
+    EmitterColorTemperature_0016_1002 = 0x00161002, ///< Emitter Color Temperature (0016,1002)
+    ContactMethod_0016_1003 = 0x00161003, ///< Contact Method (0016,1003)
+    ImmersionMedia_0016_1004 = 0x00161004, ///< Immersion Media (0016,1004)
+    OpticalMagnificationFactor_0016_1005 = 0x00161005, ///< Optical Magnification Factor (0016,1005)
     ContrastBolusAgent_0018_0010 = 0x00180010, ///< Contrast/Bolus Agent (0018,0010)
     ContrastBolusAgentSequence_0018_0012 = 0x00180012, ///< Contrast/Bolus Agent Sequence (0018,0012)
     ContrastBolusT1Relaxivity_0018_0013 = 0x00180013, ///< Contrast/Bolus T1 Relaxivity (0018,0013)
@@ -683,6 +802,7 @@ enum class tagId_t: std::uint32_t
     GantryID_0018_1008 = 0x00181008, ///< Gantry ID (0018,1008)
     UniqueDeviceIdentifier_0018_1009 = 0x00181009, ///< Unique Device Identifier (0018,1009)
     UDISequence_0018_100A = 0x0018100A, ///< UDI Sequence (0018,100A)
+    ManufacturerDeviceClassUID_0018_100B = 0x0018100B, ///< Manufacturer's Device Class UID (0018,100B)
     SecondaryCaptureDeviceID_0018_1010 = 0x00181010, ///< Secondary Capture Device ID (0018,1010)
     HardcopyCreationDeviceID_0018_1011 = 0x00181011, ///< Hardcopy Creation Device ID (0018,1011)
     DateOfSecondaryCapture_0018_1012 = 0x00181012, ///< Date of Secondary Capture (0018,1012)
@@ -693,7 +813,7 @@ enum class tagId_t: std::uint32_t
     SecondaryCaptureDeviceSoftwareVersions_0018_1019 = 0x00181019, ///< Secondary Capture Device Software Versions (0018,1019)
     HardcopyDeviceSoftwareVersion_0018_101A = 0x0018101A, ///< Hardcopy Device Software Version (0018,101A)
     HardcopyDeviceManufacturerModelName_0018_101B = 0x0018101B, ///< Hardcopy Device Manufacturer's Model Name (0018,101B)
-    SoftwareVersions_0018_1020 = 0x00181020, ///< Software Version(s) (0018,1020)
+    SoftwareVersions_0018_1020 = 0x00181020, ///< Software Versions (0018,1020)
     VideoImageFormatAcquired_0018_1022 = 0x00181022, ///< Video Image Format Acquired (0018,1022)
     DigitalImageFormatAcquired_0018_1023 = 0x00181023, ///< Digital Image Format Acquired (0018,1023)
     ProtocolName_0018_1030 = 0x00181030, ///< Protocol Name (0018,1030)
@@ -791,6 +911,24 @@ enum class tagId_t: std::uint32_t
     CompressionPressure_0018_11A3 = 0x001811A3, ///< Compression Pressure (0018,11A3)
     PaddleDescription_0018_11A4 = 0x001811A4, ///< Paddle Description (0018,11A4)
     CompressionContactArea_0018_11A5 = 0x001811A5, ///< Compression Contact Area (0018,11A5)
+    AcquisitionMode_0018_11B0 = 0x001811B0, ///< Acquisition Mode (0018,11B0)
+    DoseModeName_0018_11B1 = 0x001811B1, ///< Dose Mode Name (0018,11B1)
+    AcquiredSubtractionMaskFlag_0018_11B2 = 0x001811B2, ///< Acquired Subtraction Mask Flag (0018,11B2)
+    FluoroscopyPersistenceFlag_0018_11B3 = 0x001811B3, ///< Fluoroscopy Persistence Flag (0018,11B3)
+    FluoroscopyLastImageHoldPersistenceFlag_0018_11B4 = 0x001811B4, ///< Fluoroscopy Last Image Hold Persistence Flag (0018,11B4)
+    UpperLimitNumberOfPersistentFluoroscopyFrames_0018_11B5 = 0x001811B5, ///< Upper Limit Number Of Persistent Fluoroscopy Frames (0018,11B5)
+    ContrastBolusAutoInjectionTriggerFlag_0018_11B6 = 0x001811B6, ///< Contrast/Bolus Auto Injection Trigger Flag (0018,11B6)
+    ContrastBolusInjectionDelay_0018_11B7 = 0x001811B7, ///< Contrast/Bolus Injection Delay (0018,11B7)
+    XAAcquisitionPhaseDetailsSequence_0018_11B8 = 0x001811B8, ///< XA Acquisition Phase Details Sequence (0018,11B8)
+    XAAcquisitionFrameRate_0018_11B9 = 0x001811B9, ///< XA Acquisition Frame Rate (0018,11B9)
+    XAPlaneDetailsSequence_0018_11BA = 0x001811BA, ///< XA Plane Details Sequence (0018,11BA)
+    AcquisitionFieldOfViewLabel_0018_11BB = 0x001811BB, ///< Acquisition Field of View Label (0018,11BB)
+    XRayFilterDetailsSequence_0018_11BC = 0x001811BC, ///< X-Ray Filter Details Sequence (0018,11BC)
+    XAAcquisitionDuration_0018_11BD = 0x001811BD, ///< XA Acquisition Duration (0018,11BD)
+    ReconstructionPipelineType_0018_11BE = 0x001811BE, ///< Reconstruction Pipeline Type (0018,11BE)
+    ImageFilterDetailsSequence_0018_11BF = 0x001811BF, ///< Image Filter Details Sequence (0018,11BF)
+    AppliedMaskSubtractionFlag_0018_11C0 = 0x001811C0, ///< Applied Mask Subtraction Flag (0018,11C0)
+    RequestedSeriesDescriptionCodeSequence_0018_11C1 = 0x001811C1, ///< Requested Series Description Code Sequence (0018,11C1)
     DateOfLastCalibration_0018_1200 = 0x00181200, ///< Date of Last Calibration (0018,1200)
     TimeOfLastCalibration_0018_1201 = 0x00181201, ///< Time of Last Calibration (0018,1201)
     DateTimeOfLastCalibration_0018_1202 = 0x00181202, ///< DateTime of Last Calibration (0018,1202)
@@ -850,6 +988,15 @@ enum class tagId_t: std::uint32_t
     ShutterPresentationValue_0018_1622 = 0x00181622, ///< Shutter Presentation Value (0018,1622)
     ShutterOverlayGroup_0018_1623 = 0x00181623, ///< Shutter Overlay Group (0018,1623)
     ShutterPresentationColorCIELabValue_0018_1624 = 0x00181624, ///< Shutter Presentation Color CIELab Value (0018,1624)
+    OutlineShapeType_0018_1630 = 0x00181630, ///< Outline Shape Type (0018,1630)
+    OutlineLeftVerticalEdge_0018_1631 = 0x00181631, ///< Outline Left Vertical Edge (0018,1631)
+    OutlineRightVerticalEdge_0018_1632 = 0x00181632, ///< Outline Right Vertical Edge (0018,1632)
+    OutlineUpperHorizontalEdge_0018_1633 = 0x00181633, ///< Outline Upper Horizontal Edge (0018,1633)
+    OutlineLowerHorizontalEdge_0018_1634 = 0x00181634, ///< Outline Lower Horizontal Edge (0018,1634)
+    CenterOfCircularOutline_0018_1635 = 0x00181635, ///< Center of Circular Outline (0018,1635)
+    DiameterOfCircularOutline_0018_1636 = 0x00181636, ///< Diameter of Circular Outline (0018,1636)
+    NumberOfPolygonalVertices_0018_1637 = 0x00181637, ///< Number of Polygonal Vertices (0018,1637)
+    VerticesOfThePolygonalOutline_0018_1638 = 0x00181638, ///< Vertices of the Polygonal Outline (0018,1638)
     CollimatorShape_0018_1700 = 0x00181700, ///< Collimator Shape (0018,1700)
     CollimatorLeftVerticalEdge_0018_1702 = 0x00181702, ///< Collimator Left Vertical Edge (0018,1702)
     CollimatorRightVerticalEdge_0018_1704 = 0x00181704, ///< Collimator Right Vertical Edge (0018,1704)
@@ -886,6 +1033,7 @@ enum class tagId_t: std::uint32_t
     AcquisitionComments_0018_4000 = 0x00184000, ///< Acquisition Comments (0018,4000)
     OutputPower_0018_5000 = 0x00185000, ///< Output Power (0018,5000)
     TransducerData_0018_5010 = 0x00185010, ///< Transducer Data (0018,5010)
+    TransducerIdentificationSequence_0018_5011 = 0x00185011, ///< Transducer Identification Sequence (0018,5011)
     FocusDepth_0018_5012 = 0x00185012, ///< Focus Depth (0018,5012)
     ProcessingFunction_0018_5020 = 0x00185020, ///< Processing Function (0018,5020)
     PostprocessingFunction_0018_5021 = 0x00185021, ///< Postprocessing Function (0018,5021)
@@ -950,6 +1098,7 @@ enum class tagId_t: std::uint32_t
     TableOfPixelValues_0018_6058 = 0x00186058, ///< Table of Pixel Values (0018,6058)
     TableOfParameterValues_0018_605A = 0x0018605A, ///< Table of Parameter Values (0018,605A)
     RWaveTimeVector_0018_6060 = 0x00186060, ///< R Wave Time Vector (0018,6060)
+    ActiveImageAreaOverlayGroup_0018_6070 = 0x00186070, ///< Active Image Area Overlay Group (0018,6070)
     DetectorConditionsNominalFlag_0018_7000 = 0x00187000, ///< Detector Conditions Nominal Flag (0018,7000)
     DetectorTemperature_0018_7001 = 0x00187001, ///< Detector Temperature (0018,7001)
     DetectorType_0018_7004 = 0x00187004, ///< Detector Type (0018,7004)
@@ -1211,8 +1360,8 @@ enum class tagId_t: std::uint32_t
     XRaySourceIndex_0018_9366 = 0x00189366, ///< X-Ray Source Index (0018,9366)
     XRaySourceID_0018_9367 = 0x00189367, ///< X-Ray Source ID (0018,9367)
     MultienergySourceTechnique_0018_9368 = 0x00189368, ///< Multi-energy Source Technique (0018,9368)
-    SourceStartDateTime_0018_9369 = 0x00189369, ///< Source Start Date Time (0018,9369)
-    SourceEndDateTime_0018_936A = 0x0018936A, ///< Source End Date Time (0018,936A)
+    SourceStartDateTime_0018_9369 = 0x00189369, ///< Source Start DateTime (0018,9369)
+    SourceEndDateTime_0018_936A = 0x0018936A, ///< Source End DateTime (0018,936A)
     SwitchingPhaseNumber_0018_936B = 0x0018936B, ///< Switching Phase Number (0018,936B)
     SwitchingPhaseNominalDuration_0018_936C = 0x0018936C, ///< Switching Phase Nominal Duration (0018,936C)
     SwitchingPhaseTransitionDuration_0018_936D = 0x0018936D, ///< Switching Phase Transition Duration (0018,936D)
@@ -1651,6 +1800,13 @@ enum class tagId_t: std::uint32_t
     RefractiveProcedureOccurred_0022_1039 = 0x00221039, ///< Refractive Procedure Occurred (0022,1039)
     RefractiveSurgeryTypeCodeSequence_0022_1040 = 0x00221040, ///< Refractive Surgery Type Code Sequence (0022,1040)
     OphthalmicUltrasoundMethodCodeSequence_0022_1044 = 0x00221044, ///< Ophthalmic Ultrasound Method Code Sequence (0022,1044)
+    SurgicallyInducedAstigmatismSequence_0022_1045 = 0x00221045, ///< Surgically Induced Astigmatism Sequence (0022,1045)
+    TypeOfOpticalCorrection_0022_1046 = 0x00221046, ///< Type of Optical Correction (0022,1046)
+    ToricIOLPowerSequence_0022_1047 = 0x00221047, ///< Toric IOL Power Sequence (0022,1047)
+    PredictedToricErrorSequence_0022_1048 = 0x00221048, ///< Predicted Toric Error Sequence (0022,1048)
+    PreSelectedForImplantation_0022_1049 = 0x00221049, ///< Pre-Selected for Implantation (0022,1049)
+    ToricIOLPowerForExactEmmetropiaSequence_0022_104A = 0x0022104A, ///< Toric IOL Power for Exact Emmetropia Sequence (0022,104A)
+    ToricIOLPowerForExactTargetRefractionSequence_0022_104B = 0x0022104B, ///< Toric IOL Power for Exact Target Refraction Sequence (0022,104B)
     OphthalmicAxialLengthMeasurementsSequence_0022_1050 = 0x00221050, ///< Ophthalmic Axial Length Measurements Sequence (0022,1050)
     IOLPower_0022_1053 = 0x00221053, ///< IOL Power (0022,1053)
     PredictedRefractiveError_0022_1054 = 0x00221054, ///< Predicted Refractive Error (0022,1054)
@@ -1672,6 +1828,9 @@ enum class tagId_t: std::uint32_t
     AnteriorChamberDepthDefinitionCodeSequence_0022_1125 = 0x00221125, ///< Anterior Chamber Depth Definition Code Sequence (0022,1125)
     LensThicknessSequence_0022_1127 = 0x00221127, ///< Lens Thickness Sequence (0022,1127)
     AnteriorChamberDepthSequence_0022_1128 = 0x00221128, ///< Anterior Chamber Depth Sequence (0022,1128)
+    CalculationCommentSequence_0022_112A = 0x0022112A, ///< Calculation Comment Sequence (0022,112A)
+    CalculationCommentType_0022_112B = 0x0022112B, ///< Calculation Comment Type (0022,112B)
+    CalculationComment_0022_112C = 0x0022112C, ///< Calculation Comment (0022,112C)
     LensThickness_0022_1130 = 0x00221130, ///< Lens Thickness (0022,1130)
     AnteriorChamberDepth_0022_1131 = 0x00221131, ///< Anterior Chamber Depth (0022,1131)
     SourceOfLensThicknessDataCodeSequence_0022_1132 = 0x00221132, ///< Source of Lens Thickness Data Code Sequence (0022,1132)
@@ -2117,8 +2276,22 @@ enum class tagId_t: std::uint32_t
     StudyComponentStatusID_0032_1055 = 0x00321055, ///< Study Component Status ID (0032,1055)
     RequestedProcedureDescription_0032_1060 = 0x00321060, ///< Requested Procedure Description (0032,1060)
     RequestedProcedureCodeSequence_0032_1064 = 0x00321064, ///< Requested Procedure Code Sequence (0032,1064)
+    ReasonForVisit_0032_1066 = 0x00321066, ///< Reason for Visit (0032,1066)
+    ReasonForVisitCodeSequence_0032_1067 = 0x00321067, ///< Reason for Visit Code Sequence (0032,1067)
     RequestedContrastAgent_0032_1070 = 0x00321070, ///< Requested Contrast Agent (0032,1070)
     StudyComments_0032_4000 = 0x00324000, ///< Study Comments (0032,4000)
+    FlowIdentifierSequence_0034_0001 = 0x00340001, ///< Flow Identifier Sequence (0034,0001)
+    FlowIdentifier_0034_0002 = 0x00340002, ///< Flow Identifier (0034,0002)
+    FlowTransferSyntaxUID_0034_0003 = 0x00340003, ///< Flow Transfer Syntax UID (0034,0003)
+    FlowRTPSamplingRate_0034_0004 = 0x00340004, ///< Flow RTP Sampling Rate (0034,0004)
+    SourceIdentifier_0034_0005 = 0x00340005, ///< Source Identifier (0034,0005)
+    FrameOriginTimestamp_0034_0007 = 0x00340007, ///< Frame Origin Timestamp (0034,0007)
+    IncludesImagingSubject_0034_0008 = 0x00340008, ///< Includes Imaging Subject (0034,0008)
+    FrameUsefulnessGroupSequence_0034_0009 = 0x00340009, ///< Frame Usefulness Group Sequence (0034,0009)
+    RealTimeBulkDataFlowSequence_0034_000A = 0x0034000A, ///< Real-Time Bulk Data Flow Sequence (0034,000A)
+    CameraPositionGroupSequence_0034_000B = 0x0034000B, ///< Camera Position Group Sequence (0034,000B)
+    IncludesInformation_0034_000C = 0x0034000C, ///< Includes Information (0034,000C)
+    TimeOfFrameGroupSequence_0034_000D = 0x0034000D, ///< Time of Frame Group Sequence (0034,000D)
     ReferencedPatientAliasSequence_0038_0004 = 0x00380004, ///< Referenced Patient Alias Sequence (0038,0004)
     VisitStatusID_0038_0008 = 0x00380008, ///< Visit Status ID (0038,0008)
     AdmissionID_0038_0010 = 0x00380010, ///< Admission ID (0038,0010)
@@ -2187,6 +2360,13 @@ enum class tagId_t: std::uint32_t
     MultiplexedAudioChannelsDescriptionCodeSequence_003A_0300 = 0x003A0300, ///< Multiplexed Audio Channels Description Code Sequence (003A,0300)
     ChannelIdentificationCode_003A_0301 = 0x003A0301, ///< Channel Identification Code (003A,0301)
     ChannelMode_003A_0302 = 0x003A0302, ///< Channel Mode (003A,0302)
+    MultiplexGroupUID_003A_0310 = 0x003A0310, ///< Multiplex Group UID (003A,0310)
+    PowerlineFrequency_003A_0311 = 0x003A0311, ///< Powerline Frequency (003A,0311)
+    ChannelImpedanceSequence_003A_0312 = 0x003A0312, ///< Channel Impedance Sequence (003A,0312)
+    ImpedanceValue_003A_0313 = 0x003A0313, ///< Impedance Value (003A,0313)
+    ImpedanceMeasurementDateTime_003A_0314 = 0x003A0314, ///< Impedance Measurement DateTime (003A,0314)
+    ImpedanceMeasurementFrequency_003A_0315 = 0x003A0315, ///< Impedance Measurement Frequency (003A,0315)
+    ImpedanceMeasurementCurrentType_003A_0316 = 0x003A0316, ///< Impedance Measurement Current Type (003A,0316)
     ScheduledStationAETitle_0040_0001 = 0x00400001, ///< Scheduled Station AE Title (0040,0001)
     ScheduledProcedureStepStartDate_0040_0002 = 0x00400002, ///< Scheduled Procedure Step Start Date (0040,0002)
     ScheduledProcedureStepStartTime_0040_0003 = 0x00400003, ///< Scheduled Procedure Step Start Time (0040,0003)
@@ -2388,6 +2568,7 @@ enum class tagId_t: std::uint32_t
     DocumentingOrganizationIdentifierCodeSequenceTrial_0040_A028 = 0x0040A028, ///< Documenting Organization Identifier Code Sequence (Trial) (0040,A028)
     VerificationDateTime_0040_A030 = 0x0040A030, ///< Verification DateTime (0040,A030)
     ObservationDateTime_0040_A032 = 0x0040A032, ///< Observation DateTime (0040,A032)
+    ObservationStartDateTime_0040_A033 = 0x0040A033, ///< Observation Start DateTime (0040,A033)
     ValueType_0040_A040 = 0x0040A040, ///< Value Type (0040,A040)
     ConceptNameCodeSequence_0040_A043 = 0x0040A043, ///< Concept Name Code Sequence (0040,A043)
     MeasurementPrecisionDescriptionTrial_0040_A047 = 0x0040A047, ///< Measurement Precision Description (Trial) (0040,A047)
@@ -2483,6 +2664,14 @@ enum class tagId_t: std::uint32_t
     RelationshipSequenceTrial_0040_A731 = 0x0040A731, ///< Relationship Sequence (Trial) (0040,A731)
     RelationshipTypeCodeSequenceTrial_0040_A732 = 0x0040A732, ///< Relationship Type Code Sequence (Trial) (0040,A732)
     LanguageCodeSequenceTrial_0040_A744 = 0x0040A744, ///< Language Code Sequence (Trial) (0040,A744)
+    TabulatedValuesSequence_0040_A801 = 0x0040A801, ///< Tabulated Values Sequence (0040,A801)
+    NumberOfTableRows_0040_A802 = 0x0040A802, ///< Number of Table Rows (0040,A802)
+    NumbeOfTableColumns_0040_A803 = 0x0040A803, ///< Number of Table Columns (0040,A803)
+    TableRowNumber_0040_A804 = 0x0040A804, ///< Table Row Number (0040,A804)
+    TableColumnNumber_0040_A805 = 0x0040A805, ///< Table Column Number (0040,A805)
+    TableRowDefinitionSequence_0040_A806 = 0x0040A806, ///< Table Row Definition Sequence (0040,A806)
+    TableColumnDefinitionSequence_0040_A807 = 0x0040A807, ///< Table Column Definition Sequence (0040,A807)
+    CellValuesSequence_0040_A808 = 0x0040A808, ///< Cell Values Sequence (0040,A808)
     UniformResourceLocatorTrial_0040_A992 = 0x0040A992, ///< Uniform Resource Locator (Trial) (0040,A992)
     WaveformAnnotationSequence_0040_B020 = 0x0040B020, ///< Waveform Annotation Sequence (0040,B020)
     TemplateIdentifier_0040_DB00 = 0x0040DB00, ///< Template Identifier (0040,DB00)
@@ -2511,6 +2700,7 @@ enum class tagId_t: std::uint32_t
     MIMETypeOfEncapsulatedDocument_0042_0012 = 0x00420012, ///< MIME Type of Encapsulated Document (0042,0012)
     SourceInstanceSequence_0042_0013 = 0x00420013, ///< Source Instance Sequence (0042,0013)
     ListOfMIMETypes_0042_0014 = 0x00420014, ///< List of MIME Types (0042,0014)
+    EncapsulatedDocumentLength_0042_0015 = 0x00420015, ///< Encapsulated Document Length (0042,0015)
     ProductPackageIdentifier_0044_0001 = 0x00440001, ///< Product Package Identifier (0044,0001)
     SubstanceAdministrationApproval_0044_0002 = 0x00440002, ///< Substance Administration Approval (0044,0002)
     ApprovalStatusFurtherDescription_0044_0003 = 0x00440003, ///< Approval Status Further Description (0044,0003)
@@ -2575,6 +2765,15 @@ enum class tagId_t: std::uint32_t
     AddOtherSequence_0046_0102 = 0x00460102, ///< Add Other Sequence (0046,0102)
     AddPower_0046_0104 = 0x00460104, ///< Add Power (0046,0104)
     ViewingDistance_0046_0106 = 0x00460106, ///< Viewing Distance (0046,0106)
+    CorneaMeasurementsSequence_0046_0110 = 0x00460110, ///< Cornea Measurements Sequence (0046,0110)
+    SourceOfCorneaMeasurementDataCodeSequence_0046_0111 = 0x00460111, ///< Source of Cornea Measurement Data Code Sequence (0046,0111)
+    SteepCornealAxisSequence_0046_0112 = 0x00460112, ///< Steep Corneal Axis Sequence (0046,0112)
+    FlatCornealAxisSequence_0046_0113 = 0x00460113, ///< Flat Corneal Axis Sequence (0046,0113)
+    CornealPower_0046_0114 = 0x00460114, ///< Corneal Power (0046,0114)
+    CornealAxis_0046_0115 = 0x00460115, ///< Corneal Axis (0046,0115)
+    CorneaMeasurementMethodCodeSequence_0046_0116 = 0x00460116, ///< Cornea Measurement Method Code Sequence (0046,0116)
+    RefractiveIndexOfCornea_0046_0117 = 0x00460117, ///< Refractive Index of Cornea (0046,0117)
+    RefractiveIndexOfAqueousHumor_0046_0118 = 0x00460118, ///< Refractive Index of Aqueous Humor (0046,0118)
     VisualAcuityTypeCodeSequence_0046_0121 = 0x00460121, ///< Visual Acuity Type Code Sequence (0046,0121)
     VisualAcuityRightEyeSequence_0046_0122 = 0x00460122, ///< Visual Acuity Right Eye Sequence (0046,0122)
     VisualAcuityLeftEyeSequence_0046_0123 = 0x00460123, ///< Visual Acuity Left Eye Sequence (0046,0123)
@@ -2949,6 +3148,8 @@ enum class tagId_t: std::uint32_t
     ModelModification_0068_7001 = 0x00687001, ///< Model Modification (0068,7001)
     ModelMirroring_0068_7002 = 0x00687002, ///< Model Mirroring (0068,7002)
     ModelUsageCodeSequence_0068_7003 = 0x00687003, ///< Model Usage Code Sequence (0068,7003)
+    ModelGroupUID_0068_7004 = 0x00687004, ///< Model Group UID (0068,7004)
+    RelativeURIReferenceWithinEncapsulatedDocument_0068_7005 = 0x00687005, ///< Relative URI Reference Within Encapsulated Document (0068,7005)
     GraphicAnnotationSequence_0070_0001 = 0x00700001, ///< Graphic Annotation Sequence (0070,0001)
     GraphicLayer_0070_0002 = 0x00700002, ///< Graphic Layer (0070,0002)
     BoundingBoxAnnotationUnits_0070_0003 = 0x00700003, ///< Bounding Box Annotation Units (0070,0003)
@@ -3194,6 +3395,9 @@ enum class tagId_t: std::uint32_t
     SelectorSSValue_0072_007E = 0x0072007E, ///< Selector SS Value (0072,007E)
     SelectorUIValue_0072_007F = 0x0072007F, ///< Selector UI Value (0072,007F)
     SelectorCodeSequenceValue_0072_0080 = 0x00720080, ///< Selector Code Sequence Value (0072,0080)
+    SelectorOVValue_0072_0081 = 0x00720081, ///< Selector OV Value (0072,0081)
+    SelectorSVValue_0072_0082 = 0x00720082, ///< Selector SV Value (0072,0082)
+    SelectorUVValue_0072_0083 = 0x00720083, ///< Selector UV Value (0072,0083)
     NumberOfScreens_0072_0100 = 0x00720100, ///< Number of Screens (0072,0100)
     NominalScreenDefinitionSequence_0072_0102 = 0x00720102, ///< Nominal Screen Definition Sequence (0072,0102)
     NumberOfVerticalPixels_0072_0104 = 0x00720104, ///< Number of Vertical Pixels (0072,0104)
@@ -3439,6 +3643,8 @@ enum class tagId_t: std::uint32_t
     EncryptedContentTransferSyntaxUID_0400_0510 = 0x04000510, ///< Encrypted Content Transfer Syntax UID (0400,0510)
     EncryptedContent_0400_0520 = 0x04000520, ///< Encrypted Content (0400,0520)
     ModifiedAttributesSequence_0400_0550 = 0x04000550, ///< Modified Attributes Sequence (0400,0550)
+    NonconformingModifiedAttributesSequence_0400_0551 = 0x04000551, ///< Nonconforming Modified Attributes Sequence (0400,0551)
+    NonconformingDataElementValue_0400_0552 = 0x04000552, ///< Nonconforming Data Element Value (0400,0552)
     OriginalAttributesSequence_0400_0561 = 0x04000561, ///< Original Attributes Sequence (0400,0561)
     AttributeModificationDateTime_0400_0562 = 0x04000562, ///< Attribute Modification DateTime (0400,0562)
     ModifyingSystem_0400_0563 = 0x04000563, ///< Modifying System (0400,0563)
@@ -3648,6 +3854,7 @@ enum class tagId_t: std::uint32_t
     NumberOfContourPoints_3006_0046 = 0x30060046, ///< Number of Contour Points (3006,0046)
     ContourNumber_3006_0048 = 0x30060048, ///< Contour Number (3006,0048)
     AttachedContours_3006_0049 = 0x30060049, ///< Attached Contours (3006,0049)
+    SourcePixelPlanesCharacteristicsSequence_3006_004A = 0x3006004A, ///< Source Pixel Planes Characteristics Sequence (3006,004A)
     ContourData_3006_0050 = 0x30060050, ///< Contour Data (3006,0050)
     RTROIObservationsSequence_3006_0080 = 0x30060080, ///< RT ROI Observations Sequence (3006,0080)
     ObservationNumber_3006_0082 = 0x30060082, ///< Observation Number (3006,0082)
@@ -3670,6 +3877,9 @@ enum class tagId_t: std::uint32_t
     FrameOfReferenceTransformationType_3006_00C4 = 0x300600C4, ///< Frame of Reference Transformation Type (3006,00C4)
     FrameOfReferenceTransformationMatrix_3006_00C6 = 0x300600C6, ///< Frame of Reference Transformation Matrix (3006,00C6)
     FrameOfReferenceTransformationComment_3006_00C8 = 0x300600C8, ///< Frame of Reference Transformation Comment (3006,00C8)
+    PatientLocationCoordinatesSequence_3006_00C9 = 0x300600C9, ///< Patient Location Coordinates Sequence (3006,00C9)
+    PatientLocationCoordinatesCodeSequence_3006_00CA = 0x300600CA, ///< Patient Location Coordinates Code Sequence (3006,00CA)
+    PatientSupportPositionSequence_3006_00CB = 0x300600CB, ///< Patient Support Position Sequence (3006,00CB)
     MeasuredDoseReferenceSequence_3008_0010 = 0x30080010, ///< Measured Dose Reference Sequence (3008,0010)
     MeasuredDoseDescription_3008_0012 = 0x30080012, ///< Measured Dose Description (3008,0012)
     MeasuredDoseType_3008_0014 = 0x30080014, ///< Measured Dose Type (3008,0014)
@@ -4121,6 +4331,7 @@ enum class tagId_t: std::uint32_t
     ScanSpotReorderingAllowed_300A_0395 = 0x300A0395, ///< Scan Spot Reordering Allowed (300A,0395)
     ScanSpotMetersetWeights_300A_0396 = 0x300A0396, ///< Scan Spot Meterset Weights (300A,0396)
     ScanningSpotSize_300A_0398 = 0x300A0398, ///< Scanning Spot Size (300A,0398)
+    ScanSpotSizesDelivered_300A_0399 = 0x300A0399, ///< Scan Spot Sizes Delivered (300A,0399)
     NumberOfPaintings_300A_039A = 0x300A039A, ///< Number of Paintings (300A,039A)
     IonToleranceTableSequence_300A_03A0 = 0x300A03A0, ///< Ion Tolerance Table Sequence (300A,03A0)
     IonBeamSequence_300A_03A2 = 0x300A03A2, ///< Ion Beam Sequence (300A,03A2)
@@ -4139,6 +4350,7 @@ enum class tagId_t: std::uint32_t
     GeneralAccessoryType_300A_0423 = 0x300A0423, ///< General Accessory Type (300A,0423)
     GeneralAccessoryNumber_300A_0424 = 0x300A0424, ///< General Accessory Number (300A,0424)
     SourceToGeneralAccessoryDistance_300A_0425 = 0x300A0425, ///< Source to General Accessory Distance (300A,0425)
+    IsocenterToGeneralAccessoryDistance_300A_0426 = 0x300A0426, ///< Isocenter to General Accessory Distance (300A,0426)
     ApplicatorGeometrySequence_300A_0431 = 0x300A0431, ///< Applicator Geometry Sequence (300A,0431)
     ApplicatorApertureShape_300A_0432 = 0x300A0432, ///< Applicator Aperture Shape (300A,0432)
     ApplicatorOpening_300A_0433 = 0x300A0433, ///< Applicator Opening (300A,0433)
@@ -4165,6 +4377,185 @@ enum class tagId_t: std::uint32_t
     DeliveredNominalRangeModulatedRegionDepths_300A_0510 = 0x300A0510, ///< Delivered Nominal Range Modulated Region Depths (300A,0510)
     DeliveredReferenceDoseDefinition_300A_0511 = 0x300A0511, ///< Delivered Reference Dose Definition (300A,0511)
     ReferenceDoseDefinition_300A_0512 = 0x300A0512, ///< Reference Dose Definition (300A,0512)
+    RTControlPointIndex_300A_0600 = 0x300A0600, ///< RT Control Point Index (300A,0600)
+    RadiationGenerationModeIndex_300A_0601 = 0x300A0601, ///< Radiation Generation Mode Index (300A,0601)
+    ReferencedDefinedDeviceIndex_300A_0602 = 0x300A0602, ///< Referenced Defined Device Index (300A,0602)
+    RadiationDoseIdentificationIndex_300A_0603 = 0x300A0603, ///< Radiation Dose Identification Index (300A,0603)
+    NumberOfRTControlPoints_300A_0604 = 0x300A0604, ///< Number of RT Control Points (300A,0604)
+    ReferencedRadiationGenerationModeIndex_300A_0605 = 0x300A0605, ///< Referenced Radiation Generation Mode Index (300A,0605)
+    TreatmentPositionIndex_300A_0606 = 0x300A0606, ///< Treatment Position Index (300A,0606)
+    ReferencedDeviceIndex_300A_0607 = 0x300A0607, ///< Referenced Device Index (300A,0607)
+    TreatmentPositionGroupLabel_300A_0608 = 0x300A0608, ///< Treatment Position Group Label (300A,0608)
+    TreatmentPositionGroupUID_300A_0609 = 0x300A0609, ///< Treatment Position Group UID (300A,0609)
+    TreatmentPositionGroupSequence_300A_060A = 0x300A060A, ///< Treatment Position Group Sequence (300A,060A)
+    ReferencedTreatmentPositionIndex_300A_060B = 0x300A060B, ///< Referenced Treatment Position Index (300A,060B)
+    ReferencedRadiationDoseIdentificationIndex_300A_060C = 0x300A060C, ///< Referenced Radiation Dose Identification Index (300A,060C)
+    RTAccessoryHolderWaterEquivalentThickness_300A_060D = 0x300A060D, ///< RT Accessory Holder Water-Equivalent Thickness (300A,060D)
+    ReferencedRTAccessoryHolderDeviceIndex_300A_060E = 0x300A060E, ///< Referenced RT Accessory Holder Device Index (300A,060E)
+    RTAccessoryHolderSlotExistenceFlag_300A_060F = 0x300A060F, ///< RT Accessory Holder Slot Existence Flag (300A,060F)
+    RTAccessoryHolderSlotSequence_300A_0610 = 0x300A0610, ///< RT Accessory Holder Slot Sequence (300A,0610)
+    RTAccessoryHolderSlotID_300A_0611 = 0x300A0611, ///< RT Accessory Holder Slot ID (300A,0611)
+    RTAccessoryHolderSlotDistance_300A_0612 = 0x300A0612, ///< RT Accessory Holder Slot Distance (300A,0612)
+    RTAccessorySlotDistance_300A_0613 = 0x300A0613, ///< RT Accessory Slot Distance (300A,0613)
+    RTAccessoryHolderDefinitionSequence_300A_0614 = 0x300A0614, ///< RT Accessory Holder Definition Sequence (300A,0614)
+    RTAccessoryDeviceSlotID_300A_0615 = 0x300A0615, ///< RT Accessory Device Slot ID (300A,0615)
+    RTRadiationSequence_300A_0616 = 0x300A0616, ///< RT Radiation Sequence (300A,0616)
+    RadiationDoseSequence_300A_0617 = 0x300A0617, ///< Radiation Dose Sequence (300A,0617)
+    RadiationDoseIdentificationSequence_300A_0618 = 0x300A0618, ///< Radiation Dose Identification Sequence (300A,0618)
+    RadiationDoseIdentificationLabel_300A_0619 = 0x300A0619, ///< Radiation Dose Identification Label (300A,0619)
+    ReferenceDoseType_300A_061A = 0x300A061A, ///< Reference Dose Type (300A,061A)
+    PrimaryDoseValueIndicator_300A_061B = 0x300A061B, ///< Primary Dose Value Indicator (300A,061B)
+    DoseValuesSequence_300A_061C = 0x300A061C, ///< Dose Values Sequence (300A,061C)
+    DoseValuePurpose_300A_061D = 0x300A061D, ///< Dose Value Purpose (300A,061D)
+    ReferenceDosePointCoordinates_300A_061E = 0x300A061E, ///< Reference Dose Point Coordinates (300A,061E)
+    RadiationDoseValuesParametersSequence_300A_061F = 0x300A061F, ///< Radiation Dose Values Parameters Sequence (300A,061F)
+    MetersetToDoseMappingSequence_300A_0620 = 0x300A0620, ///< Meterset to Dose Mapping Sequence (300A,0620)
+    ExpectedInVivoMeasurementValuesSequence_300A_0621 = 0x300A0621, ///< Expected In-Vivo Measurement Values Sequence (300A,0621)
+    ExpectedInVivoMeasurementValueIndex_300A_0622 = 0x300A0622, ///< Expected In-Vivo Measurement Value Index (300A,0622)
+    RadiationDoseInVivoMeasurementLabel_300A_0623 = 0x300A0623, ///< Radiation Dose In-Vivo Measurement Label (300A,0623)
+    RadiationDoseCentralAxisDisplacement_300A_0624 = 0x300A0624, ///< Radiation Dose Central Axis Displacement (300A,0624)
+    RadiationDoseValue_300A_0625 = 0x300A0625, ///< Radiation Dose Value (300A,0625)
+    RadiationDoseSourceToSkinDistance_300A_0626 = 0x300A0626, ///< Radiation Dose Source to Skin Distance (300A,0626)
+    RadiationDoseMeasurementPointCoordinates_300A_0627 = 0x300A0627, ///< Radiation Dose Measurement Point Coordinates (300A,0627)
+    RadiationDoseSourceToExternalContourDistance_300A_0628 = 0x300A0628, ///< Radiation Dose Source to External Contour Distance (300A,0628)
+    RTToleranceSetSequence_300A_0629 = 0x300A0629, ///< RT Tolerance Set Sequence (300A,0629)
+    RTToleranceSetLabel_300A_062A = 0x300A062A, ///< RT Tolerance Set Label (300A,062A)
+    AttributeToleranceValuesSequence_300A_062B = 0x300A062B, ///< Attribute Tolerance Values Sequence (300A,062B)
+    ToleranceValue_300A_062C = 0x300A062C, ///< Tolerance Value (300A,062C)
+    PatientSupportPositionToleranceSequence_300A_062D = 0x300A062D, ///< Patient Support Position Tolerance Sequence (300A,062D)
+    TreatmentTimeLimit_300A_062E = 0x300A062E, ///< Treatment Time Limit (300A,062E)
+    CArmPhotonElectronControlPointSequence_300A_062F = 0x300A062F, ///< C-Arm Photon-Electron Control Point Sequence (300A,062F)
+    ReferencedRTRadiationSequence_300A_0630 = 0x300A0630, ///< Referenced RT Radiation Sequence (300A,0630)
+    ReferencedRTInstanceSequence_300A_0631 = 0x300A0631, ///< Referenced RT Instance Sequence (300A,0631)
+    ReferencedRTPatientSetupSequence_300A_0632 = 0x300A0632, ///< Referenced RT Patient Setup Sequence (300A,0632)
+    SourceToPatientSurfaceDistance_300A_0634 = 0x300A0634, ///< Source to Patient Surface Distance (300A,0634)
+    TreatmentMachineSpecialModeCodeSequence_300A_0635 = 0x300A0635, ///< Treatment Machine Special Mode Code Sequence (300A,0635)
+    IntendedNumberOfFractions_300A_0636 = 0x300A0636, ///< Intended Number of Fractions (300A,0636)
+    RTRadiationSetIntent_300A_0637 = 0x300A0637, ///< RT Radiation Set Intent (300A,0637)
+    RTRadiationPhysicalAndGeometricContentDetailFlag_300A_0638 = 0x300A0638, ///< RT Radiation Physical and Geometric Content Detail Flag (300A,0638)
+    RTRecordFlag_300A_0639 = 0x300A0639, ///< RT Record Flag (300A,0639)
+    TreatmentDeviceIdentificationSequence_300A_063A = 0x300A063A, ///< Treatment Device Identification Sequence (300A,063A)
+    ReferencedRTPhysicianIntentSequence_300A_063B = 0x300A063B, ///< Referenced RT Physician Intent Sequence (300A,063B)
+    CumulativeMeterset_300A_063C = 0x300A063C, ///< Cumulative Meterset (300A,063C)
+    DeliveryRate_300A_063D = 0x300A063D, ///< Delivery Rate (300A,063D)
+    DeliveryRateUnitSequence_300A_063E = 0x300A063E, ///< Delivery Rate Unit Sequence (300A,063E)
+    TreatmentPositionSequence_300A_063F = 0x300A063F, ///< Treatment Position Sequence (300A,063F)
+    RadiationSourceAxisDistance_300A_0640 = 0x300A0640, ///< Radiation Source-Axis Distance (300A,0640)
+    NumberOfRTBeamLimitingDevices_300A_0641 = 0x300A0641, ///< Number of RT Beam Limiting Devices (300A,0641)
+    RTBeamLimitingDeviceProximalDistance_300A_0642 = 0x300A0642, ///< RT Beam Limiting Device Proximal Distance (300A,0642)
+    RTBeamLimitingDeviceDistalDistance_300A_0643 = 0x300A0643, ///< RT Beam Limiting Device Distal Distance (300A,0643)
+    ParallelRTBeamDelimiterDeviceOrientationLabelCodeSequence_300A_0644 = 0x300A0644, ///< Parallel RT Beam Delimiter Device Orientation Label Code Sequence (300A,0644)
+    BeamModifierOrientationAngle_300A_0645 = 0x300A0645, ///< Beam Modifier Orientation Angle (300A,0645)
+    FixedRTBeamDelimiterDeviceSequence_300A_0646 = 0x300A0646, ///< Fixed RT Beam Delimiter Device Sequence (300A,0646)
+    ParallelRTBeamDelimiterDeviceSequence_300A_0647 = 0x300A0647, ///< Parallel RT Beam Delimiter Device Sequence (300A,0647)
+    NumberOfParallelRTBeamDelimiters_300A_0648 = 0x300A0648, ///< Number of Parallel RT Beam Delimiters (300A,0648)
+    ParallelRTBeamDelimiterBoundaries_300A_0649 = 0x300A0649, ///< Parallel RT Beam Delimiter Boundaries (300A,0649)
+    ParallelRTBeamDelimiterPositions_300A_064A = 0x300A064A, ///< Parallel RT Beam Delimiter Positions (300A,064A)
+    RTBeamLimitingDeviceOffset_300A_064B = 0x300A064B, ///< RT Beam Limiting Device Offset (300A,064B)
+    RTBeamDelimiterGeometrySequence_300A_064C = 0x300A064C, ///< RT Beam Delimiter Geometry Sequence (300A,064C)
+    RTBeamLimitingDeviceDefinitionSequence_300A_064D = 0x300A064D, ///< RT Beam Limiting Device Definition Sequence (300A,064D)
+    ParallelRTBeamDelimiterOpeningMode_300A_064E = 0x300A064E, ///< Parallel RT Beam Delimiter Opening Mode (300A,064E)
+    ParallelRTBeamDelimiterLeafMountingSide_300A_064F = 0x300A064F, ///< Parallel RT Beam Delimiter Leaf Mounting Side (300A,064F)
+    PatientSetupUID_300A_0650 = 0x300A0650, ///< Patient Setup UID (300A,0650)
+    WedgeDefinitionSequence_300A_0651 = 0x300A0651, ///< Wedge Definition Sequence (300A,0651)
+    RadiationBeamWedgeAngle_300A_0652 = 0x300A0652, ///< Radiation Beam Wedge Angle (300A,0652)
+    RadiationBeamWedgeThinEdgeDistance_300A_0653 = 0x300A0653, ///< Radiation Beam Wedge Thin Edge Distance (300A,0653)
+    RadiationBeamEffectiveWedgeAngle_300A_0654 = 0x300A0654, ///< Radiation Beam Effective Wedge Angle (300A,0654)
+    NumberOfWedgePositions_300A_0655 = 0x300A0655, ///< Number of Wedge Positions (300A,0655)
+    RTBeamLimitingDeviceOpeningSequence_300A_0656 = 0x300A0656, ///< RT Beam Limiting Device Opening Sequence (300A,0656)
+    NumberOfRTBeamLimitingDeviceOpenings_300A_0657 = 0x300A0657, ///< Number of RT Beam Limiting Device Openings (300A,0657)
+    RadiationDosimeterUnitSequence_300A_0658 = 0x300A0658, ///< Radiation Dosimeter Unit Sequence (300A,0658)
+    RTDeviceDistanceReferenceLocationCodeSequence_300A_0659 = 0x300A0659, ///< RT Device Distance Reference Location Code Sequence (300A,0659)
+    RadiationDeviceConfigurationAndCommissioningKeySequence_300A_065A = 0x300A065A, ///< Radiation Device Configuration and Commissioning Key Sequence (300A,065A)
+    PatientSupportPositionParameterSequence_300A_065B = 0x300A065B, ///< Patient Support Position Parameter Sequence (300A,065B)
+    PatientSupportPositionSpecificationMethod_300A_065C = 0x300A065C, ///< Patient Support Position Specification Method (300A,065C)
+    PatientSupportPositionDeviceParameterSequence_300A_065D = 0x300A065D, ///< Patient Support Position Device Parameter Sequence (300A,065D)
+    DeviceOrderIndex_300A_065E = 0x300A065E, ///< Device Order Index (300A,065E)
+    PatientSupportPositionParameterOrderIndex_300A_065F = 0x300A065F, ///< Patient Support Position Parameter Order Index (300A,065F)
+    PatientSupportPositionDeviceToleranceSequence_300A_0660 = 0x300A0660, ///< Patient Support Position Device Tolerance Sequence (300A,0660)
+    PatientSupportPositionToleranceOrderIndex_300A_0661 = 0x300A0661, ///< Patient Support Position Tolerance Order Index (300A,0661)
+    CompensatorDefinitionSequence_300A_0662 = 0x300A0662, ///< Compensator Definition Sequence (300A,0662)
+    CompensatorMapOrientation_300A_0663 = 0x300A0663, ///< Compensator Map Orientation (300A,0663)
+    CompensatorProximalThicknessMap_300A_0664 = 0x300A0664, ///< Compensator Proximal Thickness Map (300A,0664)
+    CompensatorDistalThicknessMap_300A_0665 = 0x300A0665, ///< Compensator Distal Thickness Map (300A,0665)
+    CompensatorBasePlaneOffset_300A_0666 = 0x300A0666, ///< Compensator Base Plane Offset (300A,0666)
+    CompensatorShapeFabricationCodeSequence_300A_0667 = 0x300A0667, ///< Compensator Shape Fabrication Code Sequence (300A,0667)
+    CompensatorShapeSequence_300A_0668 = 0x300A0668, ///< Compensator Shape Sequence (300A,0668)
+    RadiationBeamCompensatorMillingToolDiameter_300A_0669 = 0x300A0669, ///< Radiation Beam Compensator Milling Tool Diameter (300A,0669)
+    BlockDefinitionSequence_300A_066A = 0x300A066A, ///< Block Definition Sequence (300A,066A)
+    BlockEdgeData_300A_066B = 0x300A066B, ///< Block Edge Data (300A,066B)
+    BlockOrientation_300A_066C = 0x300A066C, ///< Block Orientation (300A,066C)
+    RadiationBeamBlockThickness_300A_066D = 0x300A066D, ///< Radiation Beam Block Thickness (300A,066D)
+    RadiationBeamBlockSlabThickness_300A_066E = 0x300A066E, ///< Radiation Beam Block Slab Thickness (300A,066E)
+    BlockEdgeDataSequence_300A_066F = 0x300A066F, ///< Block Edge Data Sequence (300A,066F)
+    NumberOfRTAccessoryHolders_300A_0670 = 0x300A0670, ///< Number of RT Accessory Holders (300A,0670)
+    GeneralAccessoryDefinitionSequence_300A_0671 = 0x300A0671, ///< General Accessory Definition Sequence (300A,0671)
+    NumberOfGeneralAccessories_300A_0672 = 0x300A0672, ///< Number of General Accessories (300A,0672)
+    BolusDefinitionSequence_300A_0673 = 0x300A0673, ///< Bolus Definition Sequence (300A,0673)
+    NumberOfBoluses_300A_0674 = 0x300A0674, ///< Number of Boluses (300A,0674)
+    EquipmentFrameOfReferenceUID_300A_0675 = 0x300A0675, ///< Equipment Frame of Reference UID (300A,0675)
+    EquipmentFrameOfReferenceDescription_300A_0676 = 0x300A0676, ///< Equipment Frame of Reference Description (300A,0676)
+    EquipmentReferencePointCoordinatesSequence_300A_0677 = 0x300A0677, ///< Equipment Reference Point Coordinates Sequence (300A,0677)
+    EquipmentReferencePointCodeSequence_300A_0678 = 0x300A0678, ///< Equipment Reference Point Code Sequence (300A,0678)
+    RTBeamLimitingDeviceAngle_300A_0679 = 0x300A0679, ///< RT Beam Limiting Device Angle (300A,0679)
+    SourceRollAngle_300A_067A = 0x300A067A, ///< Source Roll Angle (300A,067A)
+    RadiationGenerationModeSequence_300A_067B = 0x300A067B, ///< Radiation GenerationMode Sequence (300A,067B)
+    RadiationGenerationModeLabel_300A_067C = 0x300A067C, ///< Radiation GenerationMode Label (300A,067C)
+    RadiationGenerationModeDescription_300A_067D = 0x300A067D, ///< Radiation GenerationMode Description (300A,067D)
+    RadiationGenerationModeMachineCodeSequence_300A_067E = 0x300A067E, ///< Radiation GenerationMode Machine Code Sequence (300A,067E)
+    RadiationTypeCodeSequence_300A_067F = 0x300A067F, ///< Radiation Type Code Sequence (300A,067F)
+    NominalEnergy_300A_0680 = 0x300A0680, ///< Nominal Energy (300A,0680)
+    MinimumNominalEnergy_300A_0681 = 0x300A0681, ///< Minimum Nominal Energy (300A,0681)
+    MaximumNominalEnergy_300A_0682 = 0x300A0682, ///< Maximum Nominal Energy (300A,0682)
+    RadiationFluenceModifierCodeSequence_300A_0683 = 0x300A0683, ///< Radiation Fluence Modifier Code Sequence (300A,0683)
+    EnergyUnitCodeSequence_300A_0684 = 0x300A0684, ///< Energy Unit Code Sequence (300A,0684)
+    NumberOfRadiationGenerationModes_300A_0685 = 0x300A0685, ///< Number of Radiation GenerationModes (300A,0685)
+    PatientSupportDevicesSequence_300A_0686 = 0x300A0686, ///< Patient Support Devices Sequence (300A,0686)
+    NumberOfPatientSupportDevices_300A_0687 = 0x300A0687, ///< Number of Patient Support Devices (300A,0687)
+    RTBeamModifierDefinitionDistance_300A_0688 = 0x300A0688, ///< RT Beam Modifier Definition Distance (300A,0688)
+    BeamAreaLimitSequence_300A_0689 = 0x300A0689, ///< Beam Area Limit Sequence (300A,0689)
+    ReferencedRTPrescriptionSequence_300A_068A = 0x300A068A, ///< Referenced RT Prescription Sequence (300A,068A)
+    TreatmentSessionUID_300A_0700 = 0x300A0700, ///< Treatment Session UID (300A,0700)
+    RTRadiationUsage_300A_0701 = 0x300A0701, ///< RT Radiation Usage (300A,0701)
+    ReferencedRTRadiationSetSequence_300A_0702 = 0x300A0702, ///< Referenced RT Radiation Set Sequence (300A,0702)
+    ReferencedRTRadiationRecordSequence_300A_0703 = 0x300A0703, ///< Referenced RT Radiation Record Sequence (300A,0703)
+    RTRadiationSetDeliveryNumber_300A_0704 = 0x300A0704, ///< RT Radiation Set Delivery Number (300A,0704)
+    ClinicalFractionNumber_300A_0705 = 0x300A0705, ///< Clinical Fraction Number (300A,0705)
+    RTTreatmentFractionCompletionStatus_300A_0706 = 0x300A0706, ///< RT Treatment Fraction Completion Status (300A,0706)
+    RTRadiationSetUsage_300A_0707 = 0x300A0707, ///< RT Radiation Set Usage (300A,0707)
+    TreatmentDeliveryContinuationFlag_300A_0708 = 0x300A0708, ///< Treatment Delivery Continuation Flag (300A,0708)
+    TreatmentRecordContentOrigin_300A_0709 = 0x300A0709, ///< Treatment Record Content Origin (300A,0709)
+    RTTreatmentTerminationStatus_300A_0714 = 0x300A0714, ///< RT Treatment Termination Status (300A,0714)
+    RTTreatmentTerminationReasonCodeSequence_300A_0715 = 0x300A0715, ///< RT Treatment Termination Reason Code Sequence (300A,0715)
+    MachineSpecificTreatmentTerminationCodeSequence_300A_0716 = 0x300A0716, ///< Machine-Specific Treatment Termination Code Sequence (300A,0716)
+    RTRadiationSalvageRecordControlPointSequence_300A_0722 = 0x300A0722, ///< RT Radiation Salvage Record Control Point Sequence (300A,0722)
+    StartingMetersetValueKnownFlag_300A_0723 = 0x300A0723, ///< Starting Meterset Value Known Flag (300A,0723)
+    TreatmentTerminationDescription_300A_0730 = 0x300A0730, ///< Treatment Termination Description (300A,0730)
+    TreatmentToleranceViolationSequence_300A_0731 = 0x300A0731, ///< Treatment Tolerance Violation Sequence (300A,0731)
+    TreatmentToleranceViolationCategory_300A_0732 = 0x300A0732, ///< Treatment Tolerance Violation Category (300A,0732)
+    TreatmentToleranceViolationAttributeSequence_300A_0733 = 0x300A0733, ///< Treatment Tolerance Violation Attribute Sequence (300A,0733)
+    TreatmentToleranceViolationDescription_300A_0734 = 0x300A0734, ///< Treatment Tolerance Violation Description (300A,0734)
+    TreatmentToleranceViolationIdentification_300A_0735 = 0x300A0735, ///< Treatment Tolerance Violation Identification (300A,0735)
+    TreatmentToleranceViolationDateTime_300A_0736 = 0x300A0736, ///< Treatment Tolerance Violation DateTime (300A,0736)
+    RecordedRTControlPointDateTime_300A_073A = 0x300A073A, ///< Recorded RT Control Point DateTime (300A,073A)
+    ReferencedRadiationRTControlPointIndex_300A_073B = 0x300A073B, ///< Referenced Radiation RT Control Point Index (300A,073B)
+    AlternateValueSequence_300A_073E = 0x300A073E, ///< Alternate Value Sequence (300A,073E)
+    ConfirmationSequence_300A_073F = 0x300A073F, ///< Confirmation Sequence (300A,073F)
+    InterlockSequence_300A_0740 = 0x300A0740, ///< Interlock Sequence (300A,0740)
+    InterlockDateTime_300A_0741 = 0x300A0741, ///< Interlock DateTime (300A,0741)
+    InterlockDescription_300A_0742 = 0x300A0742, ///< Interlock Description (300A,0742)
+    InterlockOriginatingDeviceSequence_300A_0743 = 0x300A0743, ///< Interlock Originating Device Sequence (300A,0743)
+    InterlockCodeSequence_300A_0744 = 0x300A0744, ///< Interlock Code Sequence (300A,0744)
+    InterlockResolutionCodeSequence_300A_0745 = 0x300A0745, ///< Interlock Resolution Code Sequence (300A,0745)
+    InterlockResolutionUserSequence_300A_0746 = 0x300A0746, ///< Interlock Resolution User Sequence (300A,0746)
+    OverrideDateTime_300A_0760 = 0x300A0760, ///< Override DateTime (300A,0760)
+    TreatmentToleranceViolationTypeCodeSequence_300A_0761 = 0x300A0761, ///< Treatment Tolerance Violation Type Code Sequence (300A,0761)
+    TreatmentToleranceViolationCauseCodeSequence_300A_0762 = 0x300A0762, ///< Treatment Tolerance Violation Cause Code Sequence (300A,0762)
+    MeasuredMetersetToDoseMappingSequence_300A_0772 = 0x300A0772, ///< Measured Meterset to Dose Mapping Sequence (300A,0772)
+    ReferencedExpectedInVivoMeasurementValueIndex_300A_0773 = 0x300A0773, ///< Referenced Expected In-Vivo Measurement Value Index (300A,0773)
+    DoseMeasurementDeviceCodeSequence_300A_0774 = 0x300A0774, ///< Dose Measurement Device Code Sequence (300A,0774)
+    AdditionalParameterRecordingInstanceSequence_300A_0780 = 0x300A0780, ///< Additional Parameter Recording Instance Sequence (300A,0780)
+    InterlockOriginDescription_300A_0783 = 0x300A0783, ///< Interlock Origin Description (300A,0783)
     ReferencedRTPlanSequence_300C_0002 = 0x300C0002, ///< Referenced RT Plan Sequence (300C,0002)
     ReferencedBeamSequence_300C_0004 = 0x300C0004, ///< Referenced Beam Sequence (300C,0004)
     ReferencedBeamNumber_300C_0006 = 0x300C0006, ///< Referenced Beam Number (300C,0006)
@@ -4207,7 +4598,7 @@ enum class tagId_t: std::uint32_t
     RadiobiologicalDoseEffectFlag_3010_0002 = 0x30100002, ///< Radiobiological Dose Effect Flag (3010,0002)
     EffectiveDoseCalculationMethodCategoryCodeSequence_3010_0003 = 0x30100003, ///< Effective Dose Calculation Method Category Code Sequence (3010,0003)
     EffectiveDoseCalculationMethodCodeSequence_3010_0004 = 0x30100004, ///< Effective Dose Calculation Method Code Sequence (3010,0004)
-    EffectiveDoseMethodDescription_3010_0005 = 0x30100005, ///< Effective Dose Calculation Method Description (3010,0005)
+    EffectiveDoseCalculationMethodDescription_3010_0005 = 0x30100005, ///< Effective Dose Calculation Method Description (3010,0005)
     ConceptualVolumeUID_3010_0006 = 0x30100006, ///< Conceptual Volume UID (3010,0006)
     OriginatingSOPInstanceReferenceSequence_3010_0007 = 0x30100007, ///< Originating SOP Instance Reference Sequence (3010,0007)
     ConceptualVolumeConstituentSequence_3010_0008 = 0x30100008, ///< Conceptual Volume Constituent Sequence (3010,0008)
@@ -4228,7 +4619,7 @@ enum class tagId_t: std::uint32_t
     ConceptualVolumeDescription_3010_0017 = 0x30100017, ///< Conceptual Volume Description (3010,0017)
     SourceConceptualVolumeSequence_3010_0018 = 0x30100018, ///< Source Conceptual Volume Sequence (3010,0018)
     AuthorIdentificationSequence_3010_0019 = 0x30100019, ///< Author Identification Sequence (3010,0019)
-    ManufacturersModelVersion_3010_001A = 0x3010001A, ///< Manufacturer's Model Version (3010,001A)
+    ManufacturerModelVersion_3010_001A = 0x3010001A, ///< Manufacturer's Model Version (3010,001A)
     DeviceAlternateIdentifier_3010_001B = 0x3010001B, ///< Device Alternate Identifier (3010,001B)
     DeviceAlternateIdentifierType_3010_001C = 0x3010001C, ///< Device Alternate Identifier Type (3010,001C)
     DeviceAlternateIdentifierFormat_3010_001D = 0x3010001D, ///< Device Alternate Identifier Format (3010,001D)
@@ -4249,6 +4640,7 @@ enum class tagId_t: std::uint32_t
     SegmentAnnotationTypeCodeSequence_3010_002C = 0x3010002C, ///< Segment Annotation Type Code Sequence (3010,002C)
     DeviceLabel_3010_002D = 0x3010002D, ///< Device Label (3010,002D)
     DeviceTypeCodeSequence_3010_002E = 0x3010002E, ///< Device Type Code Sequence (3010,002E)
+    SegmentAnnotationTypeModifierCodeSequence_3010_002F = 0x3010002F, ///< Segment Annotation Type Modifier Code Sequence (3010,002F)
     PatientEquipmentRelationshipCodeSequence_3010_0030 = 0x30100030, ///< Patient Equipment Relationship Code Sequence (3010,0030)
     ReferencedFiducialsUID_3010_0031 = 0x30100031, ///< Referenced Fiducials UID (3010,0031)
     PatientTreatmentOrientationSequence_3010_0032 = 0x30100032, ///< Patient Treatment Orientation Sequence (3010,0032)
@@ -4337,6 +4729,18 @@ enum class tagId_t: std::uint32_t
     IntendedStartDayOfWeek_3010_0086 = 0x30100086, ///< Intended Start Day of Week (3010,0086)
     WeekdayFractionPatternSequence_3010_0087 = 0x30100087, ///< Weekday Fraction Pattern Sequence (3010,0087)
     DeliveryTimeStructureCodeSequence_3010_0088 = 0x30100088, ///< Delivery Time Structure Code Sequence (3010,0088)
+    TreatmentSiteModifierCodeSequence_3010_0089 = 0x30100089, ///< Treatment Site Modifier Code Sequence (3010,0089)
+    RoboticBaseLocationIndicator_3010_0090 = 0x30100090, ///< Robotic Base Location Indicator (3010,0090)
+    RoboticPathNodeSetCodeSequence_3010_0091 = 0x30100091, ///< Robotic Path Node Set Code Sequence (3010,0091)
+    RoboticNodeIdentifier_3010_0092 = 0x30100092, ///< Robotic Node Identifier (3010,0092)
+    RTTreatmentSourceCoordinates_3010_0093 = 0x30100093, ///< RT Treatment Source Coordinates (3010,0093)
+    RadiationSourceCoordinateSystemYawAngle_3010_0094 = 0x30100094, ///< Radiation Source Coordinate SystemYaw Angle (3010,0094)
+    RadiationSourceCoordinateSystemRollAngle_3010_0095 = 0x30100095, ///< Radiation Source Coordinate SystemRoll Angle (3010,0095)
+    RadiationSourceCoordinateSystemPitchAngle_3010_0096 = 0x30100096, ///< Radiation Source Coordinate System Pitch Angle (3010,0096)
+    RoboticPathControlPointSequence_3010_0097 = 0x30100097, ///< Robotic Path Control Point Sequence (3010,0097)
+    TomotherapeuticControlPointSequence_3010_0098 = 0x30100098, ///< Tomotherapeutic Control Point Sequence (3010,0098)
+    TomotherapeuticLeafOpenDurations_3010_0099 = 0x30100099, ///< Tomotherapeutic Leaf Open Durations (3010,0099)
+    TomotherapeuticLeafInitialClosedDurations_3010_009A = 0x3010009A, ///< Tomotherapeutic Leaf Initial Closed Durations (3010,009A)
     Arbitrary_4000_0010 = 0x40000010, ///< Arbitrary (4000,0010)
     TextComments_4000_4000 = 0x40004000, ///< Text Comments (4000,4000)
     ResultsID_4008_0040 = 0x40080040, ///< Results ID (4008,0040)
@@ -4402,7 +4806,7 @@ enum class tagId_t: std::uint32_t
     RouteSegmentEndTime_4010_1026 = 0x40101026, ///< Route Segment End Time (4010,1026)
     TDRType_4010_1027 = 0x40101027, ///< TDR Type (4010,1027)
     InternationalRouteSegment_4010_1028 = 0x40101028, ///< International Route Segment (4010,1028)
-    ThreatDetectionAlgorithmandVersion_4010_1029 = 0x40101029, ///< Threat Detection Algorithm and Version (4010,1029)
+    ThreatDetectionAlgorithmAndVersion_4010_1029 = 0x40101029, ///< Threat Detection Algorithm and Version (4010,1029)
     AssignedLocation_4010_102A = 0x4010102A, ///< Assigned Location (4010,102A)
     AlarmDecisionTime_4010_102B = 0x4010102B, ///< Alarm Decision Time (4010,102B)
     AlarmDecision_4010_1031 = 0x40101031, ///< Alarm Decision (4010,1031)
@@ -4536,6 +4940,8 @@ enum class tagId_t: std::uint32_t
     VariableCoefficientsSDVN_7F00_0020 = 0x7F000020, ///< Variable Coefficients SDVN (7F00,0020)
     VariableCoefficientsSDHN_7F00_0030 = 0x7F000030, ///< Variable Coefficients SDHN (7F00,0030)
     VariableCoefficientsSDDN_7F00_0040 = 0x7F000040, ///< Variable Coefficients SDDN (7F00,0040)
+    ExtendedOffsetTable_7FE0_0001 = 0x7FE00001, ///< Extended Offset Table (7FE0,0001)
+    ExtendedOffsetTableLengths_7FE0_0002 = 0x7FE00002, ///< Extended Offset Table Lengths (7FE0,0002)
     FloatPixelData_7FE0_0008 = 0x7FE00008, ///< Float Pixel Data (7FE0,0008)
     DoubleFloatPixelData_7FE0_0009 = 0x7FE00009, ///< Double Float Pixel Data (7FE0,0009)
     PixelData_7FE0_0010 = 0x7FE00010, ///< Pixel Data (7FE0,0010)
@@ -4603,6 +5009,9 @@ static const char* const uidHEVCH265Main10ProfileLevel51_1_2_840_10008_1_2_4_108
 static const char* const uidRLELossless_1_2_840_10008_1_2_5 = "1.2.840.10008.1.2.5"; ///< RLE Lossless
 static const char* const uidRFC2557MIMEencapsulation_1_2_840_10008_1_2_6_1 = "1.2.840.10008.1.2.6.1"; ///< RFC 2557 MIME encapsulation (Retired)
 static const char* const uidXMLEncoding_1_2_840_10008_1_2_6_2 = "1.2.840.10008.1.2.6.2"; ///< XML Encoding (Retired)
+static const char* const uidSMPTEST211020UncompressedProgressiveActiveVideo_1_2_840_10008_1_2_7_1 = "1.2.840.10008.1.2.7.1"; ///< SMPTE ST 2110-20 Uncompressed Progressive Active Video
+static const char* const uidSMPTEST211020UncompressedInterlacedActiveVideo_1_2_840_10008_1_2_7_2 = "1.2.840.10008.1.2.7.2"; ///< SMPTE ST 2110-20 Uncompressed Interlaced Active Video
+static const char* const uidSMPTEST211030PCMDigitalAudio_1_2_840_10008_1_2_7_3 = "1.2.840.10008.1.2.7.3"; ///< SMPTE ST 2110-30 PCM Digital Audio
 static const char* const uidMediaStorageDirectoryStorage_1_2_840_10008_1_3_10 = "1.2.840.10008.1.3.10"; ///< Media Storage Directory Storage
 static const char* const uidTalairachBrainAtlasFrameofReference_1_2_840_10008_1_4_1_1 = "1.2.840.10008.1.4.1.1"; ///< Talairach Brain Atlas Frame of Reference
 static const char* const uidSPM2T1FrameofReference_1_2_840_10008_1_4_1_2 = "1.2.840.10008.1.4.1.2"; ///< SPM2 T1 Frame of Reference
@@ -4624,6 +5033,13 @@ static const char* const uidSPM2AVG152PDFrameofReference_1_2_840_10008_1_4_1_17 
 static const char* const uidSPM2SINGLESUBJT1FrameofReference_1_2_840_10008_1_4_1_18 = "1.2.840.10008.1.4.1.18"; ///< SPM2 SINGLESUBJT1 Frame of Reference
 static const char* const uidICBM452T1FrameofReference_1_2_840_10008_1_4_2_1 = "1.2.840.10008.1.4.2.1"; ///< ICBM 452 T1 Frame of Reference
 static const char* const uidICBMSingleSubjectMRIFrameofReference_1_2_840_10008_1_4_2_2 = "1.2.840.10008.1.4.2.2"; ///< ICBM Single Subject MRI Frame of Reference
+static const char* const uidIEC61217FixedCoordinateSystemFrameofReference_1_2_840_10008_1_4_3_1 = "1.2.840.10008.1.4.3.1"; ///< IEC 61217 Fixed Coordinate System Frame of Reference
+static const char* const uidStandardRoboticArmCoordinateSystemFrameofReference_1_2_840_10008_1_4_3_2 = "1.2.840.10008.1.4.3.2"; ///< Standard Robotic-Arm Coordinate System Frame of Reference
+static const char* const uidSRI24FrameofReference_1_2_840_10008_1_4_4_1 = "1.2.840.10008.1.4.4.1"; ///< SRI24 Frame of Reference
+static const char* const uidColin27FrameofReference_1_2_840_10008_1_4_5_1 = "1.2.840.10008.1.4.5.1"; ///< Colin27 Frame of Reference
+static const char* const uidLPBA40AIRFrameofReference_1_2_840_10008_1_4_6_1 = "1.2.840.10008.1.4.6.1"; ///< LPBA40/AIR Frame of Reference
+static const char* const uidLPBA40FLIRTFrameofReference_1_2_840_10008_1_4_6_2 = "1.2.840.10008.1.4.6.2"; ///< LPBA40/FLIRT Frame of Reference
+static const char* const uidLPBA40SPM5FrameofReference_1_2_840_10008_1_4_6_3 = "1.2.840.10008.1.4.6.3"; ///< LPBA40/SPM5 Frame of Reference
 static const char* const uidHotIronColorPaletteSOPInstance_1_2_840_10008_1_5_1 = "1.2.840.10008.1.5.1"; ///< Hot Iron Color Palette SOP Instance
 static const char* const uidPETColorPaletteSOPInstance_1_2_840_10008_1_5_2 = "1.2.840.10008.1.5.2"; ///< PET Color Palette SOP Instance
 static const char* const uidHotMetalBlueColorPaletteSOPInstance_1_2_840_10008_1_5_3 = "1.2.840.10008.1.5.3"; ///< Hot Metal Blue Color Palette SOP Instance
@@ -4649,6 +5065,13 @@ static const char* const uidUberonOntology_1_2_840_10008_2_16_6 = "1.2.840.10008
 static const char* const uidIntegratedTaxonomicInformationSystemITISTaxonomicSerialNumberTSN_1_2_840_10008_2_16_7 = "1.2.840.10008.2.16.7"; ///< Integrated Taxonomic Information System (ITIS) Taxonomic Serial Number (TSN)
 static const char* const uidMouseGenomeInitiativeMGI_1_2_840_10008_2_16_8 = "1.2.840.10008.2.16.8"; ///< Mouse Genome Initiative (MGI)
 static const char* const uidPubChemCompoundCID_1_2_840_10008_2_16_9 = "1.2.840.10008.2.16.9"; ///< PubChem Compound CID
+static const char* const uidDublinCore_1_2_840_10008_2_16_10 = "1.2.840.10008.2.16.10"; ///< Dublin Core
+static const char* const uidNewYorkUniversityMelanomaClinicalCooperativeGroup_1_2_840_10008_2_16_11 = "1.2.840.10008.2.16.11"; ///< New York University Melanoma Clinical Cooperative Group
+static const char* const uidMayoClinicNonradiologicalImagesSpecificBodyStructureAnatomicalSurfaceRegionGuide_1_2_840_10008_2_16_12 = "1.2.840.10008.2.16.12"; ///< Mayo Clinic Non-radiological Images Specific Body Structure Anatomical Surface Region Guide
+static const char* const uidImageBiomarkerStandardisationInitiative_1_2_840_10008_2_16_13 = "1.2.840.10008.2.16.13"; ///< Image Biomarker Standardisation Initiative
+static const char* const uidRadiomicsOntology_1_2_840_10008_2_16_14 = "1.2.840.10008.2.16.14"; ///< Radiomics Ontology
+static const char* const uidRadElement_1_2_840_10008_2_16_15 = "1.2.840.10008.2.16.15"; ///< RadElement
+static const char* const uidICD11_1_2_840_10008_2_16_16 = "1.2.840.10008.2.16.16"; ///< ICD-11
 static const char* const uidDICOMApplicationContextName_1_2_840_10008_3_1_1_1 = "1.2.840.10008.3.1.1.1"; ///< DICOM Application Context Name
 static const char* const uidDetachedPatientManagementSOPClass_1_2_840_10008_3_1_2_1_1 = "1.2.840.10008.3.1.2.1.1"; ///< Detached Patient Management SOP Class (Retired)
 static const char* const uidDetachedPatientManagementMetaSOPClass_1_2_840_10008_3_1_2_1_4 = "1.2.840.10008.3.1.2.1.4"; ///< Detached Patient Management Meta SOP Class (Retired)
@@ -4729,6 +5152,12 @@ static const char* const uidBasicVoiceAudioWaveformStorage_1_2_840_10008_5_1_4_1
 static const char* const uidGeneralAudioWaveformStorage_1_2_840_10008_5_1_4_1_1_9_4_2 = "1.2.840.10008.5.1.4.1.1.9.4.2"; ///< General Audio Waveform Storage
 static const char* const uidArterialPulseWaveformStorage_1_2_840_10008_5_1_4_1_1_9_5_1 = "1.2.840.10008.5.1.4.1.1.9.5.1"; ///< Arterial Pulse Waveform Storage
 static const char* const uidRespiratoryWaveformStorage_1_2_840_10008_5_1_4_1_1_9_6_1 = "1.2.840.10008.5.1.4.1.1.9.6.1"; ///< Respiratory Waveform Storage
+static const char* const uidMultichannelRespiratoryWaveformStorage_1_2_840_10008_5_1_4_1_1_9_6_2 = "1.2.840.10008.5.1.4.1.1.9.6.2"; ///< Multi-channel Respiratory Waveform Storage
+static const char* const uidRoutineScalpElectroencephalogramWaveformStorage_1_2_840_10008_5_1_4_1_1_9_7_1 = "1.2.840.10008.5.1.4.1.1.9.7.1"; ///< Routine Scalp Electroencephalogram Waveform Storage
+static const char* const uidElectromyogramWaveformStorage_1_2_840_10008_5_1_4_1_1_9_7_2 = "1.2.840.10008.5.1.4.1.1.9.7.2"; ///< Electromyogram Waveform Storage
+static const char* const uidElectrooculogramWaveformStorage_1_2_840_10008_5_1_4_1_1_9_7_3 = "1.2.840.10008.5.1.4.1.1.9.7.3"; ///< Electrooculogram Waveform Storage
+static const char* const uidSleepElectroencephalogramWaveformStorage_1_2_840_10008_5_1_4_1_1_9_7_4 = "1.2.840.10008.5.1.4.1.1.9.7.4"; ///< Sleep Electroencephalogram Waveform Storage
+static const char* const uidBodyPositionWaveformStorage_1_2_840_10008_5_1_4_1_1_9_8_1 = "1.2.840.10008.5.1.4.1.1.9.8.1"; ///< Body Position Waveform Storage
 static const char* const uidStandaloneModalityLUTStorage_1_2_840_10008_5_1_4_1_1_10 = "1.2.840.10008.5.1.4.1.1.10"; ///< Standalone Modality LUT Storage (Retired)
 static const char* const uidStandaloneVOILUTStorage_1_2_840_10008_5_1_4_1_1_11 = "1.2.840.10008.5.1.4.1.1.11"; ///< Standalone VOI LUT Storage (Retired)
 static const char* const uidGrayscaleSoftcopyPresentationStateStorage_1_2_840_10008_5_1_4_1_1_11_1 = "1.2.840.10008.5.1.4.1.1.11.1"; ///< Grayscale Softcopy Presentation State Storage
@@ -4785,6 +5214,7 @@ static const char* const uidWideFieldOphthalmicPhotography3DCoordinatesImageStor
 static const char* const uidOphthalmicOpticalCoherenceTomographyEnFaceImageStorage_1_2_840_10008_5_1_4_1_1_77_1_5_7 = "1.2.840.10008.5.1.4.1.1.77.1.5.7"; ///< Ophthalmic Optical Coherence Tomography En Face Image Storage
 static const char* const uidOphthalmicOpticalCoherenceTomographyBscanVolumeAnalysisStorage_1_2_840_10008_5_1_4_1_1_77_1_5_8 = "1.2.840.10008.5.1.4.1.1.77.1.5.8"; ///< Ophthalmic Optical Coherence Tomography B-scan Volume Analysis Storage
 static const char* const uidVLWholeSlideMicroscopyImageStorage_1_2_840_10008_5_1_4_1_1_77_1_6 = "1.2.840.10008.5.1.4.1.1.77.1.6"; ///< VL Whole Slide Microscopy Image Storage
+static const char* const uidDermoscopicPhotographyImageStorage_1_2_840_10008_5_1_4_1_1_77_1_7 = "1.2.840.10008.5.1.4.1.1.77.1.7"; ///< Dermoscopic Photography Image Storage
 static const char* const uidLensometryMeasurementsStorage_1_2_840_10008_5_1_4_1_1_78_1 = "1.2.840.10008.5.1.4.1.1.78.1"; ///< Lensometry Measurements Storage
 static const char* const uidAutorefractionMeasurementsStorage_1_2_840_10008_5_1_4_1_1_78_2 = "1.2.840.10008.5.1.4.1.1.78.2"; ///< Autorefraction Measurements Storage
 static const char* const uidKeratometryMeasurementsStorage_1_2_840_10008_5_1_4_1_1_78_3 = "1.2.840.10008.5.1.4.1.1.78.3"; ///< Keratometry Measurements Storage
@@ -4819,10 +5249,13 @@ static const char* const uidSimplifiedAdultEchoSRStorage_1_2_840_10008_5_1_4_1_1
 static const char* const uidPatientRadiationDoseSRStorage_1_2_840_10008_5_1_4_1_1_88_73 = "1.2.840.10008.5.1.4.1.1.88.73"; ///< Patient Radiation Dose SR Storage
 static const char* const uidPlannedImagingAgentAdministrationSRStorage_1_2_840_10008_5_1_4_1_1_88_74 = "1.2.840.10008.5.1.4.1.1.88.74"; ///< Planned Imaging Agent Administration SR Storage
 static const char* const uidPerformedImagingAgentAdministrationSRStorage_1_2_840_10008_5_1_4_1_1_88_75 = "1.2.840.10008.5.1.4.1.1.88.75"; ///< Performed Imaging Agent Administration SR Storage
+static const char* const uidEnhancedXRayRadiationDoseSRStorage_1_2_840_10008_5_1_4_1_1_88_76 = "1.2.840.10008.5.1.4.1.1.88.76"; ///< Enhanced X-Ray Radiation Dose SR Storage
 static const char* const uidContentAssessmentResultsStorage_1_2_840_10008_5_1_4_1_1_90_1 = "1.2.840.10008.5.1.4.1.1.90.1"; ///< Content Assessment Results Storage
 static const char* const uidEncapsulatedPDFStorage_1_2_840_10008_5_1_4_1_1_104_1 = "1.2.840.10008.5.1.4.1.1.104.1"; ///< Encapsulated PDF Storage
 static const char* const uidEncapsulatedCDAStorage_1_2_840_10008_5_1_4_1_1_104_2 = "1.2.840.10008.5.1.4.1.1.104.2"; ///< Encapsulated CDA Storage
 static const char* const uidEncapsulatedSTLStorage_1_2_840_10008_5_1_4_1_1_104_3 = "1.2.840.10008.5.1.4.1.1.104.3"; ///< Encapsulated STL Storage
+static const char* const uidEncapsulatedOBJStorage_1_2_840_10008_5_1_4_1_1_104_4 = "1.2.840.10008.5.1.4.1.1.104.4"; ///< Encapsulated OBJ Storage
+static const char* const uidEncapsulatedMTLStorage_1_2_840_10008_5_1_4_1_1_104_5 = "1.2.840.10008.5.1.4.1.1.104.5"; ///< Encapsulated MTL Storage
 static const char* const uidPositronEmissionTomographyImageStorage_1_2_840_10008_5_1_4_1_1_128 = "1.2.840.10008.5.1.4.1.1.128"; ///< Positron Emission Tomography Image Storage
 static const char* const uidLegacyConvertedEnhancedPETImageStorage_1_2_840_10008_5_1_4_1_1_128_1 = "1.2.840.10008.5.1.4.1.1.128.1"; ///< Legacy Converted Enhanced PET Image Storage
 static const char* const uidStandalonePETCurveStorage_1_2_840_10008_5_1_4_1_1_129 = "1.2.840.10008.5.1.4.1.1.129"; ///< Standalone PET Curve Storage (Retired)
@@ -4834,6 +5267,8 @@ static const char* const uidProtocolApprovalStorage_1_2_840_10008_5_1_4_1_1_200_
 static const char* const uidProtocolApprovalInformationModelFIND_1_2_840_10008_5_1_4_1_1_200_4 = "1.2.840.10008.5.1.4.1.1.200.4"; ///< Protocol Approval Information Model - FIND
 static const char* const uidProtocolApprovalInformationModelMOVE_1_2_840_10008_5_1_4_1_1_200_5 = "1.2.840.10008.5.1.4.1.1.200.5"; ///< Protocol Approval Information Model - MOVE
 static const char* const uidProtocolApprovalInformationModelGET_1_2_840_10008_5_1_4_1_1_200_6 = "1.2.840.10008.5.1.4.1.1.200.6"; ///< Protocol Approval Information Model - GET
+static const char* const uidXADefinedProcedureProtocolStorage_1_2_840_10008_5_1_4_1_1_200_7 = "1.2.840.10008.5.1.4.1.1.200.7"; ///< XA Defined Procedure Protocol Storage
+static const char* const uidXAPerformedProcedureProtocolStorage_1_2_840_10008_5_1_4_1_1_200_8 = "1.2.840.10008.5.1.4.1.1.200.8"; ///< XA Performed Procedure Protocol Storage
 static const char* const uidRTImageStorage_1_2_840_10008_5_1_4_1_1_481_1 = "1.2.840.10008.5.1.4.1.1.481.1"; ///< RT Image Storage
 static const char* const uidRTDoseStorage_1_2_840_10008_5_1_4_1_1_481_2 = "1.2.840.10008.5.1.4.1.1.481.2"; ///< RT Dose Storage
 static const char* const uidRTStructureSetStorage_1_2_840_10008_5_1_4_1_1_481_3 = "1.2.840.10008.5.1.4.1.1.481.3"; ///< RT Structure Set Storage
@@ -4845,6 +5280,15 @@ static const char* const uidRTIonPlanStorage_1_2_840_10008_5_1_4_1_1_481_8 = "1.
 static const char* const uidRTIonBeamsTreatmentRecordStorage_1_2_840_10008_5_1_4_1_1_481_9 = "1.2.840.10008.5.1.4.1.1.481.9"; ///< RT Ion Beams Treatment Record Storage
 static const char* const uidRTPhysicianIntentStorage_1_2_840_10008_5_1_4_1_1_481_10 = "1.2.840.10008.5.1.4.1.1.481.10"; ///< RT Physician Intent Storage
 static const char* const uidRTSegmentAnnotationStorage_1_2_840_10008_5_1_4_1_1_481_11 = "1.2.840.10008.5.1.4.1.1.481.11"; ///< RT Segment Annotation Storage
+static const char* const uidRTRadiationSetStorage_1_2_840_10008_5_1_4_1_1_481_12 = "1.2.840.10008.5.1.4.1.1.481.12"; ///< RT Radiation Set Storage
+static const char* const uidCArmPhotonElectronRadiationStorage_1_2_840_10008_5_1_4_1_1_481_13 = "1.2.840.10008.5.1.4.1.1.481.13"; ///< C-Arm Photon-Electron Radiation Storage
+static const char* const uidTomotherapeuticRadiationStorage_1_2_840_10008_5_1_4_1_1_481_14 = "1.2.840.10008.5.1.4.1.1.481.14"; ///< Tomotherapeutic Radiation Storage
+static const char* const uidRoboticArmRadiationStorage_1_2_840_10008_5_1_4_1_1_481_15 = "1.2.840.10008.5.1.4.1.1.481.15"; ///< Robotic-Arm Radiation Storage
+static const char* const uidRTRadiationRecordSetStorage_1_2_840_10008_5_1_4_1_1_481_16 = "1.2.840.10008.5.1.4.1.1.481.16"; ///< RT Radiation Record Set Storage
+static const char* const uidRTRadiationSalvageRecordStorage_1_2_840_10008_5_1_4_1_1_481_17 = "1.2.840.10008.5.1.4.1.1.481.17"; ///< RT Radiation Salvage Record Storage
+static const char* const uidTomotherapeuticRadiationRecordStorage_1_2_840_10008_5_1_4_1_1_481_18 = "1.2.840.10008.5.1.4.1.1.481.18"; ///< Tomotherapeutic Radiation Record Storage
+static const char* const uidCArmPhotonElectronRadiationRecordStorage_1_2_840_10008_5_1_4_1_1_481_19 = "1.2.840.10008.5.1.4.1.1.481.19"; ///< C-Arm Photon-Electron Radiation Record Storage
+static const char* const uidRoboticRadiationRecordStorage_1_2_840_10008_5_1_4_1_1_481_20 = "1.2.840.10008.5.1.4.1.1.481.20"; ///< Robotic Radiation Record Storage
 static const char* const uidDICOSCTImageStorage_1_2_840_10008_5_1_4_1_1_501_1 = "1.2.840.10008.5.1.4.1.1.501.1"; ///< DICOS CT Image Storage
 static const char* const uidDICOSDigitalXRayImageStorageForPresentation_1_2_840_10008_5_1_4_1_1_501_2_1 = "1.2.840.10008.5.1.4.1.1.501.2.1"; ///< DICOS Digital X-Ray Image Storage - For Presentation
 static const char* const uidDICOSDigitalXRayImageStorageForProcessing_1_2_840_10008_5_1_4_1_1_501_2_2 = "1.2.840.10008.5.1.4.1.1.501.2.2"; ///< DICOS Digital X-Ray Image Storage - For Processing
@@ -4890,6 +5334,7 @@ static const char* const uidUnifiedProcedureStepPushSOPClass_1_2_840_10008_5_1_4
 static const char* const uidUnifiedProcedureStepWatchSOPClass_1_2_840_10008_5_1_4_34_6_2 = "1.2.840.10008.5.1.4.34.6.2"; ///< Unified Procedure Step - Watch SOP Class
 static const char* const uidUnifiedProcedureStepPullSOPClass_1_2_840_10008_5_1_4_34_6_3 = "1.2.840.10008.5.1.4.34.6.3"; ///< Unified Procedure Step - Pull SOP Class
 static const char* const uidUnifiedProcedureStepEventSOPClass_1_2_840_10008_5_1_4_34_6_4 = "1.2.840.10008.5.1.4.34.6.4"; ///< Unified Procedure Step - Event SOP Class
+static const char* const uidUnifiedProcedureStepQuerySOPClass_1_2_840_10008_5_1_4_34_6_5 = "1.2.840.10008.5.1.4.34.6.5"; ///< Unified Procedure Step - Query SOP Class
 static const char* const uidRTBeamsDeliveryInstructionStorage_1_2_840_10008_5_1_4_34_7 = "1.2.840.10008.5.1.4.34.7"; ///< RT Beams Delivery Instruction Storage
 static const char* const uidRTConventionalMachineVerification_1_2_840_10008_5_1_4_34_8 = "1.2.840.10008.5.1.4.34.8"; ///< RT Conventional Machine Verification
 static const char* const uidRTIonMachineVerification_1_2_840_10008_5_1_4_34_9 = "1.2.840.10008.5.1.4.34.9"; ///< RT Ion Machine Verification
@@ -4922,6 +5367,10 @@ static const char* const uidImplantTemplateGroupInformationModelGET_1_2_840_1000
 static const char* const uidNativeDICOMModel_1_2_840_10008_7_1_1 = "1.2.840.10008.7.1.1"; ///< Native DICOM Model
 static const char* const uidAbstractMultiDimensionalImageModel_1_2_840_10008_7_1_2 = "1.2.840.10008.7.1.2"; ///< Abstract Multi-Dimensional Image Model
 static const char* const uidDICOMContentMappingResource_1_2_840_10008_8_1_1 = "1.2.840.10008.8.1.1"; ///< DICOM Content Mapping Resource
+static const char* const uidVideoEndoscopicImageRealTimeCommunication_1_2_840_10008_10_1 = "1.2.840.10008.10.1"; ///< Video Endoscopic Image Real-Time Communication
+static const char* const uidVideoPhotographicImageRealTimeCommunication_1_2_840_10008_10_2 = "1.2.840.10008.10.2"; ///< Video Photographic Image Real-Time Communication
+static const char* const uidAudioWaveformRealTimeCommunication_1_2_840_10008_10_3 = "1.2.840.10008.10.3"; ///< Audio Waveform Real-Time Communication
+static const char* const uidRenditionSelectionDocumentRealTimeCommunication_1_2_840_10008_10_4 = "1.2.840.10008.10.4"; ///< Rendition Selection Document Real-Time Communication
 static const char* const uiddicomDeviceName_1_2_840_10008_15_0_3_1 = "1.2.840.10008.15.0.3.1"; ///< dicomDeviceName
 static const char* const uiddicomDescription_1_2_840_10008_15_0_3_2 = "1.2.840.10008.15.0.3.2"; ///< dicomDescription
 static const char* const uiddicomManufacturer_1_2_840_10008_15_0_3_3 = "1.2.840.10008.15.0.3.3"; ///< dicomManufacturer
@@ -4963,7 +5412,6 @@ static const char* const uiddicomUniqueAETitle_1_2_840_10008_15_0_4_7 = "1.2.840
 static const char* const uiddicomTransferCapability_1_2_840_10008_15_0_4_8 = "1.2.840.10008.15.0.4.8"; ///< dicomTransferCapability
 static const char* const uidUniversalCoordinatedTime_1_2_840_10008_15_1_1 = "1.2.840.10008.15.1.1"; ///< Universal Coordinated Time
 
-
 } //namespace dicomhero
 
-#endif // imebraTagsEnumeration_dicom2018e_INCLUDED_
+#endif // dicomheroTagsEnumeration_dicom2021b_INCLUDED_
