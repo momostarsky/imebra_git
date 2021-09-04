@@ -226,7 +226,7 @@ target_include_directories(dicomhero6 PUBLIC $<BUILD_INTERFACE:${dicomhero_objc_
 #  & DICOMHERO_REVISION
 #---------------------------------------------------------------------------------
 if ("$ENV{DICOMHERO_MAJOR_VERSION}" STREQUAL "")
-    set(DICOMHERO_MAJOR_VERSION "5")
+    set(DICOMHERO_MAJOR_VERSION "6")
 else("$ENV{DICOMHERO_MAJOR_VERSION}" STREQUAL "")
     set(DICOMHERO_MAJOR_VERSION "$ENV{DICOMHERO_MAJOR_VERSION}")
 endif("$ENV{DICOMHERO_MAJOR_VERSION}" STREQUAL "")
