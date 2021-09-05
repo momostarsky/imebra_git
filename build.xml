@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="DICOMHERO" default="make_distribution" basedir="." >
 
+    <!-- Define the variable "ant_build" with the folder where the build is performed, e.g. -Dant_build=path -->
+
     <!-- This is an ant build file -->
 
     <target name="version" description="Initialize the build number">
@@ -17,36 +19,26 @@
 
     <!-- Create the directory for the build -->
     <target name="create_build_dir" depends="version" description="Create the directory for the final build">
-        <property name="build_release" location="./ant-build" />
-        <delete dir="${build_release}" failonerror="false" />
-        <mkdir dir="${build_release}" />
-        <copy todir="${build_release}/library">
-            <fileset dir="library" />
+        <property name="ant_build" location="./ant-build" />
+        <delete dir="${ant_build}" failonerror="false" />
+        <mkdir dir="${ant_build}" />
+        <copy todir="${ant_build}/dicomheroCore6">
+            <fileset dir="dicomheroCore6" />
         </copy>
-        <copy todir="${build_release}/wrappers/objectivec">
-            <fileset dir="wrappers/objectivec" />
-        </copy>
-        <copy todir="${build_release}/examples">
+        <copy todir="${ant_build}/examples">
             <fileset dir="examples" />
         </copy>
-        <copy todir="${build_release}/tests">
-            <fileset dir="tests" />
-        </copy>
-        <copy todir="${build_release}/docs">
+        <copy todir="${ant_build}/docs">
             <fileset dir="docs" />
         </copy>
-        <copy todir="${build_release}/wrappers">
-            <fileset dir="wrappers" />
-        </copy>
-        <copy todir="${build_release}" file="build.xml" />
-        <copy todir="${build_release}" file="readme.rst" />
-        <copy todir="${build_release}" file="license.rst" />
-        <copy todir="${build_release}" file="CMakeLists.txt" />
+        <copy todir="${ant_build}" file="readme.rst" />
+        <copy todir="${ant_build}" file="license.rst" />
+        <copy todir="${ant_build}" file="CMakeLists.txt" />
     </target>
 
     <!-- Create the directory for the test execution and code coverage -->
     <target name="create_test_dir" depends="version" description="Create the directory for the tests execution">
-        <property name="build_dir" location="./ant-build-tests" />
+        <property name="build_dir" location="${ant_build}/build-tests" />
         <delete dir="${build_dir}" failonerror="false" />
         <mkdir dir="${build_dir}" />
 
@@ -66,7 +58,7 @@
 
     <!-- Create the directory for the test build in release mode -->
     <target name="create_test_dir_release" depends="version" description="Create the directory for the build in release mode">
-        <property name="build_dir_release" location="./ant-build-tests_release" />
+        <property name="build_dir_release" location="${ant_build}/tests_release" />
         <delete dir="${build_dir_release}" failonerror="false" />
         <mkdir dir="${build_dir_release}" />
 
@@ -95,29 +87,29 @@
         <replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="L&quot;1.0.0&quot;" value="L&quot;${short_version}&quot;" />
         <replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="$major_version$" value="${version_major}" />
         <replace dir="${build_release}" includes="*.h,*.cpp, *.txt, *.py" token="$minor_version$" value="${version_minor}" />
-        <replace file="${build_release}/wrappers/javaWrapper/AndroidManifest.xml" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
+        <replace file="${build_release}/dicomheroCore6/wrappers/javaWrapper/AndroidManifest.xml" token="&quot;1.0.0&quot;" value="&quot;${short_version}&quot;" />
         <replace dir="${build_release}" token="$imebraVersion$" value="${productName}" />
     </target>
 
     <!-- JAVA SWIG -->
     <target name="java_swig" depends="replace_version">
-        <delete dir="${build_release}/wrappers/javaWrapper/src" failonerror="false" />
-        <mkdir dir="${build_release}/wrappers/javaWrapper/src/com/dicomhero6" />
-        <mkdir dir="${build_release}/wrappers/javaWrapper/jni" />
-        <exec executable="swig" failonerror="true" dir="${build_release}/wrappers/">
+        <delete dir="${build_release}/dicomheroCore6/wrappers/javaWrapper/src" failonerror="false" />
+        <mkdir dir="${build_release}/dicomheroCore6/wrappers/javaWrapper/src/com/dicomhero6" />
+        <mkdir dir="${build_release}/dicomheroCore6/wrappers/javaWrapper/jni" />
+        <exec executable="swig" failonerror="true" dir="${build_release}/dicomheroCore6/wrappers/">
             <arg value="-java" />
             <arg value="-c++" />
-            <arg value="-I${build_release}/library/include" />
+            <arg value="-I${build_release}/dicomheroCore6/library/include" />
             <arg value="-package" />
             <arg value="com.dicomhero6" />
             <arg value="-outdir" />
-            <arg path="${build_release}/wrappers/javaWrapper/src/com/dicomhero6" />
+            <arg path="${build_release}/dicomheroCore6/wrappers/javaWrapper/src/com/dicomhero6" />
             <arg value="-o" />
-            <arg path="${build_release}/wrappers/javaWrapper/java_wrapper.cxx" />
-            <arg path="${build_release}/wrappers/swig.i" />
+            <arg path="${build_release}/dicomheroCore6/wrappers/javaWrapper/java_wrapper.cxx" />
+            <arg path="${build_release}/dicomheroCore6/wrappers/swig.i" />
         </exec>
 
-        <fileset id="existing" dir="${build_release}/wrappers/javaWrapper/src/com/dicomhero">
+        <fileset id="existing" dir="${build_release}/dicomheroCore6/wrappers/javaWrapper/src/com/dicomhero">
             <patternset id="files">
                 <include name="**/*.java" />
             </patternset>
@@ -137,7 +129,7 @@
         </exec>
         <exec executable="make" failonerror="true" dir="${build_jni}" />
         <copy todir="${build_java}" file="${build_jni}/libdicomherojni.so" />
-        <javac srcdir="${build_release}/wrappers/javaWrapper/src" destdir="${build_java}"/>
+        <javac srcdir="${build_release}/dicomheroCore6/wrappers/javaWrapper/src" destdir="${build_java}"/>
         <jar destfile="${build_jar}/dicomherojni.jar" basedir="${build_java}" />
 
     </target>
@@ -157,20 +149,11 @@
         <delete dir="${source_distribution}" failonerror="false" />
         <mkdir dir="${source_distribution}" />
 
-        <copy todir="${source_distribution}/library">
-                <fileset dir="${build_release}/library" />
-        </copy>
-        <copy todir="${source_distribution}/wrappers/objectivec">
-                <fileset dir="${build_release}/wrappers/objectivec" />
+        <copy todir="${source_distribution}/dicomheroCore6/">
+                <fileset dir="${build_release}/dicomheroCore6/" />
         </copy>
         <copy todir="${source_distribution}/examples">
                 <fileset dir="${build_release}/examples" />
-        </copy>
-        <copy todir="${source_distribution}/tests">
-                <fileset dir="${build_release}/tests" />
-        </copy>
-        <copy todir="${source_distribution}/wrappers">
-                <fileset dir="${build_release}/wrappers" />
         </copy>
         <copy todir="${source_distribution}/docs/html">
                 <fileset dir="${build_release}/docs/html" />
@@ -250,10 +233,10 @@
         <exec executable="lcov" dir="${build_tests}" resolveexecutable="true" failonerror="true">
             <arg value="--extract" />
             <arg path="${build_library_for_tests}/test.info" />
-            <arg path="${build_release}/library/*/*.*" />
-            <arg path="${build_release}/library/*/*/*.*" />
-            <arg path="${build_release}/wrappers/objectivec/*/*.*" />
-            <arg path="${build_release}/wrappers/objectivec/*/*/*.*" />
+            <arg path="${build_release}/dicomheroCore6/library/*/*.*" />
+            <arg path="${build_release}/dicomheroCore6/library/*/*/*.*" />
+            <arg path="${build_release}/dicomheroCore6/wrappers/objectivec/*/*.*" />
+            <arg path="${build_release}/dicomheroCore6/wrappers/objectivec/*/*/*.*" />
             <arg value="--output-file" />
             <arg path="${build_library_for_tests}/extracted.info" />
             <arg value="--rc" />
