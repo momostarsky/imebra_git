@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcTag__INCLUDED_)
-#define imebraObjcTag__INCLUDED_
+#if !defined(dicomheroObjcTag__INCLUDED_)
+#define dicomheroObjcTag__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #import "dicomhero_dataset.h"
@@ -257,4 +257,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // !defined(imebraObjcTag__INCLUDED_)
+#endif // !defined(dicomheroObjcTag__INCLUDED_)

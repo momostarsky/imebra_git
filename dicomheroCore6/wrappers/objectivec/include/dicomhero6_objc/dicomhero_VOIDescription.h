@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcVOIDescription__INCLUDED_)
-#define imebraObjcVOIDescription__INCLUDED_
+#if !defined(dicomheroObjcVOIDescription__INCLUDED_)
+#define dicomheroObjcVOIDescription__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #include "dicomhero_macros.h"
@@ -62,4 +62,4 @@ typedef NS_ENUM(int, ImebraDicomVOIFunction)
 
 @end
 
-#endif // imebraObjcVOIDescription__INCLUDED_
+#endif // dicomheroObjcVOIDescription__INCLUDED_

@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcTransformHighBit__INCLUDED_)
-#define imebraObjcTransformHighBit__INCLUDED_
+#if !defined(dicomheroObjcTransformHighBit__INCLUDED_)
+#define dicomheroObjcTransformHighBit__INCLUDED_
 
 #import "dicomhero_transform.h"
 
@@ -28,4 +28,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @end
 
 
-#endif // imebraObjcTransformHighBit__INCLUDED_
+#endif // dicomheroObjcTransformHighBit__INCLUDED_

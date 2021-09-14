@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcDataSet__INCLUDED_)
-#define imebraObjcDataSet__INCLUDED_
+#if !defined(dicomheroObjcDataSet__INCLUDED_)
+#define dicomheroObjcDataSet__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #include "dicomhero_macros.h"
@@ -1273,7 +1273,7 @@ typedef NS_ENUM(unsigned int, DicomheroImageQuality)
         ///                  error occurs
         ///
         ///////////////////////////////////////////////////////////////////////////////
-        -(void)setInt8:(DicomheroTagId*)tagId newValue:(signed char)newValue tagVR:(ImebraTagType)tagVR error:(NSError**)pError
+        -(void)setInt8:(DicomheroTagId*)tagId newValue:(signed char)newValue tagVR:(DicomheroTagType)tagVR error:(NSError**)pError
             __attribute__((swift_error(nonnull_error)));
 
         /// \brief Write a new signed 64 bit integer value into the element 0 of the
@@ -1447,11 +1447,11 @@ typedef NS_ENUM(unsigned int, DicomheroImageQuality)
         ///        specified tag's buffer 0.
         ///
         /// If the specified tag doesn't exist then a new tag is created using
-        /// the data type (VR) retrieved from the ImebraDicomDictionary.
+        /// the data type (VR) retrieved from the DicomheroDicomDictionary.
         ///
         /// If the new value cannot be converted to the VR returned by the
-        /// ImebraDicomDictionary then sets pError to
-        /// ImebraDataHandlerConversionError.
+        /// DicomheroDicomDictionary then sets pError to
+        /// DicomheroDataHandlerConversionError.
         ///
         /// \param tagId    the tag's id
         /// \param newValue the value to write into the tag
@@ -1721,6 +1721,6 @@ typedef NS_ENUM(unsigned int, DicomheroImageQuality)
 
 
 
-#endif // imebraObjcDataSet__INCLUDED_
+#endif // dicomheroObjcDataSet__INCLUDED_
 
 

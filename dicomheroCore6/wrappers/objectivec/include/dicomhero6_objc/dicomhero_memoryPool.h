@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcMemoryPool__INCLUDED_)
-#define imebraObjcMemoryPool__INCLUDED_
+#if !defined(dicomheroObjcMemoryPool__INCLUDED_)
+#define dicomheroObjcMemoryPool__INCLUDED_
 
 #import <Foundation/Foundation.h>
 
@@ -48,6 +48,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // imebraObjcMemoryPool__INCLUDED_
+#endif // dicomheroObjcMemoryPool__INCLUDED_
 
 

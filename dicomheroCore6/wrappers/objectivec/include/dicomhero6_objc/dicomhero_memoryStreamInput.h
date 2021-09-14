@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcMemoryStreamInput__INCLUDED_)
-#define imebraObjcMemoryStreamInput__INCLUDED_
+#if !defined(dicomheroObjcMemoryStreamInput__INCLUDED_)
+#define dicomheroObjcMemoryStreamInput__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #import "dicomhero_baseStreamInput.h"
@@ -34,6 +34,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // imebraObjcMemoryStreamInput__INCLUDED_
+#endif // dicomheroObjcMemoryStreamInput__INCLUDED_
 
 

@@ -12,6 +12,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 */
 
 #import "../include/dicomhero6_objc/dicomhero_dataset.h"
+#import "../include/dicomhero6_objc/dicomhero_lut.h"
 #import "../include/dicomhero6_objc/dicomhero_tag.h"
 #import "../include/dicomhero6_objc/dicomhero_tagId.h"
 #import "../include/dicomhero6_objc/dicomhero_image.h"

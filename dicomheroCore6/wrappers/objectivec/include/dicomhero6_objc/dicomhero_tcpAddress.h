@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcTcpAddress__INCLUDED_)
-#define imebraObjcTcpAddress__INCLUDED_
+#if !defined(dicomheroObjcTcpAddress__INCLUDED_)
+#define dicomheroObjcTcpAddress__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #include "dicomhero_macros.h"
@@ -114,4 +114,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // imebraObjcTcpAddress__INCLUDED_
+#endif // dicomheroObjcTcpAddress__INCLUDED_

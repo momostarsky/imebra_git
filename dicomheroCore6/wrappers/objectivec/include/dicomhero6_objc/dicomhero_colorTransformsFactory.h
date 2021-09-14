@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcColorTransformsFactory__INCLUDED_)
-#define imebraObjcColorTransformsFactory__INCLUDED_
+#if !defined(dicomheroObjcColorTransformsFactory__INCLUDED_)
+#define dicomheroObjcColorTransformsFactory__INCLUDED_
 
 #import <Foundation/Foundation.h>
 
@@ -124,6 +124,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // imebraObjcColorTransformsFactory__INCLUDED_
+#endif // dicomheroObjcColorTransformsFactory__INCLUDED_
 
 

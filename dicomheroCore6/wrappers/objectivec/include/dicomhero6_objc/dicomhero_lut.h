@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcLut__INCLUDED_)
-#define imebraObjcLut__INCLUDED_
+#if !defined(dicomheroObjcLut__INCLUDED_)
+#define dicomheroObjcLut__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #include "dicomhero_macros.h"
@@ -30,7 +30,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     define_dicomhero_object_holder(LUT);
 }
 
-    -(id)initWithImebraLut:define_dicomhero_parameter(LUT);
+    -(id)initWithDicomheroLut:define_dicomhero_parameter(LUT);
 
     -(void)dealloc;
 
@@ -72,6 +72,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // imebraObjcLut__INCLUDED_
+#endif // dicomheroObjcLut__INCLUDED_
 
 

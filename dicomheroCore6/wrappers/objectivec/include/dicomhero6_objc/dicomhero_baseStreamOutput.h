@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcBaseStreamOutput__INCLUDED_)
-#define imebraObjcBaseStreamOutput__INCLUDED_
+#if !defined(dicomheroObjcBaseStreamOutput__INCLUDED_)
+#define dicomheroObjcBaseStreamOutput__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #include "dicomhero_macros.h"
@@ -41,4 +41,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // !defined(imebraObjcBaseStreamOutput__INCLUDED_)
+#endif // !defined(dicomheroObjcBaseStreamOutput__INCLUDED_)

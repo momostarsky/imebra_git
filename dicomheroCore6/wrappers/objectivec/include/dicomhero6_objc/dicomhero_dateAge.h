@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcDateAge__INCLUDED_)
-#define imebraObjcDateAge__INCLUDED_
+#if !defined(dicomheroObjcDateAge__INCLUDED_)
+#define dicomheroObjcDateAge__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #include "dicomhero_macros.h"
@@ -126,4 +126,4 @@ typedef NS_ENUM(char, DicomheroAgeUnit)
 
 @end
 
-#endif // imebraObjcDateAge__INCLUDED_
+#endif // dicomheroObjcDateAge__INCLUDED_

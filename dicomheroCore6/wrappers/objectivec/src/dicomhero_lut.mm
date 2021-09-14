@@ -20,7 +20,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation DicomheroLUT
 
--(id)initWithImebraLut:define_dicomhero_parameter(LUT)
+-(id)initWithDicomheroLut:define_dicomhero_parameter(LUT)
 {
     reset_dicomhero_object_holder(LUT);
     self =  [super init];

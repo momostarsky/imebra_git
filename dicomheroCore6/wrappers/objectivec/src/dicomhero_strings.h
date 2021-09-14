@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcStrings__INCLUDED_)
-#define imebraObjcStrings__INCLUDED_
+#if !defined(dicomheroObjcStrings__INCLUDED_)
+#define dicomheroObjcStrings__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #include <string>
@@ -49,4 +49,4 @@ NSString* stringToNSString ( const std::wstring& str );
 
 } // namespace dicomhero
 
-#endif // imebraObjcStrings__INCLUDED_
+#endif // dicomheroObjcStrings__INCLUDED_

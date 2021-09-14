@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcPatientName__INCLUDED_)
-#define imebraObjcPatientName__INCLUDED_
+#if !defined(dicomheroObjcPatientName__INCLUDED_)
+#define dicomheroObjcPatientName__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #include "dicomhero_macros.h"
@@ -51,4 +51,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // imebraObjcPatientName__INCLUDED_
+#endif // dicomheroObjcPatientName__INCLUDED_

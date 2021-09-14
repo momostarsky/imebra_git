@@ -25,7 +25,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation DicomheroTCPStream
 
--(id)initWithImebraTcpStream:define_dicomhero_parameter(TCPStream)
+-(id)initWithDicomheroTcpStream:define_dicomhero_parameter(TCPStream)
 {
     reset_dicomhero_object_holder(TCPStream);
     self = [super init];

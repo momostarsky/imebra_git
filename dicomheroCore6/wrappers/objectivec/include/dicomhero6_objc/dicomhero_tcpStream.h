@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcTcpStream__INCLUDED_)
-#define imebraObjcTcpStream__INCLUDED_
+#if !defined(dicomheroObjcTcpStream__INCLUDED_)
+#define dicomheroObjcTcpStream__INCLUDED_
 
 #import <Foundation/Foundation.h>
 
@@ -35,7 +35,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     define_dicomhero_object_holder(TCPStream);
 }
 
-    -(id)initWithImebraTcpStream:define_dicomhero_parameter(TCPStream);
+    -(id)initWithDicomheroTcpStream:define_dicomhero_parameter(TCPStream);
 
     -(void)dealloc;
 
@@ -68,4 +68,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @end
 
 
-#endif // imebraObjcTcpStream__INCLUDED_
+#endif // dicomheroObjcTcpStream__INCLUDED_

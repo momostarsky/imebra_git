@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcTcpListener__INCLUDED_)
-#define imebraObjcTcpListener__INCLUDED_
+#if !defined(dicomheroObjcTcpListener__INCLUDED_)
+#define dicomheroObjcTcpListener__INCLUDED_
 
 #import <Foundation/Foundation.h>
 
@@ -79,4 +79,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @end
 
 
-#endif // imebraObjcTcpListener__INCLUDED_
+#endif // dicomheroObjcTcpListener__INCLUDED_

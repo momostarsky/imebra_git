@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcTagId__INCLUDED_)
-#define imebraObjcTagId__INCLUDED_
+#if !defined(dicomheroObjcTagId__INCLUDED_)
+#define dicomheroObjcTagId__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #import "tagsEnumeration.h"
@@ -80,4 +80,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 @end
 
 
-#endif // imebraObjcTagId__INCLUDED_
+#endif // dicomheroObjcTagId__INCLUDED_

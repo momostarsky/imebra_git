@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcNSError__INCLUDED_)
-#define imebraObjcNSError__INCLUDED_
+#if !defined(dicomheroObjcNSError__INCLUDED_)
+#define dicomheroObjcNSError__INCLUDED_
 
 #include <dicomhero6/exceptions.h>
 #import <dicomhero6_objc/dicomhero_exceptions.h>
@@ -394,4 +394,4 @@ namespace dicomhero
     OBJC_DICOMHERO_FUNCTION_END(); \
     return returnValue;
 
-#endif // imebraObjcNSError__INCLUDED_
+#endif // dicomheroObjcNSError__INCLUDED_

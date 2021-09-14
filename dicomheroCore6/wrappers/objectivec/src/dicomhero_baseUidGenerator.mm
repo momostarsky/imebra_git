@@ -19,7 +19,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation DicomheroBaseUIDGenerator
 
--(id)initWithImebraBaseUidGenerator:define_dicomhero_parameter(BaseUIDGenerator)
+-(id)initWithDicomheroBaseUidGenerator:define_dicomhero_parameter(BaseUIDGenerator)
 {
     reset_dicomhero_object_holder(BaseUIDGenerator);
     self = [super init];

@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcRandomUidGenerator__INCLUDED_)
-#define imebraObjcRandomUidGenerator__INCLUDED_
+#if !defined(dicomheroObjcRandomUidGenerator__INCLUDED_)
+#define dicomheroObjcRandomUidGenerator__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #import "dicomhero_baseUidGenerator.h"
@@ -40,4 +40,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // imebraObjcRandomUidGenerator__INCLUDED_
+#endif // dicomheroObjcRandomUidGenerator__INCLUDED_

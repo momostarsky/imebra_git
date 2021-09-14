@@ -14,8 +14,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #import "dicomhero_readingDataHandler.h"
 #import <Foundation/Foundation.h>
 
-#if !defined(imebraObjcReadingDataHandlerNumeric__INCLUDED_)
-#define imebraObjcReadingDataHandlerNumeric__INCLUDED_
+#if !defined(dicomheroObjcReadingDataHandlerNumeric__INCLUDED_)
+#define dicomheroObjcReadingDataHandlerNumeric__INCLUDED_
 
 @class DicomheroWritingDataHandlerNumeric;
 @class DicomheroMemory;
@@ -73,4 +73,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // !defined(imebraObjcReadingDataHandlerNumeric__INCLUDED_)
+#endif // !defined(dicomheroObjcReadingDataHandlerNumeric__INCLUDED_)

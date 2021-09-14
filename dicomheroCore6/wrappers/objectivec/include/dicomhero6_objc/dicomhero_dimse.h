@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcDimse__INCLUDED_)
-#define imebraObjcDimse__INCLUDED_
+#if !defined(dicomheroObjcDimse__INCLUDED_)
+#define dicomheroObjcDimse__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #import <Foundation/NSArray.h>
@@ -124,7 +124,7 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
    @public
    define_dicomhero_object_holder(DimseCommandBase);
 }
-    -(id)initWithImebraCommand:define_dicomhero_parameter(DimseCommandBase);
+    -(id)initWithDicomheroCommand:define_dicomhero_parameter(DimseCommandBase);
 
     -(void)dealloc;
 
@@ -1591,4 +1591,4 @@ typedef NS_ENUM(unsigned short, DicomheroDimseStatus)
 
 @end
 
-#endif // imebraObjcDimse__INCLUDED_
+#endif // dicomheroObjcDimse__INCLUDED_

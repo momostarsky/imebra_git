@@ -24,7 +24,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @implementation DicomheroDimseCommandBase
 
--(id)initWithImebraCommand:define_dicomhero_parameter(DimseCommandBase)
+-(id)initWithDicomheroCommand:define_dicomhero_parameter(DimseCommandBase)
 {
     reset_dicomhero_object_holder(DimseCommandBase);
     self = [super init];
@@ -1090,29 +1090,29 @@ If you do not want to be bound by the GPL terms (such as the requirement
     switch(pCommand->getCommandType())
     {
     case dicomhero::dimseCommandType_t::cStore:
-        return [[DicomheroCStoreCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[DicomheroCStoreCommand alloc] initWithDicomheroCommand:pCommand.release()];
     case dicomhero::dimseCommandType_t::cGet:
-        return [[DicomheroCGetCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[DicomheroCGetCommand alloc] initWithDicomheroCommand:pCommand.release()];
     case dicomhero::dimseCommandType_t::cMove:
-        return [[DicomheroCMoveCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[DicomheroCMoveCommand alloc] initWithDicomheroCommand:pCommand.release()];
     case dicomhero::dimseCommandType_t::cFind:
-        return [[DicomheroCFindCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[DicomheroCFindCommand alloc] initWithDicomheroCommand:pCommand.release()];
     case dicomhero::dimseCommandType_t::cEcho:
-        return [[DicomheroCEchoCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[DicomheroCEchoCommand alloc] initWithDicomheroCommand:pCommand.release()];
     case dicomhero::dimseCommandType_t::cCancel:
-        return [[DicomheroCCancelCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[DicomheroCCancelCommand alloc] initWithDicomheroCommand:pCommand.release()];
     case dicomhero::dimseCommandType_t::nEventReport:
-        return [[DicomheroNEventReportCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[DicomheroNEventReportCommand alloc] initWithDicomheroCommand:pCommand.release()];
     case dicomhero::dimseCommandType_t::nGet:
-        return [[DicomheroNGetCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[DicomheroNGetCommand alloc] initWithDicomheroCommand:pCommand.release()];
     case dicomhero::dimseCommandType_t::nSet:
-        return [[DicomheroNSetCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[DicomheroNSetCommand alloc] initWithDicomheroCommand:pCommand.release()];
     case dicomhero::dimseCommandType_t::nAction:
-        return [[DicomheroNActionCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[DicomheroNActionCommand alloc] initWithDicomheroCommand:pCommand.release()];
     case dicomhero::dimseCommandType_t::nCreate:
-        return [[DicomheroNCreateCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[DicomheroNCreateCommand alloc] initWithDicomheroCommand:pCommand.release()];
     case dicomhero::dimseCommandType_t::nDelete:
-        return [[DicomheroNDeleteCommand alloc] initWithImebraCommand:pCommand.release()];
+        return [[DicomheroNDeleteCommand alloc] initWithDicomheroCommand:pCommand.release()];
     default:
         break;
     }
@@ -1133,7 +1133,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroCStoreResponse alloc] initWithImebraCommand:
+    return [[DicomheroCStoreResponse alloc] initWithDicomheroCommand:
             new dicomhero::CStoreResponse(get_dicomhero_object_holder(DimseService)->getCStoreResponse(*(dicomhero::CStoreCommand*)get_other_dicomhero_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
@@ -1143,7 +1143,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroCGetResponse alloc] initWithImebraCommand:
+    return [[DicomheroCGetResponse alloc] initWithDicomheroCommand:
             new dicomhero::CGetResponse(get_dicomhero_object_holder(DimseService)->getCGetResponse(*(dicomhero::CGetCommand*)get_other_dicomhero_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
@@ -1153,7 +1153,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroCFindResponse alloc] initWithImebraCommand:
+    return [[DicomheroCFindResponse alloc] initWithDicomheroCommand:
             new dicomhero::CFindResponse(get_dicomhero_object_holder(DimseService)->getCFindResponse(*(dicomhero::CFindCommand*)get_other_dicomhero_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
@@ -1163,7 +1163,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroCMoveResponse alloc] initWithImebraCommand:
+    return [[DicomheroCMoveResponse alloc] initWithDicomheroCommand:
             new dicomhero::CMoveResponse(get_dicomhero_object_holder(DimseService)->getCMoveResponse(*(dicomhero::CMoveCommand*)get_other_dicomhero_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
@@ -1173,7 +1173,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroCEchoResponse alloc] initWithImebraCommand:
+    return [[DicomheroCEchoResponse alloc] initWithDicomheroCommand:
             new dicomhero::CEchoResponse(get_dicomhero_object_holder(DimseService)->getCEchoResponse(*(dicomhero::CEchoCommand*)get_other_dicomhero_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
@@ -1183,7 +1183,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroNEventReportResponse alloc] initWithImebraCommand:
+    return [[DicomheroNEventReportResponse alloc] initWithDicomheroCommand:
             new dicomhero::NEventReportResponse(get_dicomhero_object_holder(DimseService)->getNEventReportResponse(*(dicomhero::NEventReportCommand*)get_other_dicomhero_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
@@ -1193,7 +1193,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroNGetResponse alloc] initWithImebraCommand:
+    return [[DicomheroNGetResponse alloc] initWithDicomheroCommand:
             new dicomhero::NGetResponse(get_dicomhero_object_holder(DimseService)->getNGetResponse(*(dicomhero::NGetCommand*)get_other_dicomhero_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
@@ -1203,7 +1203,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroNSetResponse alloc] initWithImebraCommand:
+    return [[DicomheroNSetResponse alloc] initWithDicomheroCommand:
             new dicomhero::NSetResponse(get_dicomhero_object_holder(DimseService)->getNSetResponse(*(dicomhero::NSetCommand*)get_other_dicomhero_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
@@ -1213,7 +1213,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroNActionResponse alloc] initWithImebraCommand:
+    return [[DicomheroNActionResponse alloc] initWithDicomheroCommand:
             new dicomhero::NActionResponse(get_dicomhero_object_holder(DimseService)->getNActionResponse(*(dicomhero::NActionCommand*)get_other_dicomhero_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
@@ -1223,7 +1223,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroNCreateResponse alloc] initWithImebraCommand:
+    return [[DicomheroNCreateResponse alloc] initWithDicomheroCommand:
             new dicomhero::NCreateResponse(get_dicomhero_object_holder(DimseService)->getNCreateResponse(*(dicomhero::NCreateCommand*)get_other_dicomhero_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
@@ -1233,7 +1233,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroNDeleteResponse alloc] initWithImebraCommand:
+    return [[DicomheroNDeleteResponse alloc] initWithDicomheroCommand:
             new dicomhero::NDeleteResponse(get_dicomhero_object_holder(DimseService)->getNDeleteResponse(*(dicomhero::NDeleteCommand*)get_other_dicomhero_object_holder(pCommand, DimseCommandBase)))];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);

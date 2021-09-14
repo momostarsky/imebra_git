@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcWritingDataHandler__INCLUDED_)
-#define imebraObjcWritingDataHandler__INCLUDED_
+#if !defined(dicomheroObjcWritingDataHandler__INCLUDED_)
+#define dicomheroObjcWritingDataHandler__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #include "dicomhero_macros.h"
@@ -281,4 +281,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // !defined(imebraObjcWritingDataHandler__INCLUDED_)
+#endif // !defined(dicomheroObjcWritingDataHandler__INCLUDED_)

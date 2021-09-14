@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcDicomDir__INCLUDED_)
-#define imebraObjcDicomDir__INCLUDED_
+#if !defined(dicomheroObjcDicomDir__INCLUDED_)
+#define dicomheroObjcDicomDir__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #import <Foundation/NSArray.h>
@@ -247,4 +247,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // imebraObjcDicomDir__INCLUDED_
+#endif // dicomheroObjcDicomDir__INCLUDED_

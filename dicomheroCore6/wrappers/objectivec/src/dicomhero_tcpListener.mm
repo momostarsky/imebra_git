@@ -47,7 +47,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
 {
     OBJC_DICOMHERO_FUNCTION_START();
 
-    return [[DicomheroTCPStream alloc] initWithImebraTcpStream:new dicomhero::TCPStream(get_dicomhero_object_holder(TCPListener)->waitForConnection())];
+    return [[DicomheroTCPStream alloc] initWithDicomheroTcpStream:new dicomhero::TCPStream(get_dicomhero_object_holder(TCPListener)->waitForConnection())];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }

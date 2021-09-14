@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcCodecFactory__INCLUDED_)
-#define imebraObjcCodecFactory__INCLUDED_
+#if !defined(dicomheroObjcCodecFactory__INCLUDED_)
+#define dicomheroObjcCodecFactory__INCLUDED_
 
 #import <Foundation/Foundation.h>
 
@@ -150,6 +150,6 @@ typedef NS_ENUM(unsigned short, DicomheroCodecType)
 
 @end
 
-#endif // imebraObjcCodecFactory__INCLUDED_
+#endif // dicomheroObjcCodecFactory__INCLUDED_
 
 

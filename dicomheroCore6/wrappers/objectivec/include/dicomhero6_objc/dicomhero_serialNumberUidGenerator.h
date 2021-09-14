@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcSerialNumberUidGenerator__INCLUDED_)
-#define imebraObjcSerialNumberUidGenerator__INCLUDED_
+#if !defined(dicomheroObjcSerialNumberUidGenerator__INCLUDED_)
+#define dicomheroObjcSerialNumberUidGenerator__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #import "dicomhero_baseUidGenerator.h"
@@ -40,4 +40,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 @end
 
-#endif // imebraObjcSerialNumberUidGenerator__INCLUDED_
+#endif // dicomheroObjcSerialNumberUidGenerator__INCLUDED_

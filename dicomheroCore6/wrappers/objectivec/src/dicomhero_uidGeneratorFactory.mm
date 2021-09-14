@@ -39,7 +39,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_DICOMHERO_FUNCTION_START()
 
     std::unique_ptr<dicomhero::BaseUIDGenerator> pGenerator(new dicomhero::BaseUIDGenerator(dicomhero::UIDGeneratorFactory::getUIDGenerator(dicomhero::NSStringToString(name))));
-    return [[DicomheroBaseUIDGenerator alloc] initWithImebraBaseUidGenerator:pGenerator.release()];
+    return [[DicomheroBaseUIDGenerator alloc] initWithDicomheroBaseUidGenerator:pGenerator.release()];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }
@@ -49,7 +49,7 @@ If you do not want to be bound by the GPL terms (such as the requirement
     OBJC_DICOMHERO_FUNCTION_START()
 
     std::unique_ptr<dicomhero::BaseUIDGenerator> pGenerator(new dicomhero::BaseUIDGenerator(dicomhero::UIDGeneratorFactory::getDefaultUIDGenerator()));
-    return [[DicomheroBaseUIDGenerator alloc] initWithImebraBaseUidGenerator:pGenerator.release()];
+    return [[DicomheroBaseUIDGenerator alloc] initWithDicomheroBaseUidGenerator:pGenerator.release()];
 
     OBJC_DICOMHERO_FUNCTION_END_RETURN(nil);
 }

@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcDrawBitmap__INCLUDED_)
-#define imebraObjcDrawBitmap__INCLUDED_
+#if !defined(dicomheroObjcDrawBitmap__INCLUDED_)
+#define dicomheroObjcDrawBitmap__INCLUDED_
 
 #include "dicomhero_macros.h"
 
@@ -119,6 +119,6 @@ typedef NS_ENUM(unsigned int, DicomheroDrawBitmapType)
 
 @end
 
-#endif // imebraObjcDrawBitmap__INCLUDED_
+#endif // dicomheroObjcDrawBitmap__INCLUDED_
 
 

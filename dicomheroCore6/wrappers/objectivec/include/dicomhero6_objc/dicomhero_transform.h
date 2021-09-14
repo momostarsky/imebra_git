@@ -11,8 +11,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
  license for DICOMHero/Imebra from the DICOMHero’s website (https://dicomhero.com).
 */
 
-#if !defined(imebraObjcTransform__INCLUDED_)
-#define imebraObjcTransform__INCLUDED_
+#if !defined(dicomheroObjcTransform__INCLUDED_)
+#define dicomheroObjcTransform__INCLUDED_
 
 #import <Foundation/Foundation.h>
 #include "dicomhero_macros.h"
@@ -94,4 +94,4 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 
 
-#endif // imebraObjcTransform__INCLUDED_
+#endif // dicomheroObjcTransform__INCLUDED_
