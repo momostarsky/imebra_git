@@ -290,7 +290,7 @@ and the :cpp:member:`dicomhero::VOILUT` transform.
 The :cpp:member:`dicomhero::VOILUT` can be applied only to monochromatic images and changes the image's contrast to enhance
 different portions of the image (for instance just the bones or the tissue).
 
-Usually, the dataSet contains few tags that store some pre-defined settings for the image: the client application should apply
+Usually, the dataSet contains a few tags that store some pre-defined VOILUT settings for the image: the client application should apply
 those values to the VOILUT transform.
 The pre-defined settings come as pairs of center/width values or as Lookup Tables stored in the DICOM sequence 0028,3010.
 
@@ -305,11 +305,11 @@ in C++
     // apply to the image before displaying it
     dicomhero::TransformsChain chain;
 
-    if(dicomhero::ColorTransformsFactory::isMonochrome(image.getColorSpace())
+    if(dicomhero::ColorTransformsFactory::isMonochrome(image.getColorSpace()))
     {
         // Allocate a VOILUT transform. If the DataSet does not contain any pre-defined
         //  settings then we will find the optimal ones.
-        VOILUT voilutTransform;
+        std::shared_ptr<dicomhero::VOILUT> pVoilutTransform;
 
         // Retrieve the VOIs (center/width pairs)
         dicomhero::vois_t vois = loadedDataSet.getVOIs();
@@ -330,18 +330,18 @@ in C++
 
         if(!vois.empty())
         {
-            voilutTransform.setCenterWidth(vois[0].center, vois[0].width);
+            pVoilutTransform.reset(new dicomhero::VOILUT(vois[0]));
         }
         else if(!luts.empty())
         {
-            voilutTransform.setLUT(*(luts.front()));
+            pVoilutTransform.reset(new dicomhero::VOILUT(luts.front()));
         }
         else
         {
-            voilutTransform.applyOptimalVOI(image, 0, 0, width, height);
+            pVoilutTransform.reset(new dicomhero::VOILUT(dicomhero::VOILUT::getOptimalVOI(image, 0, 0, width, height)));
         }
         
-        chain.add(voilutTransform);        
+        chain.addTransform(*pVoilutTransform);        
     }
 
     // If the image is monochromatic then now chain contains the VOILUT transform
@@ -353,24 +353,24 @@ in Java
 
     // The transforms chain will contain all the transform that we want to 
     // apply to the image before displaying it
-    com.imebra.TransformsChain chain = new com.imebra.TransformsChain();
+    com.dicomhero.TransformsChain chain = new com.dicomhero.TransformsChain();
 
-    if(com.imebra.ColorTransformsFactory.isMonochrome(image.getColorSpace())
+    if(com.dicomhero.ColorTransformsFactory.isMonochrome(image.getColorSpace()))
     {
         // Allocate a VOILUT transform. If the DataSet does not contain any pre-defined
         //  settings then we will find the optimal ones.
-        VOILUT voilutTransform = new VOILUT();
+        com.dicomhero.VOILUT voilutTransform = new com.dicomhero.VOILUT();
 
         // Retrieve the VOIs (center/width pairs)
-        com.imebra.vois_t vois = loadedDataSet.getVOIs();
+        com.dicomhero.vois_t vois = loadedDataSet.getVOIs();
 
         // Retrieve the LUTs
-        List<com.imebra.LUT> luts = new ArrayList<com.imebra.LUT>();
+        List<com.dicomhero.LUT> luts = new ArrayList<com.dicomhero.LUT>();
         for(long scanLUTs = 0; ; scanLUTs++)
         {
             try
             {
-                luts.add(loadedDataSet.getLUT(new com.imebra.TagId(0x0028,0x3010), scanLUTs));
+                luts.add(loadedDataSet.getLUT(new com.dicomhero.TagId(0x0028,0x3010), scanLUTs));
             }
             catch(Exception e)
             {
@@ -380,21 +380,20 @@ in Java
 
         if(!vois.isEmpty())
         {
-            voilutTransform.setCenterWidth(vois.get(0).center, vois.get(0).width);
+            voilutTransform = new com.dicomhero.VOILUT(vois.get(0));
         }
         else if(!luts.isEmpty())
         {
-            voilutTransform.setLUT(luts.get(0));
+            voilutTransform = new com.dicomhero.VOILUT(luts.get(0));
         }
         else
         {
-            voilutTransform.applyOptimalVOI(image, 0, 0, width, height);
+            voilutTransform = new com.dicomhero.VOILUT(com.dicomhero.getOptimalVOI(image, 0, 0, width, height));
         }
         
         chain.add(voilutTransform);        
     }
 
-    // If the image is monochromatic then now chain contains the VOILUT transform
 
 
 
