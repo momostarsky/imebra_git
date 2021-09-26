@@ -290,7 +290,7 @@ and the :cpp:member:`imebra::VOILUT` transform.
 The :cpp:member:`imebra::VOILUT` can be applied only to monochromatic images and changes the image's contrast to enhance
 different portions of the image (for instance just the bones or the tissue).
 
-Usually, the dataSet contains few tags that store some pre-defined settings for the image: the client application should apply
+Usually, the dataSet contains a few tags that store some pre-defined VOILUT settings for the image: the client application should apply
 those values to the VOILUT transform.
 The pre-defined settings come as pairs of center/width values or as Lookup Tables stored in the DICOM sequence 0028,3010.
 
@@ -305,11 +305,11 @@ in C++
     // apply to the image before displaying it
     imebra::TransformsChain chain;
 
-    if(imebra::ColorTransformsFactory::isMonochrome(image.getColorSpace())
+    if(imebra::ColorTransformsFactory::isMonochrome(image.getColorSpace()))
     {
         // Allocate a VOILUT transform. If the DataSet does not contain any pre-defined
         //  settings then we will find the optimal ones.
-        VOILUT voilutTransform;
+        std::shared_ptr<imebra::VOILUT> pVoilutTransform;
 
         // Retrieve the VOIs (center/width pairs)
         imebra::vois_t vois = loadedDataSet.getVOIs();
@@ -330,18 +330,18 @@ in C++
 
         if(!vois.empty())
         {
-            voilutTransform.setCenterWidth(vois[0].center, vois[0].width);
+            pVoilutTransform.reset(new imebra::VOILUT(vois[0]));
         }
         else if(!luts.empty())
         {
-            voilutTransform.setLUT(*(luts.front()));
+            pVoilutTransform.reset(new imebra::VOILUT(luts.front()));
         }
         else
         {
-            voilutTransform.applyOptimalVOI(image, 0, 0, width, height);
+            pVoilutTransform.reset(new imebra::VOILUT(imebra::VOILUT::getOptimalVOI(image, 0, 0, width, height)));
         }
         
-        chain.add(voilutTransform);        
+        chain.addTransform(*pVoilutTransform);        
     }
 
     // If the image is monochromatic then now chain contains the VOILUT transform
@@ -355,11 +355,11 @@ in Java
     // apply to the image before displaying it
     com.imebra.TransformsChain chain = new com.imebra.TransformsChain();
 
-    if(com.imebra.ColorTransformsFactory.isMonochrome(image.getColorSpace())
+    if(com.imebra.ColorTransformsFactory.isMonochrome(image.getColorSpace()))
     {
         // Allocate a VOILUT transform. If the DataSet does not contain any pre-defined
         //  settings then we will find the optimal ones.
-        VOILUT voilutTransform = new VOILUT();
+        com.imebra.VOILUT voilutTransform = new com.imebra.VOILUT();
 
         // Retrieve the VOIs (center/width pairs)
         com.imebra.vois_t vois = loadedDataSet.getVOIs();
@@ -380,21 +380,19 @@ in Java
 
         if(!vois.isEmpty())
         {
-            voilutTransform.setCenterWidth(vois.get(0).center, vois.get(0).width);
+            voilutTransform = new com.imebra.VOILUT(vois.get(0));
         }
         else if(!luts.isEmpty())
         {
-            voilutTransform.setLUT(luts.get(0));
+            voilutTransform = new com.imebra.VOILUT(luts.get(0));
         }
         else
         {
-            voilutTransform.applyOptimalVOI(image, 0, 0, width, height);
+            voilutTransform = new com.imebra.VOILUT(com.imebra.getOptimalVOI(image, 0, 0, width, height));
         }
         
         chain.add(voilutTransform);        
     }
-
-    // If the image is monochromatic then now chain contains the VOILUT transform
 
 
 
