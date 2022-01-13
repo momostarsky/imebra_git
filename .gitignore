@@ -2,8 +2,7 @@ ant-*/
 version.property
 imebra_*.zip
 *.user
-
-
 *.autosave
 *.DS_Store
+*.txt.user*
 *.zip

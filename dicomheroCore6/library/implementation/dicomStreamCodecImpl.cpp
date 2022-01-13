@@ -608,6 +608,7 @@ void dicomStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sh
     ///////////////////////////////////////////////////////////
     std::uint8_t oldDicomSignature[8];
 
+    const size_t initialPosition = pStream->getControlledStreamPosition();
     try
     {
         pStream->read(oldDicomSignature, 8);
@@ -655,6 +656,7 @@ void dicomStreamCodec::readStream(std::shared_ptr<streamReader> pStream, std::sh
         firstDataType.push_back((char)(oldDicomSignature[4]));
         firstDataType.push_back((char)(oldDicomSignature[5]));
         bExplicitDataType = dicomDictionary::getDicomDictionary()->isDataTypeValid(firstDataType);
+        pStream->seek(initialPosition);
     }
 
     // Signature OK. Now scan all the tags.

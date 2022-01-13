@@ -6,9 +6,13 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #350 (Cannot read old NEMA files) as per SOP :ref:`FIXBUG_2`
+
 Version 5.3.0.0
 --------------------------------
 
+- Implemented enhancement #315 (Add support for the VR SV, UV, OV) as per SOP :ref:`DEVENH_2`
+- Fixed bug #341 (Some ISO 2022 conversions allow 2 escaping sequences, and some ICONV mappings are wrong) as per SOP :ref:`FIXBUG_2`
 - Fixed bug #349 (The example "Displaying an image" in the documentation uses VOILUT in the wrong way) as per SOP :ref:`FIXBUG_2`
 
 Version 5.2.1.2
