@@ -25,8 +25,8 @@ for:
       - cmake --build . --config Release
       - cmake --build . --config Release -- -sdk iphonesimulator
       - cd ..
-      - cp -R library/include build_dicomhero_debug
-      - cp -R library/include build_dicomhero_ios_debug
+      - cp -R dicomheroCore6/library/include build_dicomhero_debug
+      - cp -R dicomheroCore6/library/include build_dicomhero_ios_debug
 
     artifacts:
       - path: build_dicomhero_debug/*.dylib
@@ -58,9 +58,9 @@ for:
     
           mkdir build_dicomhero_debug\Debug\include
 
-          xcopy library\include build_dicomhero_release\Release\include /s /e
+          xcopy dicomheroCore6\library\include build_dicomhero_release\Release\include /s /e
 
-          xcopy library\include build_dicomhero_debug\Debug\include /s /e
+          xcopy dicomheroCore6\library\include build_dicomhero_debug\Debug\include /s /e
 
     artifacts:
       - path: build_dicomhero_release/Release
@@ -93,9 +93,9 @@ build_script:
     
     mkdir build_dicomhero_debug\Debug\include
 
-    xcopy library\include build_dicomhero_release\Release\include /s /e
+    xcopy dicomheroCore6\library\include build_dicomhero_release\Release\include /s /e
 
-    xcopy library\include build_dicomhero_debug\Debug\include /s /e
+    xcopy dicomheroCore6\library\include build_dicomhero_debug\Debug\include /s /e
 
 test_script:
 - cmd: 
