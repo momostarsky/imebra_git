@@ -3,7 +3,7 @@ version: 1.0.{build}
 configuration: Debug
 platform: x64
 image:
-  - macos
+  - macos-bigsur
   - Visual Studio 2019
   - Visual Studio 2015
 
