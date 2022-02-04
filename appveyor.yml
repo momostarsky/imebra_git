@@ -10,9 +10,8 @@ image:
 for:
   -
     matrix:
-      only:
-        - image: macos
-        - image: macos-bigsur
+      - image: macos
+      - image: macos-bigsur
 
     build_script:
       - mkdir build_dicomhero_debug
