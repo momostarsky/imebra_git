@@ -31,7 +31,7 @@ for:
       - cd ..
 
     artifacts:
-      - path: build_imebra_macos/Release/*.dylib
+      - path: build_imebra_macos/Release/libimebra.5.*.*.dylib
         name: build_imebra_macos
       - path: build_imebra_ios/Release-iphoneos/libimebra.a
         name: imebra_ios
@@ -51,7 +51,7 @@ for:
       - cmake --build . --config Debug
 
     artifacts:
-      - path: build_imebra_macos/Debug/*.dylib
+      - path: build_imebra_macos/Debug/libimebra.5.*.*.dylib
         name: build_imebra_macos
 
   -
