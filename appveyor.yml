@@ -31,8 +31,8 @@ for:
       - cd ..
 
     artifacts:
-      - path: build_imebra_release/*.dylib
-        name: imebra_macos_release
+      - path: build_imebra_macos/Release/*.dylib
+        name: build_imebra_macos
       - path: build_imebra_ios/Release-iphoneos/libimebra.a
         name: imebra_ios
       - path: build_imebra_ios/Release-iphonesimulator/libimebra.a
@@ -51,12 +51,8 @@ for:
       - cmake --build . --config Debug
 
     artifacts:
-      - path: build_imebra_release/*.dylib
-        name: imebra_macos_release
-      - path: build_imebra_ios/Release-iphoneos/libimebra.a
-        name: imebra_ios
-      - path: build_imebra_ios/Release-iphonesimulator/libimebra.a
-        name: imebra_ios_simulator
+      - path: build_imebra_macos/Debug/*.dylib
+        name: build_imebra_macos
 
   -
     matrix:
