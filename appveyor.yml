@@ -3,7 +3,9 @@ version: 1.0.{build}
 configuration: Debug
 platform: x64
 image:
+  - macos-bigsur
   - macos
+  - Visual Studio 2022
   - Visual Studio 2019
   - Visual Studio 2015
 
@@ -11,15 +13,15 @@ for:
   -
     matrix:
       only:
-        - image: macos
+        - image: macos-bigsur
 
     build_script:
       - mkdir build_imebra_macos
       - mkdir build_imebra_ios
 
       - cd build_imebra_macos
-      - cmake -GXcode -DCMAKE_BUILD_TYPE=Debug ..
-      - cmake --build . --config Debug
+      - cmake -GXcode -DCMAKE_BUILD_TYPE=Release ..
+      - cmake --build . --config Release
       - ctest -V .
 
       - cd ../build_imebra_ios
@@ -29,8 +31,8 @@ for:
       - cd ..
 
     artifacts:
-      - path: build_imebra_release/*.dylib
-        name: imebra_macos_release
+      - path: build_imebra_macos/Release/libimebra.5.*.*.dylib
+        name: build_imebra_macos
       - path: build_imebra_ios/Release-iphoneos/libimebra.a
         name: imebra_ios
       - path: build_imebra_ios/Release-iphonesimulator/libimebra.a
@@ -39,7 +41,24 @@ for:
   -
     matrix:
       only:
+        - image: macos
+
+    build_script:
+      - mkdir build_imebra_macos
+
+      - cd build_imebra_macos
+      - cmake -GXcode -DCMAKE_BUILD_TYPE=Debug ..
+      - cmake --build . --config Debug
+
+    artifacts:
+      - path: build_imebra_macos/Debug/libimebra.5.*.*.dylib
+        name: build_imebra_macos
+
+  -
+    matrix:
+      only:
         - image: Visual Studio 2015
+        - image: Visual Studio 2019
 
     build_script:
       - cmd: >-
@@ -58,6 +77,42 @@ for:
 
           mkdir build_imebra_release\Release\include
     
+          xcopy library\include build_imebra_release\Release\include /s /e
+
+    artifacts:
+      - path: build_imebra_release/Release
+        name: imebra__vs2015_release
+
+  -
+    matrix:
+      only:
+        - image: Visual Studio 2022
+
+    build_script:
+      - cmd: >-
+
+          mkdir build_imebra_release
+
+          mkdir build_imebra_debug
+
+          cd build_imebra_release
+    
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+    
+          cmake --build . --config Release
+
+          ctest -V .
+
+          cd ../build_imebra_debug
+    
+          cmake -DCMAKE_BUILD_TYPE=Debug ..
+    
+          cmake --build . --config Debug
+
+          cd ..
+
+          mkdir build_imebra_release\Release\include
+    
           mkdir build_imebra_debug\Debug\include
 
           xcopy library\include build_imebra_release\Release\include /s /e
@@ -66,43 +121,9 @@ for:
 
     artifacts:
       - path: build_imebra_release/Release
-        name: imebra__vs2015_release
+        name: imebra_vs2022_release
+      - path: build_imebra_debug/Debug
+        name: imebra_vs2022_debug
 
-build_script:
-- cmd: >-
 
-    mkdir build_imebra_release
 
-    mkdir build_imebra_debug
-
-    cd build_imebra_release
-    
-    cmake -DCMAKE_BUILD_TYPE=Release ..
-    
-    cmake --build . --config Release
-
-    ctest -V .
-
-    cd ../build_imebra_debug
-    
-    cmake -DCMAKE_BUILD_TYPE=Debug ..
-    
-    cmake --build . --config Debug
-
-    cd ..
-
-    mkdir build_imebra_release\Release\include
-    
-    mkdir build_imebra_debug\Debug\include
-
-    xcopy library\include build_imebra_release\Release\include /s /e
-
-    xcopy library\include build_imebra_debug\Debug\include /s /e
-
-test_script:
-- cmd: 
-artifacts:
-- path: build_imebra_release/Release
-  name: imebra_vs2019_release
-- path: build_imebra_debug/Debug
-  name: imebra_vs2019_debug
