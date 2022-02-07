@@ -5,6 +5,7 @@ platform: x64
 image:
   - macos-bigsur
   - macos
+  - Visual Studio 2022
   - Visual Studio 2019
   - Visual Studio 2015
 
@@ -19,8 +20,8 @@ for:
       - mkdir build_imebra_ios
 
       - cd build_imebra_macos
-      - cmake -GXcode -DCMAKE_BUILD_TYPE=Debug ..
-      - cmake --build . --config Debug
+      - cmake -GXcode -DCMAKE_BUILD_TYPE=Release ..
+      - cmake --build . --config Release
       - ctest -V .
 
       - cd ../build_imebra_ios
@@ -61,6 +62,7 @@ for:
     matrix:
       only:
         - image: Visual Studio 2015
+        - image: Visual Studio 2019
 
     build_script:
       - cmd: >-
@@ -79,6 +81,42 @@ for:
 
           mkdir build_imebra_release\Release\include
     
+          xcopy library\include build_imebra_release\Release\include /s /e
+
+    artifacts:
+      - path: build_imebra_release/Release
+        name: imebra__vs2015_release
+
+  -
+    matrix:
+      only:
+        - image: Visual Studio 2022
+
+    build_script:
+      - cmd: >-
+
+          mkdir build_imebra_release
+
+          mkdir build_imebra_debug
+
+          cd build_imebra_release
+    
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+    
+          cmake --build . --config Release
+
+          ctest -V .
+
+          cd ../build_imebra_debug
+    
+          cmake -DCMAKE_BUILD_TYPE=Debug ..
+    
+          cmake --build . --config Debug
+
+          cd ..
+
+          mkdir build_imebra_release\Release\include
+    
           mkdir build_imebra_debug\Debug\include
 
           xcopy library\include build_imebra_release\Release\include /s /e
@@ -87,43 +125,9 @@ for:
 
     artifacts:
       - path: build_imebra_release/Release
-        name: imebra__vs2015_release
+        name: imebra_vs2022_release
+      - path: build_imebra_debug/Debug
+        name: imebra_vs2022_debug
 
-build_script:
-- cmd: >-
 
-    mkdir build_imebra_release
 
-    mkdir build_imebra_debug
-
-    cd build_imebra_release
-    
-    cmake -DCMAKE_BUILD_TYPE=Release ..
-    
-    cmake --build . --config Release
-
-    ctest -V .
-
-    cd ../build_imebra_debug
-    
-    cmake -DCMAKE_BUILD_TYPE=Debug ..
-    
-    cmake --build . --config Debug
-
-    cd ..
-
-    mkdir build_imebra_release\Release\include
-    
-    mkdir build_imebra_debug\Debug\include
-
-    xcopy library\include build_imebra_release\Release\include /s /e
-
-    xcopy library\include build_imebra_debug\Debug\include /s /e
-
-test_script:
-- cmd: 
-artifacts:
-- path: build_imebra_release/Release
-  name: imebra_vs2019_release
-- path: build_imebra_debug/Debug
-  name: imebra_vs2019_debug
