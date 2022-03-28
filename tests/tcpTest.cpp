@@ -132,6 +132,39 @@ TEST(tcpTest, prematureClose)
 }
 
 
+void WaitForNoConnectionAndReturn(TCPListener& listener, bool& bTerminated)
+{
+    try
+    {
+        TCPStream newStream = listener.waitForConnection();
+    }
+    catch(StreamClosedError&)
+    {
+
+    }
+    bTerminated = true;
+}
+
+
+TEST(tcpTest, noConnectionToListener)
+{
+    const std::string listeningPort("20001");
+    TCPPassiveAddress listeningAddress("", listeningPort);
+    TCPListener listener(listeningAddress);
+    bool bTerminated(false);
+
+    std::thread noConnectionAndCloseThread(imebra::tests::WaitForNoConnectionAndReturn, std::ref(listener), std::ref(bTerminated));
+    noConnectionAndCloseThread.detach();
+
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    listener.terminate();
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    ASSERT_TRUE(bTerminated);
+}
+
+
+
 TEST(tcpTest, refusedConnection)
 {
     TCPActiveAddress connectToAddress("", "20000");
