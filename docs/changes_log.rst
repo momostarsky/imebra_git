@@ -7,6 +7,7 @@ Version |release| (this version)
 --------------------------------
 
 - Implemented enhancement #351 (Compile also on macOS-bigsur and VisualStudio 2022 on Appveyor)
+- Fixed bug #352 (In tcpBaseSocket::poll select (for Windows) returns 0 on time-out) as per SOP :ref:`FIXBUG_2`
 
 Version 5.3.1.0
 --------------------------------
