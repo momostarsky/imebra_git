@@ -497,6 +497,7 @@ void tcpBaseSocket::poll(pollType_t pollType)
     {
         FD_SET(m_socket, &writeSockets);
     }
+    FD_SET(m_socket, &errorSockets);
     timeval timeout;
     timeout.tv_sec = IMEBRA_TCP_TIMEOUT_MS / 1000;
     timeout.tv_usec = (IMEBRA_TCP_TIMEOUT_MS - timeout.tv_sec * 1000) * 1000;
@@ -504,6 +505,10 @@ void tcpBaseSocket::poll(pollType_t pollType)
     if(numSockets == 0)
     {
         IMEBRA_THROW(SocketTimeout, "Timed out");
+    }
+    if(FD_ISSET(m_socket, errorSockets))
+    {
+        IMEBRA_THROW(StreamClosedError, "Stream closed");
     }
 #else
     short flags = pollType == pollType_t::read ? POLLIN : POLLOUT;
