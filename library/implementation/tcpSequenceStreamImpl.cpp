@@ -506,7 +506,7 @@ void tcpBaseSocket::poll(pollType_t pollType)
     {
         IMEBRA_THROW(SocketTimeout, "Timed out");
     }
-    if(FD_ISSET(m_socket, errorSockets))
+    if(FD_ISSET(m_socket, &errorSockets))
     {
         IMEBRA_THROW(StreamClosedError, "Stream closed");
     }
