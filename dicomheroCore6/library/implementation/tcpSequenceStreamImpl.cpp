@@ -499,8 +499,8 @@ void tcpBaseSocket::poll(pollType_t pollType)
     }
     FD_SET(m_socket, &errorSockets);
     timeval timeout;
-    timeout.tv_sec = IMEBRA_TCP_TIMEOUT_MS / 1000;
-    timeout.tv_usec = (IMEBRA_TCP_TIMEOUT_MS - timeout.tv_sec * 1000) * 1000;
+    timeout.tv_sec = DICOMHERO_TCP_TIMEOUT_MS / 1000;
+    timeout.tv_usec = (DICOMHERO_TCP_TIMEOUT_MS - timeout.tv_sec * 1000) * 1000;
     int numSockets = throwTcpException(::select(m_socket + 1, &readSockets, &writeSockets, &errorSockets, &timeout));
     if(numSockets == 0)
     {
