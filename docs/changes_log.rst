@@ -6,6 +6,13 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Implemented enhancement #351 (Compile also on macOS-bigsur and VisualStudio 2022 on Appveyor) as per SOP :ref:`DEVENH_2`
+- Fixed bug #352 (In tcpBaseSocket::poll select (for Windows) returns 0 on time-out) as per SOP :ref:`FIXBUG_2`
+- Implemented enhancement #353 (Imebra switches transfer syntax to implicit when a tag is not recognized) as per SOP :ref:`DEVENH_2`
+
+Version 5.3.1.0
+--------------------------------
+
 - Fixed bug #350 (Cannot read old NEMA files) as per SOP :ref:`FIXBUG_2`
 
 Version 5.3.0.0
