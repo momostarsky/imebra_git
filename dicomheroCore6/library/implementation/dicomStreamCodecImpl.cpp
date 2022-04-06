@@ -696,6 +696,10 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
     std::uint16_t tagLengthWord;
     std::uint32_t tagLengthDWord;
 
+    // True if the codec already figured out if the transfer syntax
+    // has explicit or implicit VR
+    bool bExplicitDataTypeDecided = false;
+
     // Used to calculate the group order
     ///////////////////////////////////////////////////////////
     std::uint16_t order = 0;
@@ -833,18 +837,33 @@ void dicomStreamCodec::parseStream(std::shared_ptr<streamReader> pStream,
                     pStream->adjustEndian((std::uint8_t*)&tagLengthDWord, sizeof(tagLengthDWord), endianType);
                     (*pReadSubItemLength) += (std::uint32_t)sizeof(tagLengthDWord);
                 }
+                bExplicitDataTypeDecided = true;
             }
             catch(const DictionaryUnknownDataTypeError&)
             {
-                // The data type is not valid. Switch to implicit data type
-                ///////////////////////////////////////////////////////////
-                bExplicitDataType = false;
-                if(endianType == streamController::tByteOrdering::lowByteEndian)
-                    tagLengthDWord=(((std::uint32_t)tagLengthWord)<<16) | ((std::uint32_t)tagTypeString[0]) | (((std::uint32_t)tagTypeString[1])<<8);
+                if(bExplicitDataTypeDecided)
+                {
+                    tagType = tagVR_t::UN;
+                    tagLengthDWord=(std::uint32_t)tagLengthWord;
+                    wordSize = 0;
+                }
                 else
-                    tagLengthDWord=(std::uint32_t)tagLengthWord | (((std::uint32_t)tagTypeString[0])<<24) | (((std::uint32_t)tagTypeString[1])<<16);
-            }
+                {
+                    // The data type is not valid. Switch to implicit data type
+                    ///////////////////////////////////////////////////////////
+                    bExplicitDataType = false;
+                    if(endianType == streamController::tByteOrdering::lowByteEndian)
+                    {
+                        tagLengthDWord=(((std::uint32_t)tagLengthWord)<<16) | ((std::uint32_t)tagTypeString[0]) | (((std::uint32_t)tagTypeString[1]) << 8);
+                    }
+                    else
+                    {
+                        tagLengthDWord=(std::uint32_t)tagLengthWord | (((std::uint32_t)tagTypeString[0])<<24) | (((std::uint32_t)tagTypeString[1]) << 16);
+                    }
 
+                    bExplicitDataTypeDecided = true;
+                }
+            }
 
         } // End of the explicit data type read block
 
