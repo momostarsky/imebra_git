@@ -278,7 +278,7 @@ if(NOT IOS)
     # Download and install GoogleTest
     ExternalProject_Add(
         GTest
-        URL https://github.com/google/googletest/archive/release-1.10.0.zip
+        URL https://github.com/google/googletest/archive/release-1.12.1.zip
         CMAKE_ARGS "-Dgtest_force_shared_crt=ON" "-DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/gtest_install" "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
         INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/gtest_install
@@ -311,11 +311,7 @@ if(NOT IOS)
     target_include_directories(ImebraTests PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/gtest_install/include)
 
     # GTest always adds "d" to debug build, no matter what's the platform
-    if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        target_link_libraries(ImebraTests imebra "gtestd")
-    else()
-        target_link_libraries(ImebraTests imebra "gtest")
-    endif()
+    target_link_libraries(ImebraTests imebra "gtest")
 
     if(${DCMTK_FOUND})
         target_link_libraries(ImebraTests dcmdata dcmimage)
