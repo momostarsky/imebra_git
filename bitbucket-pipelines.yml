@@ -9,7 +9,6 @@ pipelines:
         artifacts:
           - imebra_*.zip
 
-  default:
     - step:
         name: Build for Ubuntu 22.04
         image: binarno/imebra_docker_ubuntu_2204_build_git
