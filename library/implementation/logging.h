@@ -82,8 +82,8 @@ If you do not want to be bound by the GPL terms (such as the requirement
 
 #if IMEBRA_CPP_VERSION >= 17
   #include <shared_mutex> // Some versions of log4cxx forgot to include shared_mutex
-  #include <log4cxx/logger.h>
 #endif
+  #include <log4cxx/logger.h>
   #define IMEBRA_LOG_FATAL_IMPLEMENTATION(message) LOG4CXX_FATAL(::log4cxx::Logger::getRootLogger(), message.c_str())
   #define IMEBRA_LOG_ERROR_IMPLEMENTATION(message) LOG4CXX_ERROR(::log4cxx::Logger::getRootLogger(), message.c_str())
   #define IMEBRA_LOG_WARNING_IMPLEMENTATION(message) LOG4CXX_WARN(::log4cxx::Logger::getRootLogger(), message.c_str())
