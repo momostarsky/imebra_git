@@ -26,8 +26,8 @@ int main(int argc, char **argv)
 #if defined(IMEBRA_LOGGING_LOG4CXX)
     if(!settings.get("--testLogFile").empty())
     {
-        ::log4cxx::LayoutPtr testLayout = new ::log4cxx::PatternLayout("%r [%t] %-5p %c - %m%n");
-        ::log4cxx::AppenderPtr testAppender = new ::log4cxx::FileAppender(testLayout, settings.get("--testLogFile"), false);
+        ::log4cxx::LayoutPtr testLayout(new ::log4cxx::PatternLayout("%r [%t] %-5p %c - %m%n"));
+        ::log4cxx::AppenderPtr testAppender(new ::log4cxx::FileAppender(testLayout, settings.get("--testLogFile"), false));
         ::log4cxx::Logger::getRootLogger()->addAppender(testAppender);
         ::log4cxx::Logger::getRootLogger()->setLevel(::log4cxx::Level::getInfo());
     }
