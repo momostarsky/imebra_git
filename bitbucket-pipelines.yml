@@ -14,7 +14,7 @@ pipelines:
         image: binarno/imebra_docker_ubuntu_2204_build_git
         script:
           - alias python=python3
-          - ant 
+          - ant -DcppVersion=17
         artifacts:
           - imebra_*.zip
 

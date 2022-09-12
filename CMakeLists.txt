@@ -7,7 +7,7 @@
 # -DIMEBRA_OBJC=1|0 (default = 0 on Windows and Linux, 1 on macOS and iOS)
 # -DEMBED_BITCODE=1|0 (default = 0)
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
 project("imebra")
 
@@ -17,6 +17,10 @@ if("*${CMAKE_BUILD_TYPE}*" STREQUAL "**")
 endif()
 
 set(imebra_libraries "")
+
+# Use C++11 by default
+set(CMAKE_CXX_STANDARD 11)
+add_definitions(-DIMEBRA_CPP_VERSION=${CMAKE_CXX_STANDARD})
 
 # Select the proper charset conversion libraries according to the charset conversion method
 #------------------------------------------------------------------------------------------
@@ -63,7 +67,7 @@ elseif(IMEBRA_LOG_FRAMEWORK MATCHES APPLE)
     add_definitions(-DIMEBRA_LOGGING_APPLE)
 elseif(IMEBRA_LOG_FRAMEWORK MATCHES ANDROID)
     add_definitions(-DIMEBRA_LOGGING_ANDROID)
-endif(IMEBRA_LOG_FRAMEWORK MATCHES LOG4CXX)
+endif()
 
 if(IMEBRA_LOG_LEVEL)
     add_definitions(-DIMEBRA_LOG_LEVEL_${IMEBRA_LOG_LEVEL})
@@ -193,9 +197,10 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
 else()
 
+
     message(STATUS "GNU or Clang detected, adding compile flags")
 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
     set(imebra_libraries ${imebra_libraries} pthread)
     if("${EMBED_BITCODE}" STREQUAL "1")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fembed-bitcode")

@@ -3,6 +3,10 @@
 
     <!-- This is an ant build file -->
 
+    <target name="initialize">
+        <property name="cppVersion" value="11" />
+    </target>
+
     <!--
 
             Initialize the version number.
@@ -11,7 +15,7 @@
             IMEBRA_REVISION and BUILD_BRANCH and uses them to build the final product name.
 
     -->
-    <target name="version" description="Initialize the build number">
+    <target name="version" depends="initialize" description="Initialize the build number">
         <exec executable="python3" dir=".">
             <arg path="./getVersion.py" />
         </exec>
@@ -185,6 +189,7 @@ Slovenia
             <arg value="-DCMAKE_BUILD_TYPE=Debug" />
             <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
             <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
+            <arg value="-DCMAKE_CXX_STANDARD=${cppVersion}" />
             <arg path="${build_release}/wrappers/javaWrapper"/>
         </exec>
         <exec executable="make" failonerror="true" dir="${build_jni}" />
@@ -242,6 +247,7 @@ Slovenia
             <arg value="-DCMAKE_BUILD_TYPE=Debug" />
             <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
             <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
+            <arg value="-DCMAKE_CXX_STANDARD=${cppVersion}" />
             <arg path="${build_release}"/>
         </exec>
         <exec executable="make" failonerror="true" dir="${build_library_for_tests}" />
@@ -253,6 +259,7 @@ Slovenia
             <arg value="-DCMAKE_BUILD_TYPE=Release" />
             <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
             <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
+            <arg value="-DCMAKE_CXX_STANDARD=${cppVersion}" />
             <arg path="${build_release}"/>
         </exec>
         <exec executable="make" failonerror="true" dir="${build_library_for_tests_release}" />
@@ -334,6 +341,7 @@ Slovenia
             <arg value="-DCMAKE_BUILD_TYPE=Debug" />
             <arg value="-DIMEBRA_LOG_FRAMEWORK=LOG4CXX" />
             <arg value="-DIMEBRA_LOG_LEVEL=INFO" />
+            <arg value="-DCMAKE_CXX_STANDARD=${cppVersion}" />
             <arg path="${source_distribution}/wrappers/javaWrapper"/>
         </exec>
         <exec executable="make" failonerror="true" dir="${java_test}/makejni" />
