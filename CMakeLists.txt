@@ -19,7 +19,10 @@ endif()
 set(imebra_libraries "")
 
 # Use C++11 by default
-set(CMAKE_CXX_STANDARD 11)
+if("*${CMAKE_CXX_STANDARD}*" STREQUAL "**")
+    set(CMAKE_CXX_STANDARD 11)
+endif()
+
 add_definitions(-DIMEBRA_CPP_VERSION=${CMAKE_CXX_STANDARD})
 
 # Select the proper charset conversion libraries according to the charset conversion method
