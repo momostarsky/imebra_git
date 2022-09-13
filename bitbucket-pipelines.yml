@@ -1,11 +1,20 @@
-image: binarno/imebra_docker_build_git
-
 pipelines:
   default:
     - step:
+        name: Build for Ubuntu 20.04
+        image: binarno/imebra_docker_build_git
         script:
           - alias python=python3
           - ant 
+        artifacts:
+          - imebra_*.zip
+
+    - step:
+        name: Build for Ubuntu 22.04
+        image: binarno/imebra_docker_ubuntu_2204_build_git
+        script:
+          - alias python=python3
+          - ant -DcppVersion=17
         artifacts:
           - imebra_*.zip
 
