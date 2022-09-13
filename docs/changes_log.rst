@@ -6,6 +6,11 @@ Changes log
 Version |release| (this version)
 --------------------------------
 
+- Fixed bug #355 (Imebra doesn't compile on Ubuntu 22.04) as per SOP :ref:`FIXBUG_2`
+
+Version 5.3.3.0
+--------------------------------
+
 - Fixed bug #354 (Imebra switches transfer syntax to implicit when a tag in a sequence is not recognized) as per SOP :ref:`FIXBUG_2`
 
 Version 5.3.2.0
