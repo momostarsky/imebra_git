@@ -1539,28 +1539,29 @@ TEST(dimseTest, storeSCPInteroperabilityTest)
 
     TCPListener tcpListener(TCPPassiveAddress("", "30004"));
 
-    for(int i=0; i != 20; ++i ){
-    TCPStream tcpStream(tcpListener.waitForConnection());
+    for(int i=0; i != 20; ++i )
+    {
+        TCPStream tcpStream(tcpListener.waitForConnection());
 
-    StreamReader readSCU(tcpStream.getStreamInput());
-    StreamWriter writeSCU(tcpStream.getStreamOutput());
+        StreamReader readSCU(tcpStream.getStreamInput());
+        StreamWriter writeSCU(tcpStream.getStreamOutput());
 
-    PresentationContext context(sopClassUid);
-    context.addTransferSyntax(transferSyntax);
-    PresentationContexts presentationContexts;
-    presentationContexts.addPresentationContext(context);
+        PresentationContext context(sopClassUid);
+        context.addTransferSyntax(transferSyntax);
+        PresentationContexts presentationContexts;
+        presentationContexts.addPresentationContext(context);
 
-    AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0, 10);
+        AssociationSCP scp("SCP", 1, 1, presentationContexts, readSCU, writeSCU, 0, 10);
 
-    DimseService dimse(scp);
+        DimseService dimse(scp);
 
-    CStoreCommand command = dimse.getCommand().getAsCStoreCommand();
-    DataSet payload = command.getPayloadDataSet();
+        CStoreCommand command = dimse.getCommand().getAsCStoreCommand();
+        DataSet payload = command.getPayloadDataSet();
 
-    ASSERT_EQ("Test^Patient", payload.getString(TagId(tagId_t::PatientName_0010_0010), 0));
+        ASSERT_EQ("Test^Patient", payload.getString(TagId(tagId_t::PatientName_0010_0010), 0));
 
-    dimse.sendCommandOrResponse(CStoreResponse(command, dimseStatusCode_t::success));
-}
+        dimse.sendCommandOrResponse(CStoreResponse(command, dimseStatusCode_t::success));
+    }
     thread.join();
 
 }

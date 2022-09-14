@@ -748,6 +748,12 @@ TEST(dicomCodecTest, unrecognizedTagExplicitVR)
     dataset.setString(TagId(tagId_t::PatientName_0010_0010), "Test Patient Name");
     dataset.setString(TagId(tagId_t::PatientAddress_0010_1040), "Test Patient Address");
 
+    {
+        MutableDataSet sequence = dataset.appendSequenceItem(TagId(tagId_t::OtherPatientIDsSequence_0010_1002));
+        sequence.setString(TagId(tagId_t::PatientName_0010_0010), "Test Patient Name 1");
+        sequence.setString(TagId(tagId_t::PatientAddress_0010_1040), "Test Patient Address 1");
+    }
+
     MutableMemory memory;
     MemoryStreamOutput outputMemory(memory);
     StreamWriter memoryWriter(outputMemory);
@@ -756,20 +762,35 @@ TEST(dicomCodecTest, unrecognizedTagExplicitVR)
     // Replace LO with AA (unrecognized VR)
     size_t dataSize;
     std::string modifiedFile(reinterpret_cast<const char*>(memory.data(&dataSize)), memory.size());
-    const size_t loPosition = modifiedFile.find("LO");
-    modifiedFile.replace(loPosition, 2, "AA");
+    for(size_t loPosition = modifiedFile.find("LO"); loPosition != std::string::npos; loPosition = modifiedFile.find("LO"))
+    {
+        modifiedFile.replace(loPosition, 2, "AA");
+    }
 
     Memory modifiedFileMemory(modifiedFile.data(), modifiedFile.size());
     MemoryStreamInput inputMemory(modifiedFileMemory);
     StreamReader memoryReader(inputMemory);
     DataSet readDataset(CodecFactory::load(memoryReader));
 
-    ASSERT_EQ("Test Patient Name", readDataset.getString(TagId(tagId_t::PatientName_0010_0010), 0));
-    ReadingDataHandlerNumeric unknownTagHandler = readDataset.getReadingDataHandlerNumeric(TagId(tagId_t::PatientAddress_0010_1040), 0);
-    std::string testContent(20u, ' ');
-    unknownTagHandler.data(&(testContent[0]), testContent.size());
-    ASSERT_EQ(tagVR_t::UN, unknownTagHandler.getDataType());
-    ASSERT_EQ("Test Patient Address", testContent);
+    {
+        ASSERT_EQ("Test Patient Name", readDataset.getString(TagId(tagId_t::PatientName_0010_0010), 0));
+        ReadingDataHandlerNumeric unknownTagHandler = readDataset.getReadingDataHandlerNumeric(TagId(tagId_t::PatientAddress_0010_1040), 0);
+        std::string testContent(20u, ' ');
+        unknownTagHandler.data(&(testContent[0]), testContent.size());
+        ASSERT_EQ(tagVR_t::UN, unknownTagHandler.getDataType());
+        ASSERT_EQ("Test Patient Address", testContent);
+    }
+
+    {
+        ASSERT_EQ("Test Patient Name 1", readDataset.getSequenceItem(TagId(tagId_t::OtherPatientIDsSequence_0010_1002), 0).getString(TagId(tagId_t::PatientName_0010_0010), 0));
+        ReadingDataHandlerNumeric unknownTagHandler = readDataset.
+                getSequenceItem(TagId(tagId_t::OtherPatientIDsSequence_0010_1002), 0).
+                getReadingDataHandlerNumeric(TagId(tagId_t::PatientAddress_0010_1040), 0);
+        std::string testContent(22u, ' ');
+        unknownTagHandler.data(&(testContent[0]), testContent.size());
+        ASSERT_EQ(tagVR_t::UN, unknownTagHandler.getDataType());
+        ASSERT_EQ("Test Patient Address 1", testContent);
+    }
 }
 
 
