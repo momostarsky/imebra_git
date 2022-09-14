@@ -504,11 +504,11 @@ void tcpBaseSocket::poll(pollType_t pollType)
     int numSockets = throwTcpException(::select(m_socket + 1, &readSockets, &writeSockets, &errorSockets, &timeout));
     if(numSockets == 0)
     {
-        IMEBRA_THROW(SocketTimeout, "Timed out");
+        DICOMHERO_THROW(SocketTimeout, "Timed out");
     }
     if(FD_ISSET(m_socket, &errorSockets))
     {
-        IMEBRA_THROW(StreamClosedError, "Stream closed");
+        DICOMHERO_THROW(StreamClosedError, "Stream closed");
     }
 #else
     short flags = pollType == pollType_t::read ? POLLIN : POLLOUT;
