@@ -7,9 +7,14 @@
 # -DDICOMHERO_OBJC=1|0 (default = 0)
 # -DEMBED_BITCODE=1|0 (default = 0)
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
 project("dicomhero6")
+
+# Use C++11 by default
+if("*${CMAKE_CXX_STANDARD}*" STREQUAL "**")
+    set(CMAKE_CXX_STANDARD 11)
+endif()
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 if("*${CMAKE_BUILD_TYPE}*" STREQUAL "**")
@@ -64,7 +69,7 @@ else()
 
     message(STATUS "GNU or Clang detected, adding compile flags")
 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wconversion -Wfloat-equal ${HIDDEN_FLAGS}")
     set(dicomhero_libraries ${dicomhero_libraries} pthread)
     if("${EMBED_BITCODE}" STREQUAL "1")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fembed-bitcode")

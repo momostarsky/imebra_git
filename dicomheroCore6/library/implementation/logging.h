@@ -79,6 +79,10 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #endif
 
 #if defined(DICOMHERO_LOGGING_LOG4CXX)
+
+#if IMEBRA_CPP_VERSION >= 17
+  #include <shared_mutex> // Some versions of log4cxx forgot to include shared_mutex
+#endif
   #include <log4cxx/logger.h>
 
   #define DICOMHERO_LOG_FATAL_IMPLEMENTATION(message) LOG4CXX_FATAL(::log4cxx::Logger::getRootLogger(), message.c_str())
