@@ -63,5 +63,6 @@ If you do not want to be bound by the GPL terms (such as the requirement
 #include "serialNumberUidGenerator.h"
 #include "uidsEnumeration.h"
 #include "VOIDescription.h"
+#include "version.h"
 
 #endif // DICOMHERO_INCLUDED

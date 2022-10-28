@@ -139,7 +139,6 @@ target_include_directories(dicomhero6 PUBLIC $<BUILD_INTERFACE:${dicomhero_objc_
 set_target_properties(dicomhero6 PROPERTIES VERSION ${DICOMHERO_VERSION}
                                           SOVERSION ${DICOMHERO_MAJOR_VERSION})
 
-
 if(NOT IOS)
 
   ##############################################

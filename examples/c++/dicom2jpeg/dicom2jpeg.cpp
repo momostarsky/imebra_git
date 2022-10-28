@@ -90,7 +90,7 @@ void outputDatasetTags(const DataSet& dataset, const std::wstring& prefix)
 
 int main(int argc, char* argv[])
 {
-    std::wstring version(L"1.0.0.1");
+    std::wstring version(dicomhero::getVersionW());
     std::wcout << L"dicom2jpeg version " << version << std::endl;
 
     CodecFactory::setMaximumImageSize(8000, 8000);

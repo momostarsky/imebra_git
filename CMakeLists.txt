@@ -6,20 +6,171 @@
 # -DDICOMHERO_CHARSET_CONVERSION=ICONV|JAVA|WINDOWS (default = ICONV on posix, WINDOWS on Windows)
 # -DDICOMHERO_OBJC=1|0 (default = 0)
 # -DEMBED_BITCODE=1|0 (default = 0)
+# -DBUILD_DICOMHERO_DOCUMENTATION=ON|OFF (default = OFF) Build the documentation
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.12)
 
 project("dicomhero6")
 
-# Use C++11 by default
+set(BUILD_DICOMHERO_DOCUMENTATION OFF CACHE BOOL "Build the documentation")
+
+#
+# Use C++11 by default. Set CMAKE_CXX_STANDARD to force other versions.
+#
+#=========================================================================
 if("*${CMAKE_CXX_STANDARD}*" STREQUAL "**")
     set(CMAKE_CXX_STANDARD 11)
 endif()
 
+#
+# The build type must be explicitly set
+#
+#=========================================================================
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 if("*${CMAKE_BUILD_TYPE}*" STREQUAL "**")
     set(CMAKE_BUILD_TYPE "Debug") # Default build mode is debug
 endif()
+
+#
+# Generate vcs_version.h
+#
+#=========================================================================
+find_package (Git)
+set(VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/vcs_version.h")
+set(VERSION_FILE_RAW "${CMAKE_CURRENT_BINARY_DIR}/version.txt")
+if (GIT_FOUND)
+    message("git found: ${GIT_EXECUTABLE}")
+    execute_process(COMMAND "${GIT_EXECUTABLE}" "branch"
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            OUTPUT_VARIABLE branches OUTPUT_STRIP_TRAILING_WHITESPACE)
+    string(REPLACE "\n" ";" branchesList "${branches}")
+    foreach(checkBranch ${branchesList})
+        message("checking ${checkBranch}")
+        string(SUBSTRING ${checkBranch} 0 2 active)
+        if("${active}" STREQUAL "* ")
+            string(SUBSTRING ${checkBranch} 2 -1 branch)
+        endif()
+    endforeach()
+
+    execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "HEAD"
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            OUTPUT_VARIABLE hash OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+    if(NOT "$ENV{APPVEYOR_REPO_BRANCH}" STREQUAL "")
+        set(branch $ENV{APPVEYOR_REPO_BRANCH})
+    endif()
+    message("Branch ${branch}")
+
+    if((${branch} MATCHES "^[0-9]+\.[0-9.]*[0-9]+$") OR (${branch} MATCHES ".*/[0-9]+\.[0-9.]*[0-9]+$"))
+        string(APPEND branch ".0.0.0.0")
+        string(REGEX MATCHALL "[0-9]+" major_minor_build "${branch}")
+        list(LENGTH major_minor_build version_length)
+        list(GET major_minor_build 0 major)
+        list(GET major_minor_build 1 minor)
+        list(GET major_minor_build 2 patch)
+        list(GET major_minor_build 3 build)
+    else()
+        set(major "0")
+        set(minor "0")
+        set(patch "0")
+        set(build "0")
+    endif()
+
+    message("Version ${major}.${minor}.${build}")
+
+    set(version_rc "${major},${minor},${patch},${build}")
+
+    file(WRITE "${VERSION_FILE}" "#ifndef VERSION_FILE\n")
+    file(APPEND "${VERSION_FILE}" "#define VERSION_FILE\n")
+    file(APPEND "${VERSION_FILE}" "#define VCS_COMMIT_SHORTHASH \"${hash}\"\n")
+    file(APPEND "${VERSION_FILE}" "#define VERSION_MAJOR ${major}\n")
+    file(APPEND "${VERSION_FILE}" "#define VERSION_MINOR ${minor}\n")
+    file(APPEND "${VERSION_FILE}" "#define VERSION_PATCH ${patch}\n")
+    file(APPEND "${VERSION_FILE}" "#define VERSION_BUILD ${build}\n")
+    file(APPEND "${VERSION_FILE}" "#define PRODUCT_VERSION \"${major}.${minor}.${patch}\"\n")
+    file(APPEND "${VERSION_FILE}" "#define PRODUCT_VERSION_FULL \"${major}.${minor}.${patch}.${build}\"\n")
+    file(APPEND "${VERSION_FILE}" "#define PRODUCT_VERSION_FULL_W L\"${major}.${minor}.${patch}.${build}\"\n")
+    file(APPEND "${VERSION_FILE}" "#define PRODUCT_VERSION_RC \"${version_rc}\"\n")
+    file(APPEND "${VERSION_FILE}" "#endif\n")
+    file(WRITE "${VERSION_FILE_RAW}" "${major}.${minor}.${patch}.${build}")
+else()
+    file(APPEND "${VERSION_FILE}" "#ifndef VERSION_FILE\n")
+    file(APPEND "${VERSION_FILE}" "#define VERSION_FILE\n")
+    file(APPEND "${VERSION_FILE}" "#define VCS_COMMIT_SHORTHASH \"Devel\"\n")
+    file(APPEND "${VERSION_FILE}" "#define VERSION_MAJOR 0\n")
+    file(APPEND "${VERSION_FILE}" "#define VERSION_MINOR 0\n")
+    file(APPEND "${VERSION_FILE}" "#define VERSION_PATCH 0\n")
+    file(APPEND "${VERSION_FILE}" "#define VERSION_BUILD 0\n")
+    file(APPEND "${VERSION_FILE}" "#define PRODUCT_VERSION \"0.0.0\"\n")
+    file(APPEND "${VERSION_FILE}" "#define PRODUCT_VERSION_FULL \"0.0.0.0\"\n")
+    file(APPEND "${VERSION_FILE}" "#define PRODUCT_VERSION_FULL_W L\"0.0.0.0\"\n")
+    file(APPEND "${VERSION_FILE}" "#define PRODUCT_VERSION_RC \"0,0,0,0\"\n")
+    file(APPEND "${VERSION_FILE}" "#endif\n")
+    file(WRITE "${VERSION_FILE_RAW}" "0.0.0.0")
+endif ()
+set(DICOMHERO_MAJOR_VERSION ${major})
+set(DICOMHERO_VERSION "${major}.${minor}.${patch}.${build}")
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+
+##############################################
+#
+# DOCUMENTATION
+#
+##############################################
+if(${BUILD_DICOMHERO_DOCUMENTATION})
+    find_package (Python3 COMPONENTS Interpreter REQUIRED)
+    find_package (Doxygen REQUIRED)
+    execute_process(
+        COMMAND ${Python3_EXECUTABLE} -c "import jinja2"
+        RESULT_VARIABLE JINJA_EXIT_CODE
+        OUTPUT_QUIET
+    )
+
+    execute_process(
+        COMMAND ${Python3_EXECUTABLE} -c "import sphinx"
+        RESULT_VARIABLE SPHINX_EXIT_CODE
+        OUTPUT_QUIET
+    )
+
+    execute_process(
+        COMMAND ${Python3_EXECUTABLE} -c "import breathe"
+        RESULT_VARIABLE BREATHE_EXIT_CODE
+        OUTPUT_QUIET
+    )
+
+    execute_process(
+        COMMAND ${Python3_EXECUTABLE} -c "import sphinx_rtd_theme"
+        RESULT_VARIABLE SPHINX_RTD_THEME_EXIT_CODE
+        OUTPUT_QUIET
+    )
+
+    if(NOT ${JINJA_EXIT_CODE} EQUAL 0)
+        message("To build the documentation you need to install the python package jinja2 (Preferred version is 3.0.3)")
+    endif()
+
+    if(NOT ${SPHINX_EXIT_CODE} EQUAL 0)
+        message("To build the documentation you need to install the python package sphinx (Preferred version is 2.4.4)")
+    endif()
+
+    if(NOT ${BREATHE_EXIT_CODE} EQUAL 0)
+        message("To build the documentation you need to install the python package breathe (Preferred version is 4.14.2)")
+    endif()
+
+    if(NOT ${SPHINX_RTD_THEME_EXIT_CODE} EQUAL 0)
+        message("To build the documentation you need to install the python package sphinx_rtd_theme")
+    endif()
+
+    file(GLOB dicomhero_doc_sources "${CMAKE_SOURCE_DIR}/docs/*.*")
+    file(GLOB dicomhero_doc_interface "${CMAKE_SOURCE_DIR}/dicomheroCore6/library/include/dicomhero6/*.h")
+
+    add_custom_target(documentation ALL "sphinx-build" "-b" "html" "${CMAKE_CURRENT_SOURCE_DIR}/docs" "${CMAKE_CURRENT_BINARY_DIR}/docs/html"
+        DEPENDS dicomhero6
+        SOURCES ${dicomhero_doc_sources}
+                ${dicomhero_doc_interface})
+endif()
+
+
 
 # Set the proper logging preprocessor macros
 #-------------------------------------------
@@ -84,29 +235,6 @@ else()
     endif()
 
 endif()
-
-# Set the library version from DICOMHERO_MAJOR_VERSION, DICOMHERO_MINOR_VERSION,
-#  & DICOMHERO_REVISION
-#---------------------------------------------------------------------------------
-if ("$ENV{DICOMHERO_MAJOR_VERSION}" STREQUAL "")
-    set(DICOMHERO_MAJOR_VERSION "6")
-else("$ENV{DICOMHERO_MAJOR_VERSION}" STREQUAL "")
-    set(DICOMHERO_MAJOR_VERSION "$ENV{DICOMHERO_MAJOR_VERSION}")
-endif("$ENV{DICOMHERO_MAJOR_VERSION}" STREQUAL "")
-
-if ("$ENV{DICOMHERO_MINOR_VERSION}" STREQUAL "")
-    set(DICOMHERO_MINOR_VERSION "0")
-else("$ENV{DICOMHERO_MINOR_VERSION}" STREQUAL "")
-    set(DICOMHERO_MINOR_VERSION "$ENV{DICOMHERO_MINOR_VERSION}")
-endif("$ENV{DICOMHERO_MINOR_VERSION}" STREQUAL "")
-
-if ("$ENV{DICOMHERO_REVISION}" STREQUAL "")
-    set(DICOMHERO_REVISION "0")
-else("$ENV{DICOMHERO_REVISION}" STREQUAL "")
-    set(DICOMHERO_REVISION "$ENV{DICOMHERO_REVISION}")
-endif("$ENV{DICOMHERO_REVISION}" STREQUAL "")
-
-set(DICOMHERO_VERSION "${DICOMHERO_MAJOR_VERSION}.${DICOMHERO_MINOR_VERSION}.${DICOMHERO_REVISION}")
 
 # We need thread support
 find_package(Threads REQUIRED)
@@ -184,8 +312,15 @@ install(TARGETS dicomhero6 EXPORT dicomhero6Config LIBRARY DESTINATION lib
                                                  PUBLIC_HEADER DESTINATION include
                                                  COMPONENT "DICOMHERO Shared library")
 
+if(${BUILD_DICOMHERO_DOCUMENTATION})
+    install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/docs"
+            DESTINATION "share/doc/${CPACK_PACKAGE_NAME}/")
+endif()
+
 install(FILES ${imebra_interface} DESTINATION include/imebra COMPONENT "DICOMHero legacy include files")
 install(FILES ${dicomhero_interface} DESTINATION include/dicomhero6 COMPONENT "DICOMHero include files")
+install(FILES ${VERSION_FILE} DESTINATION include/dicomhero6 COMPONENT "DICOMHero include files")
+install(FILES ${VERSION_FILE_RAW} DESTINATION include/dicomhero6 COMPONENT "DICOMHero include files")
 
 if("${DICOMHERO_OBJC}" STREQUAL "1")
     install(FILES ${dicomhero_objc_include} DESTINATION include/dicomhero6_objc COMPONENT "DICOMHero objc include files")

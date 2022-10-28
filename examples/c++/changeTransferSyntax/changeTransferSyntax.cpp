@@ -83,7 +83,7 @@ void CopyGroups(const DataSet& source, MutableDataSet& destination)
 
 int main(int argc, char* argv[])
 {
-    std::string version("1.0.0.1");
+    std::string version(dicomhero::getVersion());
     std::cout << "changeTransferSyntax version " << version << std::endl;
 
     try

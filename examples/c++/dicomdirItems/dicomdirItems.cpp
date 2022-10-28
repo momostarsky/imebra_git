@@ -160,13 +160,11 @@ void scanChildren(const DicomDirEntry& record, std::wostream* pOutputStream)
 ///////////////////////////////////////////////////////////
 int main(int argc, char* argv[])
 {
-
-
     // Output the help if the parameters have not been
     //  specified
     if(argc < 2)
     {
-        std::wstring version(L"1.0.0.1");
+        std::wstring version(dicomhero::getVersionW());
         std::wcout << L"dicomdirItems version " << version << L"\n";
         std::wcout << L"Usage: dicomdirItems dicomdirFileName outputFileName\n";
         std::wcout << L" dicomdirFileName = name of the DICOMDIR file\n";
